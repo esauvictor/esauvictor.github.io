@@ -1134,5 +1134,46 @@ s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
 <!--End of Tawk.to Script-->
+<!-- Add this script right before the closing </body> tag -->
+<script>
+    // Disable right-click
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        alert('Right-click is disabled to protect content.');
+    });
+    
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+    });
+    
+    // Disable keyboard shortcuts (Ctrl+C, Ctrl+U, etc.)
+    document.addEventListener('keydown', function(e) {
+        // Disable Ctrl+C, Ctrl+U, Ctrl+Shift+I, F12
+        if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 73) {
+            e.preventDefault();
+            alert('This action is disabled to protect content.');
+        }
+        // Disable F12 and Ctrl+Shift+I
+        if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73)) {
+            e.preventDefault();
+            alert('Developer tools are disabled to protect content.');
+        }
+    });
+    
+    // Add a transparent overlay to prevent inspecting elements
+    document.addEventListener('DOMContentLoaded', function() {
+        const overlay = document.createElement('div');
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.zIndex = '999999';
+        overlay.style.opacity = '0';
+        overlay.style.pointerEvents = 'none';
+        document.body.appendChild(overlay);
+    });
+    </script>
 </body>
 </html>
