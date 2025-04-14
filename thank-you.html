@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Thank you for contacting Esau Victor">
+    <title>Thank You | Esau Victor</title>
+    <link rel="icon" href="https://github.githubassets.com/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Consistent with your portfolio styles */
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #4a6fa5;
+            --accent-color: #3b82f6;
+            --text-color: #333;
+            --light-text: #6b7280;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --footer-bg: #1e3a8a;
+            --footer-text: #e0e7ff;
+            --transition: all 0.3s ease;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Thank You Section */
+        .thank-you {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 0;
+            flex: 1;
+        }
+
+        .thank-you-content {
+            max-width: 600px;
+            background-color: var(--card-bg);
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .thank-you-icon {
+            font-size: 4rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            animation: bounce 1s ease infinite alternate;
+        }
+
+        .thank-you h1 {
+            font-size: 2.25rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .thank-you p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: var(--light-text);
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--accent-color);
+        }
+
+        .footer-column p {
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--footer-text);
+            transition: var(--transition);
+            opacity: 0.9;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            opacity: 1;
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: white;
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--footer-text);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Animations */
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .thank-you {
+                padding: 4rem 0;
+            }
+            
+            .thank-you-content {
+                padding: 2rem;
+            }
+            
+            .thank-you h1 {
+                font-size: 1.75rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Thank You Content -->
+    <main class="thank-you">
+        <div class="container">
+            <div class="thank-you-content" style="animation: fadeIn 1s ease;">
+                <div class="thank-you-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h1>Thank You!</h1>
+                <p>Your message has been successfully sent. I'll get back to you as soon as possible.</p>
+                <a href="https://esauvictor.github.io" class="btn">Return Home</a>
+            </div>
+        </div>
+    </main>
+
+     <!-- Footer -->
+     <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Esau Victor</h3>
+                    <p>Professional Web Developer, Data Analytics Engineer, and Cyber Security Expert dedicated to delivering exceptional results.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#projects">Projects</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#services">Web Development</a></li>
+                        <li><a href="#services">Data Analytics</a></li>
+                        <li><a href="#services">Cyber Security</a></li>
+                        <li><a href="#contact">Consulting</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/esau-victor" target="_blank" aria-label="LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="https://github.com/esauvictor" target="_blank" aria-label="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://twitter.com/esau_vee" target="_blank" aria-label="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+            </div>
+            <div class="copyright">
+                <p>&copy; <span id="year"></span> Esau Victor. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Update copyright year
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
