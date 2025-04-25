@@ -150,6 +150,19 @@
             font-size: 1.25rem;
             color: var(--primary-color);
         }
+        .btn-cv {
+    background-color: transparent;
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-cv:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
 
         .nav-links {
             display: flex;
@@ -247,24 +260,56 @@
             align-items: center;
         }
 
-        .about-image {
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            transition: var(--transition);
-        }
+       /* About Image Styles */
+.about-image {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 5px solid var(--accent-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    margin: 0 auto;
+    position: relative;
+    transition: all 0.3s ease;
+}
 
-        .about-image:hover {
-            transform: translateY(-5px);
-        }
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
 
-        .about-image img {
-            transition: transform 0.5s ease;
-        }
+.about-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
 
-        .about-image:hover img {
-            transform: scale(1.05);
-        }
+.about-image:hover img {
+    transform: scale(1.1);
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(59, 130, 246, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+}
+
+.about-image {
+    animation: pulse 2s infinite;
+}
+
+/* Remove animation on hover */
+.about-image:hover {
+    animation: none;
+}
 
         .about-text p {
             margin-bottom: 1.25rem;
@@ -403,6 +448,90 @@
             font-weight: 500;
         }
 
+        /* Tutorials Section */
+.tutorials {
+    background-color: #f0f4f8;
+}
+
+.section-subtitle {
+    text-align: center;
+    color: var(--light-text);
+    margin-bottom: 3rem;
+    font-size: 1.1rem;
+}
+
+.tutorials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.tutorial-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.tutorial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.tutorial-info {
+    padding: 1.5rem;
+}
+
+.tutorial-info h3 {
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+}
+
+.tutorial-info p {
+    color: var(--light-text);
+    margin-bottom: 1rem;
+}
+
+.tutorial-meta {
+    display: flex;
+    justify-content: space-between;
+    color: var(--light-text);
+    font-size: 0.85rem;
+}
+
+.tutorial-meta i {
+    margin-right: 0.25rem;
+    color: var(--secondary-color);
+}
+
+.tutorials-cta {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.tutorials-cta .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
         /* Testimonials section */
         .testimonials {
             background-color: #f0f4f8;
@@ -524,96 +653,102 @@
             resize: vertical;
         }
 
-        /* Footer styles */
-        footer {
-            background-color: var(--footer-bg);
-            color: var(--footer-text);
-            padding: 4rem 0 2rem;
-        }
+       /* Footer Styles */
+footer {
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+    padding: 4rem 0 2rem;
+    position: relative;
+}
 
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-            margin-bottom: 3rem;
-        }
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
 
-        .footer-column h3 {
-            color: white;
-            margin-bottom: 1.5rem;
-            font-size: 1.25rem;
-            position: relative;
-            padding-bottom: 0.75rem;
-        }
+.footer-column {
+    display: flex;
+    flex-direction: column;
+}
 
-        .footer-column h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 2px;
-            background-color: var(--accent-color);
-        }
+.footer-column h3 {
+    color: white;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    position: relative;
+    padding-bottom: 0.75rem;
+}
 
-        .footer-column p {
-            margin-bottom: 1.5rem;
-            opacity: 0.9;
-        }
+.footer-column h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background-color: var(--accent-color);
+}
 
-        .footer-links {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
+.footer-column p {
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+    flex-grow: 1;
+}
 
-        .footer-links a {
-            color: var(--footer-text);
-            transition: var(--transition);
-            opacity: 0.9;
-        }
+.footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
 
-        .footer-links a:hover {
-            color: white;
-            opacity: 1;
-            padding-left: 5px;
-        }
+.footer-links a {
+    color: var(--footer-text);
+    transition: var(--transition);
+    opacity: 0.9;
+}
 
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
+.footer-links a:hover {
+    color: white;
+    opacity: 1;
+    padding-left: 5px;
+}
 
-        .social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            color: white;
-            transition: var(--transition);
-        }
+.social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: auto; /* Pushes social links to bottom of column */
+}
 
-        .social-links a:hover {
-            background-color: white;
-            color: var(--primary-color);
-            transform: translateY(-3px);
-        }
+.social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    color: white;
+    transition: var(--transition);
+}
 
-        .copyright {
-            text-align: center;
-            padding-top: 2rem;
-            margin-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            color: var(--footer-text);
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
+.social-links a:hover {
+    background-color: white;
+    color: var(--primary-color);
+    transform: translateY(-3px);
+}
 
+.copyright {
+    text-align: center;
+    padding-top: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    color: var(--footer-text);
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -717,7 +852,7 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container container">
-            <a href="#" class="logo">Esau Victor</a>
+            <a href="#home" class="logo">Esau Victor</a>
             <button class="hamburger" id="hamburger">
                 <i class="fas fa-bars"></i>
             </button>
@@ -726,6 +861,7 @@
                 <li><a href="#about">About</a></li>
                 <li><a href="#services">Services</a></li>
                 <li><a href="#projects">Projects</a></li>
+                <li><a href="#tutorials">Tutorials</a></li>
                 <li><a href="#testimonials">Testimonials</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
@@ -740,6 +876,10 @@
             <div class="hero-btns">
                 <a href="#projects" class="btn">View My Work</a>
                 <a href="#contact" class="btn btn-outline">Contact Me</a>
+                <!-- Add this new button -->
+                <a href="https://github.com/esauvictor/esauvictor.github.io/blob/main/Esau%20Victor%20Curriculum%20vitae.pdf" class="btn btn-cv" download="Esau_Victor_CV.pdf">
+                    <i class="fas fa-download"></i> Download CV
+                </a>
             </div>
         </div>
     </section>
@@ -875,6 +1015,138 @@
         </div>
     </section>
 
+    <!-- Tutorials Section -->
+<section class="section tutorials" id="tutorials">
+    <div class="container">
+        <h2 class="section-title">My Tutorials</h2>
+        <p class="section-subtitle">Educational content I've created to share my knowledge</p>
+        
+        <div class="tutorials-grid">
+            <!-- Tutorial 1 -->
+            <div class="tutorial-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/MW_MAvnExno?si=2t6R6hKfgTjhc7bW" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
+                </div>
+                <div class="tutorial-info">
+                    <h3>Web Development Basics</h3>
+                    <p>Learn the fundamentals of modern web development in this comprehensive tutorial.</p>
+                    <div class="tutorial-meta">
+                        <span><i class="fas fa-eye"></i> 10K views</span>
+                        <span><i class="fas fa-clock"></i> 38 min</span>
+                        <span><i class="fas fa-calendar-alt"></i> Mar 2025</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tutorial 2 -->
+            <div class="tutorial-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID_2" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
+                </div>
+                <div class="tutorial-info">
+                    <h3>Data Analytics with Python</h3>
+                    <p>Transform raw data into meaningful insights using Python's powerful libraries.</p>
+                    <div class="tutorial-meta">
+                        <span><i class="fas fa-eye"></i> 8.5K views</span>
+                        <span><i class="fas fa-clock"></i> 36 min</span>
+                        <span><i class="fas fa-calendar-alt"></i> Mar 2025</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tutorial 3 -->
+            <div class="tutorial-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID_3" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
+                </div>
+                <div class="tutorial-info">
+                    <h3>Cyber Security Essentials</h3>
+                    <p>Protect your digital assets with these fundamental security practices.</p>
+                    <div class="tutorial-meta">
+                        <span><i class="fas fa-eye"></i> 12K views</span>
+                        <span><i class="fas fa-clock"></i> 40 min</span>
+                        <span><i class="fas fa-calendar-alt"></i> May 2025</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tutorials-grid">
+            <!-- Tutorial 1 -->
+            <div class="tutorial-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/MW_MAvnExno?si=2t6R6hKfgTjhc7bW" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
+                </div>
+                <div class="tutorial-info">
+                    <h3>Web Development Basics</h3>
+                    <p>Learn the fundamentals of modern web development in this comprehensive tutorial.</p>
+                    <div class="tutorial-meta">
+                        <span><i class="fas fa-eye"></i> 10K views</span>
+                        <span><i class="fas fa-clock"></i> 30 min</span>
+                        <span><i class="fas fa-calendar-alt"></i> Mar 2025</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tutorial 2 -->
+            <div class="tutorial-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID_2" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
+                </div>
+                <div class="tutorial-info">
+                    <h3>Data Analytics with Python</h3>
+                    <p>Transform raw data into meaningful insights using Python's powerful libraries.</p>
+                    <div class="tutorial-meta">
+                        <span><i class="fas fa-eye"></i> 8.5K views</span>
+                        <span><i class="fas fa-clock"></i> 35 min</span>
+                        <span><i class="fas fa-calendar-alt"></i> Mar 2025</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tutorial 3 -->
+            <div class="tutorial-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID_3" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
+                </div>
+                <div class="tutorial-info">
+                    <h3>Cyber Security Essentials</h3>
+                    <p>Protect your digital assets with these fundamental security practices.</p>
+                    <div class="tutorial-meta">
+                        <span><i class="fas fa-eye"></i> 12K views</span>
+                        <span><i class="fas fa-clock"></i> 32 min</span>
+                        <span><i class="fas fa-calendar-alt"></i> May 2025</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tutorials-cta">
+            <a href="https://youtube.com/@EsauDeGenius" class="btn" target="_blank">
+                <i class="fab fa-youtube"></i> View More Tutorials
+            </a>
+        </div>
+    </div>
+</section>
+
+
     <!-- Testimonials Section -->
     <section class="section testimonials" id="testimonials">
         <div class="container">
@@ -1004,6 +1276,18 @@
                 <div class="footer-column">
                     <h3>Esau Victor</h3>
                     <p>Professional Web Developer, Data Analytics Engineer, and Cyber Security Expert dedicated to delivering exceptional results.</p>
+                    <!-- Moved social links here -->
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/esau-victor" target="_blank" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://github.com/esauvictor" target="_blank" aria-label="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://twitter.com/esau_vee" target="_blank" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="footer-column">
                     <h3>Quick Links</h3>
@@ -1024,17 +1308,6 @@
                         <li><a href="#contact">Consulting</a></li>
                     </ul>
                 </div>
-            </div>
-            <div class="social-links">
-                <a href="https://www.linkedin.com/in/esau-victor" target="_blank" aria-label="LinkedIn">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
-                <a href="https://github.com/esauvictor" target="_blank" aria-label="GitHub">
-                    <i class="fab fa-github"></i>
-                </a>
-                <a href="https://twitter.com/esau_vee" target="_blank" aria-label="Twitter">
-                    <i class="fab fa-twitter"></i>
-                </a>
             </div>
             <div class="copyright">
                 <p>&copy; <span id="year"></span> Esau Victor. All rights reserved.</p>
@@ -1134,46 +1407,5 @@ s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
 <!--End of Tawk.to Script-->
-<!-- Add this script right before the closing </body> tag -->
-<script>
-    // Disable right-click
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        alert('Right-click is disabled to protect content.');
-    });
-    
-    // Disable text selection
-    document.addEventListener('selectstart', function(e) {
-        e.preventDefault();
-    });
-    
-    // Disable keyboard shortcuts (Ctrl+C, Ctrl+U, etc.)
-    document.addEventListener('keydown', function(e) {
-        // Disable Ctrl+C, Ctrl+U, Ctrl+Shift+I, F12
-        if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 73) {
-            e.preventDefault();
-            alert('This action is disabled to protect content.');
-        }
-        // Disable F12 and Ctrl+Shift+I
-        if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73)) {
-            e.preventDefault();
-            alert('Developer tools are disabled to protect content.');
-        }
-    });
-    
-    // Add a transparent overlay to prevent inspecting elements
-    document.addEventListener('DOMContentLoaded', function() {
-        const overlay = document.createElement('div');
-        overlay.style.position = 'fixed';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.width = '100%';
-        overlay.style.height = '100%';
-        overlay.style.zIndex = '999999';
-        overlay.style.opacity = '0';
-        overlay.style.pointerEvents = 'none';
-        document.body.appendChild(overlay);
-    });
-    </script>
 </body>
 </html>
