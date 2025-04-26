@@ -7,7 +7,6 @@ Professional portfolio website showcasing my work as a Web Developer, Data Analy
 ## 🌟 Features
 
 - **Responsive Design**: Works on all devices (mobile, tablet, desktop)
-- **Dark/Light Mode**: Toggle between color themes
 - **Interactive Elements**: Animated skill bars, hover effects
 - **Multi-Section Layout**: 
   - About Me
