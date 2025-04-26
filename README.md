@@ -1,6 +1,6 @@
 # Esau Victor - Portfolio Website
 
-![Portfolio Screenshot](https://github.com/esauvictor/esauvictor.github.io/blob/main/portfolio.jpg?raw=true) <!-- Replace with actual screenshot -->
+![Portfolio Screenshot](https://github.com/esauvictor/esauvictor.github.io/blob/main/portfolio.jpg) <!-- Replace with actual screenshot -->
 
 Professional portfolio website showcasing my work as a Web Developer, Data Analytics Engineer, and Cyber Security Expert.
 
