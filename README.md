@@ -12,7 +12,7 @@ Professional portfolio website showcasing my work as a Web Developer, Data Analy
   - About Me
   - Services
   - Projects
-  - Tutorials
+  - learning centre
   - Testimonials
   - Contact Form
 - **Downloadable CV**: Direct PDF download
