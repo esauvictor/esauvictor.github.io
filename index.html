@@ -532,6 +532,63 @@
     align-items: center;
     gap: 0.5rem;
 }
+        /* Blog Section */
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.blog-post {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.blog-post:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.blog-image {
+    height: 200px;
+    overflow: hidden;
+}
+
+.blog-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.blog-post:hover .blog-image img {
+    transform: scale(1.05);
+}
+
+.blog-content {
+    padding: 1.5rem;
+}
+
+.blog-content h3 {
+    margin-bottom: 0.75rem;
+}
+
+.blog-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    color: var(--light-text);
+    font-size: 0.85rem;
+}
+
+.blog-meta i {
+    margin-right: 0.25rem;
+    color: var(--secondary-color);
+}
         /* Testimonials section */
         .testimonials {
             background-color: #f0f4f8;
@@ -862,6 +919,7 @@ footer {
                 <li><a href="#services">Services</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#tutorials">Learning centre</a></li>
+                <li><a href="#blog">Blog</a></li>
                 <li><a href="#testimonials">Testimonials</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
@@ -1146,6 +1204,66 @@ footer {
     </div>
 </section>
 
+    <!-- Blog Section -->
+<section class="section" id="blog">
+    <div class="container">
+        <h2 class="section-title">My Thoughts & Feelings</h2>
+        <p class="section-subtitle">Exploring my journey, challenges, and reflections in the tech world</p>
+        
+        <div class="blog-grid">
+            <div class="blog-post">
+                <div class="blog-image">
+                    <img src="https://via.placeholder.com/600x400" alt="Blog post image">
+                </div>
+                <div class="blog-content">
+                    <h3>A Day in the Life of a Developer</h3>
+                    <div class="blog-meta">
+                        <span><i class="fas fa-calendar-alt"></i> June 15, 2025</span>
+                        <span><i class="fas fa-clock"></i> 5 min read</span>
+                    </div>
+                    <p>Today was one of those days where I spent hours debugging a seemingly simple issue. The frustration mounted as solutions I thought were perfect just didn't work...</p>
+                    <a href="#" class="btn btn-outline">Read More</a>
+                </div>
+            </div>
+            
+            <div class="blog-post">
+                <div class="blog-image">
+                    <img src="https://via.placeholder.com/600x400" alt="Blog post image">
+                </div>
+                <div class="blog-content">
+                    <h3>Overcoming Imposter Syndrome</h3>
+                    <div class="blog-meta">
+                        <span><i class="fas fa-calendar-alt"></i> May 22, 2025</span>
+                        <span><i class="fas fa-clock"></i> 8 min read</span>
+                    </div>
+                    <p>There are days when I wake up feeling like a fraud in this field. How did I get here? Do I really belong? These thoughts have been my constant companions...</p>
+                    <a href="#" class="btn btn-outline">Read More</a>
+                </div>
+            </div>
+            
+            <div class="blog-post">
+                <div class="blog-image">
+                    <img src="https://via.placeholder.com/600x400" alt="Blog post image">
+                </div>
+                <div class="blog-content">
+                    <h3>Building Something That Matters</h3>
+                    <div class="blog-meta">
+                        <span><i class="fas fa-calendar-alt"></i> April 10, 2025</span>
+                        <span><i class="fas fa-clock"></i> 6 min read</span>
+                    </div>
+                    <p>When I see the impact of the projects I've worked on, especially those that help students like the IAUE systems, it reminds me why I fell in love with coding in the first place...</p>
+                    <a href="#" class="btn btn-outline">Read More</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tutorials-cta">
+            <a href="#" class="btn" target="_blank">
+                <i class="fas fa-plus"></i> Write a New Post
+            </a>
+        </div>
+    </div>
+</section>
 
     <!-- Testimonials Section -->
     <section class="section testimonials" id="testimonials">
