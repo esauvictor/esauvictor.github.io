@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Individual blog post from Esau Victor's blog">
+    <meta name="keywords" content="web development, data analytics, cyber security, programming">
+    <meta name="author" content="Esau Victor">
+    <link rel="icon" href="https://esauvictor.blogspot.com/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Blog Post - Esau Victor</title>
+    <style>
+        /* Import existing variables and base styles */
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #4a6fa5;
+            --accent-color: #3b82f6;
+            --text-color: #333;
+            --light-text: #6b7280;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --footer-bg: #1e3a8a;
+            --footer-text: #e0e7ff;
+            --transition: all 0.3s ease;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4 {
+            line-height: 1.2;
+            color: var(--primary-color);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .section {
+            padding: 6rem 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        /* Blog post page styles */
+        .single-blog-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .single-blog {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .single-blog-header {
+            padding: 2rem;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .single-blog-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .single-blog-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .single-blog-meta img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .post-content {
+            padding: 3rem;
+            line-height: 1.8;
+        }
+
+        .post-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .post-content h2 {
+            margin: 2rem 0 1rem;
+        }
+
+        .post-content img {
+            margin: 2rem 0;
+            border-radius: var(--border-radius);
+        }
+
+        .post-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4rem;
+            padding: 0 3rem 3rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            max-width: 50%;
+        }
+
+        .nav-prev i {
+            order: 2;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 2rem 3rem;
+        }
+
+        .tag {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .back-to-blog {
+            display: inline-block;
+            margin: 2rem 3rem 0;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .single-blog-header {
+                padding: 1.5rem;
+            }
+            
+            .single-blog-header h1 {
+                font-size: 2rem;
+            }
+            
+            .post-content {
+                padding: 2rem;
+            }
+        }
+
+        /* Navigation styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 1.25rem 2rem;
+            box-shadow: var(--shadow-sm);
+            z-index: 1000;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar.scrolled {
+            padding: 0.75rem 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary-color);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 4rem 0 2rem;
+            position: relative;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-column h3 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--accent-color);
+        }
+
+        .footer-column p {
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+            flex-grow: 1;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--footer-text);
+            transition: var(--transition);
+            opacity: 0.9;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            opacity: 1;
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: auto;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: white;
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--footer-text);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive design for navigation */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background-color: white;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2rem;
+                transition: var(--transition);
+                box-shadow: var(--shadow-md);
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container container">
+            <a href="index.html" class="logo">Esau Victor</a>
+            <button class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#services">Services</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                
+                <li><a href="blog.html" class="active">Blog</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Blog Post Section -->
+    <main class="single-blog-container">
+        <article class="single-blog">
+            <header class="single-blog-header">
+                <h1 id="post-title">Blog Title</h1>
+                <div class="single-blog-meta">
+                    <div class="post-author">
+                        <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor">
+                        <div>
+                            <strong>Esau Victor</strong>
+                            <span>Web Developer & Data Analyst</span>
+                        </div>
+                    </div>
+                    <div class="post-date" id="post-date">June 15, 2025</div>
+                </div>
+            </header>
+
+            <div class="post-content" id="post-content">
+                <!-- Content will be loaded here dynamically -->
+            </div>
+
+            <div class="tags" id="post-tags">
+                <!-- Tags will be loaded here dynamically -->
+            </div>
+
+            <div class="post-navigation">
+                <a href="#" class="nav-link nav-prev">
+                    <i class="fas fa-chevron-left"></i>
+                    <span>Previous Post</span>
+                </a>
+                <a href="#" class="nav-link nav-next">
+                    <span>Next Post</span>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+
+            <a href="blog.html" class="btn back-to-blog">Back to Blog</a>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Esau Victor</h3>
+                    <p>Professional Web Developer, Data Analytics Engineer, and Cyber Security Expert dedicated to delivering exceptional results.</p>
+                    <div class="social-links">
+                        <a href="https://linkedin.com/in/esau-victor" target="_blank" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://github.com/esauvictor" target="_blank" aria-label="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://twitter.com/esau_vee" target="_blank" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="index.html#services">Services</a></li>
+                        <li><a href="index.html#projects">Projects</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Subscribe</h3>
+                    <p>Get notified when I publish new posts</p>
+                    <form action="https://formsubmit.co/esauvictor@icloud.com" method="POST">
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Your email" required>
+                        </div>
+                        <button type="submit" class="btn">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; <span id="year"></span> Esau Victor. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Blog posts data
+        const blogPosts = {
+            1: {
+                title: "A Day in the Life of a Developer",
+                date: "June 15, 2025",
+                content: `
+                    <p>Ever wondered what a typical day looks like for a software developer? Spoiler: It's more than just typing lines of code. From morning stand-ups to late-night debugging, the day is a mix of logic, creativity, problem-solving, and—yes—a few cups of coffee.</p>
+                    
+                    <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Developer workplace">
+                    
+                    <p>My day usually starts with a cup of coffee and checking my emails. Then I join the morning stand-up meeting with my team where we discuss what we accomplished yesterday, what we plan to do today, and any blockers we might have.</p>
+                    
+                    <p>After the meeting, I dive into my development tasks. This could involve writing new features, fixing bugs, or refactoring code. I try to work in focused sessions, often using the Pomodoro technique (25 minutes of work followed by a 5-minute break) to maintain productivity.</p>
+                    
+                    <p>Lunch break is a welcome change from staring at the screen. I often use this time to stretch, take a short walk, or chat with colleagues about non-work-related topics.</p>
+                    
+                    <p>In the afternoon, the energy levels might dip a bit, so I usually tackle less intensive tasks like code reviews, documentation, or planning for upcoming features. This is also a good time for meetings or catch-ups with other teams.</p>
+                    
+                    <p>Before wrapping up for the day, I make sure to note down what I accomplished and what I need to work on tomorrow. This helps me hit the ground running the next morning.</p>
+                    
+                    <p>Occasionally, I'll stay late to fix a critical bug or finish an important feature. But I try to maintain a healthy work-life balance and avoid making overtime a regular habit.</p>
+                    
+                    <p>Evening is for relaxation - reading, exercising, or spending time with family. But I'll admit, my mind sometimes wanders back to an interesting problem I encountered during the day. That's the developer's life for you - constantly thinking and learning!</p>
+                `,
+                tags: ["Web Development", "Career", "Productivity"]
+            },
+            2: {
+                title: "Overcoming Imposter Syndrome",
+                date: "May 22, 2025",
+                content: `
+                    <p>Even after years in tech, many developers still ask themselves: "Am I good enough?" That persistent self-doubt is called Imposter Syndrome, and it's more common than you'd think—even among the most skilled professionals.</p>
+                    
+                    <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Person thinking">
+                    
+                    <p>I first experienced Imposter Syndrome early in my career. Despite positive feedback from colleagues and successful project deliveries, I felt like I was faking my way through and waiting to be "exposed" as a fraud. I thought I just got lucky or that my successes were flukes.</p>
+                    
+                    <p>The feelings resurfaced when I transitioned to more senior roles or learned new technologies. Each new challenge brought with it the fear that I wasn't qualified enough to handle it.</p>
+                    
+                    <p>Here are some strategies that helped me cope with and overcome these feelings:</p>
+                    
+                    <h2>1. Acknowledge Your Feelings</h2>
+                    <p>The first step is recognizing that Imposter Syndrome is real and common. Accepting that these feelings are normal helps reduce their power over you.</p>
+                    
+                    <h2>2. Track Your Wins</h2>
+                    <p>Keep a record of your achievements, positive feedback, and successful projects. When self-doubt creeps in, review this list to remind yourself of your capabilities.</p>
+                    
+                    <h2>3. Reframe Your Thoughts</h2>
+                    <p>When negative thoughts arise, challenge them. Ask yourself: "What evidence do I have that supports this belief? What evidence contradicts it?"</p>
+                    
+                    <h2>4. Focus on Growth, Not Perfection</h2>
+                    <p>Embrace the mindset that you're always learning and improving. Set small, achievable goals to build confidence gradually.</p>
+                    
+                    <h2>5. Connect with Others</h2>
+                    <p>Talk to colleagues or join professional communities. You'll likely find that many people share similar feelings. Mentorship can also be powerful—helping others often reinforces your own knowledge.</p>
+                    
+                    <p>Remember that Imposter Syndrome doesn't disappear completely, but it becomes less paralyzing over time. When I feel it now, I recognize it as a signal to pause, reflect on my progress, and then continue moving forward.</p>
+                `,
+                tags: ["Career Development", "Mental Health", "Productivity"]
+            },
+            3: {
+                title: "Building Something That Matters",
+                date: "April 10, 2025",
+                content: `
+                    <p>There's a unique thrill in deploying an app or script that actually makes a difference—to a team, a user, or a community. Beyond code and deadlines, the real reward in tech is building something that solves a real problem.</p>
+                    
+                    <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="People working together">
+                    
+                    <p>Early in my career, I focused mostly on technical challenges—clean code, optimized algorithms, perfect architecture. While these are important, I realized that great technical solutions don't automatically translate to meaningful impact.</p>
+                    
+                    <p>The shift happened when I worked on a project that directly improved our team's workflow. By automating repetitive tasks, we saved hours of work each week and reduced human error. The positive feedback from my team was incredibly rewarding.</p>
+                    
+                    <h2>Understanding Real Needs</h2>
+                    <p>The key to building something that matters is understanding the actual problems people face. This requires:</p>
+                    <ul>
+                        <li>Active listening to stakeholders</li>
+                        <li>Observing workflows and pain points</li>
+                        <li>Asking the right questions</li>
+                        <li>Validating assumptions before building</li>
+                    </ul>
+                    
+                    <h2>Measuring Impact</h2>
+                    <p>After deployment, it's crucial to measure whether your solution is making a difference. This could involve:</p>
+                    <ul>
+                        <li>Tracking usage metrics</li>
+                        <li>Gathering user feedback</li>
+                        <li>Measuring business outcomes</li>
+                        <li>Iterating based on results</li>
+                    </ul>
+                    
+                    <h2>The Bigger Picture</h2>
+                    <p>While individual contributions matter, the greatest impact comes from collaboration. Working with cross-functional teams brings diverse perspectives that can lead to innovative solutions.</p>
+                    
+                    <p>Remember that not every project will be a success. Some solutions might not resonate with users, or business priorities might shift. Treat these as learning opportunities rather than failures.</p>
+                    
+                    <p>The most satisfying moments in my career have come from creating tools that people actually use and find valuable. Whether it's a small internal script that saves time or a public application that solves a real problem, building something that matters is what makes tech work fulfilling.</p>
+                `,
+                tags: ["Software Development", "Problem Solving", "Impact"]
+            }
+        };
+
+        // Get URL parameter
+        function getURLParameter(name) {
+            return new URLSearchParams(window.location.search).get(name);
+        }
+
+        // Load blog post content
+        function loadBlogPost() {
+            const postId = getURLParameter('id');
+            const post = blogPosts[postId];
+            
+            if (post) {
+                document.getElementById('post-title').textContent = post.title;
+                document.getElementById('post-date').textContent = post.date;
+                document.getElementById('post-content').innerHTML = post.content;
+                
+                // Load tags
+                const tagsContainer = document.getElementById('post-tags');
+                tagsContainer.innerHTML = '';
+                post.tags.forEach(tag => {
+                    const tagElement = document.createElement('span');
+                    tagElement.className = 'tag';
+                    tagElement.textContent = tag;
+                    tagsContainer.appendChild(tagElement);
+                });
+                
+                // Setup navigation
+                const prevId = parseInt(postId) - 1;
+                const nextId = parseInt(postId) + 1;
+                const prevLink = document.querySelector('.nav-prev');
+                const nextLink = document.querySelector('.nav-next');
+                
+                if (prevId > 0) {
+                    prevLink.href = `post.html?id=${prevId}`;
+                    prevLink.querySelector('span').textContent = blogPosts[prevId].title;
+                } else {
+                    prevLink.style.visibility = 'hidden';
+                }
+                
+                if (nextId <= Object.keys(blogPosts).length) {
+                    nextLink.href = `post.html?id=${nextId}`;
+                    nextLink.querySelector('span').textContent = blogPosts[nextId].title;
+                } else {
+                    nextLink.style.visibility = 'hidden';
+                }
+                
+                // Update document title
+                document.title = `${post.title} - Esau Victor`;
+            } else {
+                // Handle case where post ID is invalid
+                document.getElementById('post-content').innerHTML = '<p>Blog post not found.</p>';
+            }
+        }
+
+        // Mobile navigation toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+        
+        // Update copyright year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Load the blog post when page loads
+        window.addEventListener('load', loadBlogPost);
+    </script>
+</body>
+</html>
