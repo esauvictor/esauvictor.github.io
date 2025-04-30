@@ -353,6 +353,35 @@
             opacity: 1;
             padding-left: 5px;
         }
+        .subscribe-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    background-color: rgba(255,255,255,0.1);
+    color: white;
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background-color: rgba(255,255,255,0.2);
+}
+
+.form-control::placeholder {
+    color: rgba(255,255,255,0.7);
+}
 
         .social-links {
             display: flex;
@@ -449,10 +478,10 @@
                         <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor">
                         <div>
                             <strong>Esau Victor</strong>
-                            <span>Web Developer & Data Analyst</span>
+                            <span>Web Developer</span>
                         </div>
                     </div>
-                    <div class="post-date" id="post-date">June 15, 2025</div>
+                    <div class="post-date" id="post-date">April 10, 2024</div>
                 </div>
             </header>
 
@@ -481,49 +510,55 @@
 
     <!-- Footer -->
     <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>Esau Victor</h3>
-                    <p>Professional Web Developer, Data Analytics Engineer, and Cyber Security Expert dedicated to delivering exceptional results.</p>
-                    <div class="social-links">
-                        <a href="https://linkedin.com/in/esau-victor" target="_blank" aria-label="LinkedIn">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="https://github.com/esauvictor" target="_blank" aria-label="GitHub">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="https://twitter.com/esau_vee" target="_blank" aria-label="Twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="index.html#home">Home</a></li>
-                        <li><a href="index.html#about">About</a></li>
-                        <li><a href="index.html#services">Services</a></li>
-                        <li><a href="index.html#projects">Projects</a></li>
-                        <li><a href="blog.html">Blog</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Subscribe</h3>
-                    <p>Get notified when I publish new posts</p>
-                    <form action="https://formsubmit.co/esauvictor@icloud.com" method="POST">
-                        <div class="form-group">
-                            <input type="email" class="form-control" placeholder="Your email" required>
-                        </div>
-                        <button type="submit" class="btn">Subscribe</button>
-                    </form>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Esau Victor</h3>
+                <p>Professional Web Developer, Data Analytics Engineer, and Cyber Security Expert dedicated to delivering exceptional results.</p>
+                <div class="social-links">
+                    <a href="https://linkedin.com/in/esau-victor" target="_blank" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://github.com/esauvictor" target="_blank" aria-label="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://x.com/esau_vee" target="_blank" aria-label="x">
+                        <i class="fab fa-x"></i>
+                    </a>
                 </div>
             </div>
-            <div class="copyright">
-                <p>&copy; <span id="year"></span> Esau Victor. All rights reserved.</p>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#services">Services</a></li>
+                    <li><a href="index.html#projects">Projects</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Subscribe</h3>
+                <p>Get notified when I publish new posts</p>
+                <form action="https://formsubmit.co/esauvictor@icloud.com" method="POST" class="subscribe-form">
+                    <input type="hidden" name="_subject" value="New subscription from your website">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_next" value="https://esauvictor.github.io/thank-you.html">
+                    <input type="text" name="_honey" style="display:none">
+                    <input type="hidden" name="_autoresponse" value="Thank you for subscribing to my blog! You'll be notified when new posts are published.">
+                    
+                    <div class="form-group">
+                        <input type="email" name="email" class="form-control" placeholder="Your email address" required>
+                    </div>
+                    <button type="submit" class="btn">Subscribe</button>
+                </form>
             </div>
         </div>
-    </footer>
+        <div class="copyright">
+            <p>&copy; <span id="year"></span> Esau Victor. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
 
     <!-- JavaScript -->
     <script>
@@ -531,7 +566,7 @@
         const blogPosts = {
             1: {
                 title: "A Day in the Life of a Developer",
-                date: "June 15, 2025",
+                date: "April 10, 2024",
                 content: `
                     <p>Ever wondered what a typical day looks like for a software developer? Spoiler: It's more than just typing lines of code. From morning stand-ups to late-night debugging, the day is a mix of logic, creativity, problem-solving, and—yes—a few cups of coffee.</p>
                     
@@ -555,7 +590,7 @@
             },
             2: {
                 title: "Overcoming Imposter Syndrome",
-                date: "May 22, 2025",
+                date: "May 3, 2025",
                 content: `
                     <p>Even after years in tech, many developers still ask themselves: "Am I good enough?" That persistent self-doubt is called Imposter Syndrome, and it's more common than you'd think—even among the most skilled professionals.</p>
                     
@@ -588,7 +623,7 @@
             },
             3: {
                 title: "Building Something That Matters",
-                date: "April 10, 2025",
+                date: "June 12 , 2025",
                 content: `
                     <p>There's a unique thrill in deploying an app or script that actually makes a difference—to a team, a user, or a community. Beyond code and deadlines, the real reward in tech is building something that solves a real problem.</p>
                     
