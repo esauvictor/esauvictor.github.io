@@ -1350,40 +1350,36 @@ footer {
                         <a href="https://github.com/esauvictor" target="_blank" aria-label="GitHub">
                             <i class="fab fa-github"></i>
                         </a>
-                        <a href="https://twitter.com/esau_vee" target="_blank" aria-label="Twitter">
-                            <i class="fab fa-twitter"></i>
+                        <a href="https://x.com/esau_vee" target="_blank" aria-label="x">
+                            <i class="fab fa-x"></i>
                         </a>
                     </div>
                 </div>
-                <form action="https://formsubmit.co/esauvictor@icloud.com" method="POST">
-                    <!-- Hidden Fields -->
-                    <input type="hidden" name="_subject" value="Message From Esau - Portfolio | Web Developer & Security Expert">
-                    <input type="hidden" name="_next" value="https://esauvictor.github.io/thank-you.html"> <!-- Redirect after submit -->
-                    
-                    <!-- Form Fields -->
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="name" placeholder="Your Name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" class="form-control" name="email" placeholder="Your Email" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="subject" placeholder="Subject">
-                    </div>
-                    <div class="form-group">
-                        <textarea class="form-control" name="message" placeholder="Your Message" required></textarea>
-                    </div>
-                    
-                    <!-- reCAPTCHA Widget -->
-                    <div class="g-recaptcha" data-sitekey="6LeYqxUrAAAAAAdPOcfsOWClrf3vHTOhJH-UeA8F"></div>
-                    <br>
-                    <button type="submit" class="btn">Send Message</button>
-                </form>
-                
-                <!-- Load reCAPTCHA API -->
-                <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-            </div>
+                <form action="https://formsubmit.co/esauvictor@icloud.com" method="POST" class="contact-form">
+        <!-- Hidden Fields -->
+        <input type="hidden" name="_subject" value="New Message From Portfolio Website">
+        <input type="hidden" name="_next" value="https://esauvictor.github.io/thank-you.html">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="_honey" style="display:none"> <!-- Honeypot for spam -->
+        <input type="hidden" name="_autoresponse" value="Thank you for your message! I'll get back to you soon.">
+        
+        <!-- Form Fields -->
+        <div class="form-group">
+            <input type="text" class="form-control" name="name" placeholder="Your Name" required>
         </div>
+        <div class="form-group">
+            <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="subject" placeholder="Subject">
+        </div>
+        <div class="form-group">
+            <textarea class="form-control" name="message" rows="4" placeholder="Your Message" required></textarea>
+        </div>
+
+        <button type="submit" class="btn">Send Message</button>
+    </form>
+</div>
     </section>
 
     <!-- Footer -->
