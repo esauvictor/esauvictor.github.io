@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | Esau Victor</title>
+    <link rel="icon" href="https://esauvictor.blogspot.com/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reuse your existing styles with some additions */
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #4a6fa5;
+            --accent-color: #3b82f6;
+            --text-color: #333;
+            --light-text: #6b7280;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --footer-bg: #1e3a8a;
+            --footer-text: #e0e7ff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Navigation styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 1.25rem 2rem;
+            box-shadow: var(--shadow-sm);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: all 0.3s ease;
+            text-decoration: none; /* Remove underline */
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary-color);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        /* Privacy-specific styles */
+        .privacy-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 6rem 0 4rem;
+            text-align: center;
+            margin-top: 70px; /* Account for fixed navbar */
+        }
+
+        .privacy-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .privacy-content {
+            padding: 4rem 0;
+            background-color: var(--card-bg);
+        }
+
+        .privacy-section {
+            margin-bottom: 3rem;
+        }
+
+        .privacy-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .privacy-section h3 {
+            color: var(--secondary-color);
+            margin: 1.5rem 0 1rem;
+            font-size: 1.25rem;
+        }
+
+        .privacy-section p, .privacy-section ul {
+            margin-bottom: 1.25rem;
+            color: var(--light-text);
+        }
+
+        .privacy-section ul {
+            padding-left: 2rem;
+        }
+
+        .privacy-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight {
+            background-color: #f0f4f8;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .last-updated {
+            text-align: center;
+            font-style: italic;
+            color: var(--light-text);
+            margin-top: 3rem;
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--footer-text);
+            transition: opacity 0.3s;
+            text-decoration: none; /* Remove underline */
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+            color: white;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background-color: white;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2rem;
+                transition: all 0.3s ease;
+                box-shadow: var(--shadow-md);
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+            
+            .privacy-header {
+                padding: 5rem 0 3rem;
+                margin-top: 60px;
+            }
+            
+            .privacy-header h1 {
+                font-size: 2rem;
+            }
+            
+            .privacy-content {
+                padding: 2rem 0;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Added style to remove underlines from all links */
+        a {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline; /* Optional: add underline on hover for better UX */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container container">
+            <a href="index.html" class="logo">Esau Victor</a>
+            <button class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#services">Services</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Privacy Header -->
+    <header class="privacy-header">
+        <div class="container">
+            <h1>Privacy Policy</h1>
+            <p>How we collect, use, and protect your information</p>
+        </div>
+    </header>
+
+    <!-- Privacy Content -->
+    <main class="privacy-content">
+        <div class="container">
+            <!-- Your privacy policy content remains the same -->
+            <div class="privacy-section">
+                <h2>Introduction</h2>
+                <p>This Privacy Policy explains how Esau Victor ("I", "me", or "my") collects, uses, and discloses information about you when you access or use my website, esauvictor.github.io, and other online products and services (collectively, the "Services").</p>
+                <p>By using the Services, you agree to the collection, use, and disclosure of your information as described in this Privacy Policy. If you do not agree, please do not use the Services.</p>
+            </div>
+
+            <!-- Rest of your privacy policy content remains unchanged -->
+            <div class="privacy-section">
+                <h2>Information I Collect</h2>
+                
+                <h3>Information You Provide</h3>
+                <p>I collect information you provide directly to me, including:</p>
+                <ul>
+                    <li><strong>Contact Information:</strong> Such as your name, email address, and phone number when you submit inquiries through my contact form.</li>
+                    <li><strong>Communication:</strong> Records of your communications with me, including messages sent through the Services.</li>
+                </ul>
+                
+                <h3>Automatically Collected Information</h3>
+                <p>When you access the Services, I automatically collect certain information, including:</p>
+                <ul>
+                    <li><strong>Log Information:</strong> Such as your IP address, browser type, operating system, and access times.</li>
+                    <li><strong>Usage Data:</strong> Information about your interactions with the Services, including pages visited and links clicked.</li>
+                    <li><strong>Device Information:</strong> Such as device type and browser characteristics.</li>
+                </ul>
+                
+                <div class="highlight">
+                    <p><strong>Note:</strong> I use Google Analytics to help analyze how users use the site. Google Analytics uses cookies to collect standard internet log information and visitor behavior information in an anonymous form.</p>
+                </div>
+            </div>
+
+            <div class="privacy-section">
+                <h2>How I Use Your Information</h2>
+                <p>I use the information I collect to:</p>
+                <ul>
+                    <li>Provide, maintain, and improve the Services</li>
+                    <li>Respond to your comments, questions, and requests</li>
+                    <li>Monitor and analyze trends, usage, and activities in connection with the Services</li>
+                    <li>Detect, investigate, and prevent fraudulent transactions and other illegal activities</li>
+                    <li>Comply with legal obligations and protect my rights</li>
+                </ul>
+            </div>
+
+            <div class="privacy-section">
+                <h2>Information Sharing</h2>
+                <p>I may share information about you as follows:</p>
+                <ul>
+                    <li>With service providers who need access to such information to carry out work on my behalf</li>
+                    <li>If I believe disclosure is necessary to comply with any applicable law or legal process</li>
+                    <li>To protect the rights, property, and safety of myself or others</li>
+                    <li>In connection with any merger, sale of assets, or acquisition of all or a portion of my business</li>
+                </ul>
+                <p>I do not sell or rent your personal information to third parties.</p>
+            </div>
+
+            <div class="privacy-section">
+                <h2>Cookies and Tracking Technologies</h2>
+                <p>I use cookies and similar tracking technologies to track activity on my website and hold certain information. Cookies are files with small amounts of data which may include an anonymous unique identifier.</p>
+                <p>You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of my website.</p>
+            </div>
+
+            <div class="privacy-section">
+                <h2>Data Security</h2>
+                <p>I implement reasonable security measures designed to protect your information from unauthorized access, alteration, or destruction. However, no internet transmission is ever completely secure, and I cannot guarantee the security of your information.</p>
+            </div>
+
+            <div class="privacy-section">
+                <h2>Your Choices</h2>
+                <h3>Access and Updates</h3>
+                <p>You may contact me to request access to, correct, or delete any personal information you have provided to me.</p>
+                
+                <h3>Opting Out</h3>
+                <p>You can opt out of receiving promotional emails from me by following the instructions in those emails. Even if you opt out, I may still send you non-promotional communications, such as those about ongoing business relations.</p>
+            </div>
+
+            <div class="privacy-section">
+                <h2>Children's Privacy</h2>
+                <p>My Services are not directed to children under 13, and I do not knowingly collect personal information from children under 13. If I learn I have collected personal information from a child under 13, I will delete that information.</p>
+            </div>
+
+            <div class="privacy-section">
+                <h2>Changes to This Policy</h2>
+                <p>I may update this Privacy Policy from time to time. If I make material changes, I will notify you by revising the date at the bottom of the policy and, in some cases, I may provide additional notice.</p>
+            </div>
+
+            <div class="privacy-section">
+                <h2>Contact Me</h2>
+                <p>If you have any questions about this Privacy Policy, please contact me at:</p>
+                <p>Email: <a href="mailto:esauvictor@icloud.com">esauvictor@icloud.com</a></p>
+            </div>
+
+            <p class="last-updated">Last updated: April 30, 2025</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#about">About</a>
+                <a href="index.html#services">Services</a>
+                <a href="index.html#projects">Projects</a>
+                <a href="index.html#contact">Contact</a>
+                <a href="privacy.html">Privacy</a>
+            </div>
+            <p class="copyright">&copy; <span id="year"></span> Esau Victor. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.innerHTML = navLinks.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+        
+        // Update copyright year
+        document.getElementById('year').textContent = new Date().getFullYear();
+        
+        // Add scroll effect for navbar
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.padding = '0.75rem 2rem';
+                navbar.style.boxShadow = 'var(--shadow-md)';
+            } else {
+                navbar.style.padding = '1.25rem 2rem';
+                navbar.style.boxShadow = 'var(--shadow-sm)';
+            }
+        });
+    </script>
+</body>
+</html>
