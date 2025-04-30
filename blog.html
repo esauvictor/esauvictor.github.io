@@ -552,8 +552,8 @@
                         <a href="https://github.com/esauvictor" target="_blank" aria-label="GitHub">
                             <i class="fab fa-github"></i>
                         </a>
-                        <a href="https://twitter.com/esau_vee" target="_blank" aria-label="Twitter">
-                            <i class="fab fa-twitter"></i>
+                        <a href="https://x.com/esau_vee" target="_blank" aria-label="x">
+                            <i class="fab fa-x"></i>
                         </a>
                     </div>
                 </div>
@@ -567,17 +567,22 @@
                         <li><a href="blog.html">Blog</a></li>
                     </ul>
                 </div>
-                <div class="footer-column">
-                    <h3>Subscribe</h3>
-                    <p>Get notified when I publish new posts</p>
-                    <form action="https://formsubmit.co/esauvictor@icloud.com" method="POST">
-                        <div class="form-group">
-                            <input type="email" class="form-control" placeholder="Your email" required>
-                        </div>
-                        <button type="submit" class="btn">Subscribe</button>
-                    </form>
-                </div>
-            </div>
+               <div class="footer-column">
+    <h3>Subscribe</h3>
+    <p>Get notified when I publish new posts</p>
+    <form action="https://formsubmit.co/esauvictor@icloud.com" method="POST">
+        <!-- Add a hidden input to customize the subject -->
+        <input type="hidden" name="_subject" value="New subscription from your website">
+        <!-- Add this to prevent spam and get a copy -->
+        <input type="text" name="_honey" style="display:none">
+        <input type="hidden" name="_autoresponse" value="Thank you for subscribing! You'll be notified when new posts are published.">
+        
+        <div class="form-group">
+            <input type="email" name="email" class="form-control" placeholder="Your email" required>
+        </div>
+        <button type="submit" class="btn">Subscribe</button>
+    </form>
+</div>
             <div class="copyright">
                 <p>&copy; <span id="year"></span> Esau Victor. All rights reserved.</p>
             </div>
