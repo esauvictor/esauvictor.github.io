@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Thank you for subscribing to Esau Victor's updates">
+    <title>Subscription Confirmed | Esau Victor</title>
+    <link rel="icon" href="https://esauvictor.blogspot.com/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #4a6fa5;
+            --accent-color: #3b82f6;
+            --text-color: #333;
+            --light-text: #6b7280;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --footer-bg: #1e3a8a;
+            --footer-text: #e0e7ff;
+            --transition: all 0.3s ease;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 1.5rem;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Subscription Thank You Section */
+        .subscription-thank-you {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem 0;
+            flex: 1;
+            min-height: calc(100vh - 150px);
+        }
+
+        .subscription-content {
+            max-width: 600px;
+            width: 100%;
+            background-color: var(--card-bg);
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            margin: 1rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .subscription-icon {
+            font-size: 4.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .subscription-content h1 {
+            font-size: 2.25rem;
+            margin-bottom: 1.25rem;
+            color: var(--primary-color);
+        }
+
+        .subscription-content p {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--light-text);
+            line-height: 1.7;
+        }
+
+        .highlight {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 2rem 0;
+            text-align: center;
+            width: 100%;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: white;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .social-links a:hover {
+            background-color: white;
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            padding-top: 1rem;
+            color: var(--footer-text);
+            font-size: 0.9rem;
+            opacity: 0.8;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 1rem;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .subscription-content {
+                padding: 2.5rem 1.5rem;
+            }
+            
+            .subscription-content h1 {
+                font-size: 1.75rem;
+            }
+
+            .subscription-content p {
+                font-size: 1rem;
+            }
+
+            .subscription-icon {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .subscription-content {
+                padding: 2rem 1.25rem;
+            }
+            
+            .subscription-content h1 {
+                font-size: 1.5rem;
+            }
+
+            .subscription-icon {
+                font-size: 3rem;
+            }
+
+            .btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Subscription Thank You Content -->
+    <main class="subscription-thank-you">
+        <div class="container">
+            <div class="subscription-content">
+                <div class="subscription-icon">
+                    <i class="fas fa-envelope-open-text"></i>
+                </div>
+                <h1>You're Subscribed!</h1>
+                <p>Thank you for joining my mailing list. Your subscription to <span class="highlight">Esau Victor's updates</span> has been confirmed.</p>
+                <p>You'll receive my latest content, news, and exclusive offers directly to your inbox.</p>
+                <a href="https://esauvictor.github.io" class="btn">Back to Homepage</a>
+                
+                <p style="margin-top: 2rem; font-size: 0.9rem; color: var(--light-text);">
+                    <i class="fas fa-info-circle"></i> You can unsubscribe anytime by clicking the link in the email footer.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p class="copyright">&copy; <span id="year"></span> Esau Victor. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Update copyright year
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
