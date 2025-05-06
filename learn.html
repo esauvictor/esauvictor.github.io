@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Roadmap 2025 - Learning Tracker</title>
+    <style>
+        :root {
+            --primary: #2d3436;
+            --secondary: #0984e3;
+            --accent: #6c5ce7;
+            --light: #f8f9fa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: var(--light);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .roadmap-section {
+            border-right: 2px solid #eee;
+            padding-right: 2rem;
+        }
+
+        .todo-section {
+            background: #f5f6fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: var(--secondary);
+            margin: 1.5rem 0 1rem;
+        }
+
+        .stage {
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .task-input {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        input, button {
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .nav-tab {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            border-radius: 8px;
+            background: #eee;
+        }
+
+        .nav-tab.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .roadmap-section {
+                border-right: none;
+                padding-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Go Roadmap 2025</h1>
+            <p>From Beginner to Pro Developer</p>
+        </div>
+
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showTab('roadmap')">Roadmap</div>
+            <div class="nav-tab" onclick="showTab('todo')">Progress Tracker</div>
+        </div>
+
+        <div id="roadmap" class="tab-content active">
+            <div class="main-content">
+                <div class="roadmap-section">
+                    <div class="stage">
+                        <h2>Beginner Stage (0-6 Months)</h2>
+                        <ul>
+                            <li>Core syntax and basic constructs</li>
+                            <li>Control structures and functions</li>
+                            <li>Simple projects: CLI tools</li>
+                        </ul>
+                    </div>
+
+                    <div class="stage">
+                        <h2>Intermediate Stage (6-12 Months)</h2>
+                        <ul>
+                            <li>Concurrency with Goroutines</li>
+                            <li>Web development and REST APIs</li>
+                            <li>Database integration</li>
+                        </ul>
+                    </div>
+
+                    <div class="stage">
+                        <h2>Advanced Stage (12-18 Months)</h2>
+                        <ul>
+                            <li>Performance optimization</li>
+                            <li>Distributed systems</li>
+                            <li>Cloud-native technologies</li>
+                        </ul>
+                    </div>
+
+                    <div class="stage">
+                        <h2>Pro Stage (18+ Months)</h2>
+                        <ul>
+                            <li>Go internals and compiler</li>
+                            <li>Open-source contributions</li>
+                            <li>Emerging technologies</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="todo-section">
+                    <h2>Quick Add Task</h2>
+                    <div class="task-input">
+                        <input type="text" id="taskInput" placeholder="New task...">
+                        <button onclick="addTask()">Add</button>
+                    </div>
+                    <ul class="task-list" id="taskList"></ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="todo" class="tab-content">
+            <!-- Full Todo App would go here -->
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Todo App functionality
+        let tasks = JSON.parse(localStorage.getItem('goTasks')) || [];
+
+        function saveTasks() {
+            localStorage.setItem('goTasks', JSON.stringify(tasks));
+        }
+
+        function renderTasks() {
+            const list = document.getElementById('taskList');
+            list.innerHTML = tasks.map((task, index) => `
+                <li class="task-item">
+                    <input type="checkbox" ${task.completed ? 'checked' : ''} 
+                           onchange="toggleComplete(${index})">
+                    <span>${task.text}</span>
+                    <button onclick="deleteTask(${index})">🗑️</button>
+                </li>
+            `).join('');
+        }
+
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            const text = input.value.trim();
+            
+            if (text) {
+                tasks.push({ text, completed: false });
+                input.value = '';
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        function toggleComplete(index) {
+            tasks[index].completed = !tasks[index].completed;
+            saveTasks();
+            renderTasks();
+        }
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            saveTasks();
+            renderTasks();
+        }
+
+        // Initial render
+        renderTasks();
+
+        // Enter key support
+        document.getElementById('taskInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') addTask();
+        });
+    </script>
+</body>
+</html>
