@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Roadmap 2025 - Todo App</title>
+    <style>
+        :root {
+            --primary: #2d3436;
+            --secondary: #0984e3;
+            --accent: #6c5ce7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+        }
+
+        .roadmap-stages {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stage {
+            background: #fff;
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 2px solid #e0e0e0;
+        }
+
+        .stage h2 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .task-input {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        input, select, button {
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        input {
+            flex: 1;
+        }
+
+        select {
+            width: 150px;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .task-item.completed {
+            background: #e9ecef;
+            opacity: 0.7;
+        }
+
+        .task-item.completed span {
+            text-decoration: line-through;
+        }
+
+        .delete-btn {
+            margin-left: auto;
+            background: #ff7675;
+            padding: 0.5rem 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .task-input {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Go Roadmap 2025 Tracker</h1>
+        
+        <div class="task-input">
+            <input type="text" id="taskInput" placeholder="Add new task...">
+            <select id="stageSelect">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+                <option value="Pro">Pro</option>
+            </select>
+            <button onclick="addTask()">Add Task</button>
+        </div>
+
+        <div class="roadmap-stages">
+            <div class="stage" id="beginner">
+                <h2>Beginner Stage (0-6 Months)</h2>
+                <ul class="task-list" id="beginnerTasks"></ul>
+            </div>
+            
+            <div class="stage" id="intermediate">
+                <h2>Intermediate Stage (6-12 Months)</h2>
+                <ul class="task-list" id="intermediateTasks"></ul>
+            </div>
+            
+            <div class="stage" id="advanced">
+                <h2>Advanced Stage (12-18 Months)</h2>
+                <ul class="task-list" id="advancedTasks"></ul>
+            </div>
+            
+            <div class="stage" id="pro">
+                <h2>Pro Stage (18+ Months)</h2>
+                <ul class="task-list" id="proTasks"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('goTasks')) || [
+            // Pre-populated with roadmap milestones
+            { id: Date.now(), text: 'Learn Variables and Constants', stage: 'Beginner', completed: false },
+            { id: Date.now()+1, text: 'Practice Control Structures', stage: 'Beginner', completed: false },
+            { id: Date.now()+2, text: 'Build CLI Calculator', stage: 'Beginner', completed: false },
+            { id: Date.now()+3, text: 'Master Goroutines', stage: 'Intermediate', completed: false },
+            { id: Date.now()+4, text: 'Create REST API with Gin', stage: 'Intermediate', completed: false },
+            { id: Date.now()+5, text: 'Learn Kubernetes Basics', stage: 'Advanced', completed: false },
+            { id: Date.now()+6, text: 'Implement gRPC Service', stage: 'Advanced', completed: false },
+            { id: Date.now()+7, text: 'Contribute to Open Source Go Project', stage: 'Pro', completed: false },
+        ];
+
+        function saveTasks() {
+            localStorage.setItem('goTasks', JSON.stringify(tasks));
+        }
+
+        function renderTasks() {
+            const stages = ['Beginner', 'Intermediate', 'Advanced', 'Pro'];
+            stages.forEach(stage => {
+                const stageTasks = tasks.filter(task => task.stage === stage);
+                const list = document.getElementById(`${stage.toLowerCase()}Tasks`);
+                list.innerHTML = stageTasks.map(task => `
+                    <li class="task-item ${task.completed ? 'completed' : ''}" data-id="${task.id}">
+                        <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleComplete(${task.id})">
+                        <span>${task.text}</span>
+                        <button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+                    </li>
+                `).join('');
+            });
+        }
+
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            const select = document.getElementById('stageSelect');
+            
+            if (input.value.trim()) {
+                tasks.push({
+                    id: Date.now(),
+                    text: input.value.trim(),
+                    stage: select.value,
+                    completed: false
+                });
+                
+                input.value = '';
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        function toggleComplete(taskId) {
+            const task = tasks.find(task => task.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        function deleteTask(taskId) {
+            tasks = tasks.filter(task => task.id !== taskId);
+            saveTasks();
+            renderTasks();
+        }
+
+        // Initial render
+        renderTasks();
+
+        // Event listener for Enter key
+        document.getElementById('taskInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') addTask();
+        });
+    </script>
+</body>
+</html>
