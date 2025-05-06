@@ -40,7 +40,7 @@ portfolio/
 │   ├── js/             # JavaScript files
 │   ├── images/         # Project images
 │   └── fonts/          # Custom fonts
-├── Resume_Esau.pdf  # Resume
+├── Resume_Esau.pdf     # Resume
 └── README.md           # This file
 ```
 
