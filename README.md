@@ -13,9 +13,10 @@ Professional portfolio website showcasing my work as a Web Developer, Data Analy
   - Services
   - Projects
   - learning centre
+  - Blog
   - Testimonials
   - Contact Form
-- **Downloadable CV**: Direct PDF download
+- **Downloadable Résumé**: Direct PDF download
 
 ## 🛠 Technologies Used
 
@@ -39,7 +40,7 @@ portfolio/
 │   ├── js/             # JavaScript files
 │   ├── images/         # Project images
 │   └── fonts/          # Custom fonts
-├── Esau Victor Curriculum vitae.pdf  # Resume
+├── Resume_Esau.pdf  # Resume
 └── README.md           # This file
 ```
 
