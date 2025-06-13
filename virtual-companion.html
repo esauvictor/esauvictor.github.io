@@ -142,18 +142,22 @@
 
     <div id="contact-form" style="display: none; margin-top: 2rem;">
       <h3>Contact Me</h3>
-      <form action="https://formsubmit.co/esauvictor@icloud.com" method="POST">
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" required />
+     <form action="https://formsubmit.co/esauvictor@icloud.com" method="POST">
+  <!-- Redirect after submit -->
+  <input type="hidden" name="_next" value="https://esauvictor.github.io/thank-you.html">
+  
+  <label for="name">Name</label>
+  <input type="text" id="name" name="name" required />
 
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required />
+  <label for="email">Email</label>
+  <input type="email" id="email" name="email" required />
 
-        <label for="message">Your Message</label>
-        <textarea id="message" name="message" rows="5" required></textarea>
+  <label for="message">Your Message</label>
+  <textarea id="message" name="message" rows="5" required></textarea>
 
-        <button type="submit" class="contact-btn">Send Message</button>
-      </form>
+  <button type="submit" class="contact-btn">Send Message</button>
+</form>
+
     </div>
   </section>
 
