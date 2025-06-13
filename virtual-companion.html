@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Professional Cyber Companion Services by Esau Victor - Empathetic, respectful online companionship">
   <link rel="icon" href="https://esauvictor.blogspot.com/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <title>Professional Cyber Companion Services</title>
@@ -23,7 +24,7 @@
     }
 
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: var(--background);
       color: var(--text);
       line-height: 1.6;
@@ -37,17 +38,17 @@
     }
 
     header h1 {
-      font-size: 2.75rem;
+      font-size: clamp(2rem, 5vw, 2.75rem);
       margin-bottom: 0.5rem;
     }
 
     header p {
-      font-size: 1.25rem;
+      font-size: clamp(1rem, 3vw, 1.25rem);
       font-weight: 300;
     }
 
     section {
-      max-width: 900px;
+      max-width: min(900px, 95%);
       margin: 3rem auto;
       background: var(--surface);
       padding: 2rem;
@@ -67,9 +68,11 @@
     a {
       color: var(--primary-dark);
       text-decoration: none;
+      transition: color 0.2s ease;
     }
 
     a:hover {
+      color: var(--primary);
       text-decoration: underline;
     }
 
@@ -85,6 +88,12 @@
       padding: 1rem;
       border-left: 4px solid var(--primary);
       border-radius: 6px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .service-list li:hover {
+      transform: translateX(4px);
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .contact-btn {
@@ -96,6 +105,9 @@
       border-radius: 6px;
       cursor: pointer;
       transition: background 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .contact-btn:hover {
@@ -107,6 +119,12 @@
       margin-top: 2rem;
       padding-top: 1rem;
       border-top: 1px solid #e5e7eb;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .contact-form .form-group {
@@ -122,6 +140,14 @@
       border-radius: 6px;
       background-color: #fff;
       color: var(--text);
+      transition: border-color 0.3s ease;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
     }
 
     .contact-form input::placeholder,
@@ -137,6 +163,7 @@
     .contact-form .btn {
       display: inline-flex;
       align-items: center;
+      gap: 0.5rem;
       background-color: var(--primary);
       color: white;
       border: none;
@@ -151,15 +178,31 @@
       background-color: var(--primary-dark);
     }
 
-    .contact-form .btn i {
-      margin-right: 0.5rem;
-    }
-
     footer {
       text-align: center;
       padding: 2rem 1rem;
       font-size: 0.875rem;
       color: var(--muted);
+      background-color: var(--surface);
+      margin-top: 2rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      section {
+        padding: 1.5rem;
+      }
+      
+      header {
+        padding: 2rem 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .contact-btn {
+        width: 100%;
+        justify-content: center;
+      }
     }
   </style>
 </head>
@@ -173,7 +216,7 @@
     <h2>Meet Your Companion</h2>
     <div style="text-align: center; margin-bottom: 2rem;">
       <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Portrait of Esau Victor, Professional Cyber Companion"
-        style="width: 120px; height: 120px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);" />
+        style="width: 120px; height: 120px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);" loading="lazy" />
     </div>
     <p style="font-size: 1.05rem; line-height: 1.9;">
       <i class="fas fa-handshake" style="color: var(--primary); margin-right: 6px;"></i>
@@ -194,17 +237,17 @@
 
     <h3>My Services</h3>
     <ul class="service-list">
-      <li>One-on-one video or voice conversations</li>
-      <li>Daily or weekly check-ins for emotional support</li>
-      <li>Study buddy or co-working accountability partner</li>
-      <li>Gaming partner for casual or cooperative play</li>
-      <li>Tailored engagement based on your personal needs</li>
+      <li><i class="fas fa-video" style="margin-right: 8px;"></i> One-on-one video or voice conversations</li>
+      <li><i class="fas fa-calendar-check" style="margin-right: 8px;"></i> Daily or weekly check-ins for emotional support</li>
+      <li><i class="fas fa-graduation-cap" style="margin-right: 8px;"></i> Study buddy or co-working accountability partner</li>
+      <li><i class="fas fa-gamepad" style="margin-right: 8px;"></i> Gaming partner for casual or cooperative play</li>
+      <li><i class="fas fa-sliders-h" style="margin-right: 8px;"></i> Tailored engagement based on your personal needs</li>
     </ul>
 
     <h3>Pricing & Booking</h3>
     <p>Rates start from <strong>$15 per 30-minute session</strong>. Secure payment available worldwide via PayPal.</p>
-    <form action="https://www.paypal.com/paypalme/esauvictor" target="_blank">
-      <button class="contact-btn"><i class="fas fa-credit-card"></i> Pay via PayPal</button>
+    <form action="https://www.paypal.com/paypalme/esauvictor" target="_blank" rel="noopener noreferrer">
+      <button type="submit" class="contact-btn"><i class="fas fa-credit-card"></i> Pay via PayPal</button>
     </form>
     <p style="font-size: 0.9rem; color: var(--muted); margin-top: 1rem;">
       <strong>Refund Policy:</strong> No refunds once the session has started. If you need to reschedule, please contact me at least 6 hours in advance.
@@ -212,7 +255,7 @@
 
     <h3>Book a Session</h3>
     <p style="margin-bottom: 1rem;">Choose a time that works best for you:</p>
-    <a href="https://calendly.com/esauvictor/session" target="_blank" style="display: inline-block; background-color: #10b981; color: white; padding: 0.75rem 1.5rem; border-radius: 6px; font-size: 1rem; text-decoration: none;">
+    <a href="https://calendly.com/esauvictor/session" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #10b981; color: white; padding: 0.75rem 1.5rem; border-radius: 6px; font-size: 1rem; text-decoration: none; transition: background-color 0.3s ease;">
       <i class="fas fa-calendar-check" style="margin-right: 6px;"></i> Schedule on Calendly
     </a>
 
@@ -228,7 +271,9 @@
       <br><strong>— Maria S.</strong>
     </blockquote>
 
-    <button class="contact-btn" onclick="showContactForm()">Get in Touch</button>
+    <button class="contact-btn" onclick="showContactForm()" aria-expanded="false" aria-controls="contact-form">
+      <i class="fas fa-envelope"></i> Get in Touch
+    </button>
 
     <!-- Contact Form -->
     <div id="contact-form" class="contact-form">
@@ -241,17 +286,21 @@
         <input type="hidden" name="_autoresponse" value="Thank you for your message! I'll get back to you within 24 hours.">
 
         <div class="form-group">
-          <input type="text" name="name" placeholder="Enter your full name" required>
+          <label for="name" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Full Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter your full name" required>
         </div>
         <div class="form-group">
-          <input type="email" name="email" placeholder="you@example.com" 
+          <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Email</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" 
                  pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Please enter a valid email address" required>
         </div>
         <div class="form-group">
-          <input type="text" name="subject" placeholder="Message subject (optional)">
+          <label for="subject" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Subject</label>
+          <input type="text" id="subject" name="subject" placeholder="Message subject (optional)">
         </div>
         <div class="form-group">
-          <textarea name="message" rows="5" placeholder="Type your message here..." required></textarea>
+          <label for="message" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Message</label>
+          <textarea id="message" name="message" rows="5" placeholder="Type your message here..." required></textarea>
         </div>
 
         <p class="privacy-notice">
@@ -269,19 +318,26 @@
   <footer>
     <p>&copy; <span id="year"></span> Esau Victor | Professional Cyber Friend. All rights reserved.</p>
     <p>
-      📧 <a href="mailto:esauvictor@icloud.com">esauvictor@icloud.com</a><br />
-      📞 <a href="tel:+2348132084092">+234 813 208 4092</a>
+      <a href="mailto:esauvictor@icloud.com"><i class="fas fa-envelope"></i> esauvictor@icloud.com</a><br />
+      <a href="tel:+2348132084092"><i class="fas fa-phone"></i> +234 813 208 4092</a>
     </p>
   </footer>
 
   <script>
     function showContactForm() {
       const form = document.getElementById("contact-form");
+      const button = document.querySelector('[aria-controls="contact-form"]');
+      
       if (form.style.display === "none" || form.style.display === "") {
         form.style.display = "block";
+        button.setAttribute('aria-expanded', 'true');
         form.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        form.style.display = "none";
+        button.setAttribute('aria-expanded', 'false');
       }
     }
+    
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 
