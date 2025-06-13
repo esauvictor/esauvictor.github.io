@@ -255,10 +255,13 @@
   </footer>
 
   <script>
-    function showContactForm() {
-      document.getElementById("contact-form").style.display = "block";
-      window.scrollTo({ top: document.getElementById("contact-form").offsetTop, behavior: 'smooth' });
-    }
+   function showContactForm() {
+  const form = document.getElementById("contact-form");
+  if (form.style.display === "none" || form.style.display === "") {
+    form.style.display = "block";
+    form.scrollIntoView({ behavior: 'smooth' });
+  }
+}
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 
