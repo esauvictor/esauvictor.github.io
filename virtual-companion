@@ -123,7 +123,7 @@
 
   <section>
     <h2>Welcome</h2>
-    <p>I'm [Your Name], a professional Cyber Friend and Digital Companion offering safe, respectful, and supportive online presence. Whether you're looking for meaningful conversation, casual companionship, or someone to keep you accountable during work or study sessions — I'm here to help.</p>
+    <p>I'm Esau Victor, a professional Cyber Friend and Digital Companion offering safe, respectful, and supportive online presence. Whether you're looking for meaningful conversation, casual companionship, or someone to keep you accountable during work or study sessions — I'm here to help.</p>
 
     <h3>My Services</h3>
     <ul class="service-list">
@@ -138,7 +138,7 @@
 
     <div id="contact-form" style="display: none; margin-top: 2rem;">
       <h3>Contact Me</h3>
-      <form action="https://formsubmit.co/YOUR_EMAIL@example.com" method="POST">
+      <form action="https://formsubmit.co/esauvictor@icloud.com" method="POST">
         <label for="name">Name</label>
         <input type="text" id="name" name="name" required />
 
@@ -154,7 +154,7 @@
   </section>
 
   <footer>
-    &copy; <span id="year"></span> [Your Name] | Professional Cyber Friend. All rights reserved.
+    &copy; <span id="year"></span> Esau Victor | Professional Cyber Friend. All rights reserved.
   </footer>
 
   <script>
