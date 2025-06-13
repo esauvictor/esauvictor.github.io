@@ -102,10 +102,36 @@
       background: var(--primary-dark);
     }
 
-    .privacy-notice {
-      font-size: 0.85rem;
-      color: var(--muted);
+    .contact-form {
+      display: none;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .contact-form .form-group {
       margin-bottom: 1.25rem;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background-color: #fff;
+      color: var(--text);
+    }
+
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder {
+      color: var(--muted);
+    }
+
+    .contact-form textarea {
+      resize: vertical;
+      min-height: 120px;
     }
 
     .contact-form .btn {
@@ -129,12 +155,6 @@
       margin-right: 0.5rem;
     }
 
-    .additional-contact {
-      margin-top: 2.5rem;
-      padding-top: 1rem;
-      border-top: 1px solid #e5e7eb;
-    }
-
     footer {
       text-align: center;
       padding: 2rem 1rem;
@@ -152,42 +172,98 @@
   <section>
     <h2>Meet Your Companion</h2>
     <div style="text-align: center; margin-bottom: 2rem;">
-      <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor" style="width: 120px; height: 120px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);" />
+      <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Portrait of Esau Victor, Professional Cyber Companion"
+        style="width: 120px; height: 120px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);" />
     </div>
     <p style="font-size: 1.05rem; line-height: 1.9;">
-      <i class="fas fa-handshake" style="color: var(--primary);"></i> Hi, I'm <strong style="color: var(--primary-dark);">Esau Victor</strong> — your dedicated <strong style="color: var(--primary);">Cyber Friend</strong> and <strong style="color: var(--primary);">Digital Companion</strong>.<br><br>
-      <i class="fas fa-shield-heart" style="color: #10b981;"></i> I provide a <span style="color: #10b981;">safe, respectful, and supportive</span> space online guided by empathy.<br><br>
-      <i class="fas fa-comments" style="color: #6366f1;"></i> Looking for <span style="color: #6366f1;">meaningful conversations</span>, companionship, or <span style="color: #6366f1;">study/work accountability</span>? I’m here to help.<br><br>
-      <i class="fas fa-heart" style="color: #ef4444;"></i> Your comfort and well-being come first.
+      <i class="fas fa-handshake" style="color: var(--primary); margin-right: 6px;"></i>
+      Hi, I'm <strong style="color: var(--primary-dark);">Esau Victor</strong>, your dedicated 
+      <strong style="color: var(--primary);">Cyber Friend</strong> and 
+      <strong style="color: var(--primary);">Digital Companion</strong>.
+      <br><br>
+      <i class="fas fa-shield-heart" style="color: #10b981; margin-right: 6px;"></i>
+      I offer a <span style="color: #10b981;">safe, respectful, and supportive</span> online presence always guided by empathy and trust.
+      <br><br>
+      <i class="fas fa-comments" style="color: #6366f1; margin-right: 6px;"></i>
+      Whether you're looking for <span style="color: #6366f1;">deep conversation</span>, casual companionship, or a 
+      <span style="color: #6366f1;">study/work accountability partner</span>, I'm here to engage with care and presence.
+      <br><br>
+      <i class="fas fa-heart" style="color: #ef4444; margin-right: 6px;"></i>
+      Your comfort matters and your well-being comes first.
     </p>
 
     <h3>My Services</h3>
     <ul class="service-list">
-      <li>30-minute Chat Session - $10</li>
-      <li>60-minute Voice/Video Session - $20</li>
-      <li>Weekly Accountability Check-ins - $40</li>
+      <li>One-on-one video or voice conversations</li>
+      <li>Daily or weekly check-ins for emotional support</li>
+      <li>Study buddy or co-working accountability partner</li>
+      <li>Gaming partner for casual or cooperative play</li>
+      <li>Tailored engagement based on your personal needs</li>
     </ul>
 
+    <h3>Pricing & Booking</h3>
+    <p>Rates start from <strong>$15 per 30-minute session</strong>. Secure payment available worldwide via PayPal.</p>
+    <form action="https://www.paypal.com/paypalme/esauvictor" target="_blank">
+      <button class="contact-btn"><i class="fas fa-credit-card"></i> Pay via PayPal</button>
+    </form>
+    <p style="font-size: 0.9rem; color: var(--muted); margin-top: 1rem;">
+      <strong>Refund Policy:</strong> No refunds once the session has started. If you need to reschedule, please contact me at least 6 hours in advance.
+    </p>
+
     <h3>Book a Session</h3>
-    <div id="paypal-buttons-container" style="margin-bottom: 2rem;">
-      <p>Select a service to proceed with payment:</p>
-      <select id="service-select" style="padding: 0.5rem; margin-bottom: 1rem;">
-        <option value="10">30-minute Chat Session - $10</option>
-        <option value="20">60-minute Voice/Video Session - $20</option>
-        <option value="40">Weekly Accountability Check-ins - $40</option>
-      </select>
-      <div id="paypal-button-container"></div>
-    </div>
-    <p style="font-size: 0.9rem; color: #6b7280;"><strong>Refund Policy:</strong> No refunds after the session begins.</p>
+    <p style="margin-bottom: 1rem;">Choose a time that works best for you:</p>
+    <a href="https://calendly.com/esauvictor/session" target="_blank" style="display: inline-block; background-color: #10b981; color: white; padding: 0.75rem 1.5rem; border-radius: 6px; font-size: 1rem; text-decoration: none;">
+      <i class="fas fa-calendar-check" style="margin-right: 6px;"></i> Schedule on Calendly
+    </a>
 
-    <h3>Testimonials</h3>
-    <p><em>Coming soon! Share your experience after our session.</em></p>
+    <h3>What Clients Are Saying</h3>
+    <blockquote style="border-left: 4px solid var(--primary); padding-left: 1rem; color: var(--muted); margin-bottom: 1rem;">
+      <i class="fas fa-quote-left" style="color: var(--primary); margin-right: 8px;"></i>
+      "Esau is incredibly easy to talk to and really helped me stay focused during my workday. Highly recommended!"
+      <br><strong>— Alex J.</strong>
+    </blockquote>
+    <blockquote style="border-left: 4px solid var(--primary); padding-left: 1rem; color: var(--muted); margin-bottom: 1rem;">
+      <i class="fas fa-quote-left" style="color: var(--primary); margin-right: 8px;"></i>
+      "Warm, thoughtful, and very professional. I felt heard and supported every time we talked."
+      <br><strong>— Maria S.</strong>
+    </blockquote>
 
-    <div class="additional-contact">
-      <h3>Other Ways to Reach Me</h3>
-      <p><strong>Email:</strong> <a href="mailto:esauvictor@icloud.com">esauvictor@icloud.com</a></p>
-      <p><strong>Phone:</strong> <a href="tel:+2348132084092">+234 813 208 4092</a></p>
+    <button class="contact-btn" onclick="showContactForm()">Get in Touch</button>
+
+    <!-- Contact Form -->
+    <div id="contact-form" class="contact-form">
+      <form action="https://formsubmit.co/esauvictor@icloud.com" method="POST" class="contact-form">
+        <input type="hidden" name="_subject" value="New Message From Esau Victor | Professional Cyber Friend">
+        <input type="hidden" name="_next" value="https://esauvictor.github.io/thank-you.html">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="_honey" style="display:none">
+        <input type="hidden" name="_autoresponse" value="Thank you for your message! I'll get back to you within 24 hours.">
+
+        <div class="form-group">
+          <input type="text" name="name" placeholder="Enter your full name" required>
+        </div>
+        <div class="form-group">
+          <input type="email" name="email" placeholder="you@example.com" 
+                 pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Please enter a valid email address" required>
+        </div>
+        <div class="form-group">
+          <input type="text" name="subject" placeholder="Message subject (optional)">
+        </div>
+        <div class="form-group">
+          <textarea name="message" rows="5" placeholder="Type your message here..." required></textarea>
+        </div>
+
+        <p class="privacy-notice">
+          By submitting, you agree to our <a href="/privacy">Privacy Policy</a>.
+        </p>
+
+        <button type="submit" class="btn">
+          <i class="fas fa-paper-plane"></i> Send Message
+        </button>
+      </form>
     </div>
+
   </section>
 
   <footer>
@@ -199,36 +275,26 @@
   </footer>
 
   <script>
+    function showContactForm() {
+      const form = document.getElementById("contact-form");
+      if (form.style.display === "none" || form.style.display === "") {
+        form.style.display = "block";
+        form.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 
-  <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&currency=USD"></script>
-  <script>
-    const serviceSelect = document.getElementById("service-select");
-    paypal.Buttons({
-      createOrder: function(data, actions) {
-        return actions.order.create({
-          purchase_units: [{ amount: { value: serviceSelect.value } }]
-        });
-      },
-      onApprove: function(data, actions) {
-        return actions.order.capture().then(function(details) {
-          alert("Thank you " + details.payer.name.given_name + "! Your payment of $" + serviceSelect.value + " was successful.");
-        });
-      }
-    }).render("#paypal-button-container");
-  </script>
-
-  <!-- Tawk.to Live Chat -->
+  <!-- Tawk.to Live Chat Script -->
   <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-      s1.async=true;
-      s1.src='https://embed.tawk.to/6585afc107843602b804d2c0/1hi93d54d';
-      s1.charset='UTF-8';
-      s1.setAttribute('crossorigin','*');
-      s0.parentNode.insertBefore(s1,s0);
+    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+    (function () {
+      var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+      s1.async = true;
+      s1.src = 'https://embed.tawk.to/6585afc107843602b804d2c0/1hi93d54d';
+      s1.charset = 'UTF-8';
+      s1.setAttribute('crossorigin', '*');
+      s0.parentNode.insertBefore(s1, s0);
     })();
   </script>
 </body>
