@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <link rel="icon" href="https://esauvictor.blogspot.com/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="https://esauvictor.blogspot.com/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <title>Professional Cyber Companion Services</title>
   <style>
     :root {
@@ -92,20 +93,61 @@
       background: var(--primary-dark);
     }
 
-    form input,
-    form textarea {
-      width: 100%;
-      padding: 0.75rem;
-      margin-bottom: 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 1rem;
+    .contact-form .form-group {
+      margin-bottom: 1.25rem;
     }
 
-    form label {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      display: block;
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background-color: #fff;
+      color: var(--text);
+    }
+
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder {
+      color: var(--muted);
+    }
+
+    .contact-form textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .privacy-notice {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .privacy-notice a {
+      color: var(--primary-dark);
+      text-decoration: underline;
+    }
+
+    .contact-form .btn {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .contact-form .btn:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .contact-form .btn i {
+      margin-right: 0.5rem;
     }
 
     footer {
@@ -125,9 +167,9 @@
   <section>
     <h2>Welcome</h2>
     <div style="text-align: center; margin-bottom: 2rem;">
-  <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor" style="width: 120px; height: 120px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);" />
-</div>
-    <p>I'm Esau Victor, a professional Cyber Friend and Digital Companion offering safe, respectful, and supportive online presence. Whether you're looking for meaningful conversation, casual companionship, or someone to keep you accountable during work or study sessions — I'm here to help.</p>
+      <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor" style="width: 120px; height: 120px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);" />
+    </div>
+    <p>I'm Esau Victor, a professional Cyber Friend and Digital Companion offering a safe, respectful, and supportive online presence. Whether you're looking for meaningful conversation, casual companionship, or someone to keep you accountable during work or study sessions — I'm here to help.</p>
 
     <h3>My Services</h3>
     <ul class="service-list">
@@ -143,34 +185,37 @@
     <div id="contact-form" style="display: none; margin-top: 2rem;">
       <h3>Contact Me</h3>
       <form action="https://formsubmit.co/esauvictor@icloud.com" method="POST" class="contact-form">
-                <!-- Hidden Fields -->
-                <input type="hidden" name="_subject" value="New Message From Esau Victors' Portfolio Website">
-                <input type="hidden" name="_next" value="https://esauvictor.github.io/thank-you.html">
-                <input type="hidden" name="_template" value="table"> <!-- Better email formatting -->
-                <input type="hidden" name="_captcha" value="false">
-                <input type="text" name="_honey" style="display:none"> <!-- Honeypot for spam -->
-                <input type="hidden" name="_autoresponse" value="Thank you for your message! I'll get back to you within 24 hours.">
-                
-                <!-- Form Fields -->
-                <div class="form-group">
-                    <input type="text" class="form-control" name="name" placeholder="Enter your full name" required>
-                </div>
-                <div class="form-group">
-                    <input type="email" class="form-control" name="email" placeholder="code@gmail.com" 
-                           pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Please enter a valid email address" required>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="subject" placeholder="Message subject (optional)">
-                </div>
-                <div class="form-group">
-                    <textarea class="form-control" name="message" rows="5" placeholder="Type your message here..." required></textarea>
-                </div>
-                
-                <p class="privacy-notice">By submitting, you agree to our <a href="/privacy" style="color: var(--accent-color)">Privacy Policy</a></p>
-                
-                <button type="submit" class="btn">
-                    <i class="fas fa-paper-plane"></i> Send Message
-                </button>
+        <!-- Hidden Fields -->
+        <input type="hidden" name="_subject" value="New Message From Esau Victors' Portfolio Website">
+        <input type="hidden" name="_next" value="https://esauvictor.github.io/thank-you.html">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="_honey" style="display:none">
+        <input type="hidden" name="_autoresponse" value="Thank you for your message! I'll get back to you within 24 hours.">
+
+        <!-- Form Inputs -->
+        <div class="form-group">
+          <input type="text" name="name" placeholder="Enter your full name" required>
+        </div>
+        <div class="form-group">
+          <input type="email" name="email" placeholder="you@example.com" 
+                 pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Please enter a valid email address" required>
+        </div>
+        <div class="form-group">
+          <input type="text" name="subject" placeholder="Message subject (optional)">
+        </div>
+        <div class="form-group">
+          <textarea name="message" rows="5" placeholder="Type your message here..." required></textarea>
+        </div>
+
+        <p class="privacy-notice">
+          By submitting, you agree to our <a href="/privacy">Privacy Policy</a>.
+        </p>
+
+        <button type="submit" class="btn">
+          <i class="fas fa-paper-plane"></i> Send Message
+        </button>
+      </form>
     </div>
   </section>
 
@@ -184,21 +229,21 @@
       window.scrollTo({ top: document.getElementById("contact-form").offsetTop, behavior: 'smooth' });
     }
 
-    // Set current year in footer
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
-     <!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/6585afc107843602b804d2c0/1hi93d54d';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
-<!--End of Tawk.to Script-->
+
+  <!--Start of Tawk.to Script-->
+  <script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6585afc107843602b804d2c0/1hi93d54d';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+  })();
+  </script>
+  <!--End of Tawk.to Script-->
 </body>
 </html>
