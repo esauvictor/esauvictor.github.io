@@ -64,6 +64,15 @@
       margin-bottom: 1.5rem;
     }
 
+    a {
+      color: var(--primary-dark);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
     .service-list {
       list-style: none;
       padding: 0;
@@ -150,6 +159,12 @@
       margin-right: 0.5rem;
     }
 
+    .additional-contact {
+      margin-top: 2.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e5e7eb;
+    }
+
     footer {
       text-align: center;
       padding: 2rem 1rem;
@@ -185,7 +200,6 @@
     <div id="contact-form" style="display: none; margin-top: 2rem;">
       <h3>Contact Me</h3>
       <form action="https://formsubmit.co/esauvictor@icloud.com" method="POST" class="contact-form">
-        <!-- Hidden Fields -->
         <input type="hidden" name="_subject" value="New Message From Esau Victor | Professional Cyber Friend">
         <input type="hidden" name="_next" value="https://esauvictor.github.io/thank-you.html">
         <input type="hidden" name="_template" value="table">
@@ -193,7 +207,6 @@
         <input type="text" name="_honey" style="display:none">
         <input type="hidden" name="_autoresponse" value="Thank you for your message! I'll get back to you within 24 hours.">
 
-        <!-- Form Inputs -->
         <div class="form-group">
           <input type="text" name="name" placeholder="Enter your full name" required>
         </div>
@@ -216,11 +229,21 @@
           <i class="fas fa-paper-plane"></i> Send Message
         </button>
       </form>
+
+      <div class="additional-contact">
+        <h3>Other Ways to Reach Me</h3>
+        <p><strong>Email:</strong> <a href="mailto:esauvictor@icloud.com">esauvictor@icloud.com</a></p>
+        <p><strong>Phone:</strong> <a href="tel:+2348132084092">+234 813 208 4092</a></p>
+      </div>
     </div>
   </section>
 
   <footer>
-    &copy; <span id="year"></span> Esau Victor | Professional Cyber Friend. All rights reserved.
+    <p>&copy; <span id="year"></span> Esau Victor | Professional Cyber Friend. All rights reserved.</p>
+    <p>
+      📧 <a href="mailto:esauvictor@icloud.com">esauvictor@icloud.com</a><br />
+      📞 <a href="tel:+2348132084092">+234 813 208 4092</a>
+    </p>
   </footer>
 
   <script>
@@ -228,29 +251,20 @@
       document.getElementById("contact-form").style.display = "block";
       window.scrollTo({ top: document.getElementById("contact-form").offsetTop, behavior: 'smooth' });
     }
-
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 
-  <!--Start of Tawk.to Script-->
+  <!-- Tawk.to Script -->
   <script type="text/javascript">
-  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-  (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/6585afc107843602b804d2c0/1hi93d54d';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-  })();
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/6585afc107843602b804d2c0/1hi93d54d';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+    })();
   </script>
-  <!--End of Tawk.to Script-->
-  <div style="margin-top: 2rem;">
-    
-  <h3>Other Ways to Reach Me</h3>
-  <p><strong>Email:</strong> <a href="mailto:esauvictor@icloud.com">esauvictor@icloud.com</a></p>
-  <p><strong>Phone:</strong> <a href="tel:+2348132084092">+234 813 208 4092</a></p>
-</div>
-
 </body>
 </html>
