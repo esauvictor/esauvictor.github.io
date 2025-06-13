@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Professional Cyber Companion Services</title>
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --background: #f9fafb;
+      --surface: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 3rem 1rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      font-size: 1.25rem;
+      font-weight: 300;
+    }
+
+    section {
+      max-width: 900px;
+      margin: 3rem auto;
+      background: var(--surface);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    h2, h3 {
+      color: var(--primary-dark);
+      margin-bottom: 1rem;
+    }
+
+    p {
+      margin-bottom: 1.5rem;
+    }
+
+    .service-list {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 2rem;
+    }
+
+    .service-list li {
+      background: #eff6ff;
+      margin-bottom: 0.75rem;
+      padding: 1rem;
+      border-left: 4px solid var(--primary);
+      border-radius: 6px;
+    }
+
+    .contact-btn {
+      background: var(--primary);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .contact-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    form input,
+    form textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    form label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Professional Cyber Companion</h1>
+    <p>Empathetic. Respectful. Always Available for You.</p>
+  </header>
+
+  <section>
+    <h2>Welcome</h2>
+    <p>I'm [Your Name], a professional Cyber Friend and Digital Companion offering safe, respectful, and supportive online presence. Whether you're looking for meaningful conversation, casual companionship, or someone to keep you accountable during work or study sessions — I'm here to help.</p>
+
+    <h3>My Services</h3>
+    <ul class="service-list">
+      <li>One-on-one video or voice conversations</li>
+      <li>Daily or weekly check-ins for emotional support</li>
+      <li>Study buddy or co-working accountability partner</li>
+      <li>Gaming partner for casual or cooperative play</li>
+      <li>Tailored engagement based on your personal needs</li>
+    </ul>
+
+    <button class="contact-btn" onclick="showContactForm()">Get in Touch</button>
+
+    <div id="contact-form" style="display: none; margin-top: 2rem;">
+      <h3>Contact Me</h3>
+      <form action="https://formsubmit.co/YOUR_EMAIL@example.com" method="POST">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="message">Your Message</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+
+        <button type="submit" class="contact-btn">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    &copy; <span id="year"></span> [Your Name] | Professional Cyber Friend. All rights reserved.
+  </footer>
+
+  <script>
+    function showContactForm() {
+      document.getElementById("contact-form").style.display = "block";
+      window.scrollTo({ top: document.getElementById("contact-form").offsetTop, behavior: 'smooth' });
+    }
+
+    // Set current year in footer
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
