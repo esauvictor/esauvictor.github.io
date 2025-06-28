@@ -1095,10 +1095,10 @@
     
     <script>
         function orderOnWhatsApp(productName, price, imageUrl) {
-            const message = `I want to buy the ${productName} for ${price}. Please assist me with the order. Product Image: ${imageUrl}`;
-            const whatsappUrl = `https://wa.me/2348132084092?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-        }
+    const message = `I want to buy the ${productName} for ${price}. Please assist me with the order.\n\nProduct Image: ${imageUrl}\n\nThis is the image of the product I am interested in.`;
+    const whatsappUrl = `https://wa.me/2348132084092?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+}
         
         // Add click event to main WhatsApp button
         document.querySelector('.whatsapp-btn').addEventListener('click', function() {
