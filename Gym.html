@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PowerGym Equipment Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        :root {
+            --primary: #1a2b48;
+            --accent: #ff4d4d;
+            --dark: #0d1522;
+            --light: #f8f9fc;
+            --gray: #6c757d;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0d1522 0%, #1a2b48 100%);
+            color: white;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            padding: 20px 0;
+            background: rgba(13, 21, 34, 0.9);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 28px;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 32px;
+            color: var(--accent);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 30px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--accent);
+        }
+        
+        nav ul li a:hover:after {
+            width: 100%;
+        }
+        
+        .whatsapp-btn {
+            background: #25d366;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+        
+        .whatsapp-btn:hover {
+            background: #128c7e;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 100px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            opacity: 0.2;
+            z-index: -1;
+        }
+        
+        .hero h1 {
+            font-size: 52px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .hero h1 span {
+            color: var(--accent);
+        }
+        
+        .hero p {
+            font-size: 22px;
+            color: #e0e0e0;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+        
+        .cta-button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 25px rgba(255, 77, 77, 0.4);
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .cta-button:hover {
+            background: #e04444;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 77, 77, 0.5);
+        }
+        
+        .hero-subtext {
+            font-size: 16px;
+            color: #a0aec0;
+            margin-top: 20px;
+        }
+        
+        .hero-subtext i {
+            color: #25d366;
+            margin-right: 5px;
+        }
+        
+        /* Features Section */
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 60px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 35px 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 77, 77, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            color: var(--accent);
+            font-size: 32px;
+        }
+        
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        
+        .feature-card p {
+            color: #cbd5e0;
+            font-size: 16px;
+        }
+        
+        /* Products Section */
+        .products {
+            padding: 80px 0;
+            background: rgba(13, 21, 34, 0.6);
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .product-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .product-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .product-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 43, 72, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .product-card:hover .product-overlay {
+            opacity: 1;
+        }
+        
+        .product-info {
+            padding: 25px;
+        }
+        
+        .product-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .product-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+        
+        .product-description {
+            color: #a0aec0;
+            font-size: 14px;
+            margin-bottom: 20px;
+            min-height: 60px;
+        }
+        
+        .whatsapp-order {
+            background: #25d366;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .whatsapp-order:hover {
+            background: #128c7e;
+            transform: translateY(-3px);
+        }
+        
+        /* Stats Section */
+        .stats {
+            background: var(--accent);
+            padding: 70px 0;
+            border-radius: 20px;
+            margin-bottom: 80px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stats:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            opacity: 0.1;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            position: relative;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 60px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat-text {
+            font-size: 18px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 80px 0;
+            background: rgba(13, 21, 34, 0.6);
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .testimonial-content {
+            color: #cbd5e0;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #1a2b48;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 20px;
+        }
+        
+        .author-info h4 {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .author-info p {
+            color: #a0aec0;
+            font-size: 14px;
+        }
+        
+        /* WhatsApp Section */
+        .whatsapp-section {
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .whatsapp-container {
+            background: rgba(26, 43, 72, 0.7);
+            border-radius: 20px;
+            padding: 60px;
+            max-width: 800px;
+            margin: 0 auto;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .whatsapp-icon {
+            font-size: 80px;
+            color: #25d366;
+            margin-bottom: 30px;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: auto;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 15px;
+        }
+        
+        .footer-column ul li a {
+            color: #a0aec0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--accent);
+        }
+        
+        .contact-info {
+            color: #a0aec0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .contact-info i {
+            color: var(--accent);
+            margin-top: 5px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #a0aec0;
+            font-size: 14px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .features, .testimonial-grid, .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .stats-container {
+                gap: 40px;
+            }
+            
+            .stat-number {
+                font-size: 50px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                margin: 15px 0;
+            }
+            
+            nav ul li {
+                margin: 10px;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+                gap: 40px;
+            }
+            
+            .whatsapp-container {
+                padding: 40px 20px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .features, .product-grid, .testimonial-grid, .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero {
+                padding: 80px 0 40px;
+            }
+            
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .section-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <i class="fas fa-dumbbell"></i>
+                POWER<span>GYM</span>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Equipment</a></li>
+                    <li><a href="#">Accessories</a></li>
+                    <li><a href="#">Supplements</a></li>
+                    <li><a href="#">About Us</a></li>
+                </ul>
+            </nav>
+            <button class="whatsapp-btn">
+                <i class="fab fa-whatsapp"></i>
+                Order via WhatsApp
+            </button>
+        </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>BUILD YOUR <span>DREAM GYM</span> AT HOME</h1>
+            <p>Professional gym equipment delivered to your doorstep with easy WhatsApp ordering</p>
+            <button class="cta-button">
+                <i class="fab fa-whatsapp"></i>
+                Shop Equipment
+            </button>
+            <p class="hero-subtext">
+                <i class="fas fa-bolt"></i>
+                Order any equipment via WhatsApp and get it delivered within 72 hours
+            </p>
+            
+            <!-- Features Grid -->
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h3>Fast Delivery</h3>
+                    <p>Receive your equipment within 72 hours anywhere in Nigeria</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>Free Setup</h3>
+                    <p>Professional assembly included with every equipment purchase</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>2-Year Warranty</h3>
+                    <p>All equipment comes with comprehensive warranty coverage</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3>Flexible Payment</h3>
+                    <p>Pay on delivery or installment plans available</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Products Section -->
+    <section class="products">
+        <div class="container">
+            <h2 class="section-title">TOP GYM EQUIPMENT</h2>
+            <div class="product-grid">
+                <!-- Product 1 -->
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80');">
+                        <div class="product-overlay">
+                            <button class="whatsapp-order" onclick="orderOnWhatsApp('Professional Treadmill', '₦450,000')">
+                                <i class="fab fa-whatsapp"></i> Order Now
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Professional Treadmill</h3>
+                        <div class="product-price">₦450,000</div>
+                        <p class="product-description">Commercial grade treadmill with 4.0 HP motor, 22" touchscreen, and incline control</p>
+                        <button class="whatsapp-order" onclick="orderOnWhatsApp('Professional Treadmill', '₦450,000')">
+                            <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1534258936925-c58bed479fcb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80');">
+                        <div class="product-overlay">
+                            <button class="whatsapp-order" onclick="orderOnWhatsApp('Adjustable Dumbbell Set', '₦175,000')">
+                                <i class="fab fa-whatsapp"></i> Order Now
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Adjustable Dumbbell Set</h3>
+                        <div class="product-price">₦175,000</div>
+                        <p class="product-description">50kg adjustable dumbbell set with quick-change weight system and storage rack</p>
+                        <button class="whatsapp-order" onclick="orderOnWhatsApp('Adjustable Dumbbell Set', '₦175,000')">
+                            <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1576678927484-cc907957088c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80');">
+                        <div class="product-overlay">
+                            <button class="whatsapp-order" onclick="orderOnWhatsApp('Multi-Functional Power Rack', '₦320,000')">
+                                <i class="fab fa-whatsapp"></i> Order Now
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Multi-Functional Power Rack</h3>
+                        <div class="product-price">₦320,000</div>
+                        <p class="product-description">Heavy-duty power rack with pull-up bar, dip station, and cable attachment</p>
+                        <button class="whatsapp-order" onclick="orderOnWhatsApp('Multi-Functional Power Rack', '₦320,000')">
+                            <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product 4 -->
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1599058917765-a780eda07a3d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80');">
+                        <div class="product-overlay">
+                            <button class="whatsapp-order" onclick="orderOnWhatsApp('Commercial Elliptical Trainer', '₦380,000')">
+                                <i class="fab fa-whatsapp"></i> Order Now
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Commercial Elliptical Trainer</h3>
+                        <div class="product-price">₦380,000</div>
+                        <p class="product-description">Low-impact cardio machine with 24 resistance levels and heart rate monitoring</p>
+                        <button class="whatsapp-order" onclick="orderOnWhatsApp('Commercial Elliptical Trainer', '₦380,000')">
+                            <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-text">Equipment Types</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">175</div>
+                    <div class="stat-text">Cities Served</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50K</div>
+                    <div class="stat-text">Happy Customers</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">CUSTOMER TESTIMONIALS</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-content">"Ordered a treadmill via WhatsApp and it arrived in just 2 days! The setup team was professional and the equipment works perfectly. Best fitness purchase ever!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h4>Tunde Adebayo</h4>
+                            <p>Lagos</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-content">"The WhatsApp ordering process was so convenient. They answered all my questions immediately and helped me choose the perfect power rack for my home gym."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h4>Chioma Okeke</h4>
+                            <p>Abuja</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-content">"I was hesitant about ordering expensive equipment online, but their WhatsApp support put me at ease. The delivery and setup were flawless. Highly recommended!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h4>Emeka Nwosu</h4>
+                            <p>Port Harcourt</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- WhatsApp Section -->
+    <section class="whatsapp-section">
+        <div class="container">
+            <div class="whatsapp-container">
+                <div class="whatsapp-icon">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <h2 class="section-title">ORDER VIA WHATSAPP</h2>
+                <p style="font-size: 18px; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    Simply send us a WhatsApp message at <strong>+234 813 208 4092</strong> with the equipment you want to order. Our team will guide you through the process and arrange delivery!
+                </p>
+                <a href="https://wa.me/2348132084092" class="cta-button">
+                    <i class="fab fa-whatsapp"></i>
+                    Start Chat on WhatsApp
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>PowerGym</h3>
+                    <p style="color: #a0aec0; margin-bottom: 20px;">Your trusted partner for professional gym equipment since 2015.</p>
+                    <div class="contact-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>123 Fitness Avenue, Victoria Island, Lagos</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>+234 813 208 4092</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-envelope"></i>
+                        <span>orders@powergym.com</span>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Products</h3>
+                    <ul>
+                        <li><a href="#">Cardio Equipment</a></li>
+                        <li><a href="#">Strength Training</a></li>
+                        <li><a href="#">Functional Training</a></li>
+                        <li><a href="#">Gym Accessories</a></li>
+                        <li><a href="#">Supplement Packages</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#">Equipment Installation</a></li>
+                        <li><a href="#">Maintenance Plans</a></li>
+                        <li><a href="#">Gym Design Consultation</a></li>
+                        <li><a href="#">Corporate Wellness</a></li>
+                        <li><a href="#">Personal Trainer Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Order Tracking</a></li>
+                        <li><a href="#">Warranty Information</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Payment Options</a></li>
+                        <li><a href="#">Contact Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 PowerGym Equipment Store. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        function orderOnWhatsApp(productName, price) {
+            const message = `I want to buy the ${productName} for ${price}. Please assist me with the order.`;
+            const whatsappUrl = `https://wa.me/2348132084092?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+        
+        // Add click event to main WhatsApp button
+        document.querySelector('.whatsapp-btn').addEventListener('click', function() {
+            window.open('https://wa.me/2348132084092', '_blank');
+        });
+        
+        // Add click event to CTA button
+        document.querySelector('.cta-button').addEventListener('click', function() {
+            window.open('https://wa.me/2348132084092', '_blank');
+        });
+        
+        // Animation for product cards
+        const productCards = document.querySelectorAll('.product-card');
+        productCards.forEach(card => {
+            card.addEventListener('mouseover', function() {
+                this.style.transform = 'translateY(-10px)';
+            });
+            
+            card.addEventListener('mouseout', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
