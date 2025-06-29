@@ -7,980 +7,85 @@
     <meta name="keywords" content="web development, data analytics, cyber security, portfolio, Nigeria, Port Harcourt">
     <meta name="author" content="Esau Victor">
     <link rel="icon" href="https://esauvictor.blogspot.com/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
     <title>Esau Victor - Portfolio | Web Developer & Security Expert</title>
-    <style>
-        /* Global styles */
-        :root {
-            --primary-color: #1e3a8a;
-            --secondary-color: #4a6fa5;
-            --accent-color: #3b82f6;
-            --text-color: #333;
-            --light-text: #6b7280;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --footer-bg: #1e3a8a;
-            --footer-text: #e0e7ff;
-            --transition: all 0.3s ease;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
-            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
-            --border-radius: 12px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            line-height: 1.6;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            scroll-behavior: smooth;
-        }
-
-        h1, h2, h3, h4 {
-            line-height: 1.2;
-            color: var(--primary-color);
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        /* Utility classes */
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 0.8rem 2rem;
-            border-radius: 30px;
-            font-weight: 500;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .btn:hover {
-            background-color: var(--primary-color);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid var(--secondary-color);
-            color: var(--secondary-color);
-        }
-
-        .btn-outline:hover {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-
-        .section {
-            padding: 6rem 0;
-        }
-
-        .section-title {
-            position: relative;
-            margin-bottom: 3rem;
-            font-size: 2.25rem;
-            text-align: center;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -0.75rem;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background-color: var(--secondary-color);
-            border-radius: 2px;
-        }
-
-        /* Navigation styles */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.98);
-            padding: 1.25rem 2rem;
-            box-shadow: var(--shadow-sm);
-            z-index: 1000;
-            transition: var(--transition);
-            backdrop-filter: blur(10px);
-        }
-
-        .navbar.scrolled {
-            padding: 0.75rem 2rem;
-            box-shadow: var(--shadow-md);
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: var(--primary-color);
-        }
-        .btn-cv {
-    background-color: transparent;
-    border: 2px solid var(--accent-color);
-    color: var(--accent-color);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.btn-cv:hover {
-    background-color: var(--accent-color);
-    color: white;
-}
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 1.5rem;
-        }
-
-        .nav-links a {
-            color: var(--text-color);
-            font-weight: 500;
-            padding: 0.5rem 0;
-            position: relative;
-            transition: var(--transition);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--secondary-color);
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover {
-            color: var(--secondary-color);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .hamburger {
-            display: none;
-            cursor: pointer;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--primary-color);
-        }
-
-   /* Hero section styles */
-.hero {
-    height: 100vh;
-    min-height: 600px;
-    display: flex;
-    align-items: center;
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                url('https://github.com/esauvictor/esauvictor.github.io/raw/main/hero.jpg') center/cover no-repeat;
-    color: white;
-    text-align: center;
-    position: relative;
-        }
-
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        .hero-content h1 {
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            animation: fadeInDown 1s ease;
-        }
-
-        .hero-content p {
-            font-size: clamp(1rem, 2vw, 1.25rem);
-            margin-bottom: 2.5rem;
-            font-weight: 300;
-            opacity: 0.9;
-            animation: fadeIn 1.5s ease;
-        }
-
-        .hero-btns {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            animation: fadeInUp 1s ease;
-        }
-
-        /* About section */
-        .about {
-            background-color: var(--card-bg);
-        }
-
-        .about-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 3rem;
-            align-items: center;
-        }
-
-       /* About Image Styles */
-.about-image {
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 5px solid var(--accent-color);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    margin: 0 auto;
-    position: relative;
-    transition: all 0.3s ease;
-}
-
-.about-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.about-image:hover {
-    transform: scale(1.05);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-}
-
-.about-image:hover img {
-    transform: scale(1.1);
-}
-
-/* Pulse Animation */
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
-    }
-    70% {
-        box-shadow: 0 0 0 15px rgba(59, 130, 246, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
-    }
-}
-
-.about-image {
-    animation: pulse 2s infinite;
-}
-
-/* Remove animation on hover */
-.about-image:hover {
-    animation: none;
-}
-
-        .about-text p {
-            margin-bottom: 1.25rem;
-            color: var(--light-text);
-        }
-
-        .skills {
-            margin-top: 2rem;
-        }
-
-        .skill-item {
-            margin-bottom: 1rem;
-        }
-
-        .skill-name {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-        }
-
-        .skill-bar {
-            height: 8px;
-            background-color: #e5e7eb;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .skill-progress {
-            height: 100%;
-            background-color: var(--secondary-color);
-            border-radius: 4px;
-            transition: width 1s ease;
-        }
-
-        /* Services section */
-        .services {
-            background-color: var(--bg-color);
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .service-card {
-            background-color: var(--card-bg);
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-            text-align: center;
-        }
-
-        .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .service-icon {
-            font-size: 2.5rem;
-            color: var(--secondary-color);
-            margin-bottom: 1.5rem;
-        }
-
-        .service-card h3 {
-            margin-bottom: 1rem;
-        }
-
-        .service-card p {
-            color: var(--light-text);
-        }
-
-        /* Projects section */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .project-card {
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-            background-color: var(--card-bg);
-        }
-
-        .project-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .project-image {
-            height: 220px;
-            overflow: hidden;
-        }
-
-        .project-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .project-card:hover .project-image img {
-            transform: scale(1.1);
-        }
-
-        .project-content {
-            padding: 1.5rem;
-        }
-
-        .project-content h3 {
-            margin-bottom: 0.75rem;
-        }
-
-        .project-content p {
-            color: var(--light-text);
-            margin-bottom: 1.25rem;
-        }
-
-        .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1.25rem;
-        }
-
-        .project-tag {
-            background-color: #e0e7ff;
-            color: var(--secondary-color);
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        /* Tutorials Section */
-.tutorials {
-    background-color: #f0f4f8;
-}
-
-.section-subtitle {
-    text-align: center;
-    color: var(--light-text);
-    margin-bottom: 3rem;
-    font-size: 1.1rem;
-}
-
-.tutorials-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-bottom: 3rem;
-}
-
-.tutorial-card {
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition);
-}
-
-.tutorial-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-}
-
-.video-container {
-    position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    height: 0;
-    overflow: hidden;
-}
-
-.video-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
-.tutorial-info {
-    padding: 1.5rem;
-}
-
-.tutorial-info h3 {
-    margin-bottom: 0.75rem;
-    font-size: 1.25rem;
-}
-
-.tutorial-info p {
-    color: var(--light-text);
-    margin-bottom: 1rem;
-}
-
-.tutorial-meta {
-    display: flex;
-    justify-content: space-between;
-    color: var(--light-text);
-    font-size: 0.85rem;
-}
-
-.tutorial-meta i {
-    margin-right: 0.25rem;
-    color: var(--secondary-color);
-}
-
-.tutorials-cta {
-    text-align: center;
-    margin-top: 2rem;
-}
-
-.tutorials-cta .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-        /* Blog Section */
-.blog-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-bottom: 3rem;
-}
-
-.blog-post {
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition);
-}
-
-.blog-post:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-}
-
-.blog-image {
-    height: 200px;
-    overflow: hidden;
-}
-
-.blog-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.blog-post:hover .blog-image img {
-    transform: scale(1.05);
-}
-
-.blog-content {
-    padding: 1.5rem;
-}
-
-.blog-content h3 {
-    margin-bottom: 0.75rem;
-}
-
-.blog-meta {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    color: var(--light-text);
-    font-size: 0.85rem;
-}
-
-.blog-meta i {
-    margin-right: 0.25rem;
-    color: var(--secondary-color);
-}
-        /* Testimonials section */
-        .testimonials {
-            background-color: #f0f4f8;
-        }
-
-        .testimonial-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .testimonial-card {
-            background-color: var(--card-bg);
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
-            position: relative;
-        }
-
-        .testimonial-card::before {
-            content: '"';
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            font-size: 4rem;
-            color: #e0e7ff;
-            font-family: Georgia, serif;
-            line-height: 1;
-            z-index: 0;
-        }
-
-        .testimonial-text {
-            position: relative;
-            z-index: 1;
-            margin-bottom: 1.5rem;
-            font-style: italic;
-            color: var(--light-text);
-        }
-
-        .testimonial-author {
-            display: flex;
-            align-items: center;
-        }
-
-        .testimonial-author img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 1rem;
-            object-fit: cover;
-        }
-
-        .author-info h4 {
-            margin-bottom: 0.25rem;
-        }
-
-        .author-info p {
-            color: var(--light-text);
-            font-size: 0.9rem;
-        }
-
-        /* Contact section */
-        .contact {
-            background-color: var(--card-bg);
-        }
-
-        .contact-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 3rem;
-        }
-
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-
-        .contact-icon {
-            font-size: 1.25rem;
-            color: var(--secondary-color);
-            margin-top: 0.25rem;
-        }
-
-        .contact-form {
-            background-color: var(--card-bg);
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        textarea.form-control {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-       /* Footer Styles */
-footer {
-    background-color: var(--footer-bg);
-    color: var(--footer-text);
-    padding: 4rem 0 2rem;
-    position: relative;
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 3rem;
-    margin-bottom: 3rem;
-}
-
-.footer-column {
-    display: flex;
-    flex-direction: column;
-}
-
-.footer-column h3 {
-    color: white;
-    margin-bottom: 1.5rem;
-    font-size: 1.25rem;
-    position: relative;
-    padding-bottom: 0.75rem;
-}
-
-.footer-column h3::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 40px;
-    height: 2px;
-    background-color: var(--accent-color);
-}
-
-.footer-column p {
-    margin-bottom: 1.5rem;
-    opacity: 0.9;
-    flex-grow: 1;
-}
-
-.footer-links {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.footer-links a {
-    color: var(--footer-text);
-    transition: var(--transition);
-    opacity: 0.9;
-}
-
-.footer-links a:hover {
-    color: white;
-    opacity: 1;
-    padding-left: 5px;
-}
-
-.social-links {
-    display: flex;
-    gap: 1rem;
-    margin-top: auto; /* Pushes social links to bottom of column */
-}
-
-.social-links a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background-color: rgba(255,255,255,0.1);
-    border-radius: 50%;
-    color: white;
-    transition: var(--transition);
-}
-
-.social-links a:hover {
-    background-color: white;
-    color: var(--primary-color);
-    transform: translateY(-3px);
-}
-
-.copyright {
-    text-align: center;
-    padding-top: 2rem;
-    margin-top: 2rem;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    color: var(--footer-text);
-    font-size: 0.9rem;
-    opacity: 0.8;
-}
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Responsive design */
-        @media (max-width: 992px) {
-            .section {
-                padding: 4rem 0;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 1rem;
-            }
-            
-            .nav-links {
-                position: fixed;
-                top: 70px;
-                left: -100%;
-                width: 100%;
-                height: calc(100vh - 70px);
-                background-color: white;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 2rem;
-                transition: var(--transition);
-                box-shadow: var(--shadow-md);
-            }
-            
-            .nav-links.active {
-                left: 0;
-            }
-            
-            .hamburger {
-                display: block;
-            }
-            
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero-btns {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 100%;
-                max-width: 250px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .section {
-                padding: 3rem 0;
-            }
-            
-            .section-title {
-                font-size: 1.75rem;
-                margin-bottom: 2rem;
-            }
-            
-            .about-content, .contact-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-        }
-    </style>
 </head>
-<body>
+<body class="bg-gray-100 text-gray-800 font-sans">
     <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container container">
-            <a href="#home" class="logo">Esau Victor</a>
-            <button class="hamburger" id="hamburger">
-                <i class="fas fa-bars"></i>
-            </button>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#tutorials">Learning centre</a></li>
-                <li><a href="#blog">Blog</a></li>
-                <li><a href="#testimonials">Testimonials</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
+    <nav class="fixed top-0 w-full bg-white shadow-md z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="#home" class="text-2xl font-bold text-blue-600">Esau Victor</a>
+                <button class="hamburger md:hidden" id="hamburger">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="nav-links hidden md:flex space-x-6">
+                    <li><a href="#home" class="hover:text-blue-600">Home</a></li>
+                    <li><a href="#about" class="hover:text-blue-600">About</a></li>
+                    <li><a href="#services" class="hover:text-blue-600">Services</a></li>
+                    <li><a href="#projects" class="hover:text-blue-600">Projects</a></li>
+                    <li><a href="#tutorials" class="hover:text-blue-600">Learning centre</a></li>
+                    <li><a href="#blog" class="hover:text-blue-600">Blog</a></li>
+                    <li><a href="#testimonials" class="hover:text-blue-600">Testimonials</a></li>
+                    <li><a href="#contact" class="hover:text-blue-600">Contact</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-<section class="hero" id="home">
-    <div class="hero-content">
-        <h1>Esau Victor</h1>
-        <p>Web Developer | Data Analytics Engineer | Cyber Security Expert | Digital Companion & Virtual Supporter</p>
-        <div class="hero-btns">
-            <a href="#projects" class="btn">View My Work</a>
-            <a href="#contact" class="btn btn-outline">Contact Me</a>
-            <!-- Updated CV download button -->
-            <a href="https://github.com/esauvictor/esauvictor.github.io/raw/main/Resume_Esau.pdf" class="btn btn-cv" download="Resume_Esau.pdf">
-                <i class="fas fa-download"></i> Download Résumé
-            </a>
+    <section class="hero bg-cover bg-center py-48" id="home" style="background-image: url('https://github.com/esauvictor/esauvictor.github.io/raw/main/hero.jpg');">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-white">Esau Victor</h1>
+            <p class="text-lg md:text-xl text-white">Web Developer | Data Analytics Engineer | Cyber Security Expert | Digital Companion & Virtual Supporter</p>
+            <div class="mt-8">
+                <a href="#projects" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700">View My Work</a>
+                <a href="#contact" class="bg-transparent border border-blue-600 text-blue-600 px-6 py-3 rounded-full hover:bg-blue-600 hover:text-white ml-4">Contact Me</a>
+                <a href="https://github.com/esauvictor/esauvictor.github.io/raw/main/Resume_Esau.pdf" class="bg-transparent border border-blue-600 text-blue-600 px-6 py-3 rounded-full hover:bg-blue-600 hover:text-white ml-4" download="Resume_Esau.pdf">
+                    <i class="fas fa-download"></i> Download Résumé
+                </a>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
     <!-- About Section -->
-    <section class="section about" id="about">
-        <div class="container">
-            <h2 class="section-title">About Me</h2>
-            <div class="about-content">
-                <div class="about-image">
-                    <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor">
+    <section class="section about py-16" id="about">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8">About Me</h2>
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="about-image w-full md:w-1/3 mb-8 md:mb-0">
+                    <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor" class="rounded-full mx-auto md:mx-0">
                 </div>
-                <div class="about-text">
-                    <p>Hello, I'm Esau Victor ⇜⇝ a Software Engineer (5+ yrs) building hardware-to-software solutions.</p>
-    <p>I merge code with user-centric design to create intuitive, impactful experiences across web development, data analytics, and cybersecurity.</p>
-    <p>Outside of work, I actively contribute to open-source, mentor aspiring developers, and stay engaged with emerging technologies.</p>
-                    
-                    <div class="skills">
+                <div class="about-text w-full md:w-2/3">
+                    <p class="text-lg md:text-xl">Hello, I'm Esau Victor ⇜⇝ a Software Engineer (5+ yrs) building hardware-to-software solutions.</p>
+                    <p class="text-lg md:text-xl">I merge code with user-centric design to create intuitive, impactful experiences across web development, data analytics, and cybersecurity.</p>
+                    <p class="text-lg md:text-xl">Outside of work, I actively contribute to open-source, mentor aspiring developers, and stay engaged with emerging technologies.</p>
+                    <div class="skills mt-8">
                         <div class="skill-item">
-                            <div class="skill-name">
+                            <div class="skill-name flex justify-between items-center">
                                 <span>Web Development</span>
                                 <span>95%</span>
                             </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 95%;"></div>
+                            <div class="skill-bar bg-gray-200 rounded-full h-4">
+                                <div class="skill-progress bg-blue-600 rounded-full h-4" style="width: 95%;"></div>
                             </div>
                         </div>
                         <div class="skill-item">
-                            <div class="skill-name">
+                            <div class="skill-name flex justify-between items-center">
                                 <span>Data Analytics</span>
                                 <span>90%</span>
                             </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 90%;"></div>
+                            <div class="skill-bar bg-gray-200 rounded-full h-4">
+                                <div class="skill-progress bg-blue-600 rounded-full h-4" style="width: 90%;"></div>
                             </div>
                         </div>
                         <div class="skill-item">
-                            <div class="skill-name">
+                            <div class="skill-name flex justify-between items-center">
                                 <span>Cyber Security</span>
                                 <span>85%</span>
                             </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 85%;"></div>
+                            <div class="skill-bar bg-gray-200 rounded-full h-4">
+                                <div class="skill-progress bg-blue-600 rounded-full h-4" style="width: 85%;"></div>
                             </div>
                         </div>
                     </div>
@@ -990,90 +95,90 @@ footer {
     </section>
 
     <!-- Services Section -->
-    <section class="section services" id="services">
-        <div class="container">
-            <h2 class="section-title">My Services</h2>
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">
+    <section class="section services py-16" id="services">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8">My Services</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="service-card p-6 bg-white rounded-lg shadow-md">
+                    <div class="service-icon text-3xl text-blue-600">
                         <i class="fas fa-code"></i>
                     </div>
-                    <h3>Web Development</h3>
-                    <p>Creating responsive, accessible, and performant websites using modern technologies like React, Vue.js, and Node.js with a focus on user experience.</p>
+                    <h3 class="text-2xl font-bold mt-4">Web Development</h3>
+                    <p class="text-gray-600">Creating responsive, accessible, and performant websites using modern technologies like React, Vue.js, and Node.js with a focus on user experience.</p>
                 </div>
-                <div class="service-card">
-                    <div class="service-icon">
+                <div class="service-card p-6 bg-white rounded-lg shadow-md">
+                    <div class="service-icon text-3xl text-blue-600">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <h3>Data Analytics</h3>
-                    <p>Transforming complex data into actionable insights using Python, SQL, and visualization tools to drive informed business decisions.</p>
+                    <h3 class="text-2xl font-bold mt-4">Data Analytics</h3>
+                    <p class="text-gray-600">Transforming complex data into actionable insights using Python, SQL, and visualization tools to drive informed business decisions.</p>
                 </div>
-                <div class="service-card">
-    <div class="service-icon">
-        <i class="fas fa-user-friends"></i>
-    </div>
-    <h3>Cyber Companion</h3>
-    <p>Empathetic digital companionship through chat, voice, or video. Whether you need emotional support, focus sessions, or casual conversation, I'm here for you.</p>
-</div>
-                <div class="service-card">
-                    <div class="service-icon">
+                <div class="service-card p-6 bg-white rounded-lg shadow-md">
+                    <div class="service-icon text-3xl text-blue-600">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mt-4">Cyber Companion</h3>
+                    <p class="text-gray-600">Empathetic digital companionship through chat, voice, or video. Whether you need emotional support, focus sessions, or casual conversation, I'm here for you.</p>
+                </div>
+                <div class="service-card p-6 bg-white rounded-lg shadow-md">
+                    <div class="service-icon text-3xl text-blue-600">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h3>Cyber Security</h3>
-                    <p>Comprehensive security solutions including vulnerability assessments, penetration testing, and security architecture design.</p>
+                    <h3 class="text-2xl font-bold mt-4">Cyber Security</h3>
+                    <p class="text-gray-600">Comprehensive security solutions including vulnerability assessments, penetration testing, and security architecture design.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Projects Section -->
-    <section class="section" id="projects">
-        <div class="container">
-            <h2 class="section-title">Featured Projects</h2>
-            <div class="projects-grid">
-                <div class="project-card">
+    <section class="section projects py-16" id="projects">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8">Featured Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="project-card bg-white rounded-lg shadow-md overflow-hidden">
                     <div class="project-image">
-                        <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/biodata.png" alt="IAUE Bio-data Capture">
+                        <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/biodata.png" alt="IAUE Bio-data Capture" class="w-full">
                     </div>
-                    <div class="project-content">
-                        <div class="project-tags">
-                            <span class="project-tag">Web Development</span>
-                            <span class="project-tag">PHP</span>
-                            <span class="project-tag">MySQL</span>
+                    <div class="project-content p-6">
+                        <div class="project-tags flex space-x-2">
+                            <span class="project-tag bg-blue-200 text-blue-800 px-2 py-1 rounded-full">Web Development</span>
+                            <span class="project-tag bg-blue-200 text-blue-800 px-2 py-1 rounded-full">PHP</span>
+                            <span class="project-tag bg-blue-200 text-blue-800 px-2 py-1 rounded-full">MySQL</span>
                         </div>
-                        <h3>IAUE Students Bio-data Capture</h3>
-                        <p>A comprehensive student data collection system with secure authentication and data validation features.</p>
-                        <a href="https://hostel.iauestudentsaffairs.com/" class="btn" target="_blank">View Project</a>
+                        <h3 class="text-2xl font-bold mt-4">IAUE Students Bio-data Capture</h3>
+                        <p class="text-gray-600">A comprehensive student data collection system with secure authentication and data validation features.</p>
+                        <a href="https://hostel.iauestudentsaffairs.com/" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 mt-4" target="_blank">View Project</a>
                     </div>
                 </div>
-                <div class="project-card">
+                <div class="project-card bg-white rounded-lg shadow-md overflow-hidden">
                     <div class="project-image">
-                        <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/hostel%20portal.png" alt="Hostel Allocation Dashboard">
+                        <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/hostel%20portal.png" alt="Hostel Allocation Dashboard" class="w-full">
                     </div>
-                    <div class="project-content">
-                        <div class="project-tags">
-                            <span class="project-tag">Dashboard</span>
-                            <span class="project-tag">Data Visualization</span>
-                            <span class="project-tag">Payment Integration</span>
+                    <div class="project-content p-6">
+                        <div class="project-tags flex space-x-2">
+                            <span class="project-tag bg-blue-200 text-blue-800 px-2 py-1 rounded-full">Dashboard</span>
+                            <span class="project-tag bg-blue-200 text-blue-800 px-2 py-1 rounded-full">Data Visualization</span>
+                            <span class="project-tag bg-blue-200 text-blue-800 px-2 py-1 rounded-full">Payment Integration</span>
                         </div>
-                        <h3>Hostel Allocation Dashboard</h3>
-                        <p>An interactive management system for student hostel allocation with real-time reporting and payment processing.</p>
-                        <a href="#" class="btn" target="_blank">View Project</a>
+                        <h3 class="text-2xl font-bold mt-4">Hostel Allocation Dashboard</h3>
+                        <p class="text-gray-600">An interactive management system for student hostel allocation with real-time reporting and payment processing.</p>
+                        <a href="#" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 mt-4" target="_blank">View Project</a>
                     </div>
                 </div>
-                <div class="project-card">
+                <div class="project-card bg-white rounded-lg shadow-md overflow-hidden">
                     <div class="project-image">
-                        <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/iauesa.png" alt="IAUE SA Website">
+                        <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/iauesa.png" alt="IAUE SA Website" class="w-full">
                     </div>
-                    <div class="project-content">
-                        <div class="project-tags">
-                            <span class="project-tag">Security</span>
-                            <span class="project-tag">Web Application</span>
-                            <span class="project-tag">Audit</span>
+                    <div class="project-content p-6">
+                        <div class="project-tags flex space-x-2">
+                            <span class="project-tag bg-blue-200 text-blue-800 px-2 py-1 rounded-full">Security</span>
+                            <span class="project-tag bg-blue-200 text-blue-800 px-2 py-1 rounded-full">Web Application</span>
+                            <span class="project-tag bg-blue-200 text-blue-800 px-2 py-1 rounded-full">Audit</span>
                         </div>
-                        <h3>IAUE SA Website Security</h3>
-                        <p>Conducted comprehensive security assessment and implemented security enhancements for the student association website.</p>
-                        <a href="https://iauestudentsaffairs.com/" class="btn" target="_blank">View Project</a>
+                        <h3 class="text-2xl font-bold mt-4">IAUE SA Website Security</h3>
+                        <p class="text-gray-600">Conducted comprehensive security assessment and implemented security enhancements for the student association website.</p>
+                        <a href="https://iauestudentsaffairs.com/" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 mt-4" target="_blank">View Project</a>
                     </div>
                 </div>
             </div>
@@ -1081,229 +186,156 @@ footer {
     </section>
 
     <!-- Tutorials Section -->
-<section class="section tutorials" id="tutorials">
-    <div class="container">
-        <h2 class="section-title">My learning centre</h2>
-        <p class="section-subtitle"></p>
-        
-        <div class="tutorials-grid">
-            <!-- Tutorial 1 -->
-            <div class="tutorial-card">
-                <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/GxmfcnU3feo" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen></iframe>
+    <section class="section tutorials py-16" id="tutorials">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8">My Learning Centre</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="tutorial-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/GxmfcnU3feo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="tutorial-info p-6">
+                        <h3 class="text-2xl font-bold">Web Development Basics</h3>
+                        <p class="text-gray-600">Learn the fundamentals of modern web development in this comprehensive tutorial.</p>
+                        <div class="tutorial-meta flex space-x-2 mt-4">
+                            <span class="flex items-center"><i class="fas fa-eye mr-2"></i> 15K views</span>
+                            <span class="flex items-center"><i class="fas fa-clock mr-2"></i> 15 min</span>
+                            <span class="flex items-center"><i class="fas fa-calendar-alt mr-2"></i> Mar 2025</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="tutorial-info">
-                    <h3>Web Development Basics</h3>
-                    <p>Learn the fundamentals of modern web development in this comprehensive tutorial.</p>
-                    <div class="tutorial-meta">
-                        <span><i class="fas fa-eye"></i> 15K views</span>
-                        <span><i class="fas fa-clock"></i> 15 min</span>
-                        <span><i class="fas fa-calendar-alt"></i> Mar 2025</span>
+                <div class="tutorial-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/GPVsHOlRBBI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="tutorial-info p-6">
+                        <h3 class="text-2xl font-bold">Data Analytics with Python</h3>
+                        <p class="text-gray-600">Transform raw data into meaningful insights using Python's powerful libraries.</p>
+                        <div class="tutorial-meta flex space-x-2 mt-4">
+                            <span class="flex items-center"><i class="fas fa-eye mr-2"></i> 68K views</span>
+                            <span class="flex items-center"><i class="fas fa-clock mr-2"></i> 9 hrs</span>
+                            <span class="flex items-center"><i class="fas fa-calendar-alt mr-2"></i> Mar 2025</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tutorial-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/lpa8uy4DyMo?si=ToQnWTltU0mjd0Hz" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="tutorial-info p-6">
+                        <h3 class="text-2xl font-bold">Cyber Security Essentials</h3>
+                        <p class="text-gray-600">Protect your digital assets with these fundamental security practices.</p>
+                        <div class="tutorial-meta flex space-x-2 mt-4">
+                            <span class="flex items-center"><i class="fas fa-eye mr-2"></i> 24K views</span>
+                            <span class="flex items-center"><i class="fas fa-clock mr-2"></i> 11 hrs</span>
+                            <span class="flex items-center"><i class="fas fa-calendar-alt mr-2"></i> May 2025</span>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Tutorial 2 -->
-            <div class="tutorial-card">
-                <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/GPVsHOlRBBI" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen></iframe>
-                </div>
-                <div class="tutorial-info">
-                    <h3>Data Analytics with Python</h3>
-                    <p>Transform raw data into meaningful insights using Python's powerful libraries.</p>
-                    <div class="tutorial-meta">
-                        <span><i class="fas fa-eye"></i> 68K views</span>
-                        <span><i class="fas fa-clock"></i> 9 hrs</span>
-                        <span><i class="fas fa-calendar-alt"></i> Mar 2025</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Tutorial 3 -->
-            <div class="tutorial-card">
-                <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/lpa8uy4DyMo?si=ToQnWTltU0mjd0Hz" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen></iframe>
-                </div>
-                <div class="tutorial-info">
-                    <h3>Cyber Security Essentials</h3>
-                    <p>Protect your digital assets with these fundamental security practices.</p>
-                    <div class="tutorial-meta">
-                        <span><i class="fas fa-eye"></i> 24K views</span>
-                        <span><i class="fas fa-clock"></i> 11 hrs</span>
-                        <span><i class="fas fa-calendar-alt"></i> May 2025</span>
-                    </div>
-                </div>
+            <div class="text-center mt-8">
+                <a href="https://youtube.com/@EsauDeGenius" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700" target="_blank">
+                    <i class="fab fa-youtube mr-2"></i> View More Content
+                </a>
             </div>
         </div>
-        <div class="tutorials-grid">
-            <!-- Tutorial 4 -->
-            <div class="tutorial-card">
-                <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/MW_MAvnExno?si=fbQlztCrd7CP2bkK" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen></iframe>
-                </div>
-                <div class="tutorial-info">
-                    <h3>Diskpart Utility</h3>
-                    <p>Create Bootable Usb Flash Drive Using the Diskpart Utility.</p>
-                    <div class="tutorial-meta">
-                        <span><i class="fas fa-eye"></i> 10K views</span>
-                        <span><i class="fas fa-clock"></i> 2 min</span>
-                        <span><i class="fas fa-calendar-alt"></i> Mar 2025</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Tutorial 5 -->
-            <div class="tutorial-card">
-                <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/ki2PnFL_HEU" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen></iframe>
-                </div>
-                <div class="tutorial-info">
-                    <h3>Zig Programming Language</h3>
-                    <p>Is Zig Overrated? Here's What No One Tells You!.</p>
-                    <div class="tutorial-meta">
-                        <span><i class="fas fa-eye"></i> 171K views</span>
-                        <span><i class="fas fa-clock"></i> 1 min</span>
-                        <span><i class="fas fa-calendar-alt"></i> Mar 2025</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Tutorial 6 -->
-            <div class="tutorial-card">
-                <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/LSEYdU8Dp9Y" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen></iframe>
-                </div>
-                <div class="tutorial-info">
-                    <h3>Spring-Boot Framework</h3>
-                    <p>What is Spring-Boot Framework?(explained from scratch).</p>
-                    <div class="tutorial-meta">
-                        <span><i class="fas fa-eye"></i> 6K views</span>
-                        <span><i class="fas fa-clock"></i> 4 min</span>
-                        <span><i class="fas fa-calendar-alt"></i> May 2025</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="tutorials-cta">
-            <a href="https://youtube.com/@EsauDeGenius" class="btn" target="_blank">
-                <i class="fab fa-youtube"></i> View More Content
-            </a>
-        </div>
-    </div>
-</section>
+    </section>
 
     <!-- Blog Section -->
-<section class="section" id="blog">
-    <div class="container">
-        <h2 class="section-title">My Blog</h2>
-        <p class="section-subtitle">Exploring my journey, challenges, and reflections in the tech world</p>
-        
-        <div class="blog-grid">
-            <div class="blog-post">
-                <div class="blog-image">
-                    <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Blog post image">
-                </div>
-                <div class="blog-content">
-                    <h3>A Day in the Life of a Developer</h3>
-                    <div class="blog-meta">
-                        <span><i class="fas fa-calendar-alt"></i> April 10, 2024</span>
-                        <span><i class="fas fa-clock"></i> 5 min read</span>
+    <section class="section blog py-16" id="blog">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8">My Blog</h2>
+            <p class="text-lg md:text-xl text-center mb-8">Exploring my journey, challenges, and reflections in the tech world</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="blog-post bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="blog-image">
+                        <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Blog post image" class="w-full">
                     </div>
-                    <p>Today was one of those days where I spent hours debugging a seemingly simple issue. The frustration mounted as solutions I thought were perfect just didn't work...</p>
-                    <a href="https://esauvictor.github.io/post.html?id=1" class="btn btn-outline">Read More</a>
+                    <div class="blog-content p-6">
+                        <h3 class="text-2xl font-bold">A Day in the Life of a Developer</h3>
+                        <div class="blog-meta flex space-x-2 mt-4">
+                            <span class="flex items-center"><i class="fas fa-calendar-alt mr-2"></i> April 10, 2024</span>
+                            <span class="flex items-center"><i class="fas fa-clock mr-2"></i> 5 min read</span>
+                        </div>
+                        <p class="text-gray-600">Today was one of those days where I spent hours debugging a seemingly simple issue. The frustration mounted as solutions I thought were perfect just didn't work...</p>
+                        <a href="https://esauvictor.github.io/post.html?id=1" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 mt-4" target="_blank">Read More</a>
+                    </div>
+                </div>
+                <div class="blog-post bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="blog-image">
+                        <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Blog post image" class="w-full">
+                    </div>
+                    <div class="blog-content p-6">
+                        <h3 class="text-2xl font-bold">Overcoming Imposter Syndrome</h3>
+                        <div class="blog-meta flex space-x-2 mt-4">
+                            <span class="flex items-center"><i class="fas fa-calendar-alt mr-2"></i> May 3, 2025</span>
+                            <span class="flex items-center"><i class="fas fa-clock mr-2"></i> 8 min read</span>
+                        </div>
+                        <p class="text-gray-600">There are days when I wake up feeling like a fraud in this field. How did get I here? Do I really belong? These thoughts have been my constant companions...</p>
+                        <a href="https://esauvictor.github.io/post.html?id=2" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 mt-4" target="_blank">Read More</a>
+                    </div>
+                </div>
+                <div class="blog-post bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="blog-image">
+                        <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Blog post image" class="w-full">
+                    </div>
+                    <div class="blog-content p-6">
+                        <h3 class="text-2xl font-bold">Building Something That Matters</h3>
+                        <div class="blog-meta flex space-x-2 mt-4">
+                            <span class="flex items-center"><i class="fas fa-calendar-alt mr-2"></i> June 12, 2025</span>
+                            <span class="flex items-center"><i class="fas fa-clock mr-2"></i> 6 min read</span>
+                        </div>
+                        <p class="text-gray-600">When I see the impact of the projects I've worked on, especially those that help students like the IAUE systems, it reminds me why I fell in love with coding in the first place...</p>
+                        <a href="https://esauvictor.github.io/post.html?id=3" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 mt-4" target="_blank">Read More</a>
+                    </div>
                 </div>
             </div>
-            
-            <div class="blog-post">
-                <div class="blog-image">
-                    <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Blog post image">
-                </div>
-                <div class="blog-content">
-                    <h3>Overcoming Imposter Syndrome</h3>
-                    <div class="blog-meta">
-                        <span><i class="fas fa-calendar-alt"></i> May 3, 2025</span>
-                        <span><i class="fas fa-clock"></i> 8 min read</span>
-                    </div>
-                    <p>There are days when I wake up feeling like a fraud in this field. How did I get here? Do I really belong? These thoughts have been my constant companions...</p>
-                    <a href="https://esauvictor.github.io/post.html?id=2" class="btn btn-outline">Read More</a>
-                </div>
-            </div>
-            
-            <div class="blog-post">
-                <div class="blog-image">
-                    <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Blog post image">
-                </div>
-                <div class="blog-content">
-                    <h3>Building Something That Matters</h3>
-                    <div class="blog-meta">
-                        <span><i class="fas fa-calendar-alt"></i> June 12 , 2025</span>
-                        <span><i class="fas fa-clock"></i> 6 min read</span>
-                    </div>
-                    <p>When I see the impact of the projects I've worked on, especially those that help students like the IAUE systems, it reminds me why I fell in love with coding in the first place...</p>
-                    <a href="https://esauvictor.github.io/post.html?id=3" class="btn btn-outline">Read More</a>
-                </div>
+            <div class="text-center mt-8">
+                <a href="/blog" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700" target="_blank">
+                    <i class="fas fa-plus mr-2"></i> Go to Blog
+                </a>
             </div>
         </div>
-        
-        <div class="tutorials-cta">
-            <a href="/blog" class="btn" target="_blank">
-                <i class="fas fa-plus"></i> Go-to Blog
-            </a>
-        </div>
-    </div>
-</section>
+    </section>
 
     <!-- Testimonials Section -->
-    <section class="section testimonials" id="testimonials">
-        <div class="container">
-            <h2 class="section-title">Client Testimonials</h2>
-            <div class="testimonial-grid">
-                <div class="testimonial-card">
-                    <p class="testimonial-text">Esau delivered our web project ahead of schedule with exceptional quality. His attention to detail and problem-solving skills are truly remarkable.</p>
-                    <div class="testimonial-author">
-                        <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Sarah%20Johnson.png" alt="Sarah Johnson">
-                        <div class="author-info">
-                            <h4>Sarah Johnson</h4>
-                            <p>CEO, Tech Innovations</p>
+    <section class="section testimonials py-16" id="testimonials">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8">Client Testimonials</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="testimonial-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-6">
+                        <p class="text-gray-600">Esau delivered our web project ahead of schedule with exceptional quality. His attention to detail and problem-solving skills are truly remarkable.</p>
+                        <div class="testimonial-author flex items-center mt-8">
+                            <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Sarah%20Johnson.png" alt="Sarah Johnson" class="w-16 h-16 rounded-full mr-4">
+                            <div class="author-info">
+                                <h4 class="font-bold">Sarah Johnson</h4>
+                                <p class="text-gray-600">CEO, Tech Innovations</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="testimonial-card">
-                    <p class="testimonial-text">The data analytics dashboard Esau created transformed how we make business decisions. We've seen a 30% improvement in operational efficiency.</p>
-                    <div class="testimonial-author">
-                        <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Michael%20Chen.png" alt="Michael Chen">
-                        <div class="author-info">
-                            <h4>Michael Chen</h4>
-                            <p>CTO, Data Solutions</p>
+                <div class="testimonial-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-6">
+                        <p class="text-gray-600">The data analytics dashboard Esau created transformed how we make business decisions. We've seen a 30% improvement in operational efficiency.</p>
+                        <div class="testimonial-author flex items-center mt-8">
+                            <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Michael%20Chen.png" alt="Michael Chen" class="w-16 h-16 rounded-full mr-4">
+                            <div class="author-info">
+                                <h4 class="font-bold">Michael Chen</h4>
+                                <p class="text-gray-600">CTO, Data Solutions</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="testimonial-card">
-                    <p class="testimonial-text">Esau's security audit identified critical vulnerabilities we were unaware of. His recommendations significantly strengthened our security posture.</p>
-                    <div class="testimonial-author">
-                        <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Emily%20Rodriguez.png" alt="Emily Rodriguez">
-                        <div class="author-info">
-                            <h4>Emily Rodriguez</h4>
-                            <p>Director of IT, Secure Networks</p>
+                <div class="testimonial-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-6">
+                        <p class="text-gray-600">Esau's security audit identified critical vulnerabilities we were unaware of. His recommendations significantly strengthened our security posture.</p>
+                        <div class="testimonial-author flex items-center mt-8">
+                            <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Emily%20Rodriguez.png" alt="Emily Rodriguez" class="w-16 h-16 rounded-full mr-4">
+                            <div class="author-info">
+                                <h4 class="font-bold">Emily Rodriguez</h4>
+                                <p class="text-gray-600">Director of IT, Secure Networks</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1312,136 +344,124 @@ footer {
     </section>
 
     <!-- Contact Section -->
-<section class="section contact" id="contact">
-    <div class="container">
-        <h2 class="section-title">Get In Touch</h2>
-        <div class="contact-container">
-            <div class="contact-info">
-                <h3>Contact Information</h3>
-                <p>Feel free to reach out for project inquiries, collaborations, or just to say hello!</p>
-                
-                <div class="contact-item">
-                    <div class="contact-icon">
-                        <i class="fas fa-envelope"></i>
+    <section class="section contact py-16" id="contact">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8">Get In Touch</h2>
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="contact-info w-full md:w-1/2 mb-8 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-4">Contact Information</h3>
+                    <p class="text-gray-600">Feel free to reach out for project inquiries, collaborations, or just to say hello!</p>
+                    <div class="contact-item flex items-start mt-4">
+                        <div class="contact-icon mr-4">
+                            <i class="fas fa-envelope text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Email</h4>
+                            <a href="mailto:esauvictor@icloud.com" class="text-blue-600">esauvictor@icloud.com</a>
+                        </div>
                     </div>
-                    <div>
-                        <h4>Email</h4>
-                        <a href="mailto:esauvictor@icloud.com">esauvictor@icloud.com</a>
+                    <div class="contact-item flex items-start mt-4">
+                        <div class="contact-icon mr-4">
+                            <i class="fas fa-phone text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Phone</h4>
+                            <a href="tel:+2348132084092" class="text-blue-600">+(234) 813 20 84 092</a>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="contact-item">
-                    <div class="contact-icon">
-                        <i class="fas fa-phone"></i>
+                    <div class="contact-item flex items-start mt-4">
+                        <div class="contact-icon mr-4">
+                            <i class="fas fa-map-marker-alt text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Location</h4>
+                            <p class="text-gray-600">Port Harcourt, Nigeria</p>
+                        </div>
                     </div>
-                    <div>
-                        <h4>Phone</h4>
-                        <a href="tel:+2348132084092">+(234) 813 20 84 092</a>
-                    </div>
-                </div>
-                
-                <div class="contact-item">
-                    <div class="contact-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    <div>
-                        <h4>Location</h4>
-                        <p>Port Harcourt, Nigeria</p>
-                    </div>
-                </div>
-                
-                <div class="social-links">
-                    <a href="https://www.linkedin.com/in/esau-victor" target="_blank" aria-label="LinkedIn">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="https://github.com/esauvictor" target="_blank" aria-label="GitHub">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="https://x.com/esau_vee" target="_blank" aria-label="x">
-                        <i class="fab fa-x"></i>
-                    </a>
-                </div>
-            </div>
-            
-            <form action="https://formsubmit.co/esauvictor@icloud.com" method="POST" class="contact-form">
-                <!-- Hidden Fields -->
-                <input type="hidden" name="_subject" value="New Message From Esau Victors' Portfolio Website">
-                <input type="hidden" name="_next" value="https://esauvictor.github.io/thank-you.html">
-                <input type="hidden" name="_template" value="table"> <!-- Better email formatting -->
-                <input type="hidden" name="_captcha" value="false">
-                <input type="text" name="_honey" style="display:none"> <!-- Honeypot for spam -->
-                <input type="hidden" name="_autoresponse" value="Thank you for your message! I'll get back to you within 24 hours.">
-                
-                <!-- Form Fields -->
-                <div class="form-group">
-                    <input type="text" class="form-control" name="name" placeholder="Enter your full name" required>
-                </div>
-                <div class="form-group">
-                    <input type="email" class="form-control" name="email" placeholder="code@gmail.com" 
-                           pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Please enter a valid email address" required>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="subject" placeholder="Message subject (optional)">
-                </div>
-                <div class="form-group">
-                    <textarea class="form-control" name="message" rows="5" placeholder="Type your message here..." required></textarea>
-                </div>
-                
-                <p class="privacy-notice">By submitting, you agree to our <a href="/privacy" style="color: var(--accent-color)">Privacy Policy</a></p>
-                
-                <button type="submit" class="btn">
-                    <i class="fas fa-paper-plane"></i> Send Message
-                </button>
-            </form>
-        </div>
-    </div>
-</section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>Esau Victor</h3>
-                    <p>Professional Web Developer, Data Analytics Engineer, and Cyber Security Expert dedicated to delivering exceptional results.</p>
-                    <!-- Moved social links here -->
-                    <div class="social-links">
-                        <a href="https://www.linkedin.com/in/esau-victor" target="_blank" aria-label="LinkedIn">
+                    <div class="social-links flex mt-8">
+                        <a href="https://www.linkedin.com/in/esau-victor" target="_blank" class="text-blue-600 hover:text-blue-700 mr-4">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
-                        <a href="https://github.com/esauvictor" target="_blank" aria-label="GitHub">
+                        <a href="https://github.com/esauvictor" target="_blank" class="text-blue-600 hover:text-blue-700 mr-4">
                             <i class="fab fa-github"></i>
                         </a>
-                        <a href="https://x.com/esau_vee" target="_blank" aria-label="x">
+                        <a href="https://x.com/esau_vee" target="_blank" class="text-blue-600 hover:text-blue-700">
+                            <i class="fab fa-x"></i>
+                        </a>
+                    </div>
+                </div>
+                <form action="https://formsubmit.co/esauvictor@icloud.com" method="POST" class="contact-form w-full md:w-1/2">
+                    <input type="hidden" name="_subject" value="New Message From Esau Victors' Portfolio Website">
+                    <input type="hidden" name="_next" value="https://esauvictor.github.io/thank-you.html">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="text" name="_honey" style="display:none">
+                    <input type="hidden" name="_autoresponse" value="Thank you for your message! I'll get back to you within 24 hours.">
+                    <div class="form-group mb-4">
+                        <input type="text" class="form-control w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-600" name="name" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group mb-4">
+                        <input type="email" class="form-control w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-600" name="email" placeholder="code@gmail.com" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Please enter a valid email address" required>
+                    </div>
+                    <div class="form-group mb-4">
+                        <input type="text" class="form-control w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-600" name="subject" placeholder="Message subject (optional)">
+                    </div>
+                    <div class="form-group mb-4">
+                        <textarea class="form-control w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-600" name="message" rows="5" placeholder="Type your message here..." required></textarea>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">By submitting, you agree to our <a href="/privacy" class="text-blue-600">Privacy Policy</a></p>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700">
+                        <i class="fas fa-paper-plane mr-2"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-blue-600 text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="footer-column">
+                    <h3 class="text-2xl font-bold mb-4">Esau Victor</h3>
+                    <p class="text-gray-300">Professional Web Developer, Data Analytics Engineer, and Cyber Security Expert dedicated to delivering exceptional results.</p>
+                    <div class="social-links flex mt-8">
+                        <a href="https://www.linkedin.com/in/esau-victor" target="_blank" class="text-white hover:text-gray-300 mr-4">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://github.com/esauvictor" target="_blank" class="text-white hover:text-gray-300 mr-4">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://x.com/esau_vee" target="_blank" class="text-white hover:text-gray-300">
                             <i class="fab fa-x"></i>
                         </a>
                     </div>
                 </div>
                 <div class="footer-column">
-                    <h3>Quick Links</h3>
+                    <h3 class="text-2xl font-bold mb-4">Quick Links</h3>
                     <ul class="footer-links">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#projects">Projects</a></li>
-                         <li><a href="#tutorials">Learning centre</a></li>
-                         <li><a href="#contact">Contact</a></li>
-                         <li><a href="#blog">Blog</a></li>
-                          <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="#home" class="text-gray-300 hover:text-white">Home</a></li>
+                        <li><a href="#about" class="text-gray-300 hover:text-white">About</a></li>
+                        <li><a href="#services" class="text-gray-300 hover:text-white">Services</a></li>
+                        <li><a href="#projects" class="text-gray-300 hover:text-white">Projects</a></li>
+                        <li><a href="#tutorials" class="text-gray-300 hover:text-white">Learning Centre</a></li>
+                        <li><a href="#contact" class="text-gray-300 hover:text-white">Contact</a></li>
+                        <li><a href="#blog" class="text-gray-300 hover:text-white">Blog</a></li>
+                        <li><a href="/privacy" class="text-gray-300 hover:text-white">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3>Services</h3>
+                    <h3 class="text-2xl font-bold mb-4">Services</h3>
                     <ul class="footer-links">
-                        <li><a href="#services">Web Development</a></li>
-                        <li><a href="#services">Data Analytics</a></li>
-                        <li><a href="#services">Cyber Security</a></li>
-                        <li><a href="#contact">Consulting</a></li>
+                        <li><a href="#services" class="text-gray-300 hover:text-white">Web Development</a></li>
+                        <li><a href="#services" class="text-gray-300 hover:text-white">Data Analytics</a></li>
+                        <li><a href="#services" class="text-gray-300 hover:text-white">Cyber Security</a></li>
+                        <li><a href="#contact" class="text-gray-300 hover:text-white">Consulting</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="copyright">
-                <p>&copy; <span id="year"></span> Esau Victor. All rights reserved.</p>
+            <div class="text-center mt-16">
+                <p class="text-gray-300">&copy; <span id="year"></span> Esau Victor. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -1526,17 +546,17 @@ footer {
         document.getElementById('year').textContent = new Date().getFullYear();
     </script>
     <!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/6585afc107843602b804d2c0/1hi93d54d';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
-<!--End of Tawk.to Script-->
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6585afc107843602b804d2c0/1hi93d54d';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!--End of Tawk.to Script-->
 </body>
 </html>
