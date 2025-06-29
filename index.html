@@ -261,6 +261,23 @@
             align-items: center;
         }
 
+        /* Slider Container */
+        .slider-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Slider Image */
+        .slider-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
         /* About Image Styles */
         .about-image {
             width: 250px;
@@ -993,8 +1010,10 @@
         <div class="container">
             <h2 class="section-title">About Me</h2>
             <div class="about-content">
-                <div class="about-image">
-                    <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor">
+                <!-- Slider Container -->
+                <div class="slider-container">
+                    <!-- Slider Image -->
+                    <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor" class="slider-image">
                 </div>
                 <div class="about-text">
                     <p>Hello, I'm Esau Victor ⇜⇝ a Software Engineer (5+ yrs) building hardware-to-software solutions.</p>
