@@ -931,13 +931,13 @@
             z-index: 1000;
         }
 
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-top: 4px solid #1e3a8a;
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #1e3a8a;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
         }
 
         @keyframes spin {
@@ -949,7 +949,7 @@
 <body>
     <!-- Loading Spinner -->
     <div class="loading-spinner" id="loadingSpinner">
-        <div class="spinner"></div>
+        <div class="loader"></div>
     </div>
 
     <!-- Navigation -->
@@ -1293,7 +1293,6 @@
                         <a href="https://esauvictor.github.io/post.html?id=2" class="btn btn-outline">Read More</a>
                     </div>
                 </div>
-                
                 <div class="blog-post">
                     <div class="blog-image">
                         <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Blog post image">
