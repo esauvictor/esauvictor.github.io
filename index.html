@@ -1493,84 +1493,92 @@
     </footer>
 
     <!-- JavaScript -->
-    <script>
-        // Mobile navigation toggle
-        const hamburger = document.getElementById('hamburger');
-        const navLinks = document.getElementById('navLinks');
-        
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            hamburger.innerHTML = navLinks.classList.contains('active') 
-                ? '<i class="fas fa-times"></i>' 
-                : '<i class="fas fa-bars"></i>';
+   <script>
+    // Mobile navigation toggle
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    
+    hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        hamburger.innerHTML = navLinks.classList.contains('active') 
+            ? '<i class="fas fa-times"></i>' 
+            : '<i class="fas fa-bars"></i>';
+    });
+    
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            hamburger.innerHTML = '<i class="fas fa-bars"></i>';
         });
-        
-        // Close mobile menu when clicking a link
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                hamburger.innerHTML = '<i class="fas fa-bars"></i>';
-            });
-        });
-        
-        // Navigation scroll effect
-        window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
+    });
+    
+    // Navigation scroll effect
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+    
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 70,
+                    behavior: 'smooth'
+                });
             }
         });
-        
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 70,
-                        behavior: 'smooth'
-                    });
-                }
-            });
+    });
+    
+    // Animate skill bars when they come into view
+    const skillBars = document.querySelectorAll('.skill-progress');
+    
+    function animateSkillBars() {
+        skillBars.forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0';
+            setTimeout(() => {
+                bar.style.width = width;
+            }, 100);
         });
-        
-        // Animate skill bars when they come into view
-        const skillBars = document.querySelectorAll('.skill-progress');
-        
-        function animateSkillBars() {
-            skillBars.forEach(bar => {
-                const width = bar.style.width;
-                bar.style.width = '0';
-                setTimeout(() => {
-                    bar.style.width = width;
-                }, 100);
-            });
+    }
+    
+    // Intersection Observer for skill bars animation
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateSkillBars();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    const skillsSection = document.querySelector('.skills');
+    if (skillsSection) {
+        observer.observe(skillsSection);
+    }
+    
+    // Update copyright year
+    document.getElementById('year').textContent = new Date().getFullYear();
+    
+    // Hide the loading spinner when the page is fully loaded
+    window.addEventListener('load', () => {
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        if (loadingSpinner) {
+            loadingSpinner.style.display = 'none';
         }
-        
-        // Intersection Observer for skill bars animation
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateSkillBars();
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.5 });
-        
-        const skillsSection = document.querySelector('.skills');
-        if (skillsSection) {
-            observer.observe(skillsSection);
-        }
-        
-        // Update copyright year
-        document.getElementById('year').textContent = new Date().getFullYear();
-    </script>
+    });
+</script>
     <!--Start of Tawk.to Script-->
     <script type="text/javascript">
     var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
@@ -1584,5 +1592,6 @@
     })();
     </script>
     <!--End of Tawk.to Script-->
+    
 </body>
 </html>
