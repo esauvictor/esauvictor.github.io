@@ -1643,42 +1643,50 @@
                 </div>
                 
                 <form action="https://formsubmit.co/esauvictor@icloud.com" method="POST" class="contact-form">
-                    <!-- Hidden Fields -->
-                    <input type="hidden" name="_subject" value="New Message From Esau Victors' Portfolio Website">
-                    <input type="hidden" name="_next" value="https://esauvictor.github.io/thank-you.html">
-                    <input type="hidden" name="_template" value="table"> <!-- Better email formatting -->
-                    <input type="hidden" name="_captcha" value="false">
-                    <input type="text" name="_honey" style="display:none"> <!-- Honeypot for spam -->
-                    <input type="hidden" name="_autoresponse" value="Thank you for your message! I'll get back to you within 24 hours.">
-                    
-                    <!-- Form Fields -->
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="name" placeholder="Enter your full name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" class="form-control" name="email" placeholder="Enter your email address" 
-                               pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Please enter a valid email address" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="subject" placeholder="Message subject (optional)">
-                    </div>
-                    <div class="form-group">
-                        <textarea class="form-control" name="message" rows="5" placeholder="Type your message here..." required></textarea>
-                    </div>
-                    
-                    <p class="privacy-notice">
-  <i class="fa-solid fa-lock" style="color: var(--accent-color); margin-right: 5px;"></i>
-  By submitting, you agree to our 
-  <a href="/privacy" style="color: var(--accent-color)">
-    <i class="fa-solid fa-file-lines" style="margin-left: 5px; margin-right: 3px;"></i>
-    Privacy Policy
-  </a>
-</p>
-                    
-                    <button type="submit" class="btn">
-                        <i class="fas fa-paper-plane"></i> Send Message
-                    </button>
-                </form>
+    <!-- Hidden Fields -->
+    <input type="hidden" name="_subject" value="New Message From Esau Victors' Portfolio Website">
+    <input type="hidden" name="_next" value="https://esauvictor.github.io/thank-you.html">
+    <input type="hidden" name="_template" value="table"> <!-- Better email formatting -->
+    <input type="hidden" name="_captcha" value="false">
+    <input type="text" name="_honey" style="display:none"> <!-- Honeypot for spam -->
+    <input type="hidden" name="_autoresponse" value="Thank you for your message! I'll get back to you within 24 hours.">
+    
+    <!-- Form Fields -->
+    <div class="form-group">
+        <input type="text" class="form-control" name="name" placeholder="Enter your full name" required>
+    </div>
+    <div class="form-group">
+        <input type="email" class="form-control" name="email" placeholder="Enter your email address" 
+               pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Please enter a valid email address" required>
+    </div>
+    <div class="form-group">
+        <select class="form-control" name="subject" required>
+            <option value="" disabled selected>Reason for Reaching</option>
+            <option value="Web Development">Web Development</option>
+            <option value="Data Analytics">Data Analytics</option>
+            <option value="Cyber Security">Cyber Security</option>
+            <option value="Consulting">Consulting</option>
+            <option value="Mentorship">Mentorship</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <textarea class="form-control" name="message" rows="5" placeholder="Type your message here..." required></textarea>
+    </div>
+    
+    <p class="privacy-notice">
+        <i class="fa-solid fa-lock" style="color: var(--accent-color); margin-right: 5px;"></i>
+        By submitting, you agree to our 
+        <a href="/privacy" style="color: var(--accent-color)">
+            <i class="fa-solid fa-file-lines" style="margin-left: 5px; margin-right: 3px;"></i>
+            Privacy Policy
+        </a>
+    </p>
+    
+    <button type="submit" class="btn">
+        <i class="fas fa-paper-plane"></i> Send Message
+    </button>
+</form>
+
             </div>
         </div>
     </section>
