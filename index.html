@@ -27,6 +27,39 @@
             --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
             --border-radius: 12px;
         }
+.laptop-mockup {
+    position: relative;
+    max-width: 100%;
+    margin-bottom: 1rem;
+}
+
+.laptop-frame {
+    background: #333;
+    border-radius: 12px 12px 0 0;
+    padding: 1rem;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.laptop-frame::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 6px;
+    background: #999;
+    border-radius: 3px;
+}
+
+.laptop-frame img {
+    display: block;
+    width: 100%;
+    border-radius: 6px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
 
         * {
             margin: 0;
@@ -1073,58 +1106,66 @@
     </section>
 
     <!-- Projects Section -->
-    <section class="section" id="projects">
-        <div class="container">
-            <h2 class="section-title">Featured Projects</h2>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-image">
+<section class="section" id="projects">
+    <div class="container">
+        <h2 class="section-title">Featured Projects</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-image laptop-mockup">
+                    <div class="laptop-frame">
                         <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/biodata.png" alt="IAUE Bio-data Capture">
                     </div>
-                    <div class="project-content">
-                        <div class="project-tags">
-                            <span class="project-tag">Web Development</span>
-                            <span class="project-tag">PHP</span>
-                            <span class="project-tag">MySQL</span>
-                        </div>
-                        <h3>IAUE Students Bio-data Capture</h3>
-                        <p>A comprehensive student data collection system with secure authentication and data validation features.</p>
-                        <a href="https://hostel.iauestudentsaffairs.com/" class="btn" target="_blank">View Project</a>
-                    </div>
                 </div>
-                <div class="project-card">
-                    <div class="project-image">
+                <div class="project-content">
+                    <div class="project-tags">
+                        <span class="project-tag">Web Development</span>
+                        <span class="project-tag">PHP</span>
+                        <span class="project-tag">MySQL</span>
+                    </div>
+                    <h3>IAUE Students Bio-data Capture</h3>
+                    <p>A comprehensive student data collection system with secure authentication and data validation features.</p>
+                    <a href="https://hostel.iauestudentsaffairs.com/" class="btn" target="_blank">View Project</a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image laptop-mockup">
+                    <div class="laptop-frame">
                         <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/hostel%20portal.png" alt="Hostel Allocation Dashboard">
                     </div>
-                    <div class="project-content">
-                        <div class="project-tags">
-                            <span class="project-tag">Dashboard</span>
-                            <span class="project-tag">Data Visualization</span>
-                            <span class="project-tag">Payment Integration</span>
-                        </div>
-                        <h3>Hostel Allocation Dashboard</h3>
-                        <p>An interactive management system for student hostel allocation with real-time reporting and payment processing.</p>
-                        <a href="#" class="btn" target="_blank">View Project</a>
-                    </div>
                 </div>
-                <div class="project-card">
-                    <div class="project-image">
+                <div class="project-content">
+                    <div class="project-tags">
+                        <span class="project-tag">Dashboard</span>
+                        <span class="project-tag">Data Visualization</span>
+                        <span class="project-tag">Payment Integration</span>
+                    </div>
+                    <h3>Hostel Allocation Dashboard</h3>
+                    <p>An interactive management system for student hostel allocation with real-time reporting and payment processing.</p>
+                    <a href="#" class="btn" target="_blank">View Project</a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image laptop-mockup">
+                    <div class="laptop-frame">
                         <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/iauesa.png" alt="IAUE SA Website">
                     </div>
-                    <div class="project-content">
-                        <div class="project-tags">
-                            <span class="project-tag">Security</span>
-                            <span class="project-tag">Web Application</span>
-                            <span class="project-tag">Audit</span>
-                        </div>
-                        <h3>IAUE SA Website Security</h3>
-                        <p>Conducted comprehensive security assessment and implemented security enhancements for the student association website.</p>
-                        <a href="https://iauestudentsaffairs.com/" class="btn" target="_blank">View Project</a>
+                </div>
+                <div class="project-content">
+                    <div class="project-tags">
+                        <span class="project-tag">Security</span>
+                        <span class="project-tag">Web Application</span>
+                        <span class="project-tag">Audit</span>
                     </div>
+                    <h3>IAUE SA Website Security</h3>
+                    <p>Conducted comprehensive security assessment and implemented security enhancements for the student association website.</p>
+                    <a href="https://iauestudentsaffairs.com/" class="btn" target="_blank">View Project</a>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Tutorials Section -->
     <section class="section tutorials" id="tutorials">
