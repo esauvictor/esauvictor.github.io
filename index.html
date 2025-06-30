@@ -29,28 +29,38 @@
         }
 /* Tablet mockup style */
 /* Laptop Mockup Styles */
+/* Laptop Mockup Styles */
 .laptop-mockup {
     position: relative;
     width: 100%;
     max-width: 300px;
     margin: 0 auto;
-    border: 1px solid #ddd;
-    border-radius: 10px;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.laptop-mockup img {
+.screen {
+    position: relative;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    overflow: hidden;
+}
+
+.screen img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: auto;
-    display: block;
+    height: 100%;
+    object-fit: cover;
 }
 
 .project-image {
     text-align: center;
     margin-bottom: 20px;
 }
-
         * {
             margin: 0;
             padding: 0;
