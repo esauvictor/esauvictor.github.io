@@ -1840,28 +1840,29 @@
     })();
     </script>
     <!--End of Tawk.to Script-->
-
-    <audio id="backgroundMusic" loop>
+<audio id="backgroundMusic" loop>
   <source src="https://www.accessbankplc.com/content/images/access-more/Access-More-Music.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
-</audio>
+</audio> 
 
 <script>
   window.addEventListener('DOMContentLoaded', function () {
     const audio = document.getElementById('backgroundMusic');
-    
-    // Try to autoplay (might fail silently on some browsers)
+
+    // Attempt autoplay when allowed (e.g., muted)
+    audio.volume = 0.5; // Optional: lower volume to avoid shocking users
     audio.play().catch(() => {
-      // If autoplay fails, wait for user interaction
-      const startAudio = () => {
+      // Autoplay blocked, wait for user interaction
+      const enableAudio = () => {
         audio.play();
-        document.removeEventListener('click', startAudio);
+        document.removeEventListener('click', enableAudio);
+        document.removeEventListener('touchstart', enableAudio); // Mobile
       };
-      document.addEventListener('click', startAudio);
+      document.addEventListener('click', enableAudio);
+      document.addEventListener('touchstart', enableAudio);
     });
   });
 </script>
-
     
 </body>
 </html>
