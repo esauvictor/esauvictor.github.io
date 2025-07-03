@@ -1844,26 +1844,27 @@
 <audio id="backgroundMusic" loop>
   <source src="https://esauvictor.github.io/mind rest.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
-</audio> 
+</audio>
 
 <script>
   window.addEventListener('DOMContentLoaded', function () {
     const audio = document.getElementById('backgroundMusic');
+    audio.volume = 0.5;
 
-    // Attempt autoplay when allowed (e.g., muted)
-    audio.volume = 0.5; // Optional: lower volume to avoid shocking users
-    audio.play().catch(() => {
-      // Autoplay blocked, wait for user interaction
-      const enableAudio = () => {
-        audio.play();
-        document.removeEventListener('click', enableAudio);
-        document.removeEventListener('touchstart', enableAudio); // Mobile
-      };
-      document.addEventListener('click', enableAudio);
-      document.addEventListener('touchstart', enableAudio);
-    });
+    const enableAudio = () => {
+      audio.play().catch((err) => {
+        console.error('Audio play failed:', err);
+      });
+      document.removeEventListener('click', enableAudio);
+      document.removeEventListener('touchstart', enableAudio);
+    };
+
+    // Only play after direct user interaction
+    document.addEventListener('click', enableAudio);
+    document.addEventListener('touchstart', enableAudio);
   });
 </script>
+
     
 </body>
 </html>
