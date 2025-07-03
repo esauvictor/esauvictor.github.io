@@ -1641,16 +1641,16 @@
                         </a>
                     </div>
                 </div>
-                
-                <form action="https://formspree.io/f/mnnpwpzg" method="POST" class="contact-form">
-    <!-- Hidden Fields -->
-    <input type="hidden" name="_subject" value="New Message From Esau Victors' Portfolio Website">
-    <input type="hidden" name="_next" value="https://esauvictor.github.io/thank-you.html">
-    <input type="hidden" name="_template" value="table"> <!-- Better email formatting -->
-    <input type="hidden" name="_captcha" value="false">
-    <input type="text" name="_honey" style="display:none"> <!-- Honeypot for spam -->
-    <input type="hidden" name="_autoresponse" value="Thank you for your message! I'll get back to you within 24 hours.">
-    
+             <form action="https://api.staticforms.xyz/submit" method="POST" class="contact-form">
+    <!-- StaticForms Required -->
+    <input type="hidden" name="accessKey" value="sf_n72knfdn65gg51ni92d9fdm7">
+    <input type="hidden" name="redirectTo" value="https://esauvictor.github.io/thank-you.html">
+
+    <!-- Optional Hidden Fields -->
+    <input type="hidden" name="subject" value="New Message From Esau Victor's Portfolio Website">
+    <input type="text" name="honeypot" style="display:none"> <!-- Anti-spam field -->
+    <input type="hidden" name="replyTo" value="email"> <!-- Makes replies go to sender's email -->
+
     <!-- Form Fields -->
     <div class="form-group">
         <input type="text" class="form-control" name="name" placeholder="Enter your full name" required>
@@ -1672,7 +1672,7 @@
     <div class="form-group">
         <textarea class="form-control" name="message" rows="5" placeholder="Type your message here..." required></textarea>
     </div>
-    
+
     <p class="privacy-notice">
         <i class="fa-solid fa-lock" style="color: var(--accent-color); margin-right: 5px;"></i>
         By submitting, you agree to our 
@@ -1681,7 +1681,7 @@
             Privacy Policy
         </a>
     </p>
-    
+
     <button type="submit" class="btn">
         <i class="fas fa-paper-plane"></i> Send Message
     </button>
