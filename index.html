@@ -1842,24 +1842,60 @@
     <!--End of Tawk.to Script-->
     
 <audio id="backgroundMusic" loop>
-  <source src="https://esauvictor.github.io/mind rest.mp3" type="audio/mpeg">
+  <source src="https://esauvictor.github.io/mind%20rest.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 
-<button id="playMusicBtn">Play Background Music</button>
+<!-- Simple music permission prompt -->
+<div id="musicPrompt" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 9999;
+">
+  <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+    <p style="margin-bottom: 1rem; font-size: 1rem;">Play background music?</p>
+    <button id="playMusic" style="
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      margin-right: 10px;
+      cursor: pointer;
+    ">Yes</button>
+    <button id="noMusic" style="
+      padding: 10px 20px;
+      background-color: #ccc;
+      color: #333;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    ">No</button>
+  </div>
+</div>
 
 <script>
-  const btn = document.getElementById('playMusicBtn');
-  const audio = document.getElementById('backgroundMusic');
-  audio.volume = 0.5;
+  window.addEventListener('DOMContentLoaded', function () {
+    const audio = document.getElementById('backgroundMusic');
+    const prompt = document.getElementById('musicPrompt');
+    const playBtn = document.getElementById('playMusic');
+    const noBtn = document.getElementById('noMusic');
 
-  btn.addEventListener('click', () => {
-    audio.play().catch(err => console.error('Play failed', err));
-    btn.style.display = 'none'; // Hide button after playing
+    audio.volume = 0.5;
+
+    playBtn.addEventListener('click', () => {
+      audio.play().catch(err => console.error('Autoplay failed:', err));
+      prompt.style.display = 'none';
+    });
+
+    noBtn.addEventListener('click', () => {
+      prompt.style.display = 'none';
+    });
   });
 </script>
-
-
-    
+ 
 </body>
 </html>
