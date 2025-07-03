@@ -1846,24 +1846,19 @@
   Your browser does not support the audio element.
 </audio>
 
+<button id="playMusicBtn">Play Background Music</button>
+
 <script>
-  window.addEventListener('DOMContentLoaded', function () {
-    const audio = document.getElementById('backgroundMusic');
-    audio.volume = 0.5;
+  const btn = document.getElementById('playMusicBtn');
+  const audio = document.getElementById('backgroundMusic');
+  audio.volume = 0.5;
 
-    const enableAudio = () => {
-      audio.play().catch((err) => {
-        console.error('Audio play failed:', err);
-      });
-      document.removeEventListener('click', enableAudio);
-      document.removeEventListener('touchstart', enableAudio);
-    };
-
-    // Only play after direct user interaction
-    document.addEventListener('click', enableAudio);
-    document.addEventListener('touchstart', enableAudio);
+  btn.addEventListener('click', () => {
+    audio.play().catch(err => console.error('Play failed', err));
+    btn.style.display = 'none'; // Hide button after playing
   });
 </script>
+
 
     
 </body>
