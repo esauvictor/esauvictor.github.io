@@ -817,7 +817,7 @@
             updateCart();
             
             // Show added animation
-            const button = document.querySelector(.add-to-cart[data-id="${itemId}"]);
+            const button = document.querySelector(`.add-to-cart[data-id="${itemId}"]`);
             button.innerHTML = '<i class="fas fa-check"></i>';
             button.style.backgroundColor = 'var(--success)';
             
@@ -868,7 +868,7 @@
                 cartItems.appendChild(cartItem);
             });
             
-            cartTotal.textContent = ₦${(total / 100).toFixed(2)};
+            cartTotal.textContent = `₦${(total / 100).toFixed(2)}`;
             
             // Add event listeners to cart controls
             document.querySelectorAll('.quantity-btn.minus').forEach(button => {
@@ -936,18 +936,18 @@
             let message = "Hello BurgerHub! I'd like to place an order:\n\n";
             
             cart.forEach((item, index) => {
-                message += ${index + 1}. ${item.name} - ${item.quantity} x ₦${(item.price / 100).toFixed(2)}\n;
+                message += `${index + 1}. ${item.name} - ${item.quantity} x ₦${(item.price / 100).toFixed(2)}\n`;
             });
             
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            message += \nTotal: ₦${(total / 100).toFixed(2)}\n\n;
+            message += `\nTotal: ₦${(total / 100).toFixed(2)}\n\n`;
             message += "Please let me know the delivery time and any additional charges. Thank you!";
             
             // Encode the message for URL
             const encodedMessage = encodeURIComponent(message);
             
             // Create WhatsApp URL
-            const whatsappUrl = https://wa.me/${phoneNumber}?text=${encodedMessage};
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
             
             // Open in new tab
             window.open(whatsappUrl, '_blank');
