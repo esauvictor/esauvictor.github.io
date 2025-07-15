@@ -1131,11 +1131,18 @@
 
 
 
-<!-- Place this before </body> -->
 <script>
-// Load Tawk.to normally but hide default button
+// Load Tawk.to and ensure default button is hidden
 var Tawk_API = Tawk_API || {};
-Tawk_API.hideWidgetOnLoad = true;
+Tawk_API.onLoad = function(){
+  // Hide the default Tawk.to button
+  if (typeof Tawk_API.hideWidget === 'function') {
+    Tawk_API.hideWidget();
+  }
+  
+  // Make sure our custom button stays visible
+  document.getElementById('tawk-custom-trigger').style.display = 'block';
+};
 
 (function(){
   var s1 = document.createElement('script');
