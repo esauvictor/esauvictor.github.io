@@ -1123,39 +1123,44 @@
         });
     </script>
 
-   <style>
-  /* Tawk.to widget positioning */
-  .tawk-button-container {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    z-index: 1000;
-  }
-  
-  /* Optional: Style for mobile responsiveness */
-  @media (max-width: 768px) {
-    .tawk-button-container {
-      top: 10px;
-      right: 10px;
-    }
-  }
-</style>
-
-<!--Start of Tawk.to Script-->
-<div class="tawk-button-container">
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/6585afc107843602b804d2c0/1hi93d54d';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
+   <<!-- Tawk.to Floating Button Container -->
+<div id="tawk-custom-container" style="position:fixed; top:20px; right:20px; z-index:999999;">
+  <!-- Button will be inserted here by Tawk.to -->
 </div>
-<!--End of Tawk.to Script-->
+
+<!-- Tawk.to Script -->
+<script>
+  window.addEventListener('load', function() {
+    var s1 = document.createElement('script');
+    s1.async = true;
+    s1.src = 'https://embed.tawk.to/YOUR_WIDGET_ID/default';
+    s1.charset = 'UTF-8';
+    s1.setAttribute('crossorigin', '*');
+    document.body.appendChild(s1);
+    
+    // Force Tawk.to to use our custom container
+    window.Tawk_API = window.Tawk_API || {};
+    window.Tawk_API.customStyle = {
+      visibility : {
+        desktop : {
+          position : 'br', // bottom-right (we'll override this)
+          x : 0,
+          y : 0
+        }
+      }
+    };
+    
+    // Override Tawk.to's default positioning
+    window.Tawk_API.onLoad = function() {
+      var tawkButton = document.querySelector('.tawk-button');
+      if(tawkButton) {
+        document.getElementById('tawk-custom-container').appendChild(tawkButton);
+        tawkButton.style.position = 'static';
+        tawkButton.style.margin = '0';
+      }
+    };
+  });
+</script>
     
 </body>
 </html>
