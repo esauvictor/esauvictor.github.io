@@ -1680,14 +1680,19 @@
                pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Please enter a valid email address" required>
     </div>
     <div class="form-group">
-        <select class="form-control" name="subject" required>
-            <option value="" disabled selected>Reason I'm Getting in Touch</option>
-            <option value="Web Development">Web Development</option>
-            <option value="Data Analytics">Data Analytics</option>
-            <option value="Cyber Security">Cyber Security</option>
-            <option value="Consulting">Consulting</option>
-            <option value="Mentorship">Mentorship</option>
-        </select>
+       <select class="form-control" name="subject" required>
+  <option value="" disabled selected>Reason I'm Getting in Touch</option>
+  
+  <!-- Core Services -->
+  <option value="Web Development">Web Development</option>
+  <option value="Data Analytics">Data Analytics</option>
+  <option value="Cyber Security">Cyber Security</option>
+  <option value="Cyber Companion">Cyber Companion</option>
+
+  <!-- Additional Engagements -->
+  <option value="Consulting">Consulting</option>
+  <option value="Mentorship">Mentorship</option>
+</select>
     </div>
     <div class="form-group">
         <textarea class="form-control" name="message" rows="5" placeholder="Type your message here..." required></textarea>
