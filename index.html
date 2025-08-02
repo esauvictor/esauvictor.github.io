@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Esau Victor | Developer & Security Specialist</title>
+    <title>Esau Victor | Web Developer & Security Specialist</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1e40af;
-            --light-gray: #f3f4f6;
-            --dark-gray: #374151;
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #4a6fa5;
+            --accent: #3b82f6;
+            --dark: #0f172a;
+            --text: #334155;
+            --light-gray: #f1f5f9;
+            --white: #ffffff;
             --border-radius: 8px;
         }
 
@@ -23,7 +27,7 @@
 
         body {
             line-height: 1.6;
-            color: #333;
+            color: var(--text);
         }
 
         .container {
@@ -40,7 +44,20 @@
         h2 {
             font-size: 2rem;
             margin-bottom: 30px;
+            color: var(--primary);
             text-align: center;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--primary-light);
         }
 
         .btn {
@@ -59,8 +76,9 @@
         }
 
         .btn-primary:hover {
-            background: var(--primary-dark);
+            background: var(--primary-light);
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
         .btn-outline {
@@ -71,6 +89,15 @@
         .btn-outline:hover {
             background: var(--primary);
             color: white;
+        }
+
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+        }
+
+        .whatsapp-btn:hover {
+            background: #128C7E;
         }
 
         /* Navigation */
@@ -102,8 +129,24 @@
         }
 
         .nav-links a {
-            color: var(--dark-gray);
+            color: var(--text);
             font-weight: 500;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         .hamburger {
@@ -117,7 +160,8 @@
         /* Hero Section */
         .hero {
             padding: 150px 0 100px;
-            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://github.com/esauvictor/esauvictor.github.io/raw/main/hero.jpg') center/cover no-repeat;
             color: white;
             text-align: center;
         }
@@ -141,6 +185,56 @@
             flex-wrap: wrap;
         }
 
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            align-items: center;
+        }
+
+        .about-image {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid var(--accent);
+            margin: 0 auto;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .skills {
+            margin-top: 30px;
+        }
+
+        .skill-item {
+            margin-bottom: 15px;
+        }
+
+        .skill-name {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .skill-bar {
+            height: 8px;
+            background: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
         /* Projects Section */
         .projects-container {
             display: grid;
@@ -155,10 +249,12 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             overflow: hidden;
             transition: transform 0.3s ease;
+            border: 1px solid var(--light-gray);
         }
 
         .project-mockup:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
         .mockup-frame {
@@ -197,11 +293,7 @@
 
         .project-info h3 {
             margin-bottom: 10px;
-        }
-
-        .project-info p {
-            color: var(--dark-gray);
-            margin-bottom: 15px;
+            color: var(--primary);
         }
 
         /* Learning Center */
@@ -216,6 +308,7 @@
             border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border: 1px solid var(--light-gray);
         }
 
         .video-container {
@@ -240,6 +333,7 @@
 
         .tutorial-info h3 {
             margin-bottom: 10px;
+            color: var(--primary);
         }
 
         /* Blog Section */
@@ -254,6 +348,7 @@
             border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border: 1px solid var(--light-gray);
         }
 
         .blog-image {
@@ -278,6 +373,7 @@
 
         .blog-content h3 {
             margin-bottom: 10px;
+            color: var(--primary);
         }
 
         /* Contact Section */
@@ -296,7 +392,7 @@
         .contact-item {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
 
         .contact-icon {
@@ -308,18 +404,6 @@
             align-items: center;
             justify-content: center;
             color: var(--primary);
-        }
-
-        .whatsapp-btn {
-            background: #25D366;
-            color: white;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .whatsapp-btn:hover {
-            background: #128C7E;
         }
 
         /* Responsive */
@@ -334,6 +418,7 @@
                 align-items: center;
                 padding: 20px 0;
                 transition: all 0.3s ease;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
             }
 
             .nav-links.active {
@@ -371,6 +456,7 @@
             </button>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#learning">Learning Center</a></li>
                 <li><a href="#blog">Blog</a></li>
@@ -394,8 +480,55 @@
         </div>
     </section>
 
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <h2>About Me</h2>
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor">
+                </div>
+                <div>
+                    <p>Hello, I'm Esau Victor ⇜⇝ a Software Engineer (5+ yrs) building hardware-to-software solutions.</p>
+                    <p>I merge code with user-centric design to create intuitive, impactful experiences across web development, data analytics, and cybersecurity.</p>
+                    <p>Outside of work, I actively contribute to open-source, mentor aspiring developers, and stay engaged with emerging technologies.</p>
+                    
+                    <div class="skills">
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>Web Development</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 95%;"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>Data Analytics</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 90%;"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>Cyber Security</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Projects Section -->
-    <section id="projects">
+    <section id="projects" style="background: var(--light-gray);">
         <div class="container">
             <h2>Featured Projects</h2>
             <div class="projects-container">
@@ -451,7 +584,7 @@
     </section>
 
     <!-- Learning Center -->
-    <section id="learning" style="background: var(--light-gray);">
+    <section id="learning">
         <div class="container">
             <h2>Learning Center</h2>
             <div class="tutorials-grid">
@@ -497,7 +630,7 @@
     </section>
 
     <!-- Blog Section -->
-    <section id="blog">
+    <section id="blog" style="background: var(--light-gray);">
         <div class="container">
             <h2>Latest Blog Posts</h2>
             <div class="blog-grid">
@@ -541,7 +674,7 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" style="background: var(--light-gray);">
+    <section id="contact">
         <div class="container">
             <h2>Get In Touch</h2>
             <div class="contact-container">
@@ -578,7 +711,7 @@
                     </a>
                 </div>
                 <div>
-                    <form class="contact-form" style="background: white; padding: 20px; border-radius: var(--border-radius);">
+                    <form class="contact-form" style="background: white; padding: 20px; border-radius: var(--border-radius); box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
                         <div style="margin-bottom: 15px;">
                             <label style="display: block; margin-bottom: 5px; font-weight: 600;">Name</label>
                             <input type="text" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: var(--border-radius);">
@@ -601,7 +734,7 @@
     </section>
 
     <!-- Footer -->
-    <footer style="background: var(--dark-gray); color: white; padding: 30px 0; text-align: center;">
+    <footer style="background: var(--dark); color: white; padding: 30px 0; text-align: center;">
         <div class="container">
             <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 20px;">
                 <a href="https://github.com/esauvictor" style="color: white; font-size: 1.5rem;"><i class="fab fa-github"></i></a>
@@ -648,6 +781,33 @@
                 }
             });
         });
+
+        // Animate skill bars on scroll
+        const skillsSection = document.querySelector('.skills');
+        const skillBars = document.querySelectorAll('.skill-progress');
+
+        function animateSkillBars() {
+            skillBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 100);
+            });
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && entry.target === skillsSection) {
+                    animateSkillBars();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        if (skillsSection) {
+            observer.observe(skillsSection);
+        }
     </script>
 </body>
 </html>
