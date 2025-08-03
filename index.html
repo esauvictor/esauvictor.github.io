@@ -1956,6 +1956,31 @@
         </div>
     </div>
 </section>
+        <!-- WhatsApp Integration Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const phoneNumber = '2348132084092'; // Your WhatsApp number
+    
+    // Function to handle WhatsApp clicks
+    function handleWhatsAppClick(e) {
+        e.preventDefault();
+        const message = this.getAttribute('data-message') || "Hello, I'm interested in your services";
+        
+        if (window.location.hostname.includes('web.whatsapp.com')) {
+            // If on WhatsApp Web, open in same tab
+            window.location.href = `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+        } else {
+            // For regular web or mobile, use wa.me in new tab
+            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+    }
+    
+    // Attach click handlers to all WhatsApp links
+    document.querySelectorAll('.whatsapp-link').forEach(link => {
+        link.addEventListener('click', handleWhatsAppClick);
+    });
+});
+</script>
 
 <section class="projects-section" id="projects">
   <div class="section-header">
@@ -2795,32 +2820,6 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('%cThis is a browser feature intended for developers.', 'font-size:16px;');
   console.log('%cIf someone told you to copy-paste something here to enable a feature or "hack" someone\'s account,', 'font-size:16px;');
   console.log('%cit is a scam and will give them access to your account.', 'font-size:16px;color:red;');
-});
-</script>
-
-    <!-- WhatsApp Integration Script -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const phoneNumber = '2348132084092'; // Your WhatsApp number
-    
-    // Function to handle WhatsApp clicks
-    function handleWhatsAppClick(e) {
-        e.preventDefault();
-        const message = this.getAttribute('data-message') || "Hello, I'm interested in your services";
-        
-        if (window.location.hostname.includes('web.whatsapp.com')) {
-            // If on WhatsApp Web, open in same tab
-            window.location.href = `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
-        } else {
-            // For regular web or mobile, use wa.me in new tab
-            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
-        }
-    }
-    
-    // Attach click handlers to all WhatsApp links
-    document.querySelectorAll('.whatsapp-link').forEach(link => {
-        link.addEventListener('click', handleWhatsAppClick);
-    });
 });
 </script>
 </body>
