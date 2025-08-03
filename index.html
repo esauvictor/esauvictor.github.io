@@ -1544,6 +1544,39 @@
         left: 10px !important;
     }
 }
+        /* Make it harder to select text */
+  body {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+  
+  /* Allow selection in input/textarea fields */
+  input, textarea {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+  }
+  
+  /* Visual indication for protected code blocks */
+  pre, code {
+    position: relative;
+  }
+  
+  pre::after, code::after {
+    content: "🔒 Protected Content";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ff0000;
+    font-weight: bold;
+  }
     </style>
 </head>
 <body>
@@ -2491,6 +2524,59 @@ Tawk_API.onLoad = function(){
 
 s0.parentNode.insertBefore(s1,s0);
 })();
+</script>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Prevent right-click context menu
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    alert('Right-click is disabled to protect content.');
+    return false;
+  });
+  
+  // Prevent keyboard shortcuts (Ctrl+C, Ctrl+A, etc.)
+  document.addEventListener('keydown', function(e) {
+    // Disable Ctrl+C, Ctrl+U, Ctrl+A, Ctrl+S, Ctrl+Shift+I, F12
+    if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 65 || e.keyCode === 83) || 
+        e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73)) {
+      e.preventDefault();
+      alert('This function has been disabled to protect content.');
+      return false;
+    }
+  });
+  
+  // Disable text selection
+  document.addEventListener('selectstart', function(e) {
+    e.preventDefault();
+    return false;
+  });
+  
+  // Disable drag and drop of images
+  document.addEventListener('dragstart', function(e) {
+    if (e.target.tagName === 'IMG') {
+      e.preventDefault();
+      return false;
+    }
+  });
+  
+  // Add overlay protection to code blocks (if you have them)
+  const codeBlocks = document.querySelectorAll('pre, code');
+  codeBlocks.forEach(block => {
+    block.style.position = 'relative';
+    block.innerHTML = `
+      <div style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:999;cursor:not-allowed;"
+           title="Code protection enabled"></div>
+      ${block.innerHTML}
+    `;
+  });
+  
+  // Console message
+  console.log('%cStop!', 'color:red;font-size:40px;font-weight:bold;');
+  console.log('%cThis is a browser feature intended for developers.', 'font-size:16px;');
+  console.log('%cIf someone told you to copy-paste something here to enable a feature or "hack" someone\'s account,', 'font-size:16px;');
+  console.log('%cit is a scam and will give them access to your account.', 'font-size:16px;color:red;');
+});
 </script>
 </body>
 </html>
