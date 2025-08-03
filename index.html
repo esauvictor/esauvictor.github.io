@@ -1862,7 +1862,7 @@
         </div>
     </section>
 
-    <!-- Services Section -->
+   <!-- Services Section -->
 <section class="section services" id="services">
     <div class="container">
         <h2 class="section-title">My Services</h2>
@@ -1873,7 +1873,7 @@
                 </div>
                 <h3 class="service-title">Web Development</h3>
                 <p class="service-desc">Custom websites and web applications built with modern technologies like React, Node.js, and modern frameworks.</p>
-                <a href="https://wa.me/2348132084092" class="btn btn-primary" target="_blank">Hire Me</a>
+                <a href="#" class="btn btn-primary whatsapp-link" data-message="I'm interested in your Web Development service">Hire Me</a>
             </div>
             <div class="service-card">
                 <div class="service-icon">
@@ -1881,7 +1881,7 @@
                 </div>
                 <h3 class="service-title">Data Analytics</h3>
                 <p class="service-desc">Transform your data into actionable insights with powerful analytics and visualization tools.</p>
-                <a href="https://wa.me/2348132084092" class="btn btn-primary" target="_blank">Hire Me</a>
+                <a href="#" class="btn btn-primary whatsapp-link" data-message="I'm interested in your Data Analytics service">Hire Me</a>
             </div>
             <div class="service-card">
                 <div class="service-icon">
@@ -1889,7 +1889,7 @@
                 </div>
                 <h3 class="service-title">Security Solutions</h3>
                 <p class="service-desc">Comprehensive security assessments and solutions to protect your digital assets.</p>
-                <a href="https://wa.me/2348132084092" class="btn btn-primary" target="_blank">Hire Me</a>
+                <a href="#" class="btn btn-primary whatsapp-link" data-message="I'm interested in your Security Solutions service">Hire Me</a>
             </div>
         </div>
         
@@ -1937,19 +1937,19 @@
                     <div class="pricing-option">
                         <h5>Introductory Session</h5>
                         <p class="price">Free 30-min consultation</p>
-                        <a href="https://wa.me/2348132084092" class="btn btn-outline" target="_blank">Book Now</a>
+                        <a href="#" class="btn btn-outline whatsapp-link" data-message="I'd like to book a Free Introductory Session for Tech Counseling">Book Now</a>
                     </div>
                     <div class="pricing-option featured">
                         <h5>Standard Package</h5>
                         <p class="price">₦15,000/session</p>
                         <p class="details">(4 sessions/month recommended)</p>
-                        <a href="https://wa.me/2348132084092" class="btn btn-primary" target="_blank">Get Started</a>
+                        <a href="#" class="btn btn-primary whatsapp-link" data-message="I'm interested in your Standard Package for Tech Counseling">Get Started</a>
                     </div>
                     <div class="pricing-option">
                         <h5>Enterprise Solution</h5>
                         <p class="price">Custom Pricing</p>
                         <p class="details">For teams & organizations</p>
-                        <a href="https://wa.me/2348132084092" class="btn btn-outline" target="_blank">Contact Us</a>
+                        <a href="#" class="btn btn-outline whatsapp-link" data-message="I'm inquiring about Enterprise Solutions for Tech Counseling">Contact Us</a>
                     </div>
                 </div>
             </div>
@@ -2798,17 +2798,30 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-    <script>
-  function openWhatsApp() {
-    const phoneNumber = '2348132084092'; 
-    const message = ''; 
+    <!-- WhatsApp Integration Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const phoneNumber = '2348132084092'; // Your WhatsApp number
     
-    if (/web\.whatsapp\.com/i.test(window.location.hostname)) {
-      window.open(`https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`, '_blank');
-    } else {
-      window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    // Function to handle WhatsApp clicks
+    function handleWhatsAppClick(e) {
+        e.preventDefault();
+        const message = this.getAttribute('data-message') || "Hello, I'm interested in your services";
+        
+        if (window.location.hostname.includes('web.whatsapp.com')) {
+            // If on WhatsApp Web, open in same tab
+            window.location.href = `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+        } else {
+            // For regular web or mobile, use wa.me in new tab
+            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+        }
     }
-  }
+    
+    // Attach click handlers to all WhatsApp links
+    document.querySelectorAll('.whatsapp-link').forEach(link => {
+        link.addEventListener('click', handleWhatsAppClick);
+    });
+});
 </script>
 </body>
 </html>
