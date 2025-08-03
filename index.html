@@ -2797,5 +2797,18 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('%cit is a scam and will give them access to your account.', 'font-size:16px;color:red;');
 });
 </script>
+
+    <script>
+  function openWhatsApp() {
+    const phoneNumber = '2348132084092'; 
+    const message = ''; 
+    
+    if (/web\.whatsapp\.com/i.test(window.location.hostname)) {
+      window.open(`https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`, '_blank');
+    } else {
+      window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    }
+  }
+</script>
 </body>
 </html>
