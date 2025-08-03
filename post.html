@@ -10,52 +10,85 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Blog Post - Esau Victor</title>
     <style>
-        /* Import existing variables and base styles */
+        /* Improved color scheme with better contrast */
         :root {
-            --primary-color: #1e3a8a;
-            --secondary-color: #4a6fa5;
-            --accent-color: #3b82f6;
-            --text-color: #333;
-            --light-text: #6b7280;
-            --bg-color: #f8f9fa;
+            --primary-color: #2563eb; /* More vibrant blue */
+            --primary-dark: #1e40af;
+            --secondary-color: #3b82f6;
+            --accent-color: #60a5fa;
+            --text-color: #1f2937; /* Darker for better readability */
+            --light-text: #4b5563;
+            --bg-color: #f9fafb; /* Slightly warmer background */
             --card-bg: #ffffff;
-            --footer-bg: #1e3a8a;
+            --footer-bg: #1e40af; /* Darker footer */
             --footer-text: #e0e7ff;
             --transition: all 0.3s ease;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
             --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
             --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
             --border-radius: 12px;
+            --content-width: 800px;
+            --line-height: 1.8;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
 
         body {
-            line-height: 1.6;
+            line-height: var(--line-height);
             background-color: var(--bg-color);
             color: var(--text-color);
             scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
         }
 
         h1, h2, h3, h4 {
-            line-height: 1.2;
-            color: var(--primary-color);
+            line-height: 1.3;
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 2.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+            border-radius: 3px;
         }
 
         a {
             text-decoration: none;
-            color: inherit;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--primary-dark);
         }
 
         img {
             max-width: 100%;
             height: auto;
             display: block;
+            border-radius: var(--border-radius);
         }
 
         .container {
@@ -70,40 +103,44 @@
         }
 
         .btn {
-            display: inline-block;
-            background-color: var(--secondary-color);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background-color: var(--primary-color);
             color: white;
             padding: 0.8rem 2rem;
-            border-radius: 30px;
-            font-weight: 500;
+            border-radius: 8px;
+            font-weight: 600;
             transition: var(--transition);
             border: none;
             cursor: pointer;
             text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .btn:hover {
-            background-color: var(--primary-color);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
 
         .btn-outline {
             background-color: transparent;
-            border: 2px solid var(--secondary-color);
-            color: var(--secondary-color);
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
         }
 
         .btn-outline:hover {
-            background-color: var(--secondary-color);
+            background-color: var(--primary-color);
             color: white;
         }
 
         /* Blog post page styles */
         .single-blog-container {
-            max-width: 800px;
+            max-width: var(--content-width);
             margin: 0 auto;
-            padding: 2rem;
+            padding: 2rem 1rem;
         }
 
         .single-blog {
@@ -111,25 +148,60 @@
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-sm);
             overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .single-blog:hover {
+            box-shadow: var(--shadow-md);
         }
 
         .single-blog-header {
-            padding: 2rem;
-            background-color: var(--primary-color);
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
             color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .single-blog-header::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .single-blog-header::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
         }
 
         .single-blog-header h1 {
             font-size: 2.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             color: white;
+            position: relative;
+            z-index: 1;
+            line-height: 1.2;
         }
 
         .single-blog-meta {
             display: flex;
+            flex-wrap: wrap;
             gap: 1.5rem;
             margin-bottom: 1rem;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
+            position: relative;
+            z-index: 1;
         }
 
         .single-blog-meta img {
@@ -137,30 +209,89 @@
             height: 50px;
             border-radius: 50%;
             object-fit: cover;
+            border: 2px solid rgba(255,255,255,0.3);
         }
 
         .post-author {
             display: flex;
             align-items: center;
+            gap: 0.75rem;
+        }
+
+        .post-author strong {
+            font-weight: 600;
+        }
+
+        .post-author span {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .post-date {
+            display: flex;
+            align-items: center;
             gap: 0.5rem;
+        }
+
+        .post-date::before {
+            content: '•';
+            opacity: 0.7;
         }
 
         .post-content {
             padding: 3rem;
-            line-height: 1.8;
+            line-height: var(--line-height);
         }
 
         .post-content p {
             margin-bottom: 1.5rem;
-        }
-
-        .post-content h2 {
-            margin: 2rem 0 1rem;
+            font-size: 1.1rem;
+            color: var(--text-color);
         }
 
         .post-content img {
-            margin: 2rem 0;
+            margin: 2.5rem auto;
             border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            max-height: 500px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .post-content ul, .post-content ol {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+        }
+
+        .post-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .post-content blockquote {
+            border-left: 4px solid var(--accent-color);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+            color: var(--light-text);
+        }
+
+        .post-content code {
+            font-family: 'Fira Code', monospace;
+            background-color: #f3f4f6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .post-content pre {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 2rem 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
 
         .post-navigation {
@@ -174,38 +305,100 @@
         .nav-link {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            max-width: 50%;
+            gap: 1rem;
+            max-width: 45%;
+            padding: 1rem;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            background-color: #f3f4f6;
         }
 
         .nav-prev i {
             order: 2;
         }
 
+        .nav-link span {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .nav-link .nav-direction {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
         .tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.75rem;
             margin: 2rem 3rem;
         }
 
         .tag {
-            background-color: var(--secondary-color);
+            background-color: var(--accent-color);
             color: white;
-            padding: 0.3rem 1rem;
+            padding: 0.4rem 1.2rem;
             border-radius: 20px;
             font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .tag:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
         }
 
         .back-to-blog {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
             margin: 2rem 3rem 0;
+        }
+
+        /* Table styles for blog content */
+        .post-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-sm);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .post-content th, .post-content td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .post-content th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .post-content tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        .post-content tr:hover {
+            background-color: #f3f4f6;
         }
 
         /* Responsive design */
         @media (max-width: 768px) {
+            :root {
+                --content-width: 100%;
+            }
+            
             .single-blog-header {
-                padding: 1.5rem;
+                padding: 2rem 1.5rem;
             }
             
             .single-blog-header h1 {
@@ -213,7 +406,25 @@
             }
             
             .post-content {
-                padding: 2rem;
+                padding: 2rem 1.5rem;
+            }
+            
+            .post-navigation {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 0 1.5rem 2rem;
+            }
+            
+            .nav-link {
+                max-width: 100%;
+            }
+            
+            .tags {
+                margin: 2rem 1.5rem;
+            }
+            
+            .back-to-blog {
+                margin: 2rem 1.5rem 0;
             }
         }
 
@@ -247,6 +458,15 @@
             font-weight: 700;
             font-size: 1.25rem;
             color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
         }
 
         .nav-links {
@@ -270,15 +490,24 @@
             left: 0;
             width: 0;
             height: 2px;
-            background-color: var(--secondary-color);
+            background-color: var(--primary-color);
             transition: var(--transition);
         }
 
         .nav-links a:hover {
-            color: var(--secondary-color);
+            color: var(--primary-color);
         }
 
         .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links .active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .nav-links .active::after {
             width: 100%;
         }
 
@@ -289,6 +518,11 @@
             border: none;
             font-size: 1.5rem;
             color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .hamburger:hover {
+            transform: rotate(90deg);
         }
 
         /* Footer Styles */
@@ -346,6 +580,9 @@
             color: var(--footer-text);
             transition: var(--transition);
             opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .footer-links a:hover {
@@ -353,35 +590,43 @@
             opacity: 1;
             padding-left: 5px;
         }
+
+        .footer-links a i {
+            width: 20px;
+            text-align: center;
+        }
+
         .subscribe-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
 
-.form-group {
-    margin-bottom: 1rem;
-}
+        .form-group {
+            margin-bottom: 1rem;
+        }
 
-.form-control {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 4px;
-    background-color: rgba(255,255,255,0.1);
-    color: white;
-    transition: var(--transition);
-}
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
 
-.form-control:focus {
-    outline: none;
-    border-color: var(--accent-color);
-    background-color: rgba(255,255,255,0.2);
-}
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background-color: rgba(255,255,255,0.2);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
 
-.form-control::placeholder {
-    color: rgba(255,255,255,0.7);
-}
+        .form-control::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
 
         .social-links {
             display: flex;
@@ -417,6 +662,25 @@
             opacity: 0.8;
         }
 
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
         /* Responsive design for navigation */
         @media (max-width: 768px) {
             .navbar {
@@ -432,28 +696,71 @@
                 background-color: white;
                 flex-direction: column;
                 align-items: center;
-                justify-content: center;
-                gap: 2rem;
+                justify-content: flex-start;
+                gap: 1.5rem;
                 transition: var(--transition);
                 box-shadow: var(--shadow-md);
+                padding: 2rem 0;
+                overflow-y: auto;
             }
             
             .nav-links.active {
                 left: 0;
             }
             
+            .nav-links a {
+                padding: 0.5rem 1rem;
+                font-size: 1.1rem;
+            }
+            
             .hamburger {
                 display: block;
             }
         }
+
+        /* Animation for page load */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .single-blog {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        /* Reading progress bar */
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1001;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--accent-color);
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
     </style>
 </head>
 <body>
+    <!-- Reading progress bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container container">
-            <a href="index.html" class="logo">Esau Victor</a>
-            <button class="hamburger" id="hamburger">
+            <a href="index.html" class="logo">
+                <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor">
+                <span>Esau Victor</span>
+            </a>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
                 <i class="fas fa-bars"></i>
             </button>
             <ul class="nav-links" id="navLinks">
@@ -461,7 +768,6 @@
                 <li><a href="index.html#about">About</a></li>
                 <li><a href="index.html#services">Services</a></li>
                 <li><a href="index.html#projects">Projects</a></li>
-                
                 <li><a href="blog.html" class="active">Blog</a></li>
                 <li><a href="index.html#contact">Contact</a></li>
             </ul>
@@ -481,7 +787,14 @@
                             <span>Web Developer</span>
                         </div>
                     </div>
-                    <div class="post-date" id="post-date">April 10, 2024</div>
+                    <div class="post-date" id="post-date">
+                        <i class="far fa-calendar-alt"></i>
+                        <span>April 10, 2024</span>
+                    </div>
+                    <div class="reading-time" id="reading-time">
+                        <i class="far fa-clock"></i>
+                        <span>5 min read</span>
+                    </div>
                 </div>
             </header>
 
@@ -496,73 +809,82 @@
             <div class="post-navigation">
                 <a href="#" class="nav-link nav-prev">
                     <i class="fas fa-chevron-left"></i>
-                    <span>Previous Post</span>
+                    <div>
+                        <span class="nav-direction">Previous</span>
+                        <span>Previous Post Title</span>
+                    </div>
                 </a>
                 <a href="#" class="nav-link nav-next">
-                    <span>Next Post</span>
+                    <div>
+                        <span class="nav-direction">Next</span>
+                        <span>Next Post Title</span>
+                    </div>
                     <i class="fas fa-chevron-right"></i>
                 </a>
             </div>
 
-            <a href="blog.html" class="btn back-to-blog">Back to Blog</a>
+            <a href="blog.html" class="btn back-to-blog">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Blog</span>
+            </a>
         </article>
     </main>
 
     <!-- Footer -->
     <footer>
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-column">
-                <h3>Esau Victor</h3>
-                <p>Professional Web Developer, Data Analytics Engineer, and Cyber Security Expert dedicated to delivering exceptional results.</p>
-                <div class="social-links">
-                    <a href="https://linkedin.com/in/esau-victor" target="_blank" aria-label="LinkedIn">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="https://github.com/esauvictor" target="_blank" aria-label="GitHub">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="https://x.com/esau_vee" target="_blank" aria-label="x">
-                        <i class="fab fa-x"></i>
-                    </a>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Esau Victor</h3>
+                    <p>Professional Web Developer, Data Analytics Engineer, and Cyber Security Expert dedicated to delivering exceptional results.</p>
+                    <div class="social-links">
+                        <a href="https://linkedin.com/in/esau-victor" target="_blank" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://github.com/esauvictor" target="_blank" aria-label="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://x.com/esau_vee" target="_blank" aria-label="x">
+                            <i class="fab fa-x-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html#home"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="index.html#about"><i class="fas fa-user"></i> About</a></li>
+                        <li><a href="index.html#services"><i class="fas fa-cog"></i> Services</a></li>
+                        <li><a href="index.html#projects"><i class="fas fa-project-diagram"></i> Projects</a></li>
+                        <li><a href="blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Subscribe</h3>
+                    <p>Get notified when I publish new posts</p>
+                    <form action="https://api.staticforms.xyz/submit" method="POST" class="subscribe-form">
+                        <!-- StaticForms Required -->
+                        <input type="hidden" name="accessKey" value="sf_n72knfdn65gg51ni92d9fdm7">
+                        <input type="hidden" name="redirectTo" value="https://esauvictor.github.io/thank-you-sub.html">
+                        
+                        <!-- Optional subject field -->
+                        <input type="hidden" name="_subject" value="New subscription from your website">
+
+                        <!-- Honeypot for spam protection -->
+                        <input type="text" name="honeypot" style="display:none">
+
+                        <div class="form-group">
+                            <input type="email" name="email" class="form-control" placeholder="Your email address" required>
+                        </div>
+                        <button type="submit" class="btn">Subscribe</button>
+                    </form>
                 </div>
             </div>
-            <div class="footer-column">
-                <h3>Quick Links</h3>
-                <ul class="footer-links">
-                    <li><a href="index.html#home">Home</a></li>
-                    <li><a href="index.html#about">About</a></li>
-                    <li><a href="index.html#services">Services</a></li>
-                    <li><a href="index.html#projects">Projects</a></li>
-                    <li><a href="blog.html">Blog</a></li>
-                </ul>
+            <div class="copyright">
+                <p>&copy; <span id="year"></span> Esau Victor. All rights reserved.</p>
             </div>
-           <div class="footer-column">
-  <h3>Subscribe</h3>
-  <p>Get notified when I publish new posts</p>
-  <form action="https://api.staticforms.xyz/submit" method="POST" class="subscribe-form">
-    <!-- StaticForms Required -->
-    <input type="hidden" name="accessKey" value="sf_n72knfdn65gg51ni92d9fdm7">
-    <input type="hidden" name="redirectTo" value="https://esauvictor.github.io/thank-you-sub.html">
-    
-    <!-- Optional subject field -->
-    <input type="hidden" name="_subject" value="New subscription from your website">
-
-    <!-- Honeypot for spam protection -->
-    <input type="text" name="honeypot" style="display:none">
-
-    <div class="form-group">
-      <input type="email" name="email" class="form-control" placeholder="Your email address" required>
-    </div>
-    <button type="submit" class="btn">Subscribe</button>
-  </form>
-</div>
         </div>
-        <div class="copyright">
-            <p>&copy; <span id="year"></span> Esau Victor. All rights reserved.</p>
-        </div>
-    </div>
-</footer>
+    </footer>
 
     <!-- JavaScript -->
     <script>
@@ -590,7 +912,8 @@
                     
                     <p>Evening is for relaxation - reading, exercising, or spending time with family. But I'll admit, my mind sometimes wanders back to an interesting problem I encountered during the day. That's the developer's life for you - constantly thinking and learning!</p>
                 `,
-                tags: ["Web Development", "Career", "Productivity"]
+                tags: ["Web Development", "Career", "Productivity"],
+                wordCount: 450
             },
             2: {
                 title: "Overcoming Imposter Syndrome",
@@ -623,11 +946,12 @@
                     
                     <p>Remember that Imposter Syndrome doesn't disappear completely, but it becomes less paralyzing over time. When I feel it now, I recognize it as a signal to pause, reflect on my progress, and then continue moving forward.</p>
                 `,
-                tags: ["Career Development", "Mental Health", "Productivity"]
+                tags: ["Career Development", "Mental Health", "Productivity"],
+                wordCount: 520
             },
             3: {
                 title: "Building Something That Matters",
-                date: "June 12 , 2025",
+                date: "June 12, 2025",
                 content: `
                     <p>There's a unique thrill in deploying an app or script that actually makes a difference—to a team, a user, or a community. Beyond code and deadlines, the real reward in tech is building something that solves a real problem.</p>
                     
@@ -662,13 +986,21 @@
                     
                     <p>The most satisfying moments in my career have come from creating tools that people actually use and find valuable. Whether it's a small internal script that saves time or a public application that solves a real problem, building something that matters is what makes tech work fulfilling.</p>
                 `,
-                tags: ["Software Development", "Problem Solving", "Impact"]
+                tags: ["Software Development", "Problem Solving", "Impact"],
+                wordCount: 580
             }
         };
 
         // Get URL parameter
         function getURLParameter(name) {
             return new URLSearchParams(window.location.search).get(name);
+        }
+
+        // Calculate reading time
+        function calculateReadingTime(wordCount) {
+            const wordsPerMinute = 200;
+            const minutes = Math.ceil(wordCount / wordsPerMinute);
+            return `${minutes} min read`;
         }
 
         // Load blog post content
@@ -678,8 +1010,9 @@
             
             if (post) {
                 document.getElementById('post-title').textContent = post.title;
-                document.getElementById('post-date').textContent = post.date;
+                document.getElementById('post-date').querySelector('span').textContent = post.date;
                 document.getElementById('post-content').innerHTML = post.content;
+                document.getElementById('reading-time').querySelector('span').textContent = calculateReadingTime(post.wordCount);
                 
                 // Load tags
                 const tagsContainer = document.getElementById('post-tags');
@@ -699,14 +1032,14 @@
                 
                 if (prevId > 0) {
                     prevLink.href = `post.html?id=${prevId}`;
-                    prevLink.querySelector('span').textContent = blogPosts[prevId].title;
+                    prevLink.querySelector('span:last-child').textContent = blogPosts[prevId].title;
                 } else {
                     prevLink.style.visibility = 'hidden';
                 }
                 
                 if (nextId <= Object.keys(blogPosts).length) {
                     nextLink.href = `post.html?id=${nextId}`;
-                    nextLink.querySelector('span').textContent = blogPosts[nextId].title;
+                    nextLink.querySelector('span:last-child').textContent = blogPosts[nextId].title;
                 } else {
                     nextLink.style.visibility = 'hidden';
                 }
@@ -725,20 +1058,105 @@
         
         hamburger.addEventListener('click', () => {
             navLinks.classList.toggle('active');
+            hamburger.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
         });
         
         // Close mobile menu when clicking a link
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
+                hamburger.innerHTML = '<i class="fas fa-bars"></i>';
             });
         });
         
         // Update copyright year
         document.getElementById('year').textContent = new Date().getFullYear();
 
+        // Scroll progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add hover effect to images in post content
+        function addImageHoverEffect() {
+            document.querySelectorAll('.post-content img').forEach(img => {
+                img.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+                img.addEventListener('mouseenter', () => {
+                    img.style.transform = 'scale(1.02)';
+                    img.style.boxShadow = '0 15px 30px rgba(0,0,0,0.2)';
+                });
+                img.addEventListener('mouseleave', () => {
+                    img.style.transform = 'scale(1)';
+                    img.style.boxShadow = 'var(--shadow-md)';
+                });
+            });
+        }
+
         // Load the blog post when page loads
-        window.addEventListener('load', loadBlogPost);
+        window.addEventListener('load', () => {
+            loadBlogPost();
+            addImageHoverEffect();
+            
+            // Add smooth fade-in for content
+            document.querySelectorAll('.post-content > *').forEach((el, i) => {
+                el.style.opacity = '0';
+                el.style.animation = `fadeIn 0.5s ease-out ${i * 0.1}s forwards`;
+            });
+        });
+
+        // Add copy button to code blocks
+        document.querySelectorAll('pre').forEach(pre => {
+            const button = document.createElement('button');
+            button.className = 'copy-btn';
+            button.innerHTML = '<i class="far fa-copy"></i>';
+            button.title = 'Copy code';
+            
+            button.addEventListener('click', () => {
+                const code = pre.querySelector('code').innerText;
+                navigator.clipboard.writeText(code).then(() => {
+                    button.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => {
+                        button.innerHTML = '<i class="far fa-copy"></i>';
+                    }, 2000);
+                });
+            });
+            
+            pre.style.position = 'relative';
+            button.style.position = 'absolute';
+            button.style.top = '10px';
+            button.style.right = '10px';
+            button.style.background = 'rgba(255,255,255,0.2)';
+            button.style.border = 'none';
+            button.style.color = 'white';
+            button.style.borderRadius = '4px';
+            button.style.padding = '5px 10px';
+            button.style.cursor = 'pointer';
+            button.style.transition = 'background 0.3s ease';
+            
+            button.addEventListener('mouseenter', () => {
+                button.style.background = 'rgba(255,255,255,0.3)';
+            });
+            
+            button.addEventListener('mouseleave', () => {
+                button.style.background = 'rgba(255,255,255,0.2)';
+            });
+            
+            pre.appendChild(button);
+        });
     </script>
 </body>
 </html>
