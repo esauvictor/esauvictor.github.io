@@ -508,27 +508,26 @@
         }
         
       /* Projects Section Styling */
- /* Paragraph variations */
+/* Projects Section Styling */
 .projects-section .lead-paragraph {
   font-size: 1.25rem;
   line-height: 1.7;
-  color: #00008B; /* blue */
+  color: #00008B;
   margin-bottom: 2rem;
 }
 
 .projects-section .small-text {
   font-size: 0.875rem;
   line-height: 1.5;
-  color: #00008B; /* blue */
+  color: #00008B;
 }
 
-/* Paragraph with drop cap */
 .projects-section .drop-cap::first-letter {
   float: left;
   font-size: 3.5rem;
   line-height: 0.65;
   margin: 0.1em 0.15em 0 0;
-  color: #00008B; /* blue */
+  color: #00008B;
   font-weight: 700;
 }
 
@@ -546,7 +545,7 @@
 .projects-section .section-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #00008B; /* blue */
+  color: #00008B;
   margin-bottom: 15px;
   position: relative;
   display: inline-block;
@@ -560,7 +559,7 @@
   transform: translateX(-50%);
   width: 80px;
   height: 4px;
-  background: linear-gradient(135deg, #00008B, #00008B); /* blue gradient */
+  background: linear-gradient(135deg, #00008B, #00008B);
   border-radius: 2px;
 }
 
@@ -743,6 +742,224 @@
   margin-top: 15px;
 }
 
+/* Tutorials Section Styling */
+.section.tutorials {
+  background: #f8fafc;
+  padding: 80px 0;
+}
+
+.tutorials .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.tutorials .section-title {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 15px;
+  color: #00008B;
+}
+
+.tutorials .section-subtitle {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 50px;
+}
+
+.tutorials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.tutorial-card {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.tutorial-card:hover {
+  transform: translateY(-5px);
+}
+
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.tutorial-info {
+  padding: 20px;
+}
+
+.tutorial-info h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #1e293b;
+}
+
+.tutorial-info p {
+  color: #64748b;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.tutorial-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.tutorial-meta i {
+  margin-right: 5px;
+}
+
+.tutorials-cta {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.tutorials-cta .btn {
+  display: inline-block;
+  padding: 12px 30px;
+  background: #4f46e5;
+  color: white;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.tutorials-cta .btn:hover {
+  background: #4338ca;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.tutorials-cta .btn i {
+  margin-right: 8px;
+}
+
+/* Blog Section Styling */
+.section#blog {
+  padding: 80px 0;
+  background: white;
+}
+
+.section#blog .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section#blog .section-title {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 15px;
+  color: #00008B;
+}
+
+.section#blog .section-subtitle {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 50px;
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.blog-post {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.blog-post:hover {
+  transform: translateY(-5px);
+}
+
+.blog-image {
+  height: 200px;
+  overflow: hidden;
+}
+
+.blog-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.blog-post:hover .blog-image img {
+  transform: scale(1.05);
+}
+
+.blog-content {
+  padding: 20px;
+}
+
+.blog-content h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #1e293b;
+}
+
+.blog-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  color: #64748b;
+  font-size: 0.85rem;
+  margin-bottom: 15px;
+}
+
+.blog-meta i {
+  margin-right: 5px;
+}
+
+.blog-content p {
+  color: #64748b;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.btn-outline {
+  display: inline-block;
+  padding: 10px 20px;
+  border: 2px solid #4f46e5;
+  color: #4f46e5;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+  background: #4f46e5;
+  color: white;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .projects-section {
@@ -778,6 +995,14 @@
     padding: 8px 15px;
     font-size: 0.85rem;
   }
+  
+  .section.tutorials, .section#blog {
+    padding: 60px 0;
+  }
+  
+  .tutorials .section-title, .section#blog .section-title {
+    font-size: 2rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -808,8 +1033,15 @@
   .projects-section .project-links {
     justify-content: center;
   }
-}
   
+  .tutorials .section-title, .section#blog .section-title {
+    font-size: 1.8rem;
+  }
+  
+  .blog-grid, .tutorials-grid {
+    grid-template-columns: 1fr;
+  }
+}
         /* Testimonials Section */
         .testimonials {
             background-color: var(--light);
@@ -1306,7 +1538,7 @@
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#services">Services</a></li>
-                <li><a href="#projects">Projects</a></li>
+                <li><a href="#projects-section">Projects</a></li>
                 <li><a href="#testimonials">Testimonials</a></li>
                 <li><a href="#contact">Contact</a></li>
                 <li><a href="https://github.com/esauvictor" target="_blank">GitHub</a></li>
@@ -1341,7 +1573,7 @@
                         <i class="fab fa-linkedin-in"></i>
                     </a>
                     <a href="https://x.com/esau_vee" class="social-link" target="_blank" aria-label="Twitter">
-                        <i class="fab fa-x-twitter"></i>
+                        <i class="fab fa-x"></i>
                     </a>
                     <a href="https://wa.me/2348132084092" class="social-link" target="_blank" aria-label="WhatsApp">
                         <i class="fab fa-whatsapp"></i>
@@ -1439,7 +1671,7 @@
         </div>
     </section>
 
- <!-- Projects Section -->
+<!-- Projects Section -->
 <section class="projects-section">
   <div class="section-header">
     <h2 class="section-title">Featured Projects</h2>
@@ -1621,6 +1853,199 @@
   </div>
 </section>
 
+<!-- Tutorials Section -->
+<section class="section tutorials" id="tutorials">
+  <div class="container">
+    <h2 class="section-title">My Learning Centre</h2>
+    <p class="section-subtitle"></p>
+    
+    <div class="tutorials-grid">
+      <!-- Tutorial 1 -->
+      <div class="tutorial-card">
+        <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/GxmfcnU3feo" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen></iframe>
+        </div>
+        <div class="tutorial-info">
+          <h3>Web Development Basics</h3>
+          <p>Learn the fundamentals of modern web development in this comprehensive tutorial.</p>
+          <div class="tutorial-meta">
+            <span><i class="fas fa-eye"></i> 15K views</span>
+            <span><i class="fas fa-clock"></i> 15 min</span>
+            <span><i class="fas fa-calendar-alt"></i> Mar 2025</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Tutorial 2 -->
+      <div class="tutorial-card">
+        <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/GPVsHOlRBBI" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen></iframe>
+        </div>
+        <div class="tutorial-info">
+          <h3>Data Analytics with Python</h3>
+          <p>Transform raw data into meaningful insights using Python's powerful libraries.</p>
+          <div class="tutorial-meta">
+            <span><i class="fas fa-eye"></i> 68K views</span>
+            <span><i class="fas fa-clock"></i> 9 hrs</span>
+            <span><i class="fas fa-calendar-alt"></i> Mar 2025</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Tutorial 3 -->
+      <div class="tutorial-card">
+        <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/lpa8uy4DyMo?si=ToQnWTltU0mjd0Hz" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen></iframe>
+        </div>
+        <div class="tutorial-info">
+          <h3>Cyber Security Essentials</h3>
+          <p>Protect your digital assets with these fundamental security practices.</p>
+          <div class="tutorial-meta">
+            <span><i class="fas fa-eye"></i> 24K views</span>
+            <span><i class="fas fa-clock"></i> 11 hrs</span>
+            <span><i class="fas fa-calendar-alt"></i> May 2025</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tutorials-grid">
+      <!-- Tutorial 4 -->
+      <div class="tutorial-card">
+        <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/MW_MAvnExno?si=fbQlztCrd7CP2bkK" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen></iframe>
+        </div>
+        <div class="tutorial-info">
+          <h3>Diskpart Utility</h3>
+          <p>Create Bootable Usb Flash Drive Using the Diskpart Utility.</p>
+          <div class="tutorial-meta">
+            <span><i class="fas fa-eye"></i> 10K views</span>
+            <span><i class="fas fa-clock"></i> 2 min</span>
+            <span><i class="fas fa-calendar-alt"></i> Mar 2025</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Tutorial 5 -->
+      <div class="tutorial-card">
+        <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/ki2PnFL_HEU" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen></iframe>
+        </div>
+        <div class="tutorial-info">
+          <h3>Zig Programming Language</h3>
+          <p>Is Zig Overrated? Here's What No One Tells You!.</p>
+          <div class="tutorial-meta">
+            <span><i class="fas fa-eye"></i> 171K views</span>
+            <span><i class="fas fa-clock"></i> 1 min</span>
+            <span><i class="fas fa-calendar-alt"></i> Mar 2025</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Tutorial 6 -->
+      <div class="tutorial-card">
+        <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/LSEYdU8Dp9Y" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen></iframe>
+        </div>
+        <div class="tutorial-info">
+          <h3>Spring-Boot Framework</h3>
+          <p>What is Spring-Boot Framework?(explained from scratch).</p>
+          <div class="tutorial-meta">
+            <span><i class="fas fa-eye"></i> 6K views</span>
+            <span><i class="fas fa-clock"></i> 4 min</span>
+            <span><i class="fas fa-calendar-alt"></i> May 2025</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tutorials-cta">
+      <a href="https://youtube.com/@EsauDeGenius" class="btn" target="_blank">
+        <i class="fab fa-youtube"></i> View More Content
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Blog Section -->
+<section class="section" id="blog">
+  <div class="container">
+    <h2 class="section-title">My Blog</h2>
+    <p class="section-subtitle">Exploring my journey, challenges, and reflections in the tech world</p>
+    
+    <div class="blog-grid">
+      <div class="blog-post">
+        <div class="blog-image">
+          <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Blog post image">
+        </div>
+        <div class="blog-content">
+          <h3>A Day in the Life of a Developer</h3>
+          <div class="blog-meta">
+            <span><i class="fas fa-calendar-alt"></i> April 10, 2024</span>
+            <span><i class="fas fa-clock"></i> 5 min read</span>
+          </div>
+          <p>Today was one of those days where I spent hours debugging a seemingly simple issue. The frustration mounted as solutions I thought were perfect just didn't work...</p>
+          <a href="https://esauvictor.github.io/post.html?id=1" class="btn btn-outline">Read More</a>
+        </div>
+      </div>
+      
+      <div class="blog-post">
+        <div class="blog-image">
+          <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Blog post image">
+        </div>
+        <div class="blog-content">
+          <h3>Overcoming Imposter Syndrome</h3>
+          <div class="blog-meta">
+            <span><i class="fas fa-calendar-alt"></i> May 3, 2025</span>
+            <span><i class="fas fa-clock"></i> 8 min read</span>
+          </div>
+          <p>There are days when I wake up feeling like a fraud in this field. How did I get here? Do I really belong? These thoughts have been my constant companions...</p>
+          <a href="https://esauvictor.github.io/post.html?id=2" class="btn btn-outline">Read More</a>
+        </div>
+      </div>
+      
+      <div class="blog-post">
+        <div class="blog-image">
+          <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Blog post image">
+        </div>
+        <div class="blog-content">
+          <h3>Building Something That Matters</h3>
+          <div class="blog-meta">
+            <span><i class="fas fa-calendar-alt"></i> June 12, 2025</span>
+            <span><i class="fas fa-clock"></i> 6 min read</span>
+          </div>
+          <p>When I see the impact of the projects I've worked on, especially those that help students like the IAUE systems, it reminds me why I fell in love with coding in the first place...</p>
+          <a href="https://esauvictor.github.io/post.html?id=3" class="btn btn-outline">Read More</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tutorials-cta">
+      <a href="/blog" class="btn" target="_blank">
+        <i class="fas fa-plus"></i> Go-to Blog
+      </a>
+    </div>
+  </div>
+</section>
+
     <!-- Testimonials Section -->
     <section class="section testimonials" id="testimonials">
         <div class="container">
@@ -1762,7 +2187,7 @@
                             <i class="fab fa-linkedin-in"></i>
                         </a>
                         <a href="https://x.com/esau_vee" target="_blank" aria-label="Twitter">
-                            <i class="fab fa-x-twitter"></i>
+                            <i class="fab fa-x"></i>
                         </a>
                     </div>
                 </div>
