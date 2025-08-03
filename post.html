@@ -8,19 +8,19 @@
     <meta name="author" content="Esau Victor">
     <link rel="icon" href="https://esauvictor.blogspot.com/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>Blog Post - Esau Victor</title>
     <style>
-        /* Improved color scheme with better contrast */
         :root {
-            --primary-color: #2563eb; /* More vibrant blue */
+            --primary-color: #2563eb;
             --primary-dark: #1e40af;
             --secondary-color: #3b82f6;
             --accent-color: #60a5fa;
-            --text-color: #1f2937; /* Darker for better readability */
+            --text-color: #1f2937;
             --light-text: #4b5563;
-            --bg-color: #f9fafb; /* Slightly warmer background */
+            --bg-color: #f9fafb;
             --card-bg: #ffffff;
-            --footer-bg: #1e40af; /* Darker footer */
+            --footer-bg: #1e40af;
             --footer-text: #e0e7ff;
             --transition: all 0.3s ease;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
@@ -98,10 +98,6 @@
             padding: 0 1.5rem;
         }
 
-        .section {
-            padding: 6rem 0;
-        }
-
         .btn {
             display: inline-flex;
             align-items: center;
@@ -125,18 +121,7 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
 
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-        }
-
-        .btn-outline:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        /* Blog post page styles */
+        /* Blog post specific styles */
         .single-blog-container {
             max-width: var(--content-width);
             margin: 0 auto;
@@ -149,6 +134,7 @@
             box-shadow: var(--shadow-sm);
             overflow: hidden;
             transition: var(--transition);
+            animation: fadeIn 0.6s ease-out forwards;
         }
 
         .single-blog:hover {
@@ -204,18 +190,18 @@
             z-index: 1;
         }
 
-        .single-blog-meta img {
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .post-author img {
             width: 50px;
             height: 50px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid rgba(255,255,255,0.3);
-        }
-
-        .post-author {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
         }
 
         .post-author strong {
@@ -227,15 +213,10 @@
             opacity: 0.9;
         }
 
-        .post-date {
+        .post-date, .reading-time {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-        }
-
-        .post-date::before {
-            content: '•';
-            opacity: 0.7;
         }
 
         .post-content {
@@ -256,6 +237,12 @@
             max-height: 500px;
             width: auto;
             object-fit: contain;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .post-content img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
         }
 
         .post-content ul, .post-content ol {
@@ -284,6 +271,7 @@
         }
 
         .post-content pre {
+            position: relative;
             background-color: #1e293b;
             color: #f8fafc;
             padding: 1.5rem;
@@ -359,73 +347,6 @@
             align-items: center;
             gap: 0.5rem;
             margin: 2rem 3rem 0;
-        }
-
-        /* Table styles for blog content */
-        .post-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 2rem 0;
-            box-shadow: var(--shadow-sm);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .post-content th, .post-content td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .post-content th {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: 600;
-        }
-
-        .post-content tr:nth-child(even) {
-            background-color: #f9fafb;
-        }
-
-        .post-content tr:hover {
-            background-color: #f3f4f6;
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            :root {
-                --content-width: 100%;
-            }
-            
-            .single-blog-header {
-                padding: 2rem 1.5rem;
-            }
-            
-            .single-blog-header h1 {
-                font-size: 2rem;
-            }
-            
-            .post-content {
-                padding: 2rem 1.5rem;
-            }
-            
-            .post-navigation {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 0 1.5rem 2rem;
-            }
-            
-            .nav-link {
-                max-width: 100%;
-            }
-            
-            .tags {
-                margin: 2rem 1.5rem;
-            }
-            
-            .back-to-blog {
-                margin: 2rem 1.5rem 0;
-            }
         }
 
         /* Navigation styles */
@@ -662,27 +583,66 @@
             opacity: 0.8;
         }
 
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        /* Progress bar */
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1001;
         }
 
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
+        .progress-bar {
+            height: 4px;
+            background: var(--accent-color);
+            width: 0%;
+            transition: width 0.1s ease-out;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 4px;
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-dark);
-        }
-
-        /* Responsive design for navigation */
+        /* Responsive design */
         @media (max-width: 768px) {
+            :root {
+                --content-width: 100%;
+            }
+            
+            .single-blog-header {
+                padding: 2rem 1.5rem;
+            }
+            
+            .single-blog-header h1 {
+                font-size: 2rem;
+            }
+            
+            .post-content {
+                padding: 2rem 1.5rem;
+            }
+            
+            .post-navigation {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 0 1.5rem 2rem;
+            }
+            
+            .nav-link {
+                max-width: 100%;
+            }
+            
+            .tags {
+                margin: 2rem 1.5rem;
+            }
+            
+            .back-to-blog {
+                margin: 2rem 1.5rem 0;
+            }
+
             .navbar {
                 padding: 1rem;
             }
@@ -718,32 +678,22 @@
             }
         }
 
-        /* Animation for page load */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Copy button for code blocks */
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
 
-        .single-blog {
-            animation: fadeIn 0.6s ease-out forwards;
-        }
-
-        /* Reading progress bar */
-        .progress-container {
-            width: 100%;
-            height: 4px;
-            background: transparent;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1001;
-        }
-
-        .progress-bar {
-            height: 4px;
-            background: var(--accent-color);
-            width: 0%;
-            transition: width 0.1s ease-out;
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.3);
         }
     </style>
 </head>
@@ -811,13 +761,13 @@
                     <i class="fas fa-chevron-left"></i>
                     <div>
                         <span class="nav-direction">Previous</span>
-                        <span>Previous Post Title</span>
+                        <span id="prev-post-title">Previous Post Title</span>
                     </div>
                 </a>
                 <a href="#" class="nav-link nav-next">
                     <div>
                         <span class="nav-direction">Next</span>
-                        <span>Next Post Title</span>
+                        <span id="next-post-title">Next Post Title</span>
                     </div>
                     <i class="fas fa-chevron-right"></i>
                 </a>
@@ -863,14 +813,9 @@
                     <h3>Subscribe</h3>
                     <p>Get notified when I publish new posts</p>
                     <form action="https://api.staticforms.xyz/submit" method="POST" class="subscribe-form">
-                        <!-- StaticForms Required -->
                         <input type="hidden" name="accessKey" value="sf_n72knfdn65gg51ni92d9fdm7">
                         <input type="hidden" name="redirectTo" value="https://esauvictor.github.io/thank-you-sub.html">
-                        
-                        <!-- Optional subject field -->
                         <input type="hidden" name="_subject" value="New subscription from your website">
-
-                        <!-- Honeypot for spam protection -->
                         <input type="text" name="honeypot" style="display:none">
 
                         <div class="form-group">
@@ -1030,18 +975,18 @@
                 const prevLink = document.querySelector('.nav-prev');
                 const nextLink = document.querySelector('.nav-next');
                 
-                if (prevId > 0) {
+                if (blogPosts[prevId]) {
                     prevLink.href = `post.html?id=${prevId}`;
-                    prevLink.querySelector('span:last-child').textContent = blogPosts[prevId].title;
+                    document.getElementById('prev-post-title').textContent = blogPosts[prevId].title;
                 } else {
-                    prevLink.style.visibility = 'hidden';
+                    prevLink.style.display = 'none';
                 }
                 
-                if (nextId <= Object.keys(blogPosts).length) {
+                if (blogPosts[nextId]) {
                     nextLink.href = `post.html?id=${nextId}`;
-                    nextLink.querySelector('span:last-child').textContent = blogPosts[nextId].title;
+                    document.getElementById('next-post-title').textContent = blogPosts[nextId].title;
                 } else {
-                    nextLink.style.visibility = 'hidden';
+                    nextLink.style.display = 'none';
                 }
                 
                 // Update document title
@@ -1049,6 +994,8 @@
             } else {
                 // Handle case where post ID is invalid
                 document.getElementById('post-content').innerHTML = '<p>Blog post not found.</p>';
+                document.querySelector('.nav-prev').style.display = 'none';
+                document.querySelector('.nav-next').style.display = 'none';
             }
         }
 
@@ -1081,18 +1028,64 @@
             document.getElementById('progressBar').style.width = scrolled + '%';
         });
 
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
+        // Add copy button to code blocks
+        function addCopyButtons() {
+            document.querySelectorAll('pre').forEach(pre => {
+                // Skip if already has copy button
+                if (pre.querySelector('.copy-btn')) return;
+                
+                const button = document.createElement('button');
+                button.className = 'copy-btn';
+                button.innerHTML = '<i class="far fa-copy"></i>';
+                button.title = 'Copy code';
+                
+                button.addEventListener('click', () => {
+                    const code = pre.querySelector('code')?.innerText || pre.innerText;
+                    navigator.clipboard.writeText(code).then(() => {
+                        button.innerHTML = '<i class="fas fa-check"></i>';
+                        setTimeout(() => {
+                            button.innerHTML = '<i class="far fa-copy"></i>';
+                        }, 2000);
+                    });
                 });
+                
+                pre.style.position = 'relative';
+                button.style.position = 'absolute';
+                button.style.top = '10px';
+                button.style.right = '10px';
+                button.style.background = 'rgba(255,255,255,0.2)';
+                button.style.border = 'none';
+                button.style.color = 'white';
+                button.style.borderRadius = '4px';
+                button.style.padding = '5px 10px';
+                button.style.cursor = 'pointer';
+                button.style.transition = 'background 0.3s ease';
+                
+                button.addEventListener('mouseenter', () => {
+                    button.style.background = 'rgba(255,255,255,0.3)';
+                });
+                
+                button.addEventListener('mouseleave', () => {
+                    button.style.background = 'rgba(255,255,255,0.2)';
+                });
+                
+                pre.appendChild(button);
             });
-        });
+        }
 
-        // Add hover effect to images in post content
-        function addImageHoverEffect() {
+        // Load the blog post when page loads
+        window.addEventListener('load', () => {
+            loadBlogPost();
+            addCopyButtons();
+            
+            // Add smooth fade-in for content
+            const contentElements = document.querySelectorAll('.post-content > *');
+            contentElements.forEach((el, i) => {
+                el.style.opacity = '0';
+                el.style.animation = `fadeIn 0.5s ease-out ${i * 0.1}s forwards`;
+            });
+            
+            // Add hover effect to images
             document.querySelectorAll('.post-content img').forEach(img => {
                 img.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
                 img.addEventListener('mouseenter', () => {
@@ -1104,58 +1097,12 @@
                     img.style.boxShadow = 'var(--shadow-md)';
                 });
             });
-        }
-
-        // Load the blog post when page loads
-        window.addEventListener('load', () => {
-            loadBlogPost();
-            addImageHoverEffect();
-            
-            // Add smooth fade-in for content
-            document.querySelectorAll('.post-content > *').forEach((el, i) => {
-                el.style.opacity = '0';
-                el.style.animation = `fadeIn 0.5s ease-out ${i * 0.1}s forwards`;
-            });
         });
 
-        // Add copy button to code blocks
-        document.querySelectorAll('pre').forEach(pre => {
-            const button = document.createElement('button');
-            button.className = 'copy-btn';
-            button.innerHTML = '<i class="far fa-copy"></i>';
-            button.title = 'Copy code';
-            
-            button.addEventListener('click', () => {
-                const code = pre.querySelector('code').innerText;
-                navigator.clipboard.writeText(code).then(() => {
-                    button.innerHTML = '<i class="fas fa-check"></i>';
-                    setTimeout(() => {
-                        button.innerHTML = '<i class="far fa-copy"></i>';
-                    }, 2000);
-                });
-            });
-            
-            pre.style.position = 'relative';
-            button.style.position = 'absolute';
-            button.style.top = '10px';
-            button.style.right = '10px';
-            button.style.background = 'rgba(255,255,255,0.2)';
-            button.style.border = 'none';
-            button.style.color = 'white';
-            button.style.borderRadius = '4px';
-            button.style.padding = '5px 10px';
-            button.style.cursor = 'pointer';
-            button.style.transition = 'background 0.3s ease';
-            
-            button.addEventListener('mouseenter', () => {
-                button.style.background = 'rgba(255,255,255,0.3)';
-            });
-            
-            button.addEventListener('mouseleave', () => {
-                button.style.background = 'rgba(255,255,255,0.2)';
-            });
-            
-            pre.appendChild(button);
+        // Handle navigation changes
+        window.addEventListener('popstate', () => {
+            loadBlogPost();
+            addCopyButtons();
         });
     </script>
 </body>
