@@ -32,13 +32,49 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Thank you for contacting Esau Victor">
+    <title>Thank You | Esau Victor</title>
+    <link rel="icon" href="https://esauvictor.blogspot.com/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #4a6fa5;
+            --accent-color: #3b82f6;
+            --text-color: #333;
+            --light-text: #6b7280;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --footer-bg: #1e3a8a;
+            --footer-text: #e0e7ff;
+            --transition: all 0.3s ease;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
             line-height: 1.6;
-            background-color: var(--bg-color);
+            background: linear-gradient(135deg, var(--bg-color) 0%, #eef2ff 100%);
             color: var(--text-color);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
@@ -51,23 +87,26 @@
 
         .btn {
             display: inline-block;
-            background-color: var(--secondary-color);
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
             color: white;
-            padding: 0.8rem 2rem;
-            border-radius: 30px;
-            font-weight: 500;
+            padding: 0.9rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.3px;
             transition: var(--transition);
             border: none;
             cursor: pointer;
+            box-shadow: var(--shadow-sm);
             text-align: center;
             text-decoration: none;
             margin-top: 1.5rem;
         }
 
         .btn:hover {
-            background-color: var(--primary-color);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
 
         /* Contact Thank You Section */
@@ -94,15 +133,16 @@
 
         .contact-icon {
             font-size: 4.5rem;
-            color: var(--secondary-color);
+            color: var(--accent-color);
             margin-bottom: 1.5rem;
-            animation: float 3s ease-in-out infinite;
+            animation: pulse 2.5s infinite ease-in-out;
         }
 
         .contact-content h1 {
-            font-size: 2.25rem;
+            font-size: 2.4rem;
             margin-bottom: 1.25rem;
             color: var(--primary-color);
+            animation: fadeUp 0.6s ease-out forwards;
         }
 
         .contact-content p {
@@ -126,32 +166,6 @@
             width: 100%;
         }
 
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            color: white;
-            transition: var(--transition);
-            text-decoration: none;
-        }
-
-        .social-links a:hover {
-            background-color: white;
-            color: var(--primary-color);
-            transform: translateY(-3px);
-        }
-
         .copyright {
             padding-top: 1rem;
             color: var(--footer-text);
@@ -159,16 +173,25 @@
             opacity: 0.8;
             border-top: 1px solid rgba(255,255,255,0.1);
             margin-top: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .copyright:hover {
+            color: var(--accent-color);
         }
 
         /* Animations */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.9; }
         }
 
         @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
@@ -243,3 +266,44 @@
     </script>
 </body>
 </html>
+
+
+            .btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Contact Thank You Content -->
+    <main class="contact-thank-you">
+        <div class="container">
+            <div class="contact-content">
+                <div class="contact-icon">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <h1>Message Received!</h1>
+                <p>Thank you for reaching out to <span class="highlight">Esau Victor</span>. Your message has been successfully sent.</p>
+                <p>I'll review your inquiry and get back to you as soon as possible, typically within 24-48 hours.</p>
+                <a href="https://esauvictor.github.io" class="btn">Return to Homepage</a>
+                
+                <p style="margin-top: 2rem; font-size: 0.9rem; color: var(--light-text);">
+                    <i class="fas fa-clock"></i> Business Hours: Monday-Friday, 9AM-5PM EST
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p class="copyright">&copy; <span id="year"></span> Esau Victor. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Update copyright year
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
+
