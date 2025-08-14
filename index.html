@@ -2770,22 +2770,20 @@ s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
 
-    <script>
+   <script>
 document.addEventListener('DOMContentLoaded', function() {
   // Prevent right-click context menu
   document.addEventListener('contextmenu', function(e) {
     e.preventDefault();
-    alert('Right-click is disabled to protect content.');
     return false;
   });
   
-  // Prevent keyboard shortcuts (Ctrl+C, Ctrl+A, etc.)
+  // Prevent keyboard shortcuts (Ctrl+C, Ctrl+U, Ctrl+A, etc.)
   document.addEventListener('keydown', function(e) {
     // Disable Ctrl+C, Ctrl+U, Ctrl+A, Ctrl+S, Ctrl+Shift+I, F12
     if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 65 || e.keyCode === 83) || 
         e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73)) {
       e.preventDefault();
-      alert('This function has been disabled to protect content.');
       return false;
     }
   });
@@ -2822,5 +2820,6 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('%cit is a scam and will give them access to your account.', 'font-size:16px;color:red;');
 });
 </script>
+
 </body>
 </html>
