@@ -664,8 +664,7 @@
         min-width: 100%;
     }
 }
-      /* Projects Section Styling */
-/* Projects Section Styling */
+  /* Projects Section Styling */
 .projects-section .lead-paragraph {
   font-size: 1.25rem;
   line-height: 1.7;
@@ -720,7 +719,7 @@
   border-radius: 2px;
 }
 
-/* Tablet Mockups Container */
+/* Tablet Mockups Container - Made more flexible */
 .projects-section .tablet-mockups-container {
   display: flex;
   flex-wrap: wrap;
@@ -729,10 +728,12 @@
   margin: 0 auto;
 }
 
-/* Individual Tablet Mockup */
+/* Individual Tablet Mockup - Adjusted to be responsive */
 .projects-section .tablet-mockup {
   position: relative;
-  width: 350px;
+  /* Replaced fixed width with a flexible one */
+  flex-basis: 350px; 
+  max-width: 100%; /* Ensure it doesn't overflow container */
   margin-bottom: 30px;
   padding: 15px;
   background: #f5f5f5;
@@ -773,7 +774,7 @@
   height: 100%;
 }
 
-/* Project Card Adjustments for Tablet */
+/* Project Card Adjustments */
 .projects-section .single-project {
   padding: 15px;
 }
@@ -899,149 +900,90 @@
   margin-top: 15px;
 }
 
-/* Tutorials Section Styling */
-.section.tutorials {
-  background: #f8fafc;
-  padding: 80px 0;
+/* Responsive Adjustments - Updated for better flexibility */
+@media (max-width: 768px) {
+  .projects-section {
+    padding: 40px 15px;
+  }
+  
+  .projects-section .section-title {
+    font-size: 2rem;
+  }
+  
+  .projects-section .tablet-mockups-container {
+    gap: 30px;
+  }
+  
+  /* Removed fixed width from tablet-mockup in media query */
+  .projects-section .tablet-mockup {
+    flex-basis: calc(50% - 15px);
+    max-width: 400px; /* Optional max-width for very large tablet screens */
+  }
+  
+  .projects-section .single-project h3 {
+    font-size: 1.3rem;
+  }
+  
+  .projects-section .single-project p {
+    font-size: 0.9rem;
+  }
+  
+  .projects-section .project-tag {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+  }
+  
+  .projects-section .single-project .btn {
+    padding: 8px 15px;
+    font-size: 0.85rem;
+  }
+  
+  .section.tutorials, .section#blog {
+    padding: 60px 0;
+  }
+  
+  .tutorials .section-title, .section#blog .section-title {
+    font-size: 2rem;
+  }
 }
 
-.tutorials .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.tutorials .section-title {
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 15px;
-  color: #00008B;
-}
-
-.tutorials .section-subtitle {
-  text-align: center;
-  color: #64748b;
-  margin-bottom: 50px;
-}
-
-.tutorials-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  margin-bottom: 30px;
-}
-
-.tutorial-card {
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
-}
-
-.tutorial-card:hover {
-  transform: translateY(-5px);
-}
-
-.video-container {
-  position: relative;
-  padding-bottom: 56.25%;
-  height: 0;
-  overflow: hidden;
-}
-
-.video-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-.tutorial-info {
-  padding: 20px;
-}
-
-.tutorial-info h3 {
-  font-size: 1.3rem;
-  margin-bottom: 10px;
-  color: #1e293b;
-}
-
-.tutorial-info p {
-  color: #64748b;
-  margin-bottom: 15px;
-  line-height: 1.6;
-}
-
-.tutorial-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  color: #64748b;
-  font-size: 0.85rem;
-}
-
-.tutorial-meta i {
-  margin-right: 5px;
-}
-
-.tutorials-cta {
-  text-align: center;
-  margin-top: 40px;
-}
-
-.tutorials-cta .btn {
-  display: inline-block;
-  padding: 12px 30px;
-  background: #4f46e5;
-  color: white;
-  border-radius: 6px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.tutorials-cta .btn:hover {
-  background: #4338ca;
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.tutorials-cta .btn i {
-  margin-right: 8px;
-}
-
-/* Blog Section Styling */
-.section#blog {
-  padding: 80px 0;
-  background: white;
-}
-
-.section#blog .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.section#blog .section-title {
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 15px;
-  color: #00008B;
-}
-
-.section#blog .section-subtitle {
-  text-align: center;
-  color: #64748b;
-  margin-bottom: 50px;
-}
-
-.blog-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
+@media (max-width: 480px) {
+  .projects-section .section-title {
+    font-size: 1.8rem;
+  }
+  
+  /* Ensured the mockup is 100% width on small screens */
+  .projects-section .tablet-mockup {
+    flex-basis: 100%; 
+    padding: 10px;
+  }
+  
+  .projects-section .tablet-screen {
+    border-width: 6px;
+  }
+  
+  .projects-section .single-project h3 {
+    font-size: 1.2rem;
+  }
+  
+  .projects-section .single-project .btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .projects-section .project-links {
+    justify-content: center;
+  }
+  
+  .tutorials .section-title, .section#blog .section-title {
+    font-size: 1.8rem;
+  }
+  
+  .blog-grid, .tutorials-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .blog-post {
