@@ -7,7 +7,7 @@
     <meta name="keywords" content="web development, data analytics, cyber security, portfolio, Nigeria, Port Harcourt">
     <meta name="author" content="Esau Victor">
     <title>Esau Victor | Full Stack Developer</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="https://esauvictor.blogspot.com/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -506,694 +506,729 @@
             color: var(--medium-gray);
             margin-bottom: var(--space-md);
         }
-        
+
         /* Professional Counseling Service Styles */
-        .professional-counseling-service {
-            margin-top: 60px;
-            padding-top: 40px;
-            border-top: 1px solid rgba(0,0,0,0.1);
+.professional-counseling-service {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.counseling-card {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.counseling-icon {
+    width: 100px;
+    height: 100px;
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    margin: 0 auto 20px;
+}
+
+.service-subtitle {
+    color: #64748b;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.counseling-details {
+    display: flex;
+    gap: 30px;
+    margin: 40px 0;
+    text-align: left;
+}
+
+.counseling-benefits, .counseling-approach {
+    flex: 1;
+}
+
+.counseling-benefits h4, .counseling-approach h4 {
+    color: #1e293b;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+.counseling-benefits ul {
+    list-style: none;
+    padding: 0;
+}
+
+.counseling-benefits li {
+    margin-bottom: 15px;
+    padding-left: 30px;
+    position: relative;
+    line-height: 1.6;
+}
+
+.counseling-benefits i {
+    color: #10b981;
+    position: absolute;
+    left: 0;
+    top: 4px;
+}
+
+.approach-points {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.approach-item {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.approach-item i {
+    font-size: 1.5rem;
+    color: #2563eb;
+    margin-bottom: 10px;
+}
+
+.approach-item p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.pricing-options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.pricing-option {
+    flex: 1;
+    min-width: 250px;
+    padding: 25px;
+    border-radius: 10px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.pricing-option.featured {
+    border: 2px solid #2563eb;
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.1);
+}
+
+.pricing-option h5 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #1e293b;
+}
+
+.price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2563eb;
+    margin: 15px 0;
+}
+
+.details {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 20px;
+}
+
+.btn-outline {
+    background: white;
+    color: #2563eb;
+    border: 2px solid #2563eb;
+}
+
+.btn-outline:hover {
+    background: #f8fafc;
+}
+
+@media (max-width: 768px) {
+    .counseling-details {
+        flex-direction: column;
+    }
+    
+    .counseling-card {
+        padding: 25px;
+    }
+    
+    .pricing-option {
+        min-width: 100%;
+    }
+}
+      /* Projects Section Styling */
+/* Projects Section Styling */
+.projects-section .lead-paragraph {
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: #00008B;
+  margin-bottom: 2rem;
+}
+
+.projects-section .small-text {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #00008B;
+}
+
+.projects-section .drop-cap::first-letter {
+  float: left;
+  font-size: 3.5rem;
+  line-height: 0.65;
+  margin: 0.1em 0.15em 0 0;
+  color: #00008B;
+  font-weight: 700;
+}
+
+.projects-section {
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.projects-section .section-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.projects-section .section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #00008B;
+  margin-bottom: 15px;
+  position: relative;
+  display: inline-block;
+}
+
+.projects-section .section-title:after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(135deg, #00008B, #00008B);
+  border-radius: 2px;
+}
+
+/* Tablet Mockups Container */
+.projects-section .tablet-mockups-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  margin: 0 auto;
+}
+
+/* Individual Tablet Mockup */
+.projects-section .tablet-mockup {
+  position: relative;
+  width: 350px;
+  margin-bottom: 30px;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.projects-section .tablet-mockup:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 50px;
+  background: #ccc;
+  border-radius: 0 5px 5px 0;
+}
+
+.projects-section .tablet-mockup:after {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 5px;
+  background: #333;
+  border-radius: 5px;
+}
+
+.projects-section .tablet-screen {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 8px solid #222;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
+  height: 100%;
+}
+
+/* Project Card Adjustments for Tablet */
+.projects-section .single-project {
+  padding: 15px;
+}
+
+.projects-section .single-project .project-card {
+  margin: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.projects-section .single-project .project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.projects-section .single-project .project-image {
+  flex: 1;
+  height: 200px;
+  overflow: hidden;
+}
+
+.projects-section .single-project .project-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.projects-section .single-project .project-card:hover .project-image img {
+  transform: scale(1.05);
+}
+
+.projects-section .single-project .project-content {
+  padding: 20px;
+}
+
+/* Project Tag Styling */
+.projects-section .project-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #fff;
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.projects-section .project-tag:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Project Text Styling */
+.projects-section .single-project h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 15px 0 10px;
+  color: #2d3748;
+  line-height: 1.3;
+}
+
+.projects-section .single-project p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #4a5568;
+  margin-bottom: 20px;
+}
+
+/* Button Styling */
+.projects-section .single-project .btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #4f46e5;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.projects-section .single-project .btn:hover {
+  background: #4338ca;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* GitHub Button Styling */
+.projects-section .single-project .btn-github {
+  background: #333;
+  color: white;
+}
+
+.projects-section .single-project .btn-github:hover {
+  background: #24292e;
+}
+
+.projects-section .single-project .btn-github i {
+  margin-right: 5px;
+}
+
+/* Project Links Container */
+.projects-section .project-links {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+/* Tutorials Section Styling */
+.section.tutorials {
+  background: #f8fafc;
+  padding: 80px 0;
+}
+
+.tutorials .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.tutorials .section-title {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 15px;
+  color: #00008B;
+}
+
+.tutorials .section-subtitle {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 50px;
+}
+
+.tutorials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.tutorial-card {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.tutorial-card:hover {
+  transform: translateY(-5px);
+}
+
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.tutorial-info {
+  padding: 20px;
+}
+
+.tutorial-info h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #1e293b;
+}
+
+.tutorial-info p {
+  color: #64748b;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.tutorial-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.tutorial-meta i {
+  margin-right: 5px;
+}
+
+.tutorials-cta {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.tutorials-cta .btn {
+  display: inline-block;
+  padding: 12px 30px;
+  background: #4f46e5;
+  color: white;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.tutorials-cta .btn:hover {
+  background: #4338ca;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.tutorials-cta .btn i {
+  margin-right: 8px;
+}
+
+/* Blog Section Styling */
+.section#blog {
+  padding: 80px 0;
+  background: white;
+}
+
+.section#blog .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section#blog .section-title {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 15px;
+  color: #00008B;
+}
+
+.section#blog .section-subtitle {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 50px;
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.blog-post {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.blog-post:hover {
+  transform: translateY(-5px);
+}
+
+.blog-image {
+  height: 200px;
+  overflow: hidden;
+}
+
+.blog-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.blog-post:hover .blog-image img {
+  transform: scale(1.05);
+}
+
+.blog-content {
+  padding: 20px;
+}
+
+.blog-content h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #1e293b;
+}
+
+.blog-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  color: #64748b;
+  font-size: 0.85rem;
+  margin-bottom: 15px;
+}
+
+.blog-meta i {
+  margin-right: 5px;
+}
+
+.blog-content p {
+  color: #64748b;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.btn-outline {
+  display: inline-block;
+  padding: 10px 20px;
+  border: 2px solid #4f46e5;
+  color: #4f46e5;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+  background: #4f46e5;
+  color: white;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .projects-section {
+    padding: 40px 15px;
+  }
+  
+  .projects-section .section-title {
+    font-size: 2rem;
+  }
+  
+  .projects-section .tablet-mockups-container {
+    gap: 30px;
+  }
+  
+  .projects-section .tablet-mockup {
+    width: 300px;
+  }
+  
+  .projects-section .single-project h3 {
+    font-size: 1.3rem;
+  }
+  
+  .projects-section .single-project p {
+    font-size: 0.9rem;
+  }
+  
+  .projects-section .project-tag {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+  }
+  
+  .projects-section .single-project .btn {
+    padding: 8px 15px;
+    font-size: 0.85rem;
+  }
+  
+  .section.tutorials, .section#blog {
+    padding: 60px 0;
+  }
+  
+  .tutorials .section-title, .section#blog .section-title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .projects-section .section-title {
+    font-size: 1.8rem;
+  }
+  
+  .projects-section .tablet-mockup {
+    width: 280px;
+    padding: 10px;
+  }
+  
+  .projects-section .tablet-screen {
+    border-width: 6px;
+  }
+  
+  .projects-section .single-project h3 {
+    font-size: 1.2rem;
+  }
+  
+  .projects-section .single-project .btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .projects-section .project-links {
+    justify-content: center;
+  }
+  
+  .tutorials .section-title, .section#blog .section-title {
+    font-size: 1.8rem;
+  }
+  
+  .blog-grid, .tutorials-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+        /* Statistics Section CSS */
+        .statistics-section {
+            background-color: var(--white);
+            padding: var(--space-xxl) 0;
         }
-        
-        .counseling-card {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 40px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            text-align: center;
-        }
-        
-        .counseling-icon {
-            width: 100px;
-            height: 100px;
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
-            margin: 0 auto 20px;
-        }
-        
-        .service-subtitle {
-            color: #64748b;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
-        }
-        
-        .counseling-details {
-            display: flex;
-            gap: 30px;
-            margin: 40px 0;
-            text-align: left;
-        }
-        
-        .counseling-benefits, .counseling-approach {
-            flex: 1;
-        }
-        
-        .counseling-benefits h4, .counseling-approach h4 {
-            color: #1e293b;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-        }
-        
-        .counseling-benefits ul {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .counseling-benefits li {
-            margin-bottom: 15px;
-            padding-left: 30px;
-            position: relative;
-            line-height: 1.6;
-        }
-        
-        .counseling-benefits i {
-            color: #10b981;
-            position: absolute;
-            left: 0;
-            top: 4px;
-        }
-        
-        .approach-points {
+
+        .counters {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        
-        .approach-item {
-            background: #f8fafc;
-            padding: 20px;
-            border-radius: 8px;
+            gap: var(--space-lg);
             text-align: center;
         }
-        
-        .approach-item i {
-            font-size: 1.5rem;
-            color: #2563eb;
-            margin-bottom: 10px;
+
+        .counter-item {
+            padding: var(--space-md);
+            border-radius: var(--radius-lg);
+            background-color: var(--light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .counter-item h3 {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: var(--space-xs);
         }
         
-        .approach-item p {
-            margin: 0;
-            font-size: 0.95rem;
-        }
-        
-        .pricing-options {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 40px;
-            flex-wrap: wrap;
-        }
-        
-        .pricing-option {
-            flex: 1;
-            min-width: 250px;
-            padding: 25px;
-            border-radius: 10px;
-            background: white;
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
-        
-        .pricing-option.featured {
-            border: 2px solid #2563eb;
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.1);
-        }
-        
-        .pricing-option h5 {
+        .counter-item p {
             font-size: 1.1rem;
-            margin-bottom: 10px;
-            color: #1e293b;
-        }
-        
-        .price {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #2563eb;
-            margin: 15px 0;
-        }
-        
-        .details {
-            font-size: 0.85rem;
-            color: #64748b;
-            margin-bottom: 20px;
-        }
-        
-        .btn-outline {
-            background: white;
-            color: #2563eb;
-            border: 2px solid #2563eb;
-        }
-        
-        .btn-outline:hover {
-            background: #f8fafc;
-        }
-        
-        @media (max-width: 768px) {
-            .counseling-details {
-                flex-direction: column;
-            }
-            
-            .counseling-card {
-                padding: 25px;
-            }
-            
-            .pricing-option {
-                min-width: 100%;
-            }
-        }
-        
-        /* Projects Section Styling */
-        .projects-section .lead-paragraph {
-            font-size: 1.25rem;
-            line-height: 1.7;
-            color: #00008B;
-            margin-bottom: 2rem;
-        }
-        
-        .projects-section .small-text {
-            font-size: 0.875rem;
-            line-height: 1.5;
-            color: #00008B;
-        }
-        
-        .projects-section .drop-cap::first-letter {
-            float: left;
-            font-size: 3.5rem;
-            line-height: 0.65;
-            margin: 0.1em 0.15em 0 0;
-            color: #00008B;
-            font-weight: 700;
-        }
-        
-        .projects-section {
-            padding: 60px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .projects-section .section-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-        
-        .projects-section .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #00008B;
-            margin-bottom: 15px;
-            position: relative;
-            display: inline-block;
-        }
-        
-        .projects-section .section-title:after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(135deg, #00008B, #00008B);
-            border-radius: 2px;
-        }
-        
-        /* Tablet Mockups Container */
-        .projects-section .tablet-mockups-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 40px;
-            margin: 0 auto;
-        }
-        
-        /* Individual Tablet Mockup */
-        .projects-section .tablet-mockup {
-            position: relative;
-            width: 350px;
-            margin-bottom: 30px;
-            padding: 15px;
-            background: #f5f5f5;
-            border-radius: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .projects-section .tablet-mockup:before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
-            width: 8px;
-            height: 50px;
-            background: #ccc;
-            border-radius: 0 5px 5px 0;
-        }
-        
-        .projects-section .tablet-mockup:after {
-            content: '';
-            position: absolute;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 5px;
-            background: #333;
-            border-radius: 5px;
-        }
-        
-        .projects-section .tablet-screen {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 8px solid #222;
-            box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
-            height: 100%;
-        }
-        
-        /* Project Card Adjustments for Tablet */
-        .projects-section .single-project {
-            padding: 15px;
-        }
-        
-        .projects-section .single-project .project-card {
-            margin: 0;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            background: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .projects-section .single-project .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        
-        .projects-section .single-project .project-image {
-            flex: 1;
-            height: 200px;
-            overflow: hidden;
-        }
-        
-        .projects-section .single-project .project-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-        
-        .projects-section .single-project .project-card:hover .project-image img {
-            transform: scale(1.05);
-        }
-        
-        .projects-section .single-project .project-content {
-            padding: 20px;
-        }
-        
-        /* Project Tag Styling */
-        .projects-section .project-tag {
-            display: inline-block;
-            padding: 4px 12px;
-            margin-right: 8px;
-            margin-bottom: 8px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #fff;
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .projects-section .project-tag:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-        
-        /* Project Text Styling */
-        .projects-section .single-project h3 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin: 15px 0 10px;
-            color: #2d3748;
-            line-height: 1.3;
-        }
-        
-        .projects-section .single-project p {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #4a5568;
-            margin-bottom: 20px;
-        }
-        
-        /* Button Styling */
-        .projects-section .single-project .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #4f46e5;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .projects-section .single-project .btn:hover {
-            background: #4338ca;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-        
-        /* GitHub Button Styling */
-        .projects-section .single-project .btn-github {
-            background: #333;
-            color: white;
-        }
-        
-        .projects-section .single-project .btn-github:hover {
-            background: #24292e;
-        }
-        
-        .projects-section .single-project .btn-github i {
-            margin-right: 5px;
-        }
-        
-        /* Project Links Container */
-        .projects-section .project-links {
-            display: flex;
-            flex-wrap: wrap;
-            margin-top: 15px;
-        }
-        
-        /* Tutorials Section Styling */
-        .section.tutorials {
-            background: #f8fafc;
-            padding: 80px 0;
-        }
-        
-        .tutorials .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .tutorials .section-title {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 15px;
-            color: #00008B;
-        }
-        
-        .tutorials .section-subtitle {
-            text-align: center;
-            color: #64748b;
-            margin-bottom: 50px;
-        }
-        
-        .tutorials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-        
-        .tutorial-card {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        
-        .tutorial-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-        }
-        
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        
-        .tutorial-info {
-            padding: 20px;
-        }
-        
-        .tutorial-info h3 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            color: #1e293b;
-        }
-        
-        .tutorial-info p {
-            color: #64748b;
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-        
-        .tutorial-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            color: #64748b;
-            font-size: 0.85rem;
-        }
-        
-        .tutorial-meta i {
-            margin-right: 5px;
-        }
-        
-        .tutorials-cta {
-            text-align: center;
-            margin-top: 40px;
-        }
-        
-        .tutorials-cta .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: #4f46e5;
-            color: white;
-            border-radius: 6px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        
-        .tutorials-cta .btn:hover {
-            background: #4338ca;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .tutorials-cta .btn i {
-            margin-right: 8px;
-        }
-        
-        /* Blog Section Styling */
-        .section#blog {
-            padding: 80px 0;
-            background: white;
-        }
-        
-        .section#blog .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .section#blog .section-title {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 15px;
-            color: #00008B;
-        }
-        
-        .section#blog .section-subtitle {
-            text-align: center;
-            color: #64748b;
-            margin-bottom: 50px;
-        }
-        
-        .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        
-        .blog-post {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        
-        .blog-post:hover {
-            transform: translateY(-5px);
-        }
-        
-        .blog-image {
-            height: 200px;
-            overflow: hidden;
-        }
-        
-        .blog-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-        
-        .blog-post:hover .blog-image img {
-            transform: scale(1.05);
-        }
-        
-        .blog-content {
-            padding: 20px;
-        }
-        
-        .blog-content h3 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            color: #1e293b;
-        }
-        
-        .blog-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            color: #64748b;
-            font-size: 0.85rem;
-            margin-bottom: 15px;
-        }
-        
-        .blog-meta i {
-            margin-right: 5px;
-        }
-        
-        .blog-content p {
-            color: #64748b;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-        
-        .btn-outline {
-            display: inline-block;
-            padding: 10px 20px;
-            border: 2px solid #4f46e5;
-            color: #4f46e5;
-            border-radius: 6px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-outline:hover {
-            background: #4f46e5;
-            color: white;
-        }
-        
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .projects-section {
-                padding: 40px 15px;
-            }
-            
-            .projects-section .section-title {
-                font-size: 2rem;
-            }
-            
-            .projects-section .tablet-mockups-container {
-                gap: 30px;
-            }
-            
-            .projects-section .tablet-mockup {
-                width: 300px;
-            }
-            
-            .projects-section .single-project h3 {
-                font-size: 1.3rem;
-            }
-            
-            .projects-section .single-project p {
-                font-size: 0.9rem;
-            }
-            
-            .projects-section .project-tag {
-                font-size: 0.7rem;
-                padding: 3px 8px;
-            }
-            
-            .projects-section .single-project .btn {
-                padding: 8px 15px;
-                font-size: 0.85rem;
-            }
-            
-            .tutorials .section-title, .section#blog .section-title {
-                font-size: 2rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .projects-section .section-title {
-                font-size: 1.8rem;
-            }
-            
-            .projects-section .tablet-mockup {
-                width: 280px;
-                padding: 10px;
-            }
-            
-            .projects-section .tablet-screen {
-                border-width: 6px;
-            }
-            
-            .projects-section .single-project h3 {
-                font-size: 1.2rem;
-            }
-            
-            .projects-section .single-project .btn {
-                padding: 8px 12px;
-                font-size: 0.8rem;
-                margin-right: 5px;
-                margin-bottom: 5px;
-            }
-            
-            .projects-section .project-links {
-                justify-content: center;
-            }
-            
-            .tutorials .section-title, .section#blog .section-title {
-                font-size: 1.8rem;
-            }
-            
-            .blog-grid, .tutorials-grid {
-                grid-template-columns: 1fr;
-            }
+            color: var(--dark-gray);
         }
         
         /* Testimonials Section */
@@ -1249,10 +1284,6 @@
             margin-right: var(--space-sm);
             object-fit: cover;
             border: 3px solid var(--primary-light);
-        }
-        
-        .author-info {
-            line-height: 1.2;
         }
         
         .author-name {
@@ -1463,887 +1494,722 @@
         }
         
         /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes slideInLeft {
-            from { transform: translateX(-50px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        @keyframes slideInRight {
-            from { transform: translateX(50px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        @keyframes slideInUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } } 
+        @keyframes slideInLeft { from { transform: translateX(-50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } } 
+        @keyframes slideInRight { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } } 
+        @keyframes slideInUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } } 
         
         /* Responsive Design */
-        @media (max-width: 992px) {
-            .section { padding: var(--space-xl) 0; }
-            .section-title { font-size: 2rem; }
-            .hero-title { font-size: 2.8rem; }
-        }
+        @media (max-width: 992px) { 
+            .section { padding: var(--space-xl) 0; } 
+            .section-title { font-size: 2rem; } 
+            .hero-title { font-size: 2.8rem; } 
+        } 
         
-        @media (max-width: 768px) {
-            .nav-links {
-                position: fixed;
-                top: 70px;
-                left: -100%;
-                width: 80%;
-                height: calc(100vh - 70px);
-                background-color: var(--white);
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: var(--space-md);
-                transition: var(--transition-normal);
-                box-shadow: var(--shadow-lg);
-                z-index: 999;
-            }
+        @media (max-width: 768px) { 
+            .nav-links { 
+                position: fixed; 
+                top: 70px; 
+                left: -100%; 
+                width: 80%; 
+                height: calc(100vh - 70px); 
+                background-color: var(--white); 
+                flex-direction: column; 
+                align-items: center; 
+                justify-content: center; 
+                gap: var(--space-md); 
+                transition: var(--transition-normal); 
+                box-shadow: var(--shadow-lg); 
+                z-index: 999; 
+            } 
             
-            .nav-links.active { left: 0; }
-            .hamburger { display: block; }
+            .nav-links.active { left: 0; } 
+            .hamburger { display: block; } 
+            .hero-container { 
+                flex-direction: column; 
+                text-align: center; 
+                padding-top: var(--space-xl); 
+            } 
             
-            .hero-container {
-                flex-direction: column;
-                text-align: center;
-                padding-top: var(--space-xl);
-            }
+            .hero-content { 
+                padding-right: 0; 
+                margin-bottom: var(--space-xl); 
+            } 
             
-            .hero-content {
-                padding-right: 0;
-                margin-bottom: var(--space-xl);
-            }
-            
-            .hero-actions { justify-content: center; }
-            .hero-title { font-size: 2.5rem; }
-            .hero-subtitle { margin-left: auto; margin-right: auto; }
-            .project-links { flex-direction: column; }
-        }
+            .hero-actions { justify-content: center; } 
+            .hero-title { font-size: 2.5rem; } 
+            .hero-subtitle { margin-left: auto; margin-right: auto; } 
+            .project-links { flex-direction: column; } 
+        } 
         
-        @media (max-width: 576px) {
-            .section-title { font-size: 1.8rem; }
-            .hero-title { font-size: 2rem; }
-            .hero-subtitle { font-size: 1.1rem; }
-            .hero-actions {
-                flex-direction: column;
-                gap: var(--space-sm);
-            }
-            .btn { width: 100%; }
-        }
+        @media (max-width: 576px) { 
+            .section-title { font-size: 1.8rem; } 
+            .hero-title { font-size: 2rem; } 
+            .hero-subtitle { font-size: 1.1rem; } 
+            .hero-actions { flex-direction: column; gap: var(--space-sm); } 
+            .btn { width: 100%; } 
+        } 
         
-        /* Dark Mode Toggle */
-        .dark-mode-toggle {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background-color: var(--primary);
-            color: var(--white);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: var(--shadow-md);
-            z-index: 999;
-            transition: var(--transition-normal);
-        }
+        /* Dark Mode Toggle */ 
+        .dark-mode-toggle { 
+            position: fixed; 
+            bottom: 30px; 
+            right: 30px; 
+            width: 50px; 
+            height: 50px; 
+            background-color: var(--primary); 
+            color: var(--white); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            box-shadow: var(--shadow-md); 
+            z-index: 999; 
+            transition: var(--transition-normal); 
+        } 
         
-        .dark-mode-toggle:hover {
-            transform: scale(1.1);
-        }
+        .dark-mode-toggle:hover { transform: scale(1.1); } 
         
-        /* Dark Mode Styles */
-        body.dark-mode {
-            --dark: #f8fafc;
-            --dark-gray: #e2e8f0;
-            --medium-gray: #94a3b8;
-            --light-gray: #334155;
-            --light: #1e293b;
-            --white: #0f172a;
-            --black: #ffffff;
-        }
+        /* Dark Mode Styles */ 
+        body.dark-mode { 
+            --dark: #f8fafc; 
+            --dark-gray: #e2e8f0; 
+            --medium-gray: #94a3b8; 
+            --light-gray: #334155; 
+            --light: #1e293b; 
+            --white: #0f172a; 
+            --black: #ffffff; 
+        } 
         
-        /* Loading Spinner */
-        .loading-spinner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--white);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid var(--light-gray);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+        /* GitHub Corner */ 
+        .github-corner { 
+            position: fixed; 
+            top: 0; 
+            right: 0; 
+            z-index: 1000; 
+        } 
         
-        .counter {
-            font-family: var(--font-heading);
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-top: 20px;
-        }
-
-        .fade-out {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .hidden-content {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        .github-corner svg { 
+            fill: var(--primary); 
+            color: var(--white); 
+            width: 80px; 
+            height: 80px; 
+        } 
         
-        /* GitHub Corner */
-        .github-corner {
-            position: fixed;
-            top: 0;
-            right: 0;
-            z-index: 1000;
-        }
+        .github-corner:hover .octo-arm { 
+            animation: octocat-wave 560ms ease-in-out; 
+        } 
         
-        .github-corner svg {
-            fill: var(--primary);
-            color: var(--white);
-            width: 80px;
-            height: 80px;
-        }
+        @keyframes octocat-wave { 
+            0%, 100% { transform: rotate(0); } 
+            20%, 60% { transform: rotate(-25deg); } 
+            40%, 80% { transform: rotate(10deg); } 
+        } 
         
-        .github-corner:hover .octo-arm {
-            animation: octocat-wave 560ms ease-in-out;
-        }
+        @media (max-width: 768px) { 
+            .github-corner svg { 
+                width: 60px; 
+                height: 60px; 
+            } 
+        } 
         
-        @keyframes octocat-wave {
-            0%, 100% { transform: rotate(0); }
-            20%, 60% { transform: rotate(-25deg); }
-            40%, 80% { transform: rotate(10deg); }
-        }
+        /* Tawk.to Custom Styles */ 
+        .tawk-min-container { 
+            left: 20px !important; 
+            right: auto !important; 
+            bottom: 20px !important; 
+        } 
         
-        @media (max-width: 768px) {
-            .github-corner svg {
-                width: 60px;
-                height: 60px;
-            }
-        }
+        .tawk-button { 
+            left: 20px !important; 
+            right: auto !important; 
+            background-color: #2563eb !important; 
+            border-radius: 50px !important; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important; 
+        } 
         
-        /* Tawk.to Custom Styles */
-        .tawk-min-container {
-            left: 20px !important;
-            right: auto !important;
-            bottom: 20px !important;
-        }
+        .tawk-button.tawk-button-right { 
+            right: auto !important; 
+            left: 20px !important; 
+        } 
         
-        .tawk-button {
-            left: 20px !important;
-            right: auto !important;
-            background-color: #2563eb !important;
-            border-radius: 50px !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
-        }
+        .tawk-chat-container { 
+            left: 20px !important; 
+            right: auto !important; 
+            bottom: 80px !important; 
+        } 
         
-        .tawk-button.tawk-button-right {
-            right: auto !important;
-            left: 20px !important;
-        }
+        @media (max-width: 768px) { 
+            .tawk-min-container, .tawk-button, .tawk-chat-container { 
+                left: 10px !important; 
+            } 
+        } 
         
-        .tawk-chat-container {
-            left: 20px !important;
-            right: auto !important;
-            bottom: 80px !important;
-        }
+        /* Make it harder to select text */ 
+        body { 
+            user-select: none; 
+            -webkit-user-select: none; 
+            -moz-user-select: none; 
+            -ms-user-select: none; 
+        } 
         
-        @media (max-width: 768px) {
-            .tawk-min-container, .tawk-button, .tawk-chat-container {
-                left: 10px !important;
-            }
-        }
+        /* Allow selection in input/textarea fields */ 
+        input, textarea { 
+            user-select: text !important; 
+            -webkit-user-select: text !important; 
+        } 
         
-        /* Make it harder to select text */
-        body {
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-        }
+        /* Visual indication for protected code blocks */ 
+        pre, code { 
+            position: relative; 
+        } 
         
-        /* Allow selection in input/textarea fields */
-        input, textarea {
-            user-select: text !important;
-            -webkit-user-select: text !important;
-        }
-        
-        /* Visual indication for protected code blocks */
-        pre, code {
-            position: relative;
-        }
-        
-        pre::after, code::after {
-            content: "🔒 Protected Content";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255,255,255,0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ff0000;
-            font-weight: bold;
-        }
+        pre::after, code::after { 
+            content: "🔒 Protected Content"; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: rgba(255,255,255,0.7); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: #ff0000; 
+            font-weight: bold; 
+        } 
     </style>
 </head>
 <body>
-    <div class="loading-spinner" id="loadingSpinner">
-        <div class="spinner"></div>
-        <div class="counter">0%</div>
-    </div>
+    <a href="https://github.com/esauvictor/esauvictor.github.io" class="github-corner" aria-label="View source on GitHub" target="_blank">
+        <svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true">
+            <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+            <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+            <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 137.9,97.7 140.9,96.5 C142.9,95.6 145.1,94.6 147.1,93.4 C148.9,92.4 150.5,91.6 152.0,90.9 C154.5,89.9 157.0,88.9 159.5,88.0 C162.0,87.1 164.5,86.2 167.0,85.5 C170.0,84.6 173.0,83.9 176.0,83.4 C179.0,82.9 182.0,82.5 185.0,82.2 C188.0,81.9 191.0,81.7 194.0,81.6 L201.0,81.6 C204.0,81.6 207.0,81.8 210.0,82.1 C213.0,82.4 216.0,82.7 219.0,83.0 C222.0,83.3 225.0,83.6 228.0,84.0 C231.0,84.4 234.0,84.8 237.0,85.2 C240.0,85.6 243.0,86.0 246.0,86.4 C249.0,86.8 252.0,87.2 255.0,87.6 L255.0,115.0 L250.0,250.0 L142.0,142.0 L130.0,115.0 L115.0,115.0 Z" fill="currentColor" class="octo-body"></path>
+        </svg>
+    </a>
 
-    <div id="mainContent" class="hidden-content">
-        <a href="https://github.com/esauvictor/esauvictor.github.io" class="github-corner" aria-label="View source on GitHub" target="_blank">
-            <svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true">
-                <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
-                <path d="M128.3,109.0 C113.8,113.2 113.9,115.3 113.9,115.3 C122.1,118.8 127.3,123.6 130.4,128.8 C137.8,136.2 134.6,139.6 132.8,141.5 C146.6,145.8 160.0,146.0 160.0,146.0 C173.2,148.6 186.2,149.3 199.5,149.3 L199.5,199.5 C199.5,212.7 188.7,223.5 175.5,223.5 C162.3,223.5 151.5,212.7 151.5,199.5 C151.5,186.3 151.5,152.0 151.5,152.0 L115.3,115.3 C115.3,115.3 113.8,113.2 128.3,109.0 Z" fill="currentColor" class="octo-arm"></path>
-                <path d="M142,142 C147,147 150,150 150,150 C155,155 155,155 155,155 C160,160 160,160 160,160 C165,165 165,165 165,165 C170,170 170,170 170,170 C175,175 175,175 175,175 C180,180 180,180 180,180 C185,185 185,185 185,185 C190,190 190,190 190,190 C195,195 195,195 195,195 C200,200 200,200 200,200 C205,205 205,205 205,205 L220,220 C225,225 225,225 225,225 C230,230 230,230 230,230 C235,235 235,235 235,235 C240,240 240,240 240,240 C245,245 245,245 245,245 C250,250 250,250 250,250 C245,245 240,240 235,235 C230,230 225,225 220,220 C215,215 210,210 205,205 C200,200 195,195 190,190 C185,185 180,180 175,175 C170,170 165,165 160,160 C155,155 150,150 145,145 C140,140 135,135 130,130 C125,125 120,120 115,115" fill="currentColor"></path>
-            </svg>
-        </a>
-        <header id="home" class="hero section">
-            <div class="container hero-container" data-aos="fade-up">
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">Esau<span>Victor</span></a>
+            <ul class="nav-links">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="#contact" class="btn btn-primary">Hire Me</a>
+            </div>
+            <button class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <main>
+        <section class="section hero" id="hero">
+            <div class="container hero-container">
                 <div class="hero-content">
-                    <h1 class="hero-title">
-                        <span class="text-primary">I'm Esau Victor.</span><br>
-                        A Full Stack Developer
-                    </h1>
-                    <p class="hero-subtitle">
-                        I am a passionate and results-oriented full stack developer with expertise in building scalable web applications and data solutions. My focus is on creating elegant, efficient, and secure digital experiences.
-                    </p>
+                    <h1 class="hero-title">Hello, I'm <span class="text-primary">Esau Victor</span>, a Full Stack Developer</h1>
+                    <p class="hero-subtitle">Crafting robust, scalable, and secure web solutions with a passion for clean code and data-driven insights.</p>
                     <div class="hero-actions">
-                        <a href="#projects" class="btn btn-primary">My Work <i class="fas fa-arrow-right"></i></a>
-                        <a href="#contact" class="btn btn-secondary">Contact Me</a>
+                        <a href="#contact" class="btn btn-primary">Let's Talk <i class="fas fa-arrow-right"></i></a>
+                        <a href="#" class="btn btn-secondary">Download CV <i class="fas fa-download"></i></a>
                     </div>
                 </div>
-                <div class="hero-image" data-aos="fade-left">
-                    <img src="images/profile-img.jpg" alt="Esau Victor" class="profile-image">
+                <div class="hero-image">
+                    <img src="https://esauvictor.blogspot.com/img/profile.jpg" alt="Esau Victor" class="profile-image">
                     <div class="shape shape-1"></div>
                     <div class="shape shape-2"></div>
                 </div>
             </div>
-        </header>
-        
-        <main>
-            <section id="about" class="about section">
-                <div class="container about-container">
-                    <div class="about-image" data-aos="fade-right">
-                        <img src="images/about-img.jpg" alt="About me" class="about-img">
-                        <div class="about-badge">
-                            <i class="fas fa-code"></i> Full Stack Developer
+        </section>
+
+        <section class="section about" id="about">
+            <div class="container about-container">
+                <div class="about-image">
+                    <img src="https://esauvictor.blogspot.com/img/about.jpg" alt="About Esau Victor" class="about-img">
+                    <span class="about-badge">10+ Years of Experience</span>
+                </div>
+                <div class="about-content">
+                    <h2 class="section-title text-center">About Me</h2>
+                    <p class="about-text">I am a passionate and results-driven Full Stack Developer with over a decade of experience in building high-performance web applications. My expertise spans across frontend and backend technologies, data engineering, and cybersecurity. I love solving complex problems and creating intuitive, efficient, and secure digital experiences.</p>
+                    <div class="skills">
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>Web Development</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 95%;"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="about-content" data-aos="fade-left">
-                        <h2 class="section-title text-left">About Me</h2>
-                        <p class="about-text">
-                            Hello! I am a dedicated Full Stack Developer and Security Specialist with a strong foundation in modern web technologies and a passion for crafting robust and secure software solutions. My journey began with a deep curiosity for how technology works, leading me to specialize in both front-end and back-end development.
-                        </p>
-                        <p class="about-text">
-                            With over 4 years of experience, I've had the privilege of working on diverse projects, from dynamic e-commerce platforms to secure data management systems. My approach is simple: I build solutions that are not only functional and beautiful but also reliable and easy to maintain. I am always eager to learn and adapt to new challenges, ensuring that my skills remain at the cutting edge of the industry.
-                        </p>
-                        <div class="skills">
-                            <div class="skill-item">
-                                <div class="skill-name"><span>Front-End</span><span>90%</span></div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 90%;"></div>
-                                </div>
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>Data Engineering</span>
+                                <span>90%</span>
                             </div>
-                            <div class="skill-item">
-                                <div class="skill-name"><span>Back-End</span><span>85%</span></div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 85%;"></div>
-                                </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 90%;"></div>
                             </div>
-                            <div class="skill-item">
-                                <div class="skill-name"><span>Data Engineering</span><span>80%</span></div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 80%;"></div>
-                                </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-name">
+                                <span>Cyber Security</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%;"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-        
-            <section id="services" class="services section">
-                <div class="container" data-aos="fade-up">
-                    <h2 class="section-title">My Services</h2>
-                    <p class="text-center text-medium-gray" style="max-width: 600px; margin: 0 auto 40px;">
-                        I offer a range of professional services, leveraging my skills to deliver high-quality, tailored solutions.
+            </div>
+        </section>
+
+        <section class="section statistics-section">
+            <div class="container">
+                <h2 class="section-title">My Achievements</h2>
+                <div class="counters">
+                    <div class="counter-item">
+                        <h3 class="counter" data-target="150">0</h3>
+                        <p>Projects Completed</p>
+                    </div>
+                    <div class="counter-item">
+                        <h3 class="counter" data-target="80">0</h3>
+                        <p>Happy Clients</p>
+                    </div>
+                    <div class="counter-item">
+                        <h3 class="counter" data-target="10">0</h3>
+                        <p>Years of Experience</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section services" id="services">
+            <div class="container">
+                <h2 class="section-title">My Services</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-laptop-code"></i></div>
+                        <h3 class="service-title">Full Stack Development</h3>
+                        <p class="service-desc">Building and maintaining complete web applications, from frontend user interfaces to backend logic and databases.</p>
+                        <a href="#" class="btn btn-accent">Learn More</a>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-database"></i></div>
+                        <h3 class="service-title">Data Engineering</h3>
+                        <p class="service-desc">Designing, building, and managing data pipelines and infrastructure to enable data-driven insights and applications.</p>
+                        <a href="#" class="btn btn-accent">Learn More</a>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3 class="service-title">Cyber Security</h3>
+                        <p class="service-desc">Protecting systems, networks, and programs from digital attacks and unauthorized access with proactive measures.</p>
+                        <a href="#" class="btn btn-accent">Learn More</a>
+                    </div>
+                </div>
+
+                <div class="professional-counseling-service">
+                    <div class="counseling-card">
+                        <div class="counseling-icon service-icon"><i class="fas fa-brain"></i></div>
+                        <h2 class="section-title">Professional Counseling Service</h2>
+                        <p class="service-subtitle">As a trained professional, I offer counseling services to help you navigate your mental health.</p>
+                        <div class="counseling-details">
+                            <div class="counseling-benefits">
+                                <h4>What you can expect:</h4>
+                                <ul>
+                                    <li><i class="fas fa-check-circle"></i> Confidential and safe space for discussion.</li>
+                                    <li><i class="fas fa-check-circle"></i> Personalized strategies to cope with challenges.</li>
+                                    <li><i class="fas fa-check-circle"></i> Improved communication and relationship skills.</li>
+                                    <li><i class="fas fa-check-circle"></i> Guidance on managing stress and anxiety.</li>
+                                </ul>
+                            </div>
+                            <div class="counseling-approach">
+                                <h4>My Approach</h4>
+                                <div class="approach-points">
+                                    <div class="approach-item">
+                                        <i class="fas fa-comments"></i>
+                                        <p>Client-Centered Therapy</p>
+                                    </div>
+                                    <div class="approach-item">
+                                        <i class="fas fa-user-lock"></i>
+                                        <p>Strict Confidentiality</p>
+                                    </div>
+                                    <div class="approach-item">
+                                        <i class="fas fa-brain"></i>
+                                        <p>Cognitive Behavioral Techniques</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pricing-options">
+                            <div class="pricing-option">
+                                <h5>Single Session</h5>
+                                <div class="price">$50</div>
+                                <div class="details">Per 60-minute session.</div>
+                                <a href="#" class="btn btn-outline">Book Now</a>
+                            </div>
+                            <div class="pricing-option featured">
+                                <h5>Package of 4</h5>
+                                <div class="price">$180</div>
+                                <div class="details">Save $20! Four 60-minute sessions.</div>
+                                <a href="#" class="btn btn-primary">Book Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section projects-section" id="projects">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Featured Projects</h2>
+                    <p class="lead-paragraph">
+                        <span class="drop-cap">A</span> showcase of my recent work, highlighting my skills in various domains from web development to data engineering and cybersecurity. Each project represents a unique challenge and solution.
                     </p>
-                    <div class="services-grid">
-                        <div class="service-card" data-aos="zoom-in" data-aos-delay="100">
-                            <div class="service-icon">
-                                <i class="fas fa-laptop-code"></i>
-                            </div>
-                            <h3 class="service-title">Web Development</h3>
-                            <p class="service-desc">
-                                Creating responsive and high-performing websites using modern frameworks like React, Node.js, and Django.
-                            </p>
-                            <a href="#" class="btn btn-accent">Learn More</a>
-                        </div>
-                        <div class="service-card" data-aos="zoom-in" data-aos-delay="200">
-                            <div class="service-icon">
-                                <i class="fas fa-database"></i>
-                            </div>
-                            <h3 class="service-title">Data Engineering</h3>
-                            <p class="service-desc">
-                                Designing and building robust data pipelines, ETL processes, and database solutions for large-scale data management.
-                            </p>
-                            <a href="#" class="btn btn-accent">Learn More</a>
-                        </div>
-                        <div class="service-card" data-aos="zoom-in" data-aos-delay="300">
-                            <div class="service-icon">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <h3 class="service-title">Cyber Security</h3>
-                            <p class="service-desc">
-                                Providing penetration testing, vulnerability assessments, and security consulting to protect your digital assets.
-                            </p>
-                            <a href="#" class="btn btn-accent">Learn More</a>
-                        </div>
-                    </div>
-                    
-                    <div class="professional-counseling-service" data-aos="fade-up" data-aos-delay="400">
-                        <div class="counseling-card">
-                            <div class="service-icon counseling-icon">
-                                <i class="fas fa-comments"></i>
-                            </div>
-                            <h2 class="section-title" style="margin-bottom: 10px;">Professional Counseling</h2>
-                            <p class="service-subtitle">
-                                Beyond technical services, I offer expert career guidance and counseling to help you navigate your journey in tech.
-                            </p>
-                            
-                            <div class="counseling-details">
-                                <div class="counseling-benefits">
-                                    <h4>What you will get:</h4>
-                                    <ul>
-                                        <li><i class="fas fa-check-circle"></i> Personalized career roadmap based on your goals.</li>
-                                        <li><i class="fas fa-check-circle"></i> Advice on skill development and learning resources.</li>
-                                        <li><i class="fas fa-check-circle"></i> Mentorship for securing your dream job.</li>
-                                        <li><i class="fas fa-check-circle"></i> Interview preparation and resume optimization tips.</li>
-                                    </ul>
-                                </div>
-                                <div class="counseling-approach">
-                                    <h4>My approach:</h4>
-                                    <div class="approach-points">
-                                        <div class="approach-item">
-                                            <i class="fas fa-brain"></i>
-                                            <p>Tailored Strategy</p>
-                                        </div>
-                                        <div class="approach-item">
-                                            <i class="fas fa-hands-helping"></i>
-                                            <p>Actionable Steps</p>
-                                        </div>
-                                        <div class="approach-item">
-                                            <i class="fas fa-chart-line"></i>
-                                            <p>Measurable Results</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <a href="#contact" class="btn btn-primary" style="margin-top: 20px;">Book a Session</a>
-                        </div>
-                    </div>
                 </div>
-            </section>
-        
-            <section id="projects" class="projects-section section">
-                <div class="container">
-                    <header class="section-header" data-aos="fade-up">
-                        <h2 class="section-title">My Recent Projects</h2>
-                        <p class="lead-paragraph">
-                            <span class="drop-cap">A</span> collection of my recent work showcasing my skills in full stack development, data engineering, and cyber security.
-                        </p>
-                        <p class="small-text">Each project is a testament to my commitment to building secure, scalable, and user-centric solutions. Click on a project to see the live demo or the source code on GitHub.</p>
-                    </header>
-                    <div class="tablet-mockups-container">
-                        <div class="tablet-mockup" data-aos="fade-up" data-aos-delay="100">
-                            <div class="tablet-screen">
-                                <div class="single-project">
-                                    <div class="project-card">
-                                        <div class="project-image">
-                                            <img src="images/e-commerce.png" alt="E-commerce Application">
-                                        </div>
-                                        <div class="project-content">
-                                            <span class="project-tag">Web Development</span>
-                                            <h3>Modern E-commerce Platform</h3>
-                                            <p>A full-featured e-commerce site built with React, Node.js, and a robust MongoDB database, featuring secure payment gateways and a responsive design.</p>
-                                            <div class="project-links">
-                                                <a href="#" class="btn">Live Demo <i class="fas fa-external-link-alt"></i></a>
-                                                <a href="https://github.com/esauvictor/e-commerce-platform" class="btn btn-github" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                                            </div>
-                                        </div>
+                <div class="tablet-mockups-container">
+                    <div class="tablet-mockup">
+                        <div class="tablet-screen">
+                            <div class="single-project project-card">
+                                <div class="project-image">
+                                    <img src="https://esauvictor.blogspot.com/img/project-1.jpg" alt="Project 1: E-commerce Website">
+                                </div>
+                                <div class="project-content">
+                                    <div class="tags">
+                                        <span class="project-tag">Web Development</span>
+                                        <span class="project-tag">Frontend</span>
+                                    </div>
+                                    <h3>E-commerce Website</h3>
+                                    <p class="small-text">A modern e-commerce platform with a clean UI and secure payment integration.</p>
+                                    <div class="project-links">
+                                        <a href="#" class="btn btn-primary" target="_blank"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+                                        <a href="#" class="btn btn-github" target="_blank"><i class="fab fa-github"></i> GitHub</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="tablet-mockup" data-aos="fade-up" data-aos-delay="200">
-                            <div class="tablet-screen">
-                                <div class="single-project">
-                                    <div class="project-card">
-                                        <div class="project-image">
-                                            <img src="images/data-analytics.png" alt="Data Analytics Dashboard">
-                                        </div>
-                                        <div class="project-content">
-                                            <span class="project-tag">Data Engineering</span>
-                                            <h3>Data Analytics Dashboard</h3>
-                                            <p>A data visualization and analytics dashboard that processes real-time data from various sources, providing valuable business insights.</p>
-                                            <div class="project-links">
-                                                <a href="#" class="btn">Live Demo <i class="fas fa-external-link-alt"></i></a>
-                                                <a href="https://github.com/esauvictor/data-analytics-dashboard" class="btn btn-github" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                                            </div>
-                                        </div>
+                    </div>
+                    <div class="tablet-mockup">
+                        <div class="tablet-screen">
+                            <div class="single-project project-card">
+                                <div class="project-image">
+                                    <img src="https://esauvictor.blogspot.com/img/project-2.jpg" alt="Project 2: Data Analytics Dashboard">
+                                </div>
+                                <div class="project-content">
+                                    <div class="tags">
+                                        <span class="project-tag">Data Engineering</span>
+                                        <span class="project-tag">Backend</span>
+                                    </div>
+                                    <h3>Data Analytics Dashboard</h3>
+                                    <p class="small-text">A robust dashboard for visualizing complex datasets and generating real-time insights.</p>
+                                    <div class="project-links">
+                                        <a href="#" class="btn btn-primary" target="_blank"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+                                        <a href="#" class="btn btn-github" target="_blank"><i class="fab fa-github"></i> GitHub</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="tablet-mockup" data-aos="fade-up" data-aos-delay="300">
-                            <div class="tablet-screen">
-                                <div class="single-project">
-                                    <div class="project-card">
-                                        <div class="project-image">
-                                            <img src="images/security.png" alt="Security Automation Tool">
-                                        </div>
-                                        <div class="project-content">
-                                            <span class="project-tag">Cyber Security</span>
-                                            <h3>Security Automation Tool</h3>
-                                            <p>A Python-based tool that automates vulnerability scanning and generates detailed reports to help developers secure their applications.</p>
-                                            <div class="project-links">
-                                                <a href="#" class="btn">Live Demo <i class="fas fa-external-link-alt"></i></a>
-                                                <a href="https://github.com/esauvictor/security-automation-tool" class="btn btn-github" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                                            </div>
-                                        </div>
+                    </div>
+                    <div class="tablet-mockup">
+                        <div class="tablet-screen">
+                            <div class="single-project project-card">
+                                <div class="project-image">
+                                    <img src="https://esauvictor.blogspot.com/img/project-3.jpg" alt="Project 3: Secure API Gateway">
+                                </div>
+                                <div class="project-content">
+                                    <div class="tags">
+                                        <span class="project-tag">Cyber Security</span>
+                                        <span class="project-tag">Backend</span>
+                                    </div>
+                                    <h3>Secure API Gateway</h3>
+                                    <p class="small-text">An API gateway with advanced security features to protect microservices from threats.</p>
+                                    <div class="project-links">
+                                        <a href="#" class="btn btn-primary" target="_blank"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+                                        <a href="#" class="btn btn-github" target="_blank"><i class="fab fa-github"></i> GitHub</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
+
+        <section class="section tutorials">
+            <div class="container">
+                <h2 class="section-title">Tutorials and Guides</h2>
+                <p class="section-subtitle">A selection of my video tutorials and guides on various tech topics.</p>
+                <div class="tutorials-grid">
+                    <div class="tutorial-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                        </div>
+                        <div class="tutorial-info">
+                            <h3>Learn Python in 10 Minutes</h3>
+                            <p>A quick-start guide to the basics of Python programming for beginners.</p>
+                            <div class="tutorial-meta">
+                                <span><i class="fas fa-calendar-alt"></i> Sep 13, 2025</span>
+                                <span><i class="fas fa-clock"></i> 10 min</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tutorial-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                        </div>
+                        <div class="tutorial-info">
+                            <h3>JavaScript ES6+ Features</h3>
+                            <p>An in-depth look at the most useful features introduced in modern JavaScript.</p>
+                            <div class="tutorial-meta">
+                                <span><i class="fas fa-calendar-alt"></i> Sep 13, 2025</span>
+                                <span><i class="fas fa-clock"></i> 15 min</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tutorial-card">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                        </div>
+                        <div class="tutorial-info">
+                            <h3>Introduction to Data Science</h3>
+                            <p>Exploring the core concepts and tools used in data science and analytics.</p>
+                            <div class="tutorial-meta">
+                                <span><i class="fas fa-calendar-alt"></i> Sep 13, 2025</span>
+                                <span><i class="fas fa-clock"></i> 20 min</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tutorials-cta">
+                    <a href="#" class="btn">
+                        <i class="fab fa-youtube"></i> Visit my YouTube Channel
+                    </a>
+                </div>
+            </div>
+        </section>
         
-            <section id="tutorials" class="section tutorials">
-                <div class="container">
-                    <h2 class="section-title" data-aos="fade-up">My Tutorials</h2>
-                    <p class="section-subtitle" data-aos="fade-up">
-                        Learn with me! Here are some of my latest educational videos and guides on YouTube and my blog.
-                    </p>
-                    <div class="tutorials-grid">
-                        <div class="tutorial-card" data-aos="fade-up" data-aos-delay="100">
-                            <div class="video-container">
-                                <iframe src="https://www.youtube.com/embed/your-video-id" allowfullscreen></iframe>
-                            </div>
-                            <div class="tutorial-info">
-                                <h3>Building a REST API with Node.js and Express</h3>
-                                <p>A step-by-step guide to creating a simple yet powerful RESTful API from scratch using Node.js, Express, and MongoDB.</p>
-                                <div class="tutorial-meta">
-                                    <span><i class="fas fa-tag"></i> Web Dev</span>
-                                    <span><i class="fas fa-calendar-alt"></i> Oct 26, 2023</span>
-                                </div>
-                            </div>
+        <section class="section" id="blog">
+            <div class="container">
+                <h2 class="section-title">Latest Blog Posts</h2>
+                <p class="section-subtitle">Thoughts and articles on development, data, and technology.</p>
+                <div class="blog-grid">
+                    <article class="blog-post">
+                        <div class="blog-image">
+                            <img src="https://esauvictor.blogspot.com/img/blog-1.jpg" alt="Blog Post 1">
                         </div>
-                        <div class="tutorial-card" data-aos="fade-up" data-aos-delay="200">
-                            <div class="video-container">
-                                <iframe src="https://www.youtube.com/embed/your-video-id" allowfullscreen></iframe>
+                        <div class="blog-content">
+                            <h3>The Importance of Clean Code</h3>
+                            <div class="blog-meta">
+                                <span><i class="fas fa-calendar-alt"></i> Sep 13, 2025</span>
+                                <span><i class="fas fa-tags"></i> Development</span>
                             </div>
-                            <div class="tutorial-info">
-                                <h3>Introduction to Data Pipelines with Python</h3>
-                                <p>An entry-level tutorial on building and automating data pipelines for data extraction, transformation, and loading (ETL).</p>
-                                <div class="tutorial-meta">
-                                    <span><i class="fas fa-tag"></i> Data Engineering</span>
-                                    <span><i class="fas fa-calendar-alt"></i> Oct 19, 2023</span>
-                                </div>
-                            </div>
+                            <p>Why writing clean, readable, and maintainable code is crucial for long-term project success.</p>
+                            <a href="#" class="btn-outline">Read More</a>
                         </div>
-                        <div class="tutorial-card" data-aos="fade-up" data-aos-delay="300">
-                            <div class="video-container">
-                                <iframe src="https://www.youtube.com/embed/your-video-id" allowfullscreen></iframe>
-                            </div>
-                            <div class="tutorial-info">
-                                <h3>Securing Your Website: A Beginner's Guide</h3>
-                                <p>Learn the fundamental steps to protect your website from common attacks, including cross-site scripting (XSS) and SQL injection.</p>
-                                <div class="tutorial-meta">
-                                    <span><i class="fas fa-tag"></i> Cyber Security</span>
-                                    <span><i class="fas fa-calendar-alt"></i> Oct 12, 2023</span>
-                                </div>
-                            </div>
+                    </article>
+                    <article class="blog-post">
+                        <div class="blog-image">
+                            <img src="https://esauvictor.blogspot.com/img/blog-2.jpg" alt="Blog Post 2">
                         </div>
-                    </div>
-                    <div class="tutorials-cta" data-aos="fade-up">
-                        <a href="https://www.youtube.com/your-channel" class="btn" target="_blank"><i class="fab fa-youtube"></i> View All Tutorials</a>
-                    </div>
+                        <div class="blog-content">
+                            <h3>An Introduction to Data Visualization</h3>
+                            <div class="blog-meta">
+                                <span><i class="fas fa-calendar-alt"></i> Sep 13, 2025</span>
+                                <span><i class="fas fa-tags"></i> Data Science</span>
+                            </div>
+                            <p>A guide to the principles and best practices of presenting data in a visual format.</p>
+                            <a href="#" class="btn-outline">Read More</a>
+                        </div>
+                    </article>
+                    <article class="blog-post">
+                        <div class="blog-image">
+                            <img src="https://esauvictor.blogspot.com/img/blog-3.jpg" alt="Blog Post 3">
+                        </div>
+                        <div class="blog-content">
+                            <h3>Protecting Against Phishing Attacks</h3>
+                            <div class="blog-meta">
+                                <span><i class="fas fa-calendar-alt"></i> Sep 13, 2025</span>
+                                <span><i class="fas fa-tags"></i> Cyber Security</span>
+                            </div>
+                            <p>Essential tips and techniques to identify and protect yourself from phishing scams.</p>
+                            <a href="#" class="btn-outline">Read More</a>
+                        </div>
+                    </article>
                 </div>
-            </section>
-        
-            <section id="blog" class="section">
-                <div class="container">
-                    <h2 class="section-title" data-aos="fade-up">Latest from the Blog</h2>
-                    <p class="section-subtitle" data-aos="fade-up">
-                        My thoughts and insights on technology, career growth, and personal development.
-                    </p>
-                    <div class="blog-grid">
-                        <div class="blog-post" data-aos="fade-up" data-aos-delay="100">
-                            <div class="blog-image">
-                                <img src="images/blog-1.png" alt="A Guide to Modern JavaScript">
-                            </div>
-                            <div class="blog-content">
-                                <h3>A Guide to Modern JavaScript Frameworks</h3>
-                                <div class="blog-meta">
-                                    <span><i class="fas fa-calendar-alt"></i> Oct 28, 2023</span>
-                                    <span><i class="fas fa-user"></i> Esau Victor</span>
-                                </div>
-                                <p>An in-depth look at the most popular JavaScript frameworks and how to choose the right one for your next project.</p>
-                                <a href="https://esauvictor.blogspot.com/modern-javascript-frameworks" class="btn-outline">Read More</a>
+            </div>
+        </section>
+
+        <section class="section testimonials">
+            <div class="container">
+                <h2 class="section-title">What My Clients Say</h2>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"Esau's work is top-notch. He delivered a high-quality product on time and was a pleasure to work with. Highly recommend his services!"</p>
+                        <div class="testimonial-author">
+                            <img src="https://esauvictor.blogspot.com/img/client-1.jpg" alt="Client 1" class="author-avatar">
+                            <div>
+                                <h4 class="author-name">Jane Doe</h4>
+                                <p class="author-role">CEO, Tech Innovators</p>
                             </div>
                         </div>
-                        <div class="blog-post" data-aos="fade-up" data-aos-delay="200">
-                            <div class="blog-image">
-                                <img src="images/blog-2.png" alt="Demystifying Cloud Computing">
-                            </div>
-                            <div class="blog-content">
-                                <h3>Demystifying Cloud Computing for Developers</h3>
-                                <div class="blog-meta">
-                                    <span><i class="fas fa-calendar-alt"></i> Oct 25, 2023</span>
-                                    <span><i class="fas fa-user"></i> Esau Victor</span>
-                                </div>
-                                <p>A beginner-friendly guide to understanding cloud services like AWS, Azure, and Google Cloud Platform.</p>
-                                <a href="https://esauvictor.blogspot.com/cloud-computing-for-developers" class="btn-outline">Read More</a>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"The data dashboard Esau built for us has revolutionized our business. The insights we're getting are incredible. Thank you!"</p>
+                        <div class="testimonial-author">
+                            <img src="https://esauvictor.blogspot.com/img/client-2.jpg" alt="Client 2" class="author-avatar">
+                            <div>
+                                <h4 class="author-name">John Smith</h4>
+                                <p class="author-role">Data Director, Global Analytics</p>
                             </div>
                         </div>
-                        <div class="blog-post" data-aos="fade-up" data-aos-delay="300">
-                            <div class="blog-image">
-                                <img src="images/blog-3.png" alt="Career Path in Cyber Security">
-                            </div>
-                            <div class="blog-content">
-                                <h3>Your Career Path in Cyber Security</h3>
-                                <div class="blog-meta">
-                                    <span><i class="fas fa-calendar-alt"></i> Oct 20, 2023</span>
-                                    <span><i class="fas fa-user"></i> Esau Victor</span>
-                                </div>
-                                <p>Explore the different roles and career opportunities available in the ever-evolving field of cyber security.</p>
-                                <a href="https://esauvictor.blogspot.com/career-in-cyber-security" class="btn-outline">Read More</a>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"Esau is not just a developer, he's a true professional. His attention to detail and commitment to security are unmatched."</p>
+                        <div class="testimonial-author">
+                            <img src="https://esauvictor.blogspot.com/img/client-3.jpg" alt="Client 3" class="author-avatar">
+                            <div>
+                                <h4 class="author-name">Emily White</h4>
+                                <p class="author-role">CTO, Secure Systems Inc.</p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-        
-            <section id="testimonials" class="testimonials section">
-                <div class="container" data-aos="fade-up">
-                    <h2 class="section-title">What People Say</h2>
-                    <div class="testimonials-grid">
-                        <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
-                            <p class="testimonial-text">"Esau's work is exceptional. He delivered a high-quality, scalable solution ahead of schedule. His attention to detail and ability to tackle complex problems is unmatched."</p>
-                            <div class="testimonial-author">
-                                <img src="images/avatar1.png" alt="Client Avatar" class="author-avatar">
-                                <div class="author-info">
-                                    <h4 class="author-name">Jane Doe</h4>
-                                    <p class="author-role">CEO, Tech Innovators</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
-                            <p class="testimonial-text">"I was thoroughly impressed with Esau's knowledge of data engineering. He streamlined our entire data pipeline, resulting in a massive increase in efficiency."</p>
-                            <div class="testimonial-author">
-                                <img src="images/avatar2.png" alt="Client Avatar" class="author-avatar">
-                                <div class="author-info">
-                                    <h4 class="author-name">John Smith</h4>
-                                    <p class="author-role">Data Analyst, DataCorp</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="testimonial-card" data-aos="fade-up" data-aos-delay="300">
-                            <p class="testimonial-text">"As a security consultant, Esau's insights were invaluable. His expertise helped us identify and fix critical vulnerabilities in our application. Highly recommended!"</p>
-                            <div class="testimonial-author">
-                                <img src="images/avatar3.png" alt="Client Avatar" class="author-avatar">
-                                <div class="author-info">
-                                    <h4 class="author-name">Emily White</h4>
-                                    <p class="author-role">CTO, Secure Solutions</p>
-                                </div>
-                            </div>
+            </div>
+        </section>
+
+        <section class="section contact" id="contact">
+            <div class="container contact-container">
+                <div class="contact-info">
+                    <h2 class="section-title">Get in Touch</h2>
+                    <p class="contact-desc">Have a project in mind or just want to say hello? Fill out the form or reach out to me directly.</p>
+                    <div class="contact-method">
+                        <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="contact-details">
+                            <h4>Email Me</h4>
+                            <p><a href="mailto:esauvictor.dev@gmail.com">esauvictor.dev@gmail.com</a></p>
                         </div>
                     </div>
-                </div>
-            </section>
-        
-            <section id="contact" class="contact section">
-                <div class="container contact-container" data-aos="fade-up">
-                    <div class="contact-info">
-                        <h2 class="section-title contact-title">Get in Touch</h2>
-                        <p class="contact-desc">
-                            Have a project in mind, a question about my work, or just want to say hello? I'd love to hear from you.
-                        </p>
-                        <div class="contact-method">
-                            <div class="contact-icon">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </div>
-                            <div class="contact-details">
-                                <h4>Location</h4>
-                                <p>Port Harcourt, Nigeria</p>
-                            </div>
-                        </div>
-                        <div class="contact-method">
-                            <div class="contact-icon">
-                                <i class="fas fa-envelope"></i>
-                            </div>
-                            <div class="contact-details">
-                                <h4>Email</h4>
-                                <a href="mailto:esauvictor0@gmail.com">esauvictor0@gmail.com</a>
-                            </div>
-                        </div>
-                        <div class="contact-method">
-                            <div class="contact-icon">
-                                <i class="fas fa-phone"></i>
-                            </div>
-                            <div class="contact-details">
-                                <h4>Phone</h4>
-                                <a href="tel:+2348123456789">+234-812-345-6789</a>
-                            </div>
-                        </div>
-                        <div class="social-links">
-                            <a href="https://github.com/esauvictor" class="social-link" target="_blank"><i class="fab fa-github"></i></a>
-                            <a href="https://linkedin.com/in/esauvictor" class="social-link" target="_blank"><i class="fab fa-linkedin"></i></a>
-                            <a href="https://twitter.com/esauvictor" class="social-link" target="_blank"><i class="fab fa-twitter"></i></a>
-                            <a href="https://wa.me/+2348123456789" class="social-link" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <div class="contact-method">
+                        <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div class="contact-details">
+                            <h4>Call Me</h4>
+                            <p><a href="tel:+2348149673981">+234 814 967 3981</a></p>
                         </div>
                     </div>
-                    <div class="contact-form">
-                        <form action="https://formspree.io/f/youremail" method="POST">
-                            <div class="form-group">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" id="name" name="name" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" id="email" name="email" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="message" class="form-label">Message</label>
-                                <textarea id="message" name="message" class="form-control" rows="5" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message <i class="fas fa-paper-plane"></i></button>
-                        </form>
+                    <div class="contact-method">
+                        <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="contact-details">
+                            <h4>Location</h4>
+                            <p>Port Harcourt, Rivers, Nigeria</p>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="https://linkedin.com/in/esauvictor" class="social-link" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://github.com/esauvictor" class="social-link" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="https://twitter.com/esauvictor" class="social-link" target="_blank"><i class="fab fa-twitter"></i></a>
                     </div>
                 </div>
-            </section>
-        </main>
-        
-        <footer class="footer">
-            <div class="container footer-container">
-                <div class="footer-col">
-                    <h3>Esau Victor</h3>
-                    <p>A passionate and dedicated Full Stack Developer and Security Specialist.</p>
-                    <div class="footer-social">
-                        <a href="https://github.com/esauvictor" target="_blank"><i class="fab fa-github"></i></a>
-                        <a href="https://linkedin.com/in/esauvictor" target="_blank"><i class="fab fa-linkedin"></i></a>
-                        <a href="https://twitter.com/esauvictor" target="_blank"><i class="fab fa-twitter"></i></a>
-                    </div>
-                </div>
-                <div class="footer-col">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#projects">Projects</a></li>
-                        <li><a href="#tutorials">Tutorials</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h3>Contact Info</h3>
-                    <ul class="footer-links">
-                        <li><a href="mailto:esauvictor0@gmail.com"><i class="fas fa-envelope"></i> esauvictor0@gmail.com</a></li>
-                        <li><a href="tel:+2348123456789"><i class="fas fa-phone"></i> +234-812-345-6789</a></li>
-                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> Port Harcourt, Nigeria</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h3>Newsletter</h3>
-                    <p>Stay updated with my latest work and insights. Subscribe to the newsletter.</p>
-                    <form action="https://formspree.io/f/youremail" method="POST" class="newsletter-form">
-                        <input type="email" name="email" placeholder="Your Email" required>
-                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                <div class="contact-form">
+                    <form action="#">
+                        <div class="form-group">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea id="message" name="message" class="form-control" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
                     </form>
                 </div>
             </div>
-            <div class="copyright">
-                &copy; <span id="current-year"></span> Esau Victor. All rights reserved.
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-col">
+                <h3>Esau Victor</h3>
+                <p>Full Stack Developer with a passion for building beautiful and functional web applications.</p>
+                <div class="footer-social">
+                    <a href="https://linkedin.com/in/esauvictor" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://github.com/esauvictor" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="https://twitter.com/esauvictor" target="_blank"><i class="fab fa-twitter"></i></a>
+                </div>
             </div>
-        </footer>
-        
-        <a href="#" id="back-to-top" class="back-to-top" style="display: none;">
-            <i class="fas fa-arrow-up"></i>
-        </a>
-    </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contact Info</h3>
+                <ul class="footer-links">
+                    <li><a href="mailto:esauvictor.dev@gmail.com"><i class="fas fa-envelope"></i> esauvictor.dev@gmail.com</a></li>
+                    <li><a href="tel:+2348149673981"><i class="fas fa-phone-alt"></i> +234 814 967 3981</a></li>
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> Port Harcourt, Nigeria</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 Esau Victor. All Rights Reserved.
+        </div>
+    </footer>
     
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="counter.js"></script>
     <script>
-        // Get necessary elements for the spinner
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const mainContent = document.getElementById('mainContent');
-        const counter = document.querySelector('.counter');
-
-        // Counting logic
-        let count = 0;
-        const duration = 2000; // 2 seconds
-        const interval = duration / 100;
-
-        const counterInterval = setInterval(() => {
-            if (count < 100) {
-                count++;
-                counter.textContent = `${count}%`;
-            } else {
-                clearInterval(counterInterval);
-            }
-        }, interval);
-
-        // This part waits for the entire page to be fully loaded
-        window.addEventListener('load', function() {
-            // Now that the page is loaded, fade out the spinner and show the content
-            loadingSpinner.classList.add('fade-out');
-            mainContent.classList.remove('hidden-content');
-
-            // Optional: Remove the spinner from the DOM after it has faded out
-            loadingSpinner.addEventListener('transitionend', () => {
-                loadingSpinner.remove();
-            });
-            
-            // AOS initialization and other scripts go here
-            AOS.init({
-                offset: 50,
-                duration: 1000,
-                easing: 'ease-in-out',
-                once: true,
-            });
-
-            // Other scripts from your original file
-            const hamburger = document.querySelector('.hamburger');
-            const navLinks = document.querySelector('.nav-links');
-            
-            hamburger.addEventListener('click', () => {
-              navLinks.classList.toggle('active');
-            });
-            
-            document.querySelectorAll('.nav-links a').forEach(link => {
-              link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-              });
-            });
-            
-            window.addEventListener('scroll', () => {
-                const navbar = document.querySelector('.navbar');
-                if (window.scrollY > 50) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
-            });
-            
-            const backToTop = document.getElementById('back-to-top');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 200) {
-                    backToTop.style.display = 'block';
-                } else {
-                    backToTop.style.display = 'none';
-                }
-            });
-            
-            backToTop.addEventListener('click', (e) => {
-                e.preventDefault();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-            
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-
-            const darkModeToggle = document.querySelector('.dark-mode-toggle');
-            darkModeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('dark-mode');
-            });
-            
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-            });
-            document.addEventListener('keydown', function(e) {
-                if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 65 || e.keyCode === 83) || 
-                    e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73)) {
-                  e.preventDefault();
-                  return false;
-                }
-            });
-            
-            document.addEventListener('selectstart', function(e) {
+        // Disable Ctrl+C, Ctrl+U, Ctrl+A, Ctrl+S, Ctrl+Shift+I, F12
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 65 || e.keyCode === 83) || 
+                e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73)) {
                 e.preventDefault();
                 return false;
-            });
-            
-            document.addEventListener('dragstart', function(e) {
-                if (e.target.tagName === 'IMG') {
-                  e.preventDefault();
-                  return false;
-                }
-            });
-            
-            const codeBlocks = document.querySelectorAll('pre, code');
-            codeBlocks.forEach(block => {
-                block.style.position = 'relative';
-                block.innerHTML = `
-                  <div style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:999;cursor:not-allowed;"
-                       title="Code protection enabled"></div>
-                  ${block.innerHTML}
-                `;
-            });
-            
-            console.log('%cStop!', 'color:red;font-size:40px;font-weight:bold;');
-            console.log('%cThis is a security-protected website. Unauthorized access or attempts to copy content are strictly prohibited. The website is secured and monitored for any suspicious activities.', 'font-size:15px;');
+            }
         });
         
-        // Tawk.to Live Chat Script
-        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-        (function(){
-            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-            s1.async=true;
-            s1.src='https://embed.tawk.to/653bb545a847ba0f2a472c1c/1hdogj0a5';
-            s1.charset='UTF-8';
-            s1.setAttribute('crossorigin','*');
-            s0.parentNode.insertBefore(s1,s0);
-        })();
+        // Disable text selection
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // Disable drag and drop of images
+        document.addEventListener('dragstart', function(e) {
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // Add overlay protection to code blocks (if you have them)
+        const codeBlocks = document.querySelectorAll('pre, code');
+        codeBlocks.forEach(block => {
+            block.style.position = 'relative';
+            block.innerHTML = `
+                <div style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:999;cursor:not-allowed;"
+                    title="Code protection enabled"></div>
+                ${block.innerHTML}
+            `;
+        });
+        
+        // Console message
+        console.log('%cStop!', 'color:red;font-size:40px;font-weight:bold;');
+        console.log('%cThis is a protected portfolio. All content is copyrighted.','font-size:12px;');
     </script>
 </body>
 </html>
