@@ -1747,55 +1747,64 @@
     font-weight: bold;
   }
 
-/* Improve layout when "Desktop Site" is forced on small phones */
-@media screen and (max-width: 1200px) {
-  .container {
-    max-width: 100% !important;
-    padding-left: 12px !important;
-    padding-right: 12px !important;
-  }
-  .hero-container {
-    gap: 16px !important;
-  }
-  section {
-    padding: 40px 0 !important;
-  }
-  .nav-links {
-    gap: 12px !important;
-  }
+/* =======================================
+   Desktop Site Fixes for Mobile Browsers
+   ======================================= */
+
+/* Allow scrolling when desktop site is forced */
+body {
+  overflow-x: auto !important;
 }
-/* Fix spacing and layout in Desktop Site on small phones */
+
+/* Prevent weird zoom/scaling */
+html {
+  -webkit-text-size-adjust: 100% !important;
+}
+
+/* Adjust spacing and layout below 1200px (phones in desktop-site mode) */
 @media screen and (max-width: 1200px) {
-  /* Reduce section spacing */
   section {
     padding: 30px 0 !important;
   }
   .hero-container {
     margin-bottom: 20px !important;
   }
-
-  /* About section tighter */
   .about-container {
     margin-top: 20px !important;
     gap: 20px !important;
   }
 
-  /* Learning Centre grid fix */
+  /* Make fonts a little smaller so layout fits */
+  body {
+    font-size: 0.9em !important;
+    line-height: 1.4 !important;
+  }
+  h1, h2, h3 {
+    font-size: 90% !important;
+  }
+
+  /* Scale down images */
+  img, .profile-image, .about-img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Fix Learning Centre grid */
   .learning-centre .video-grid,
   .learning-centre .videos {
     display: grid !important;
-    grid-template-columns: 1fr !important;   /* single column on very small */
+    grid-template-columns: 1fr !important;   /* single column */
     gap: 16px !important;
   }
 }
 
+/* Two-column videos on medium widths */
 @media screen and (min-width: 700px) and (max-width: 1200px) {
   .learning-centre .video-grid,
   .learning-centre .videos {
-    grid-template-columns: 1fr 1fr !important;  /* 2 columns for mid-size */
+    grid-template-columns: 1fr 1fr !important;
   }
 }
-
 </style>
 </head>
 <body>
