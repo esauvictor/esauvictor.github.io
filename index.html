@@ -1608,7 +1608,7 @@
             --black: #ffffff;
         }
         
-       /* Counting Preloader Styles */
+     /* Circular Counting Preloader Styles */
 .preloader-container {
     position: fixed;
     top: 0;
@@ -1627,35 +1627,37 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    width: 80%;
-    max-width: 400px;
-    padding: 30px;
-    background-color: var(--light);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
+    justify-content: center;
 }
 
 .progress-bar-container {
-    width: 100%;
-    height: 8px;
-    background-color: var(--light-gray);
-    border-radius: var(--radius-full);
-    overflow: hidden;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: conic-gradient(var(--primary) 0%, var(--primary-light) 0%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    transition: background 0.3s ease;
 }
 
-.progress-bar {
-    height: 100%;
-    width: 0;
-    background: linear-gradient(90deg, var(--primary), var(--secondary));
-    border-radius: var(--radius-full);
-    transition: width 0.3s ease;
+.progress-bar-container::before {
+    content: '';
+    position: absolute;
+    width: 85px;
+    height: 85px;
+    background: var(--white);
+    border-radius: 50%;
+    z-index: 1;
 }
 
 .percentage-text {
-    font-family: var(--font-heading);
+    position: relative;
+    z-index: 2;
     font-size: 2rem;
     font-weight: 700;
+    font-family: var(--font-heading);
     color: var(--primary);
 }
         
