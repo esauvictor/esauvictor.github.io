@@ -1608,7 +1608,7 @@
             --black: #ffffff;
         }
         
-     /* Circular Counting Preloader Styles */
+   /* Circular Counting Preloader Styles */
 .preloader-container {
     position: fixed;
     top: 0;
@@ -1652,8 +1652,26 @@
     z-index: 1;
 }
 
+.preloader-image {
+    position: absolute;
+    z-index: 3;
+    width: 70px; /* Adjust size as needed */
+    height: 70px; /* Adjust size as needed */
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preloader-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .percentage-text {
-    position: relative;
+    position: absolute;
     z-index: 2;
     font-size: 2rem;
     font-weight: 700;
@@ -1762,12 +1780,14 @@
     </style>
 </head>
 <body>
-   <div class="preloader-container">
+  <div class="preloader-container">
     <div class="loader-inner">
         <div class="progress-bar-container">
-            <div class="progress-bar"></div>
+            <div class="preloader-image">
+                <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau">
+            </div>
+            <div class="percentage-text">0%</div>
         </div>
-        <div class="percentage-text">0%</div>
     </div>
 </div>
 
@@ -2668,16 +2688,21 @@ document.addEventListener('DOMContentLoaded', function() {
             darkModeToggle.querySelector('i').classList.add('fa-sun');
         }
         
-      // Counting preloader logic
+     // Counting preloader logic
 document.addEventListener('DOMContentLoaded', () => {
     const preloader = document.querySelector('.preloader-container');
-    const progressBar = document.querySelector('.progress-bar');
+    const progressBarContainer = document.querySelector('.progress-bar-container');
     const percentageText = document.querySelector('.percentage-text');
+    const preloaderImage = document.querySelector('.preloader-image');
 
     let currentProgress = 0;
     const interval = 20; // Time in milliseconds between each count
     const duration = 2000; // Total duration of the animation in milliseconds
     const increment = 100 / (duration / interval);
+
+    // Hide the image and display the count
+    preloaderImage.style.display = 'none';
+    percentageText.style.display = 'block';
 
     const counter = setInterval(() => {
         currentProgress += increment;
@@ -2691,8 +2716,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const roundedProgress = Math.round(currentProgress);
-        progressBar.style.width = `${roundedProgress}%`;
+        progressBarContainer.style.background = `conic-gradient(var(--primary) ${roundedProgress}%, var(--primary-light) 0%)`;
         percentageText.textContent = `${roundedProgress}%`;
+
+        // At 100%, show the image again
+        if (roundedProgress === 100) {
+            preloaderImage.style.display = 'block';
+            percentageText.style.display = 'none';
+        }
     }, interval);
 });
         
