@@ -1154,12 +1154,20 @@
     font-size: 0.85rem;
   }
   
+  .projects-section .project-links {
+    flex-direction: column;
+  }
+  
   .section.tutorials, .section#blog {
     padding: 60px 0;
   }
   
   .tutorials .section-title, .section#blog .section-title {
     font-size: 2rem;
+  }
+  
+  .blog-grid, .tutorials-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1670,40 +1678,6 @@
             .tawk-min-container, .tawk-button, .tawk-chat-container {
                 left: 10px !important;
             }
-        }
-        
-        /* Make it harder to select text */
-        body {
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-        }
-        
-        /* Allow selection in input/textarea fields */
-        input, textarea {
-            user-select: text !important;
-            -webkit-user-select: text !important;
-        }
-        
-        /* Visual indication for protected code blocks */
-        pre, code {
-            position: relative;
-        }
-        
-        pre::after, code::after {
-            content: "🔒 Protected Content";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255,255,255,0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ff0000;
-            font-weight: bold;
         }
         
         /* ======================================= Desktop Site Fixes for Mobile Browsers ======================================= */
