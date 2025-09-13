@@ -1746,6 +1746,53 @@
     font-weight: bold;
   }
 </style>
+
+<!-- Desktop-for-Mobile: non-intrusive style (safe) -->
+<style id="force-desktop-style">
+/* Applied only when html or body has class "force-desktop" */
+html.force-desktop, body.force-desktop {
+  min-width: 1200px !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Make main container behave like desktop */
+html.force-desktop .container, body.force-desktop .container {
+  width: 1200px !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+/* Hide mobile nav toggles and force desktop nav layout when enabled */
+html.force-desktop .hamburger, body.force-desktop .hamburger { display: none !important; }
+html.force-desktop .nav-links, body.force-desktop .nav-links {
+  position: static !important;
+  left: 0 !important;
+  top: auto !important;
+  width: auto !important;
+  height: auto !important;
+  background: transparent !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  box-shadow: none !important;
+  z-index: auto !important;
+}
+
+/* Prevent mobile-specific shrinkage */
+html.force-desktop * , body.force-desktop * {
+  -webkit-text-size-adjust: none !important;
+}
+
+/* Ensure wide images don't collapse */
+html.force-desktop img, body.force-desktop img, html.force-desktop .profile-image, body.force-desktop .profile-image {
+  max-width: none !important;
+  width: auto !important;
+}
+</style>
+
 </head>
 <body>
   <div class="preloader-container">
@@ -2870,6 +2917,32 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('%cIf someone told you to copy-paste something here to enable a feature or "hack" someone\'s account,', 'font-size:16px;');
   console.log('%cit is a scam and will give them access to your account.', 'font-size:16px;color:red;');
 });
+</script>
+
+
+<!-- Desktop View Toggle (safe) -->
+<button id="desktopToggle" aria-pressed="false" title="Toggle desktop view" style="position:fixed;bottom:90px;right:30px;padding:8px 12px;border-radius:8px;background:#111;color:#fff;z-index:99999;border:none;box-shadow:0 6px 18px rgba(0,0,0,0.15);font-family:inherit;">
+  Desktop View
+</button>
+
+<script id="desktopToggleScript">
+(function(){
+  const toggle = document.getElementById('desktopToggle');
+  if(!toggle) return;
+  function updateText(active){
+    toggle.textContent = active ? 'Responsive View' : 'Desktop View';
+    toggle.setAttribute('aria-pressed', active ? 'true' : 'false');
+  }
+  // initialize
+  updateText(document.documentElement.classList.contains('force-desktop') || document.body.classList.contains('force-desktop'));
+
+  toggle.addEventListener('click', () => {
+    const isActive = document.documentElement.classList.toggle('force-desktop');
+    document.body.classList.toggle('force-desktop', isActive);
+    updateText(isActive);
+    // no viewport meta changes here (safer)
+  });
+})();
 </script>
 
 </body>
