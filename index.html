@@ -1746,6 +1746,25 @@
     color: #ff0000;
     font-weight: bold;
   }
+
+/* Improve layout when "Desktop Site" is forced on small phones */
+@media screen and (max-width: 1200px) {
+  .container {
+    max-width: 100% !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  .hero-container {
+    gap: 16px !important;
+  }
+  section {
+    padding: 40px 0 !important;
+  }
+  .nav-links {
+    gap: 12px !important;
+  }
+}
+
 </style>
 </head>
 <body>
