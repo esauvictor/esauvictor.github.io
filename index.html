@@ -2934,16 +2934,13 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
     
 <script>
-/* lock layout to the phone’s exact screen width */
 (function(){
-  const phone = screen.width && screen.width <= 900;   // any mobile
-  if(!phone) return;                                  // leave desktops alone
-  const w = screen.width;                             // real device pixels
-  const vp= document.getElementById('vp');
+  const w = window.screen.width || 390;          // real device width (fallback 390)
+  if(w > 900) return;                            // ignore tablets/desktops
+  const vp = document.getElementById('vp');
   vp.setAttribute('content','width='+w+',initial-scale=1,maximum-scale=1,user-scalable=no');
-  document.documentElement.style.width = w+'px';
-  document.body.style.width = w+'px';
-  window.addEventListener('resize',()=>location.reload()); // keep it locked
+  document.documentElement.style.width = w + 'px';
+  document.body.style.width      = w + 'px';
 })();
 </script>
 </body>
