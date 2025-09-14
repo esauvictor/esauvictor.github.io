@@ -1464,23 +1464,45 @@
         
         /* Animations */
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
         
         @keyframes slideInLeft {
-            from { transform: translateX(-50px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
         
         @keyframes slideInRight {
-            from { transform: translateX(50px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
         
         @keyframes slideInUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
         
         /* Responsive Design */
@@ -1488,11 +1510,9 @@
             .section {
                 padding: var(--space-xl) 0;
             }
-            
             .section-title {
                 font-size: 2rem;
             }
-            
             .hero-title {
                 font-size: 2.8rem;
             }
@@ -1514,39 +1534,31 @@
                 box-shadow: var(--shadow-lg);
                 z-index: 999;
             }
-            
             .nav-links.active {
                 left: 0;
             }
-            
             .hamburger {
                 display: block;
             }
-            
             .hero-container {
                 flex-direction: column;
                 text-align: center;
                 padding-top: var(--space-xl);
             }
-            
             .hero-content {
                 padding-right: 0;
                 margin-bottom: var(--space-xl);
             }
-            
             .hero-actions {
                 justify-content: center;
             }
-            
             .hero-title {
                 font-size: 2.5rem;
             }
-            
             .hero-subtitle {
                 margin-left: auto;
                 margin-right: auto;
             }
-            
             .project-links {
                 flex-direction: column;
             }
@@ -1556,22 +1568,49 @@
             .section-title {
                 font-size: 1.8rem;
             }
-            
             .hero-title {
                 font-size: 2rem;
             }
-            
             .hero-subtitle {
                 font-size: 1.1rem;
             }
-            
             .hero-actions {
                 flex-direction: column;
                 gap: var(--space-sm);
             }
-            
             .btn {
                 width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .projects-section .section-title {
+                font-size: 1.8rem;
+            }
+            .projects-section .tablet-mockup {
+                width: 280px;
+                padding: 10px;
+            }
+            .projects-section .tablet-screen {
+                border-width: 6px;
+            }
+            .projects-section .single-project h3 {
+                font-size: 1.2rem;
+            }
+            .projects-section .single-project .btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                margin-right: 5px;
+                margin-bottom: 5px;
+            }
+            .projects-section .project-links {
+                justify-content: center;
+            }
+            .tutorials .section-title, .section#blog .section-title {
+                font-size: 1.8rem;
+            }
+            .blog-grid, .tutorials-grid {
+                grid-template-columns: 1fr;
             }
         }
         
@@ -1609,1328 +1648,779 @@
             --black: #ffffff;
         }
         
-       /* Circular Counting Preloader Styles */
-.preloader-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--white);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
-}
-
-.loader-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.progress-bar-container {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: conic-gradient(var(--primary) 0%, var(--primary-light) 0%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    transition: background 0.3s ease;
-}
-
-.progress-bar-container::before {
-    content: '';
-    position: absolute;
-    width: 85px;
-    height: 85px;
-    background: var(--white);
-    border-radius: 50%;
-    z-index: 1;
-}
-
-.preloader-image {
-    position: absolute;
-    z-index: 3;
-    width: 70px; /* Adjust size as needed */
-    height: 70px; /* Adjust size as needed */
-    border-radius: 50%;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.preloader-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.percentage-text {
-    position: absolute;
-    z-index: 2;
-    font-size: 2rem;
-    font-weight: 700;
-    font-family: var(--font-heading);
-    color: var(--primary);
-}
-
+        /* Circular Counting Preloader Styles */
+        .preloader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .loader-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .progress-bar-container {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary) 0%, var(--primary-light) 0%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            transition: background 0.3s ease;
+        }
+        
+        .progress-bar-container::before {
+            content: '';
+            position: absolute;
+            width: 85px;
+            height: 85px;
+            background: var(--white);
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .preloader-image {
+            position: absolute;
+            z-index: 3;
+            width: 70px; /* Adjust size as needed */
+            height: 70px; /* Adjust size as needed */
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .preloader-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .percentage-text {
+            position: absolute;
+            z-index: 2;
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: var(--font-heading);
+            color: var(--primary);
+        }
+        
         /* Tawk.to Custom Styles */
-.tawk-min-container {
-    left: 20px !important;
-    right: auto !important;
-    bottom: 20px !important;
-}
-
-.tawk-button {
-    left: 20px !important;
-    right: auto !important;
-    background-color: #2563eb !important;
-    border-radius: 50px !important;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
-}
-
-.tawk-button.tawk-button-right {
-    right: auto !important;
-    left: 20px !important;
-}
-
-.tawk-chat-container {
-    left: 20px !important;
-    right: auto !important;
-    bottom: 80px !important;
-}
-
-@media (max-width: 768px) {
-    .tawk-min-container,
-    .tawk-button,
-    .tawk-chat-container {
-        left: 10px !important;
-    }
-}
+        .tawk-min-container {
+            left: 20px !important;
+            right: auto !important;
+            bottom: 20px !important;
+        }
+        
+        .tawk-button {
+            left: 20px !important;
+            right: auto !important;
+            background-color: #2563eb !important;
+            border-radius: 50px !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+        }
+        
+        .tawk-button.tawk-button-right {
+            right: auto !important;
+            left: 20px !important;
+        }
+        
+        .tawk-chat-container {
+            left: 20px !important;
+            right: auto !important;
+            bottom: 80px !important;
+        }
+        
+        @media (max-width: 768px) {
+            .tawk-min-container, .tawk-button, .tawk-chat-container {
+                left: 10px !important;
+            }
+        }
+        
         /* Make it harder to select text */
-  body {
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-  }
-  
-  /* Allow selection in input/textarea fields */
-  input, textarea {
-    user-select: text !important;
-    -webkit-user-select: text !important;
-  }
-  
-  /* Visual indication for protected code blocks */
-  pre, code {
-    position: relative;
-  }
-  
-  pre::after, code::after {
-    content: "🔒 Protected Content";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255,255,255,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ff0000;
-    font-weight: bold;
-  }
-
-/* =======================================
-   Desktop Site Fixes for Mobile Browsers
-   ======================================= */
-
-/* Allow scrolling when desktop site is forced */
-body {
-  overflow-x: auto !important;
-}
-
-/* Prevent weird zoom/scaling */
-html {
-  -webkit-text-size-adjust: 100% !important;
-}
-
-/* Adjust spacing and layout below 1200px (phones in desktop-site mode) */
-@media screen and (max-width: 1200px) {
-  section {
-    padding: 30px 0 !important;
-  }
-  .hero-container {
-    margin-bottom: 20px !important;
-  }
-  .about-container {
-    margin-top: 20px !important;
-    gap: 20px !important;
-  }
-
-  /* Make fonts a little smaller so layout fits */
-  body {
-    font-size: 0.9em !important;
-    line-height: 1.4 !important;
-  }
-  h1, h2, h3 {
-    font-size: 90% !important;
-  }
-
-  /* Scale down images */
-  img, .profile-image, .about-img {
-    max-width: 100% !important;
-    height: auto !important;
-  }
-
-  /* Fix Learning Centre grid */
-  .learning-centre .video-grid,
-  .learning-centre .videos {
-    display: grid !important;
-    grid-template-columns: 1fr !important;   /* single column */
-    gap: 16px !important;
-  }
-}
-
-/* Two-column videos on medium widths */
-@media screen and (min-width: 700px) and (max-width: 1200px) {
-  .learning-centre .video-grid,
-  .learning-centre .videos {
-    grid-template-columns: 1fr 1fr !important;
-  }
-}
-</style>
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        /* Allow selection in input/textarea fields */
+        input, textarea {
+            user-select: text !important;
+            -webkit-user-select: text !important;
+        }
+        
+        /* Visual indication for protected code blocks */
+        pre, code {
+            position: relative;
+        }
+        
+        pre::after, code::after {
+            content: "🔒 Protected Content";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff0000;
+            font-weight: bold;
+        }
+        
+        /* ======================================= Desktop Site Fixes for Mobile Browsers ======================================= */
+        /* Allow scrolling when desktop site is forced */
+        body {
+            overflow-x: auto !important;
+        }
+        
+        /* Prevent weird zoom/scaling */
+        html {
+            -webkit-text-size-adjust: 100% !important;
+        }
+        
+        /* Adjust spacing and layout below 1200px (phones in desktop-site mode) */
+        @media screen and (min-width: 993px) {
+            .nav-links {
+                position: static;
+                display: flex;
+                flex-direction: row;
+                height: auto;
+                width: auto;
+                box-shadow: none;
+            }
+            .hero-container {
+                flex-direction: row;
+                text-align: left;
+            }
+            .hero-content {
+                padding-right: var(--space-lg);
+                margin-bottom: 0;
+            }
+            .hero-actions {
+                justify-content: flex-start;
+            }
+            .hero-title {
+                font-size: 3.5rem;
+            }
+            .hero-subtitle {
+                margin: 0 0 var(--space-lg) 0;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="preloader-container">
-    <div class="loader-inner">
-        <div class="progress-bar-container">
-            <div class="preloader-image">
-                <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau">
+    <div class="preloader-container">
+        <div class="loader-inner">
+            <div class="progress-bar-container">
+                <div class="preloader-image">
+                    <img src="./assets/esau_victor.jpeg" alt="Esau Victor">
+                </div>
+                <span class="percentage-text">0%</span>
             </div>
-            <div class="percentage-text">0%</div>
+            <p class="loader-text">Loading...</p>
         </div>
     </div>
-</div>
-
-    <!-- GitHub Corner -->
-    <a href="https://github.com/esauvictor/esauvictor.github.io" class="github-corner" aria-label="View source on GitHub" target="_blank">
-        <svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true">
-            <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
-            <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
-            <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path>
-        </svg>
-    </a>
-
-    <!-- Navigation -->
-   <nav class="navbar">
-  <div class="container nav-container">
-    <a href="#home" class="logo">Esau<span>Victor</span></a>
-    <button class="hamburger" id="hamburger">
-      <i class="fas fa-bars"></i>
-    </button>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#home">Home</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#projects">Projects</a></li> 
-      <li><a href="#tutorials">Learning Center</a></li>  
-      <li><a href="#blog">Blog</a></li>  
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <div class="nav-actions">
-      <a href="https://github.com/esauvictor/esauvictor.github.io/raw/main/Resume_Esau.pdf" class="btn btn-secondary" download>
-        <i class="fas fa-download"></i> Resume
-      </a>
+    <div class="dark-mode-toggle">
+        <i class="fas fa-moon"></i>
     </div>
-  </div>
-</nav>
-
-    <!-- Hero Section -->
-    <section class="hero" id="home">
+    
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">E<span>.V</span></a>
+            <ul class="nav-links">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="#contact" class="btn btn-primary">Hire Me</a>
+                <button class="hamburger" id="hamburger">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <section id="hero" class="section hero">
         <div class="container hero-container">
             <div class="hero-content">
-                <p class="hero-title">Hi, I'm Esau Victor</p>
-                <p class="hero-subtitle">Full Stack Developer | Data Engineer | Security Specialist creating digital solutions that make an impact</p>
+                <h1 class="hero-title">Hello, I'm <span class="text-primary">Esau Victor</span></h1>
+                <p class="hero-subtitle">A Full Stack Developer, Data Engineer & Security Specialist passionate about building scalable and secure applications.</p>
                 <div class="hero-actions">
-                    <a href="#projects" class="btn btn-primary">
-                        <i class="fas fa-eye"></i> View Work
-                    </a>
-                    <a href="#contact" class="btn btn-secondary">
-                        <i class="fas fa-paper-plane"></i> Contact Me
-                    </a>
-                </div>
-                <div class="social-links">
-                    <a href="https://github.com/esauvictor" class="social-link" target="_blank" aria-label="GitHub">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="https://linkedin.com/in/esau-victor" class="social-link" target="_blank" aria-label="LinkedIn">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="https://x.com/esau_vee" class="social-link" target="_blank" aria-label="x">
-                        <i class="fab fa-x"></i>
-                    </a>
-                    <a href="https://wa.me/2348132084092" class="social-link" target="_blank" aria-label="WhatsApp">
-                        <i class="fab fa-whatsapp"></i>
-                    </a>
+                    <a href="#projects" class="btn btn-primary">My Work</a>
+                    <a href="#contact" class="btn btn-secondary">Get in Touch</a>
                 </div>
             </div>
             <div class="hero-image">
+                <img src="./assets/esau_victor_hero.png" alt="Esau Victor" class="profile-image">
                 <div class="shape shape-1"></div>
-                <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor" class="profile-image">
                 <div class="shape shape-2"></div>
             </div>
         </div>
     </section>
-
-    <!-- About Section -->
-    <section class="section about" id="about">
-        <div class="container">
-            <h2 class="section-title">About Me</h2>
-            <div class="about-container">
-                <div class="about-image">
-                    <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor" class="about-img">
-                    <div class="about-badge">
-                        <i class="fas fa-award"></i> 5+ Years Experience
+    <section id="about" class="section about">
+        <div class="container about-container">
+            <div class="about-image">
+                <img src="./assets/esau_victor_about.jpeg" alt="Esau Victor" class="about-img">
+                <div class="about-badge">Full Stack Developer</div>
+            </div>
+            <div class="about-content">
+                <h2 class="section-title">About Me</h2>
+                <p class="about-text">A multi-talented professional with a robust background in Full Stack Development, Data Engineering, and Cybersecurity. I thrive on building end-to-end solutions that are not only functional and efficient but also secure and scalable. My journey has taken me through diverse technologies, allowing me to connect the dots between front-end aesthetics, back-end logic, and data infrastructure.</p>
+                <p class="about-text">My passion lies in creating products that make a real impact. I am a firm believer in continuous learning and adapting to the ever-evolving tech landscape. Let's build something great together.</p>
+                
+                <div class="skills">
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Web Development</span>
+                            <span>95%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 95%;"></div>
+                        </div>
                     </div>
-                </div>
-                <div class="about-content">
-                    <p class="about-text">I'm a passionate full-stack developer with expertise in building robust web applications, analyzing complex data, and implementing security solutions. With over 5 years of experience, I've helped businesses transform their digital presence.</p>
-                    <p class="about-text">My approach combines technical excellence with user-centered design, ensuring solutions are not only functional but also intuitive and enjoyable to use.</p>
-                    <p class="about-text">When I'm not coding, you can find me contributing to open-source projects, mentoring aspiring developers, or exploring new technologies.</p>
-                    
-                    <div class="skills">
-                        <div class="skill-item">
-                            <div class="skill-name">
-                                <span>Web Development</span>
-                                <span>95%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 95%"></div>
-                            </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Data Engineering</span>
+                            <span>90%</span>
                         </div>
-                        <div class="skill-item">
-                            <div class="skill-name">
-                                <span>Data Analytics</span>
-                                <span>90%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 90%"></div>
-                            </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 90%;"></div>
                         </div>
-                        <div class="skill-item">
-                            <div class="skill-name">
-                                <span>Cyber Security</span>
-                                <span>85%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 85%"></div>
-                            </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Cybersecurity</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>UI/UX Design</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 80%;"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-   <!-- Services Section -->
-<section class="section services" id="services">
-    <div class="container">
-        <h2 class="section-title">My Services</h2>
-        <div class="services-grid">
-            <div class="service-card">
-                <div class="service-icon">
-                    <i class="fas fa-code"></i>
+    <section id="services" class="section services">
+        <div class="container">
+            <h2 class="section-title">My Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-code"></i></div>
+                    <h3 class="service-title">Web Development</h3>
+                    <p class="service-desc">I build responsive, high-performance, and scalable websites and web applications using modern frameworks and technologies.</p>
                 </div>
-                <h3 class="service-title">Web Development</h3>
-                <p class="service-desc">Custom websites and web applications built with modern technologies like React, Node.js, and modern frameworks.</p>
-                <a href="#" class="btn btn-primary whatsapp-link" data-message="I'm interested in your Web Development service">Hire Me</a>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-database"></i></div>
+                    <h3 class="service-title">Data Engineering</h3>
+                    <p class="service-desc">I design, build, and maintain robust data pipelines, data warehouses, and ETL processes to handle large-scale data.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3 class="service-title">Cybersecurity</h3>
+                    <p class="service-desc">I implement security measures, conduct vulnerability assessments, and ensure your applications and data are protected from threats.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-palette"></i></div>
+                    <h3 class="service-title">UI/UX Design</h3>
+                    <p class="service-desc">I create intuitive and aesthetically pleasing user interfaces that provide a seamless and engaging user experience.</p>
+                </div>
             </div>
-            <div class="service-card">
-                <div class="service-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <h3 class="service-title">Data Analytics</h3>
-                <p class="service-desc">Transform your data into actionable insights with powerful analytics and visualization tools.</p>
-                <a href="#" class="btn btn-primary whatsapp-link" data-message="I'm interested in your Data Analytics service">Hire Me</a>
-            </div>
-            <div class="service-card">
-                <div class="service-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h3 class="service-title">Security Solutions</h3>
-                <p class="service-desc">Comprehensive security assessments and solutions to protect your digital assets.</p>
-                <a href="#" class="btn btn-primary whatsapp-link" data-message="I'm interested in your Security Solutions service">Hire Me</a>
-            </div>
-        </div>
-        
-        <!-- Professional Cyber Counseling Service -->
-        <div class="professional-counseling-service">
-            <div class="service-card counseling-card">
-                <div class="service-icon counseling-icon">
-                    <i class="fas fa-headset"></i>
-                </div>
-                <h3 class="service-title">Tech Counseling & Mentorship</h3>
-                <p class="service-subtitle">Professional Guidance for Your Digital Journey</p>
-                
-                <div class="counseling-details">
-                    <div class="counseling-benefits">
-                        <h4>What I Offer:</h4>
-                        <ul>
-                            <li><i class="fas fa-check-circle"></i> One-on-one technical counseling sessions</li>
-                            <li><i class="fas fa-check-circle"></i> Career guidance in tech fields</li>
-                            <li><i class="fas fa-check-circle"></i> Personalized learning roadmaps</li>
-                            <li><i class="fas fa-check-circle"></i> Project planning and review</li>
-                            <li><i class="fas fa-check-circle"></i> Digital wellbeing consultations</li>
-                        </ul>
+            
+            <div class="professional-counseling-service">
+                <div class="counseling-card">
+                    <div class="service-icon counseling-icon"><i class="fas fa-users"></i></div>
+                    <h3 class="service-title">Professional Counseling</h3>
+                    <p class="service-subtitle">As an IT professional, I offer counseling on a variety of tech-related topics to help you navigate your career and projects.</p>
+                    
+                    <div class="counseling-details">
+                        <div class="counseling-benefits">
+                            <h4>What You'll Gain:</h4>
+                            <ul>
+                                <li><i class="fas fa-check-circle"></i> Insightful career guidance and roadmap creation.</li>
+                                <li><i class="fas fa-check-circle"></i> Strategies for technical skill development.</li>
+                                <li><i class="fas fa-check-circle"></i> Guidance on project management and execution.</li>
+                                <li><i class="fas fa-check-circle"></i> Cybersecurity best practices for your projects.</li>
+                                <li><i class="fas fa-check-circle"></i> Practical advice for navigating the tech industry.</li>
+                            </ul>
+                        </div>
+                        <div class="counseling-approach">
+                            <h4>My Approach:</h4>
+                            <div class="approach-points">
+                                <div class="approach-item">
+                                    <i class="fas fa-handshake"></i>
+                                    <p>Personalized Sessions</p>
+                                </div>
+                                <div class="approach-item">
+                                    <i class="fas fa-lightbulb"></i>
+                                    <p>Actionable Insights</p>
+                                </div>
+                                <div class="approach-item">
+                                    <i class="fas fa-cogs"></i>
+                                    <p>Practical Solutions</p>
+                                </div>
+                                <div class="approach-item">
+                                    <i class="fas fa-chart-line"></i>
+                                    <p>Growth-Oriented</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="counseling-approach">
-                        <h4>My Approach:</h4>
-                        <div class="approach-points">
-                            <div class="approach-item">
-                                <i class="fas fa-user-tie"></i>
-                                <p>Confidential, professional sessions</p>
-                            </div>
-                            <div class="approach-item">
-                                <i class="fas fa-bullseye"></i>
-                                <p>Goal-oriented framework</p>
-                            </div>
-                            <div class="approach-item">
-                                <i class="fas fa-hand-holding-heart"></i>
-                                <p>Empathetic technical guidance</p>
+                    <h4 style="margin-top: 30px;">Pricing Options</h4>
+                    <div class="pricing-options">
+                        <div class="pricing-option">
+                            <h5>30-Minute Session</h5>
+                            <p class="details">Quick Q&A or specific issue discussion.</p>
+                            <p class="price">$50</p>
+                            <a href="#contact" class="btn btn-outline">Book Now</a>
+                        </div>
+                        <div class="pricing-option featured">
+                            <h5>60-Minute Session</h5>
+                            <p class="details">In-depth discussion on career or project.</p>
+                            <p class="price">$90</p>
+                            <a href="#contact" class="btn btn-primary">Book Now</a>
+                        </div>
+                        <div class="pricing-option">
+                            <h5>Package of 3 (60-Min)</h5>
+                            <p class="details">Structured guidance over multiple sessions.</p>
+                            <p class="price">$250</p>
+                            <a href="#contact" class="btn btn-outline">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+    <section id="projects" class="projects-section">
+      <div class="container">
+          <header class="section-header">
+              <h2 class="section-title">My Projects</h2>
+              <p class="section-subtitle">A showcase of my recent work across web development, data engineering, and cybersecurity.</p>
+          </header>
+
+          <div class="tablet-mockups-container">
+            <div class="tablet-mockup">
+                <div class="tablet-screen">
+                    <div class="single-project project-card">
+                        <div class="project-image">
+                            <img src="https://via.placeholder.com/350x200" alt="Data Dashboard">
+                        </div>
+                        <div class="project-content">
+                            <span class="project-tag">Data Engineering</span>
+                            <span class="project-tag">Frontend</span>
+                            <h3>Interactive Data Dashboard</h3>
+                            <p>A real-time data visualization dashboard that processes large datasets and presents them through interactive charts and graphs.</p>
+                            <div class="project-links">
+                                <a href="#" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> View Live</a>
+                                <a href="#" class="btn btn-github btn-github"><i class="fab fa-github"></i> GitHub</a>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="pricing-options">
-                    <div class="pricing-option">
-                        <h5>Introductory Session</h5>
-                        <p class="price">Free 30-min consultation</p>
-                        <a href="#" class="btn btn-outline whatsapp-link" data-message="I'd like to book a Free Introductory Session for Tech Counseling">Book Now</a>
-                    </div>
-                    <div class="pricing-option featured">
-                        <h5>Standard Package</h5>
-                        <p class="price">₦30,000/session</p>
-                        <p class="details">(4 sessions/month recommended)</p>
-                        <a href="#" class="btn btn-primary whatsapp-link" data-message="I'm interested in your Standard Package for Tech Counseling">Get Started</a>
-                    </div>
-                    <div class="pricing-option">
-                        <h5>Enterprise Solution</h5>
-                        <p class="price">Custom Pricing</p>
-                        <p class="details">For teams & organizations</p>
-                        <a href="#" class="btn btn-outline whatsapp-link" data-message="I'm inquiring about Enterprise Solutions for Tech Counseling">Contact Us</a>
+            </div>
+
+            <div class="tablet-mockup">
+                <div class="tablet-screen">
+                    <div class="single-project project-card">
+                        <div class="project-image">
+                            <img src="https://via.placeholder.com/350x200" alt="E-commerce Website">
+                        </div>
+                        <div class="project-content">
+                            <span class="project-tag">Full Stack</span>
+                            <span class="project-tag">Web Dev</span>
+                            <h3>Modern E-commerce Platform</h3>
+                            <p>A full-featured e-commerce site with secure payment processing, user authentication, and a robust product management system.</p>
+                            <div class="project-links">
+                                <a href="#" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> View Live</a>
+                                <a href="#" class="btn btn-github"><i class="fab fa-github"></i> GitHub</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
-        <!-- WhatsApp Integration Script -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const phoneNumber = '2348132084092'; // Your WhatsApp number
-    
-    // Function to handle WhatsApp clicks
-    function handleWhatsAppClick(e) {
-        e.preventDefault();
-        const message = this.getAttribute('data-message') || "Hello, I'm interested in your services";
-        
-        if (window.location.hostname.includes('web.whatsapp.com')) {
-            // If on WhatsApp Web, open in same tab
-            window.location.href = `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
-        } else {
-            // For regular web or mobile, use wa.me in new tab
-            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
-        }
-    }
-    
-    // Attach click handlers to all WhatsApp links
-    document.querySelectorAll('.whatsapp-link').forEach(link => {
-        link.addEventListener('click', handleWhatsAppClick);
-    });
-});
-</script>
 
-<section class="projects-section" id="projects">
-  <div class="section-header">
-    <h2 class="section-title">Featured Projects</h2>
-    <div class="section-divider"></div>
-  </div>
-  <!-- Tablet Mockup Container -->
-  <div class="tablet-mockups-container">
-
-    <!-- First Project Tablet -->
-    <div class="tablet-mockup">
-      <div class="tablet-screen">
-        <div class="single-project">
-          <div class="project-card">
-            <div class="project-image">
-              <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/biodata.png" alt="IAUE Bio-data Capture">
-            </div>
-            <div class="project-content">
-              <div class="project-tags">
-                <span class="project-tag">Web Development</span>
-                <span class="project-tag">PHP</span>
-                <span class="project-tag">MySQL</span>
-              </div>
-              <h3>IAUE Students Bio-data Capture</h3>
-              <p>A comprehensive student data collection system with secure authentication and data validation features.</p>
-              <div class="project-links">
-                <a href="https://hostel.iauestudentsaffairs.com/" class="btn" target="_blank">View Project</a>
-                <a href="https://github.com/esauvictor/IAUE-Hostel-Student-Bio-data-Capture-and-Allocation-System.git" class="btn btn-github" target="_blank">
-                  <i class="fab fa-github"></i> Code
-                </a>
-              </div>
+            <div class="tablet-mockup">
+                <div class="tablet-screen">
+                    <div class="single-project project-card">
+                        <div class="project-image">
+                            <img src="https://via.placeholder.com/350x200" alt="Secure Messaging App">
+                        </div>
+                        <div class="project-content">
+                            <span class="project-tag">Cybersecurity</span>
+                            <span class="project-tag">Backend</span>
+                            <h3>End-to-End Encrypted Messenger</h3>
+                            <p>A messaging application built with a focus on privacy and security, featuring end-to-end encryption for all communications.</p>
+                            <div class="project-links">
+                                <a href="#" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> View Live</a>
+                                <a href="#" class="btn btn-github"><i class="fab fa-github"></i> GitHub</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
           </div>
-        </div>
       </div>
-    </div>
-
-    <!-- Second Project Tablet -->
-    <div class="tablet-mockup">
-      <div class="tablet-screen">
-        <div class="single-project">
-          <div class="project-card">
-            <div class="project-image">
-              <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/hostel%20portal.png" alt="Hostel Allocation Dashboard">
-            </div>
-            <div class="project-content">
-              <div class="project-tags">
-                <span class="project-tag">Dashboard</span>
-                <span class="project-tag">Data Visualization</span>
-                <span class="project-tag">Payment Integration</span>
-              </div>
-              <h3>Hostel Allocation Dashboard</h3>
-              <p>An interactive management system for student hostel allocation with real-time reporting and payment processing.</p>
-             <div class="project-links">
-                <a href="https://hostel.iauestudentsaffairs.com/admin/login" class="btn" target="_blank">View Project</a>
-                <a href="https://github.com/esauvictor/IAUE-Hostel-Student-Bio-data-Capture-and-Allocation-System.git" class="btn btn-github" target="_blank">
-                  <i class="fab fa-github"></i> Code
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-      
-    <!-- Third Project Tablet -->
-    <div class="tablet-mockup">
-      <div class="tablet-screen">
-        <div class="single-project">
-          <div class="project-card">
-            <div class="project-image">
-              <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/iauesa.png" alt="IAUE SA Website">
-            </div>
-            <div class="project-content">
-              <div class="project-tags">
-                <span class="project-tag">S A Directorate</span>
-                <span class="project-tag">Security</span>
-                <span class="project-tag">Web Application</span>
-                <span class="project-tag">Audit</span>
-              </div>
-              <h3>IAUE SA Website</h3>
-              <p>Conducted comprehensive security assessment and implemented security enhancements for the Students' Affairs Unit website.</p>
-            <div class="project-links">
-                <a href="https://iauestudentsaffairs.com/" class="btn" target="_blank">View Project</a>
-                <a href="https://raw.githubusercontent.com/esauvictor/esauvictor.github.io/main/iauesa.html" class="btn btn-github" target="_blank">
-                  <i class="fab fa-github"></i> Code
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Fourth Project Tablet -->
-    <div class="tablet-mockup">
-      <div class="tablet-screen">
-        <div class="single-project">
-          <div class="project-card">
-            <div class="project-image">
-              <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/kitchenstar.jpeg" alt="Kitchen Star Food Vendor">
-            </div>
-            <div class="project-content">
-              <div class="project-tags">
-                <span class="project-tag">Food Ordering</span>
-                <span class="project-tag">Responsive Design</span>
-                <span class="project-tag">Frontend</span>
-              </div>
-              <h3>Kitchen Star Food Vendor</h3>
-              <p>A sleek and responsive food vendor website for online menu display and customer engagement.</p>
-              <div class="project-links">
-                <a href="https://esauvictor.github.io/restaurant.html" class="btn" target="_blank">View Project</a>
-                <a href="https://raw.githubusercontent.com/esauvictor/esauvictor.github.io/main/restaurant.html" class="btn btn-github" target="_blank">
-                  <i class="fab fa-github"></i> Code
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Fifth Project Tablet -->
-    <div class="tablet-mockup">
-      <div class="tablet-screen">
-        <div class="single-project">
-          <div class="project-card">
-            <div class="project-image">
-              <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/oma.jpeg" alt="Oma's Spray Perfume Vendor">
-            </div>
-            <div class="project-content">
-              <div class="project-tags">
-                <span class="project-tag">E-Commerce</span>
-                <span class="project-tag">Perfume Store</span>
-                <span class="project-tag">Mobile-Friendly</span>
-              </div>
-              <h3>Oma's Spray Perfume Vendor</h3>
-              <p>A modern e-commerce platform for premium perfume products with user-friendly navigation and checkout experience.</p>
-              <div class="project-links">
-                <a href="https://omaspray.com.ng/" class="btn" target="_blank">View Project</a>
-                <a href="https://raw.githubusercontent.com/omaspray/omaspray.github.io/main/index.html" class="btn btn-github" target="_blank">
-                  <i class="fab fa-github"></i> Code
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sixth Project Tablet -->
-    <div class="tablet-mockup">
-      <div class="tablet-screen">
-        <div class="single-project">
-          <div class="project-card">
-            <div class="project-image">
-              <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/gym.jpeg" alt="PowerGym">
-            </div>
-            <div class="project-content">
-              <div class="project-tags">
-                <span class="project-tag">Fitness</span>
-                <span class="project-tag">Landing Page</span>
-                <span class="project-tag">HTML/CSS</span>
-              </div>
-              <h3>PowerGym</h3>
-              <p>A clean and engaging fitness website for a gym center, showcasing services, programs, and contact details.</p>
-              <div class="project-links">
-                <a href="https://esauvictor.github.io/Gym" class="btn" target="_blank">View Project</a>
-                <a href="https://raw.githubusercontent.com/esauvictor/esauvictor.github.io/main/Gym.html" class="btn btn-github" target="_blank">
-                  <i class="fab fa-github"></i> Code
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- Tutorials Section -->
-<section class="section tutorials" id="tutorials">
-  <div class="container">
-    <h2 class="section-title">My Learning Center</h2>
-    <p class="section-subtitle"></p>
-    
-    <div class="tutorials-grid">
-      <!-- Tutorial 1 -->
-      <div class="tutorial-card">
-        <div class="video-container">
-          <iframe src="https://www.youtube.com/embed/GxmfcnU3feo" 
-                  frameborder="0" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                  allowfullscreen></iframe>
-        </div>
-        <div class="tutorial-info">
-          <h3>Web Development Basics</h3>
-          <p>Learn the fundamentals of modern web development in this comprehensive tutorial.</p>
-          <div class="tutorial-meta">
-            <span><i class="fas fa-eye"></i> 15K views</span>
-            <span><i class="fas fa-clock"></i> 15 min</span>
-            <span><i class="fas fa-calendar-alt"></i> Mar 2025</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Tutorial 2 -->
-      <div class="tutorial-card">
-        <div class="video-container">
-          <iframe src="https://www.youtube.com/embed/GPVsHOlRBBI" 
-                  frameborder="0" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                  allowfullscreen></iframe>
-        </div>
-        <div class="tutorial-info">
-          <h3>Data Analytics with Python</h3>
-          <p>Transform raw data into meaningful insights using Python's powerful libraries.</p>
-          <div class="tutorial-meta">
-            <span><i class="fas fa-eye"></i> 68K views</span>
-            <span><i class="fas fa-clock"></i> 9 hrs</span>
-            <span><i class="fas fa-calendar-alt"></i> Mar 2025</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Tutorial 3 -->
-      <div class="tutorial-card">
-        <div class="video-container">
-          <iframe src="https://www.youtube.com/embed/lpa8uy4DyMo?si=ToQnWTltU0mjd0Hz" 
-                  frameborder="0" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                  allowfullscreen></iframe>
-        </div>
-        <div class="tutorial-info">
-          <h3>Cyber Security Essentials</h3>
-          <p>Protect your digital assets with these fundamental security practices.</p>
-          <div class="tutorial-meta">
-            <span><i class="fas fa-eye"></i> 24K views</span>
-            <span><i class="fas fa-clock"></i> 11 hrs</span>
-            <span><i class="fas fa-calendar-alt"></i> May 2025</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="tutorials-grid">
-      <!-- Tutorial 4 -->
-      <div class="tutorial-card">
-        <div class="video-container">
-          <iframe src="https://www.youtube.com/embed/MW_MAvnExno?si=fbQlztCrd7CP2bkK" 
-                  frameborder="0" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                  allowfullscreen></iframe>
-        </div>
-        <div class="tutorial-info">
-          <h3>Diskpart Utility</h3>
-          <p>Create Bootable Usb Flash Drive Using the Diskpart Utility.</p>
-          <div class="tutorial-meta">
-            <span><i class="fas fa-eye"></i> 10K views</span>
-            <span><i class="fas fa-clock"></i> 2 min</span>
-            <span><i class="fas fa-calendar-alt"></i> Mar 2025</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Tutorial 5 -->
-      <div class="tutorial-card">
-        <div class="video-container">
-          <iframe src="https://www.youtube.com/embed/ki2PnFL_HEU" 
-                  frameborder="0" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                  allowfullscreen></iframe>
-        </div>
-        <div class="tutorial-info">
-          <h3>Zig Programming Language</h3>
-          <p>Is Zig Overrated? Here's What No One Tells You!.</p>
-          <div class="tutorial-meta">
-            <span><i class="fas fa-eye"></i> 171K views</span>
-            <span><i class="fas fa-clock"></i> 1 min</span>
-            <span><i class="fas fa-calendar-alt"></i> Mar 2025</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Tutorial 6 -->
-      <div class="tutorial-card">
-        <div class="video-container">
-          <iframe src="https://www.youtube.com/embed/LSEYdU8Dp9Y" 
-                  frameborder="0" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                  allowfullscreen></iframe>
-        </div>
-        <div class="tutorial-info">
-          <h3>Spring-Boot Framework</h3>
-          <p>What is Spring-Boot Framework?(explained from scratch).</p>
-          <div class="tutorial-meta">
-            <span><i class="fas fa-eye"></i> 6K views</span>
-            <span><i class="fas fa-clock"></i> 4 min</span>
-            <span><i class="fas fa-calendar-alt"></i> May 2025</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="tutorials-cta">
-      <a href="https://youtube.com/@EsauDeGenius" class="btn" target="_blank">
-        <i class="fab fa-youtube"></i> View More Content
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- Blog Section -->
-<section class="section" id="blog">
-  <div class="container">
-    <h2 class="section-title">My Blog</h2>
-    <p class="section-subtitle">Exploring my journey, challenges, and reflections in the tech world</p>
-    
-    <div class="blog-grid">
-      <div class="blog-post">
-        <div class="blog-image">
-          <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Blog post image">
-        </div>
-        <div class="blog-content">
-          <h3>A Day in the Life of a Developer</h3>
-          <div class="blog-meta">
-            <span><i class="fas fa-calendar-alt"></i> April 10, 2024</span>
-            <span><i class="fas fa-clock"></i> 5 min read</span>
-          </div>
-          <p>Today was one of those days where I spent hours debugging a seemingly simple issue. The frustration mounted as solutions I thought were perfect just didn't work...</p>
-          <a href="https://esauvictor.github.io/post.html?id=1" class="btn btn-outline">Read More</a>
-        </div>
-      </div>
-      
-      <div class="blog-post">
-        <div class="blog-image">
-          <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Blog post image">
-        </div>
-        <div class="blog-content">
-          <h3>Overcoming Imposter Syndrome</h3>
-          <div class="blog-meta">
-            <span><i class="fas fa-calendar-alt"></i> May 3, 2025</span>
-            <span><i class="fas fa-clock"></i> 8 min read</span>
-          </div>
-          <p>There are days when I wake up feeling like a fraud in this field. How did I get here? Do I really belong? These thoughts have been my constant companions...</p>
-          <a href="https://esauvictor.github.io/post.html?id=2" class="btn btn-outline">Read More</a>
-        </div>
-      </div>
-      
-      <div class="blog-post">
-        <div class="blog-image">
-          <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Blog post image">
-        </div>
-        <div class="blog-content">
-          <h3>Building Something That Matters</h3>
-          <div class="blog-meta">
-            <span><i class="fas fa-calendar-alt"></i> June 12, 2025</span>
-            <span><i class="fas fa-clock"></i> 6 min read</span>
-          </div>
-          <p>When I see the impact of the projects I've worked on, especially those that help students like the IAUE systems, it reminds me why I fell in love with coding in the first place...</p>
-          <a href="https://esauvictor.github.io/post.html?id=3" class="btn btn-outline">Read More</a>
-        </div>
-      </div>
-    </div>
-    
-    <div class="tutorials-cta">
-      <a href="/blog" class="btn" target="_blank">
-        <i class="fas fa-plus"></i> Go-to Blog
-      </a>
-    </div>
-  </div>
-</section>
-
-    <!-- Testimonials Section -->
-    <section class="section testimonials" id="testimonials">
+  </section>
+  <section id="tutorials" class="section tutorials">
         <div class="container">
-            <h2 class="section-title">Client Testimonials</h2>
+            <h2 class="section-title">Tutorials & Guides</h2>
+            <p class="section-subtitle">Sharing my knowledge through technical tutorials and how-to guides.</p>
+            <div class="tutorials-grid">
+                <div class="tutorial-card">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                    </div>
+                    <div class="tutorial-info">
+                        <h3>Getting Started with Python for Data Engineering</h3>
+                        <p>An introduction to using Python for building data pipelines, from basic data manipulation to advanced ETL processes.</p>
+                        <div class="tutorial-meta">
+                            <span><i class="fas fa-clock"></i> 12 min</span>
+                            <span><i class="fas fa-tag"></i> Data Engineering</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tutorial-card">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/yQpYd9QeR0A" allowfullscreen></iframe>
+                    </div>
+                    <div class="tutorial-info">
+                        <h3>Secure Coding Practices for Web Developers</h3>
+                        <p>Learn the essential security practices every web developer needs to know to protect their applications from common vulnerabilities.</p>
+                        <div class="tutorial-meta">
+                            <span><i class="fas fa-clock"></i> 15 min</span>
+                            <span><i class="fas fa-tag"></i> Cybersecurity</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tutorial-card">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/3W5X491B_9s" allowfullscreen></iframe>
+                    </div>
+                    <div class="tutorial-info">
+                        <h3>Building a Full Stack App with MERN Stack</h3>
+                        <p>A step-by-step guide to building a complete web application using MongoDB, Express.js, React, and Node.js.</p>
+                        <div class="tutorial-meta">
+                            <span><i class="fas fa-clock"></i> 20 min</span>
+                            <span><i class="fas fa-tag"></i> Web Development</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tutorials-cta">
+                <a href="#" class="btn btn-primary"><i class="fas fa-play"></i> View All Tutorials</a>
+            </div>
+        </div>
+    </section>
+    <section id="blog" class="section blog">
+      <div class="container">
+          <h2 class="section-title">Latest from the Blog</h2>
+          <p class="section-subtitle">Insights, tutorials, and thoughts on the world of tech.</p>
+          <div class="blog-grid">
+              <div class="blog-post">
+                  <div class="blog-image">
+                      <img src="https://via.placeholder.com/400x250" alt="Blog Post Image">
+                  </div>
+                  <div class="blog-content">
+                      <h3>The Future of Data: AI and Machine Learning</h3>
+                      <div class="blog-meta">
+                          <span><i class="fas fa-calendar-alt"></i> August 15, 2023</span>
+                          <span><i class="fas fa-tag"></i> Data, AI</span>
+                      </div>
+                      <p>An exploration of how artificial intelligence and machine learning are revolutionizing the field of data engineering and analytics.</p>
+                      <a href="#" class="btn btn-outline">Read More</a>
+                  </div>
+              </div>
+              <div class="blog-post">
+                  <div class="blog-image">
+                      <img src="https://via.placeholder.com/400x250" alt="Blog Post Image">
+                  </div>
+                  <div class="blog-content">
+                      <h3>Securing Your Web Application: A Comprehensive Guide</h3>
+                      <div class="blog-meta">
+                          <span><i class="fas fa-calendar-alt"></i> August 10, 2023</span>
+                          <span><i class="fas fa-tag"></i> Cybersecurity</span>
+                      </div>
+                      <p>A step-by-step guide to implementing robust security practices to protect your web applications from common threats.</p>
+                      <a href="#" class="btn btn-outline">Read More</a>
+                  </div>
+              </div>
+              <div class="blog-post">
+                  <div class="blog-image">
+                      <img src="https://via.placeholder.com/400x250" alt="Blog Post Image">
+                  </div>
+                  <div class="blog-content">
+                      <h3>The Rise of Headless CMS: A Developer's Perspective</h3>
+                      <div class="blog-meta">
+                          <span><i class="fas fa-calendar-alt"></i> August 5, 2023</span>
+                          <span><i class="fas fa-tag"></i> Web Dev</span>
+                      </div>
+                      <p>Discussing the benefits and challenges of using a headless CMS and how it's changing the way we build websites.</p>
+                      <a href="#" class="btn btn-outline">Read More</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+  <section id="testimonials" class="section testimonials">
+        <div class="container">
+            <h2 class="section-title">What My Clients Say</h2>
             <div class="testimonials-grid">
                 <div class="testimonial-card">
-                    <p class="testimonial-text">Esau delivered our web project ahead of schedule with exceptional quality. His attention to detail and problem-solving skills are truly remarkable.</p>
+                    <p class="testimonial-text">"Esau's work on our web application was outstanding. His attention to detail and ability to deliver a scalable, secure, and user-friendly product was beyond our expectations."</p>
                     <div class="testimonial-author">
-                        <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Sarah%20Johnson.png" alt="Sarah Johnson" class="author-avatar">
-                        <div>
-                            <h4 class="author-name">Sarah Johnson</h4>
-                            <p class="author-role">CEO, Tech Innovations</p>
+                        <img src="https://via.placeholder.com/50" alt="Client 1" class="author-avatar">
+                        <div class="author-info">
+                            <h4 class="author-name">Jane Doe</h4>
+                            <p class="author-role">CEO, Tech Solutions Inc.</p>
                         </div>
                     </div>
                 </div>
                 <div class="testimonial-card">
-                    <p class="testimonial-text">The data analytics dashboard Esau created transformed how we make business decisions. We've seen a 30% improvement in operational efficiency.</p>
+                    <p class="testimonial-text">"I highly recommend Esau for any data engineering project. He's a true professional who delivers high-quality work and is a pleasure to work with."</p>
                     <div class="testimonial-author">
-                        <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Michael%20Chen.png" alt="Michael Chen" class="author-avatar">
-                        <div>
-                            <h4 class="author-name">Michael Chen</h4>
-                            <p class="author-role">CTO, Data Solutions</p>
+                        <img src="https://via.placeholder.com/50" alt="Client 2" class="author-avatar">
+                        <div class="author-info">
+                            <h4 class="author-name">John Smith</h4>
+                            <p class="author-role">Data Scientist, Global Analytics</p>
                         </div>
                     </div>
                 </div>
                 <div class="testimonial-card">
-                    <p class="testimonial-text">Esau's security audit identified critical vulnerabilities we were unaware of. His recommendations significantly strengthened our security posture.</p>
+                    <p class="testimonial-text">"Esau's expertise in cybersecurity saved us from a potential disaster. His quick actions and thorough security audit were invaluable to our company."</p>
                     <div class="testimonial-author">
-                        <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Emily%20Rodriguez.png" alt="Emily Rodriguez" class="author-avatar">
-                        <div>
-                            <h4 class="author-name">Emily Rodriguez</h4>
-                            <p class="author-role">Director of IT, Secure Networks</p>
+                        <img src="https://via.placeholder.com/50" alt="Client 3" class="author-avatar">
+                        <div class="author-info">
+                            <h4 class="author-name">Emily White</h4>
+                            <p class="author-role">CTO, Secure Systems Ltd.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Contact Section -->
-    <section class="section contact" id="contact">
-        <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
-            <div class="contact-container">
-                <div class="contact-info">
-                    <h3 class="contact-title">Let's Work Together</h3>
-                    <p class="contact-desc">Have a project in mind or want to discuss potential opportunities? Feel free to reach out!</p>
-                    
-                    <div class="contact-method">
-                        <div class="contact-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h4>Email</h4>
-                            <a href="mailto:esauvictor@icloud.com">esauvictor@icloud.com</a>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-method">
-                        <div class="contact-icon">
-                            <i class="fas fa-phone"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h4>Phone</h4>
-                            <a href="tel:+2348132084092">+234 813 208 4092</a>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-method">
-                        <div class="contact-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h4>Location</h4>
-                            <p>Port Harcourt, Nigeria</p>
-                        </div>
-                    </div>
-                    
-                    <div class="social-links">
-                        <a href="https://github.com/esauvictor" class="social-link" target="_blank" aria-label="GitHub">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="https://linkedin.com/in/esau-victor" class="social-link" target="_blank" aria-label="LinkedIn">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="https://x.com/esau_vee" class="social-link" target="_blank" aria-label="x">
-                            <i class="fab fa-x"></i>
-                        </a>
-                        <a href="https://wa.me/2348132084092" class="social-link" target="_blank" aria-label="WhatsApp">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
+    <section id="contact" class="section contact">
+        <div class="container contact-container">
+            <div class="contact-info">
+                <h2 class="section-title contact-title">Get in Touch</h2>
+                <p class="contact-desc">Feel free to contact me for any questions, collaborations, or project inquiries. I'm always open to discussing new opportunities.</p>
+                <div class="contact-method">
+                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="contact-details">
+                        <h4>Email Me</h4>
+                        <p><a href="mailto:Esauvictor0@gmail.com">Esauvictor0@gmail.com</a></p>
                     </div>
                 </div>
-                
-                <form action="https://api.staticforms.xyz/submit" method="POST" class="contact-form">
-                    <input type="hidden" name="accessKey" value="sf_n72knfdn65gg51ni92d9fdm7">
-                    <input type="hidden" name="redirectTo" value="https://esauvictor.github.io/thank-you.html">
-                    
-                    <div class="form-group">
-                        <label for="name" class="form-label">Your Name</label>
-                        <input type="text" id="name" name="name" class="form-control" required>
+                <div class="contact-method">
+                    <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                    <div class="contact-details">
+                        <h4>Call Me</h4>
+                        <p><a href="tel:+2348123456789">+234 (0) 812-345-6789</a></p>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="email" class="form-label">Email Address</label>
-                        <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+                <div class="contact-method">
+                    <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="contact-details">
+                        <h4>My Location</h4>
+                        <p>Port Harcourt, Rivers State, Nigeria</p>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="subject" class="form-label">Subject</label>
-                        <input type="text" id="subject" name="subject" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="message" class="form-label">Message</label>
-                        <textarea id="message" name="message" class="form-control" required></textarea>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-paper-plane"></i> Send Message
-                    </button>
+                </div>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-medium-m"></i></a>
+                </div>
+            </div>
+            
+            <form action="https://formspree.io/f/mlekrgyb" method="POST" class="contact-form">
+                <div class="form-group">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea id="message" name="message" class="form-control" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </div>
+    </section>
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-col footer-about">
+                <h3>Esau Victor</h3>
+                <p>A multi-talented professional with a robust background in Full Stack Development, Data Engineering, and Cybersecurity.</p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-medium-m"></i></a>
+                </div>
+            </div>
+            <div class="footer-col footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col footer-newsletter">
+                <h3>Newsletter</h3>
+                <p>Stay updated with my latest projects and articles by subscribing to my newsletter.</p>
+                <form action="#" class="newsletter-form">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
                 </form>
             </div>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-col">
-                    <h3>Esau Victor</h3>
-                    <p>Full Stack Developer creating digital solutions that make an impact through clean code and innovative thinking.</p>
-                    <div class="footer-social">
-                        <a href="https://github.com/esauvictor" target="_blank" aria-label="GitHub">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="https://linkedin.com/in/esau-victor" target="_blank" aria-label="LinkedIn">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="https://x.com/esau_vee" target="_blank" aria-label="x">
-                            <i class="fab fa-x"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="footer-col">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#projects">Projects</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <li><a href="https://github.com/esauvictor" target="_blank">GitHub</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h3>Services</h3>
-                    <ul class="footer-links">
-                        <li><a href="#services">Web Development</a></li>
-                        <li><a href="#services">Data Analytics</a></li>
-                        <li><a href="#services">Security Solutions</a></li>
-                        <li><a href="#contact">Consulting</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; <span id="year"></span> Esau Victor. All rights reserved.</p>
-            </div>
+        <div class="copyright">
+            <p>&copy; 2023 Esau Victor. All Rights Reserved.</p>
         </div>
     </footer>
-
-    <!-- Dark Mode Toggle -->
-    <div class="dark-mode-toggle" id="darkModeToggle">
-        <i class="fas fa-moon"></i>
-    </div>
-
-    <!-- JavaScript -->
     <script>
-        // Mobile navigation toggle
-        const hamburger = document.getElementById('hamburger');
-        const navLinks = document.getElementById('navLinks');
-        
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            hamburger.innerHTML = navLinks.classList.contains('active') 
-                ? '<i class="fas fa-times"></i>' 
-                : '<i class="fas fa-bars"></i>';
+        document.getElementById('hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
         });
         
-        // Close mobile menu when clicking a link
         document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+            link.addEventListener('click', function() {
+                document.querySelector('.nav-links').classList.remove('active');
             });
         });
-        
-        // Navigation scroll effect
-        window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-        
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-        
-        // Animate skill bars when they come into view
-        const skillBars = document.querySelectorAll('.skill-progress');
-        
-        function animateSkillBars() {
-            skillBars.forEach(bar => {
-                const width = bar.style.width;
-                bar.style.width = '0';
-                setTimeout(() => {
-                    bar.style.width = width;
-                }, 100);
-            });
-        }
-        
-        // Intersection Observer for animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    if (entry.target.classList.contains('skills')) {
-                        animateSkillBars();
-                    }
-                    entry.target.classList.add('animated');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        
-        // Observe sections for animations
-        document.querySelectorAll('section').forEach(section => {
-            observer.observe(section);
-        });
-        
-        // Update copyright year
-        document.getElementById('year').textContent = new Date().getFullYear();
-        
-        // Dark mode toggle
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        
+
+        // Dark Mode Toggle
+        const darkModeToggle = document.querySelector('.dark-mode-toggle');
         darkModeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
-            const icon = darkModeToggle.querySelector('i');
-            
-            if (document.body.classList.contains('dark-mode')) {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-                localStorage.setItem('darkMode', 'disabled');
-            }
         });
         
-        // Check for saved dark mode preference
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            document.body.classList.add('dark-mode');
-            darkModeToggle.querySelector('i').classList.remove('fa-moon');
-            darkModeToggle.querySelector('i').classList.add('fa-sun');
-        }
+        // Hide preloader once the page is fully loaded
+        window.addEventListener('load', () => {
+            const preloader = document.querySelector('.preloader-container');
+            const percentageText = document.querySelector('.percentage-text');
+            const progressBar = document.querySelector('.progress-bar-container');
+            let progress = 0;
+            const interval = setInterval(() => {
+                if (progress < 100) {
+                    progress += 1;
+                    percentageText.textContent = `${progress}%`;
+                    progressBar.style.background = `conic-gradient(var(--primary) ${progress}%, var(--primary-light) 0%)`;
+                } else {
+                    clearInterval(interval);
+                    preloader.style.opacity = '0';
+                    preloader.style.visibility = 'hidden';
+                }
+            }, 15); // Adjust speed of the counter
+        });
         
-     // Counting preloader logic
-document.addEventListener('DOMContentLoaded', () => {
-    const preloader = document.querySelector('.preloader-container');
-    const progressBarContainer = document.querySelector('.progress-bar-container');
-    const percentageText = document.querySelector('.percentage-text');
-    const preloaderImage = document.querySelector('.preloader-image');
-
-    let currentProgress = 0;
-    const interval = 20; // Time in milliseconds between each count
-    const duration = 2000; // Total duration of the animation in milliseconds
-    const increment = 100 / (duration / interval);
-
-    // Hide the image and display the count
-    preloaderImage.style.display = 'none';
-    percentageText.style.display = 'block';
-
-    const counter = setInterval(() => {
-        currentProgress += increment;
-        if (currentProgress >= 100) {
-            currentProgress = 100;
-            clearInterval(counter);
-            setTimeout(() => {
-                preloader.style.opacity = '0';
-                preloader.style.visibility = 'hidden';
-            }, 500); // Wait 0.5 seconds for the progress bar to fill completely
-        }
-
-        const roundedProgress = Math.round(currentProgress);
-        progressBarContainer.style.background = `conic-gradient(var(--primary) ${roundedProgress}%, var(--primary-light) 0%)`;
-        percentageText.textContent = `${roundedProgress}%`;
-
-        // At 100%, show the image again
-        if (roundedProgress === 100) {
-            preloaderImage.style.display = 'block';
-            percentageText.style.display = 'none';
-        }
-    }, interval);
-});
-        
-        // GitHub corner animation
-        const githubCorner = document.querySelector('.github-corner');
-        if (githubCorner) {
-            githubCorner.addEventListener('mouseenter', () => {
-                const octoArm = githubCorner.querySelector('.octo-arm');
-                octoArm.style.animation = 'octocat-wave 560ms ease-in-out';
-            });
-            
-            githubCorner.addEventListener('mouseleave', () => {
-                const octoArm = githubCorner.querySelector('.octo-arm');
-                octoArm.style.animation = '';
-            });
-        }
     </script>
-
-   <!-- 
-<audio id="backgroundMusic" loop>
-  <source src="https://esauvictor.github.io/mind%20rest.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
--->
-
-<!-- Simple music permission prompt -->
-<!--
-<div id="musicPrompt" style="
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex; justify-content: center; align-items: center;
-  z-index: 9999;
-">
-  <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
-    <p style="margin-bottom: 1rem; font-size: 1rem;">Play background music?</p>
-    <button id="playMusic" style="
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      margin-right: 10px;
-      cursor: pointer;
-    ">Yes</button>
-    <button id="noMusic" style="
-      padding: 10px 20px;
-      background-color: #ccc;
-      color: #333;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    ">No</button>
-  </div>
-</div>
--->
-
-<!--
-<script>
-  window.addEventListener('DOMContentLoaded', function () {
-    const audio = document.getElementById('backgroundMusic');
-    const prompt = document.getElementById('musicPrompt');
-    const playBtn = document.getElementById('playMusic');
-    const noBtn = document.getElementById('noMusic');
-
-    audio.volume = 0.5;
-
-    playBtn.addEventListener('click', () => {
-      audio.play().catch(err => console.error('Autoplay failed:', err));
-      prompt.style.display = 'none';
-    });
-
-    noBtn.addEventListener('click', () => {
-      prompt.style.display = 'none';
-    });
-  });
-</script>
--->
-
+    
     <script type="text/javascript">
-var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
-(function(){
-var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
-s1.async = true;
-s1.src = 'https://embed.tawk.to/6585afc107843602b804d2c0/1hi93d54d';
-s1.charset = 'UTF-8';
-s1.setAttribute('crossorigin','*');
-
-Tawk_API = Tawk_API || {};
-Tawk_API.customStyle = {
-    visibility : {
-        desktop : {
-            position : 'bl',
-            xOffset : 20,
-            yOffset : 20
-        },
-        mobile : {
-            position : 'bl',
-            xOffset : 10,
-            yOffset : 10
-        }
-    },
-    theme : {
-        color : '#2563eb',
-    },
-    bubble : {
-        rotate : '0deg',
-        color : '#2563eb'
-    }
-};
-
-Tawk_API.onLoad = function(){
-    Tawk_API.setAttributes({
-        'name' : 'Esau Victor',
-        'title' : 'How can I help you?'
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        (function(){
+            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+            s1.async=true;
+            s1.src='https://embed.tawk.to/6504a7c20f2b18434fd77717/1hac1d86d';
+            s1.charset='UTF-8';
+            s1.setAttribute('crossorigin','*');
+            s0.parentNode.insertBefore(s1,s0);
+        })();
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.js"></script>
+    
+    <script>
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      return false;
+    });
+    document.addEventListener('keydown', function(e) {
+      // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+      if ((e.keyCode === 123) || (e.ctrlKey && e.shiftKey && e.keyCode === 73) || (e.ctrlKey && e.shiftKey && e.keyCode === 74) || (e.ctrlKey && e.keyCode === 85)) {
+        e.preventDefault();
+        return false;
+      }
+    });
+    </script>
+    <script>
+    // Custom Code for Security
+    document.addEventListener('keydown', function(e) {
+      // Disable Ctrl+C, Ctrl+U, Ctrl+A, Ctrl+S, Ctrl+Shift+I, F12
+      if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 65 || e.keyCode === 83) || 
+          e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73)) {
+        e.preventDefault();
+        return false;
+      }
     });
     
-    Tawk_API.customize({
-        color: '#2563eb',
-        buttonText: 'Chat with me',
-        buttonTextColor: '#ffffff'
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+      e.preventDefault();
+      return false;
     });
-};
-
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
-
-   <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Prevent right-click context menu
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    return false;
-  });
-  
-  // Prevent keyboard shortcuts (Ctrl+C, Ctrl+U, Ctrl+A, etc.)
-  document.addEventListener('keydown', function(e) {
-    // Disable Ctrl+C, Ctrl+U, Ctrl+A, Ctrl+S, Ctrl+Shift+I, F12
-    if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 65 || e.keyCode === 83) || 
-        e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73)) {
-      e.preventDefault();
-      return false;
-    }
-  });
-  
-  // Disable text selection
-  document.addEventListener('selectstart', function(e) {
-    e.preventDefault();
-    return false;
-  });
-  
-  // Disable drag and drop of images
-  document.addEventListener('dragstart', function(e) {
-    if (e.target.tagName === 'IMG') {
-      e.preventDefault();
-      return false;
-    }
-  });
-  
-  // Add overlay protection to code blocks (if you have them)
-  const codeBlocks = document.querySelectorAll('pre, code');
-  codeBlocks.forEach(block => {
-    block.style.position = 'relative';
-    block.innerHTML = `
-      <div style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:999;cursor:not-allowed;"
-           title="Code protection enabled"></div>
-      ${block.innerHTML}
-    `;
-  });
-  
-  // Console message
-  console.log('%cStop!', 'color:red;font-size:40px;font-weight:bold;');
-  console.log('%cThis is a browser feature intended for developers.', 'font-size:16px;');
-  console.log('%cIf someone told you to copy-paste something here to enable a feature or "hack" someone\'s account,', 'font-size:16px;');
-  console.log('%cit is a scam and will give them access to your account.', 'font-size:16px;color:red;');
-});
-</script>
-
+    
+    // Disable drag and drop of images
+    document.addEventListener('dragstart', function(e) {
+      if (e.target.tagName === 'IMG') {
+        e.preventDefault();
+        return false;
+      }
+    });
+    
+    // Add overlay protection to code blocks (if you have them)
+    const codeBlocks = document.querySelectorAll('pre, code');
+    codeBlocks.forEach(block => {
+      block.style.position = 'relative';
+      block.innerHTML = `
+        <div style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:999;cursor:not-allowed;"
+             title="Code protection enabled"></div>
+        ${block.innerHTML}
+      `;
+    });
+    
+    // Console message
+    console.log('%cStop!', 'color:red;font-size:40px;font-weight:bold;');
+    console.log('%cThis is a browser feature intended for developers. If someone told you to copy/paste something here to enable a feature, it is a scam and will give them access to your account.', 'color:black;font-size:16px;');
+    </script>
 </body>
 </html>
