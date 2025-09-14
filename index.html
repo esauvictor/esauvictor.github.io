@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta id="vp" name="viewport"
-    content="width=375, initial-scale=1, maximum-scale=1, user-scalable=no"> 
+    <meta id="vp" name="viewport" content="width=375, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="description" content="Professional portfolio of Esau Victor - Full Stack Developer, Data Engineer & Security Specialist">
     <meta name="keywords" content="web development, data analytics, cyber security, portfolio, Nigeria, Port Harcourt">
     <meta name="author" content="Esau Victor">
@@ -1806,10 +1805,7 @@ html {
     grid-template-columns: 1fr 1fr !important;
   }
 }
-     @media (max-width: 1200px){
-  html,body{min-width:375px !important; width:375px !important; overflow-x:hidden !important}
-  .container{max-width:375px !important; padding:0 15px !important}
-}   
+ html,body{min-width:375px!important;width:375px!important;overflow-x:hidden!important;margin:0 auto}
 </style>
 </head>
 <body>
@@ -2938,21 +2934,18 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
     
 <script>
-/* ----- kill desktop mode on mobile ----- */
+/* brute-force mobile layout even in desktop-mode */
 (function(){
-  const phone = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  if(!phone) return;                       // leave real desktops alone
-
-  /* 1. lock viewport to mobile width */
-  document.write('<meta name="viewport" content="width=375,initial-scale=1,maximum-scale=1,user-scalable=no">');
-
-  /* 2. tell Chrome/Edge “this site is mobile-optimised” → removes menu toggle */
-  try{window.external.BrowserControl.SetViewPreference('mobile');}catch(e){}
-
-  /* 3. extra CSS safety-net */
-  const s=document.createElement('style');
-  s.textContent='html,body{min-width:375px!important;width:375px!important;overflow-x:hidden!important}';
-  document.head.appendChild(s);
+  const lock=()=>{
+    document.documentElement.style.width='375px';
+    document.body.style.width='375px';
+    document.body.style.maxWidth='375px';
+    document.body.style.margin='0 auto';
+    document.body.style.overflowX='hidden';
+  };
+  lock();
+  window.addEventListener('resize',lock);
+  window.addEventListener('orientationchange',lock);
 })();
 </script>
 </body>
