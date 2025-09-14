@@ -1805,6 +1805,10 @@ html {
     grid-template-columns: 1fr 1fr !important;
   }
 }
+     @media (max-width: 1200px){
+  html,body{min-width:375px !important; width:375px !important; overflow-x:hidden !important}
+  .container{max-width:375px !important; padding:0 15px !important}
+}   
 </style>
 </head>
 <body>
@@ -2931,6 +2935,22 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('%cit is a scam and will give them access to your account.', 'font-size:16px;color:red;');
 });
 </script>
-
+    
+<script>
+/* force 375 px layout even in desktop-mode */
+(function(){
+  const vp=document.getElementById('vp');
+  function lock(){
+    if(window.innerWidth<=1200){          // any phone / small tablet
+      vp.setAttribute('content','width=375,initial-scale=1,maximum-scale=1,user-scalable=no');
+      document.documentElement.style.width='375px';
+      document.body.style.width='375px';
+    }
+  }
+  lock();
+  window.addEventListener('orientationchange',lock);
+  window.addEventListener('resize',lock);
+})();
+</script>
 </body>
 </html>
