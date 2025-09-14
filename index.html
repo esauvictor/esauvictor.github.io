@@ -2938,19 +2938,21 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
     
 <script>
-/* force 375 px layout even in desktop-mode */
+/* ----- kill desktop mode on mobile ----- */
 (function(){
-  const vp=document.getElementById('vp');
-  function lock(){
-    if(window.innerWidth<=1200){          // any phone / small tablet
-      vp.setAttribute('content','width=375,initial-scale=1,maximum-scale=1,user-scalable=no');
-      document.documentElement.style.width='375px';
-      document.body.style.width='375px';
-    }
-  }
-  lock();
-  window.addEventListener('orientationchange',lock);
-  window.addEventListener('resize',lock);
+  const phone = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  if(!phone) return;                       // leave real desktops alone
+
+  /* 1. lock viewport to mobile width */
+  document.write('<meta name="viewport" content="width=375,initial-scale=1,maximum-scale=1,user-scalable=no">');
+
+  /* 2. tell Chrome/Edge “this site is mobile-optimised” → removes menu toggle */
+  try{window.external.BrowserControl.SetViewPreference('mobile');}catch(e){}
+
+  /* 3. extra CSS safety-net */
+  const s=document.createElement('style');
+  s.textContent='html,body{min-width:375px!important;width:375px!important;overflow-x:hidden!important}';
+  document.head.appendChild(s);
 })();
 </script>
 </body>
