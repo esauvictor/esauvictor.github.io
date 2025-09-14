@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta id="vp" name="viewport" content="width=375, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta id="vp" name="viewport">
     <meta name="description" content="Professional portfolio of Esau Victor - Full Stack Developer, Data Engineer & Security Specialist">
     <meta name="keywords" content="web development, data analytics, cyber security, portfolio, Nigeria, Port Harcourt">
     <meta name="author" content="Esau Victor">
@@ -1805,7 +1805,7 @@ html {
     grid-template-columns: 1fr 1fr !important;
   }
 }
- html,body{min-width:375px!important;width:375px!important;overflow-x:hidden!important;margin:0 auto}
+html,body{ width:100vw !important; max-width:100vw !important; overflow-x:hidden !important; margin:0 auto !important }
 </style>
 </head>
 <body>
@@ -2934,18 +2934,16 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
     
 <script>
-/* brute-force mobile layout even in desktop-mode */
+/* lock layout to the phone’s exact screen width */
 (function(){
-  const lock=()=>{
-    document.documentElement.style.width='375px';
-    document.body.style.width='375px';
-    document.body.style.maxWidth='375px';
-    document.body.style.margin='0 auto';
-    document.body.style.overflowX='hidden';
-  };
-  lock();
-  window.addEventListener('resize',lock);
-  window.addEventListener('orientationchange',lock);
+  const phone = screen.width && screen.width <= 900;   // any mobile
+  if(!phone) return;                                  // leave desktops alone
+  const w = screen.width;                             // real device pixels
+  const vp= document.getElementById('vp');
+  vp.setAttribute('content','width='+w+',initial-scale=1,maximum-scale=1,user-scalable=no');
+  document.documentElement.style.width = w+'px';
+  document.body.style.width = w+'px';
+  window.addEventListener('resize',()=>location.reload()); // keep it locked
 })();
 </script>
 </body>
