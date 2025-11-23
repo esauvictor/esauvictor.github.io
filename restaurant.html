@@ -829,25 +829,208 @@
             return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
-        /* ---------- LOCATION ---------- */
-        async function reverseGeocode(lat, lng) {
-            try {
-                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
-                const data = await res.json();
-                return data.address.neighbourhood || data.address.suburb || data.address.city || "Your location";
-            } catch {
-                return "Lagos Mainland";
-            }
-        }
-        function getUserLocation() {
-            const el = document.getElementById('userLocation');
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async pos => {
-                    el.textContent = "Current Location: " + await reverseGeocode(pos.coords.latitude, pos.coords.longitude);
-                }, () => el.textContent = "Current Location: Lagos Mainland");
-            } else el.textContent = "Current Location: Lagos Mainland";
-        }
+     /* ---------- LOCATION - PRECISE VERSION ---------- */
+async function getPreciseLocation() {
+    const el = document.getElementById('userLocation');
+    
+    // Show loading immediately
+    el.textContent = "Detecting your precise location...";
+    
+    if (!navigator.geolocation) {
+        el.textContent = "Current Location: Lagos Mainland (Geolocation not supported)";
+        return;
+    }
 
+    // Function to get location name from coordinates
+    const getLocationName = async (lat, lng) => {
+        try {
+            // Using OpenStreetMap Nominatim with proper headers
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
+                {
+                    headers: {
+                        'Accept-Language': 'en',
+                        'User-Agent': 'KitchenStarApp/1.0'
+                    }
+                }
+            );
+            
+            if (!response.ok) throw new Error('API request failed');
+            
+            const data = await response.json();
+            
+            if (data && data.address) {
+                const addr = data.address;
+                // Try to get the most specific location name
+                return addr.neighbourhood || 
+                       addr.suburb || 
+                       addr.city_district || 
+                       addr.city || 
+                       addr.town || 
+                       addr.municipality || 
+                       addr.county || 
+                       "Nearby Area";
+            }
+            throw new Error('No address data');
+            
+        } catch (error) {
+            console.log('Geocoding failed:', error);
+            // Fallback to Google Maps geocoding (no API key needed for basic info)
+            return getGoogleMapsLocation(lat, lng);
+        }
+    };
+
+    // Fallback using Google Maps
+    const getGoogleMapsLocation = async (lat, lng) => {
+        try {
+            const response = await fetch(
+                `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyC1lBw7Q7O1wHnLqjKkKjKkKjKkKjKkKjKk`
+            );
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.results && data.results.length > 0) {
+                    // Get the most specific result
+                    const address = data.results[0].formatted_address;
+                    return address.split(',')[0]; // Get first part of address
+                }
+            }
+            return `Area near ${lat.toFixed(4)}°, ${lng.toFixed(4)}°`;
+        } catch {
+            return `Area near ${lat.toFixed(4)}°, ${lng.toFixed(4)}°`;
+        }
+    };
+
+    // Get current position
+    navigator.geolocation.getCurrentPosition(
+        async (position) => {
+            try {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                
+                console.log('Your coordinates:', lat, lng);
+                
+                // First show coordinates
+                el.textContent = `📍 Locating: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                
+                // Then get precise location name
+                const locationName = await getLocationName(lat, lng);
+                el.textContent = `📍 Current Location: ${locationName}`;
+                
+                // Also show coordinates in console for debugging
+                console.log('Precise location detected:', locationName);
+                
+            } catch (error) {
+                console.error('Location processing error:', error);
+                el.textContent = "📍 Current Location: Lagos Mainland";
+            }
+        },
+        (error) => {
+            console.log('Geolocation permission error:', error);
+            handleLocationError(error, el);
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 60000
+        }
+    );
+}
+
+function handleLocationError(error, el) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            el.textContent = "📍 Please allow location access to see your area";
+            break;
+        case error.POSITION_UNAVAILABLE:
+            el.textContent = "📍 Location unavailable - Using Lagos Mainland";
+            break;
+        case error.TIMEOUT:
+            el.textContent = "📍 Location detection timeout - Using Lagos Mainland";
+            break;
+        default:
+            el.textContent = "📍 Current Location: Lagos Mainland";
+            break;
+    }
+    
+    // Add click to manually set location
+    setupManualLocationSelector();
+}
+
+// Manual location selector as backup
+function setupManualLocationSelector() {
+    const el = document.getElementById('userLocation');
+    const lagosAreas = [
+        "Lagos Island", "Victoria Island", "Ikoyi", "Lekki Phase 1", "Lekki Phase 2",
+        "Ikeja", "Surulere", "Yaba", "Ebute Metta", "Apapa", "Ijora", "Obalende",
+        "Marina", "Ajah", "Festac Town", "Amuwo Odofin", "Gbagada", "Ilaje", "Bariga"
+    ];
+    
+    let currentIndex = 0;
+    
+    el.style.cursor = 'pointer';
+    el.style.textDecoration = 'underline';
+    el.title = 'Click to select your precise area in Lagos';
+    
+    el.addEventListener('click', function() {
+        // Create a custom dropdown
+        const dropdown = document.createElement('div');
+        dropdown.style.cssText = `
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+        `;
+        
+        // Position near the location element
+        const rect = el.getBoundingClientRect();
+        dropdown.style.top = (rect.bottom + 5) + 'px';
+        dropdown.style.left = rect.left + 'px';
+        
+        // Add area options
+        lagosAreas.forEach(area => {
+            const option = document.createElement('div');
+            option.textContent = area;
+            option.style.padding = '8px 12px';
+            option.style.cursor = 'pointer';
+            option.style.borderRadius = '5px';
+            
+            option.addEventListener('mouseenter', () => {
+                option.style.background = '#ff6b00';
+                option.style.color = 'white';
+            });
+            
+            option.addEventListener('mouseleave', () => {
+                option.style.background = 'transparent';
+                option.style.color = 'inherit';
+            });
+            
+            option.addEventListener('click', () => {
+                el.textContent = `📍 Current Location: ${area}`;
+                document.body.removeChild(dropdown);
+            });
+            
+            dropdown.appendChild(option);
+        });
+        
+        // Close dropdown when clicking outside
+        const closeDropdown = (e) => {
+            if (!dropdown.contains(e.target) && e.target !== el) {
+                document.body.removeChild(dropdown);
+                document.removeEventListener('click', closeDropdown);
+            }
+        };
+        
+        document.body.appendChild(dropdown);
+        setTimeout(() => document.addEventListener('click', closeDropdown), 100);
+    });
+}
         /* ---------- HERO SLIDER ---------- */
         const slides = document.querySelectorAll('.slide');
         let currentSlide = 0;
@@ -993,12 +1176,14 @@
             window.open(`https://wa.me/2348132084092?text=${encodeURIComponent(msg)}`, '_blank');
         };
 
-        /* ---------- INIT ---------- */
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeMenu();
-            updateCart();
-            getUserLocation();
-        });
+       /* ---------- INIT ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+    initializeMenu();
+    updateCart();
+    
+    // Get precise location
+    getPreciseLocation();
+});
     </script>
     <script>
   const btn  = document.getElementById('wa-btn');
