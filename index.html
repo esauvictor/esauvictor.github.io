@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
 
   <style>
     /* =====================
@@ -37,8 +37,8 @@
       --surface:    #f8fafc;
       --white:      #ffffff;
 
-      --ff-head: 'Syne', sans-serif;
-      --ff-body: 'DM Sans', sans-serif;
+      --ff-head: 'Montserrat', sans-serif;
+      --ff-body: 'Montserrat', sans-serif;
 
       --radius-sm:  6px;
       --radius-md: 12px;
@@ -117,11 +117,12 @@
       border-radius: var(--radius-md);
       font-family: var(--ff-head);
       font-weight: 600;
-      font-size: .95rem;
+      font-size: .9rem;
       cursor: pointer;
       border: 2px solid transparent;
       transition: all .22s var(--ease-out-expo);
       white-space: nowrap;
+      letter-spacing: .02em;
     }
     .btn-primary {
       background: var(--blue);
@@ -200,7 +201,7 @@
     .pre-pct {
       position:absolute; z-index:3;
       font-family:var(--ff-head); font-weight:800;
-      font-size: 1.1rem; color:var(--white);
+      font-size: 1rem; color:var(--white);
     }
     .pre-name {
       font-family:var(--ff-head); font-weight:700;
@@ -210,6 +211,7 @@
     .pre-sub {
       font-size:.8rem; color:var(--muted);
       margin-top:4px; letter-spacing:.06em;
+      font-weight: 500;
     }
 
     /* =====================
@@ -234,16 +236,16 @@
     .logo {
       font-family: var(--ff-head);
       font-weight: 800;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: var(--white);
       background: var(--blue);
       padding: 7px 16px;
       border-radius: var(--radius-md);
-      letter-spacing: .02em;
+      letter-spacing: .03em;
       transition: background .2s;
     }
     .logo:hover { background: var(--blue-dark); }
-    .logo em { font-style:normal; opacity: .75; font-weight: 600; }
+    .logo em { font-style:normal; opacity: .75; font-weight: 500; }
 
     .nav-links {
       display:flex; gap:36px;
@@ -251,9 +253,10 @@
     .nav-links a {
       font-family: var(--ff-head);
       font-weight: 600;
-      font-size: .9rem;
+      font-size: .85rem;
       color: var(--slate);
-      letter-spacing:.02em;
+      letter-spacing:.04em;
+      text-transform: uppercase;
       position:relative;
       transition: color .2s;
     }
@@ -336,8 +339,8 @@
       background: rgba(29,78,216,.18);
       border: 1px solid rgba(29,78,216,.35);
       color: var(--blue-mid);
-      font-family:var(--ff-head); font-size:.8rem; font-weight:700;
-      letter-spacing:.1em; text-transform:uppercase;
+      font-family:var(--ff-head); font-size:.75rem; font-weight:700;
+      letter-spacing:.12em; text-transform:uppercase;
       padding:6px 16px; border-radius:var(--radius-xl);
       margin-bottom:24px;
     }
@@ -350,15 +353,17 @@
       color: var(--white);
       line-height: 1.05;
       margin-bottom: 22px;
+      letter-spacing: -.02em;
     }
     .hero-title .name { color: var(--blue-mid); }
 
     .hero-subtitle {
-      font-size: 1.1rem;
+      font-size: 1rem;
+      font-weight: 400;
       color: #94a3b8;
       max-width: 500px;
       margin-bottom: 36px;
-      line-height: 1.7;
+      line-height: 1.75;
     }
 
     .hero-actions {
@@ -374,9 +379,10 @@
     .stat-num {
       font-family:var(--ff-head); font-size:2rem; font-weight:800;
       color:var(--white); line-height:1;
+      letter-spacing: -.03em;
     }
     .stat-num span { color:var(--blue-mid); }
-    .stat-label { font-size:.8rem; color:#64748b; margin-top:4px; text-transform:uppercase; letter-spacing:.08em; }
+    .stat-label { font-size:.72rem; font-weight:600; color:#64748b; margin-top:4px; text-transform:uppercase; letter-spacing:.1em; }
 
     /* hero image side */
     .hero-visual {
@@ -400,8 +406,9 @@
       border-radius:var(--radius-md);
       padding:12px 18px;
       display:flex; align-items:center; gap:12px;
-      color:var(--white); font-size:.85rem;
+      color:var(--white); font-size:.82rem;
       font-family:var(--ff-head); font-weight:600;
+      letter-spacing: .01em;
     }
     .hero-floating-card i { color:var(--blue-mid); font-size:1.1rem; }
     .hero-card-1 { bottom:40px; left:-40px; animation:float 6s ease-in-out infinite; }
@@ -458,12 +465,13 @@
       position:absolute; bottom:20px; right:-24px; z-index:3;
       background:var(--blue); color:var(--white);
       padding:14px 20px; border-radius:var(--radius-md);
-      font-family:var(--ff-head); font-weight:700; font-size:.9rem;
+      font-family:var(--ff-head); font-weight:700; font-size:.85rem;
       box-shadow:0 8px 32px rgba(29,78,216,.4);
       display:flex; align-items:center; gap:8px;
+      letter-spacing: .02em;
     }
 
-    .about-text { color:var(--muted); line-height:1.8; margin-bottom:16px; }
+    .about-text { color:var(--muted); line-height:1.8; margin-bottom:16px; font-size:.95rem; font-weight:400; }
 
     .skills-grid {
       display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:28px;
@@ -472,13 +480,14 @@
       display:flex; align-items:center; gap:10px;
       background:var(--surface); border:1px solid var(--border);
       border-radius:var(--radius-md); padding:10px 14px;
-      font-family:var(--ff-head); font-size:.85rem; font-weight:600; color:var(--ink2);
+      font-family:var(--ff-head); font-size:.82rem; font-weight:600; color:var(--ink2);
+      letter-spacing: .02em;
     }
     .skill-pill i { color:var(--blue); font-size:.9rem; }
 
     .bar-list { margin-top:28px; display:flex; flex-direction:column; gap:16px; }
     .bar-item {}
-    .bar-head { display:flex; justify-content:space-between; margin-bottom:6px; font-family:var(--ff-head); font-size:.85rem; font-weight:700; }
+    .bar-head { display:flex; justify-content:space-between; margin-bottom:6px; font-family:var(--ff-head); font-size:.82rem; font-weight:700; letter-spacing:.02em; }
     .bar-track { height:6px; background:var(--border); border-radius:var(--radius-xl); overflow:hidden; }
     .bar-fill {
       height:100%; border-radius:var(--radius-xl);
@@ -528,8 +537,8 @@
       font-size:1.8rem; color:var(--white);
       box-shadow: 0 8px 24px rgba(29,78,216,.3);
     }
-    .svc-title { font-size:1.2rem; font-weight:700; margin-bottom:12px; }
-    .svc-desc { color:var(--muted); font-size:.92rem; line-height:1.7; margin-bottom:24px; }
+    .svc-title { font-size:1.15rem; font-weight:700; margin-bottom:12px; letter-spacing:-.01em; }
+    .svc-desc { color:var(--muted); font-size:.9rem; line-height:1.7; margin-bottom:24px; font-weight:400; }
 
     /* counseling card */
     .counseling-wrap {
@@ -554,14 +563,14 @@
       display:flex; align-items:center; justify-content:center;
       font-size:2rem;
     }
-    .counseling-title { font-size:clamp(1.6rem,3vw,2.2rem); font-weight:800; color:var(--white); margin-bottom:10px; }
-    .counseling-sub { color:rgba(255,255,255,.6); font-size:1rem; line-height:1.6; max-width:500px; }
+    .counseling-title { font-size:clamp(1.6rem,3vw,2.2rem); font-weight:800; color:var(--white); margin-bottom:10px; letter-spacing:-.02em; }
+    .counseling-sub { color:rgba(255,255,255,.6); font-size:.95rem; line-height:1.6; max-width:500px; font-weight:400; }
 
     .counseling-benefits { flex:1; min-width:260px; }
-    .counseling-benefits h4 { font-size:1rem; color:rgba(255,255,255,.5); letter-spacing:.1em; text-transform:uppercase; margin-bottom:16px; }
+    .counseling-benefits h4 { font-size:.78rem; font-weight:700; color:rgba(255,255,255,.5); letter-spacing:.12em; text-transform:uppercase; margin-bottom:16px; }
     .benefit-item {
       display:flex; align-items:flex-start; gap:12px;
-      margin-bottom:14px; font-size:.93rem; color:rgba(255,255,255,.85); line-height:1.5;
+      margin-bottom:14px; font-size:.9rem; color:rgba(255,255,255,.85); line-height:1.5; font-weight:400;
     }
     .benefit-item i { color:var(--green); margin-top:2px; flex-shrink:0; }
 
@@ -578,9 +587,9 @@
       background:rgba(29,78,216,.35); border-color:var(--blue-mid);
       transform:scale(1.04);
     }
-    .pricing-card h5 { font-size:1rem; color:rgba(255,255,255,.7); margin-bottom:12px; }
-    .pricing-price { font-family:var(--ff-head); font-size:1.4rem; font-weight:800; color:var(--white); margin-bottom:6px; }
-    .pricing-detail { font-size:.8rem; color:rgba(255,255,255,.45); margin-bottom:20px; }
+    .pricing-card h5 { font-size:.85rem; font-weight:600; color:rgba(255,255,255,.7); margin-bottom:12px; letter-spacing:.04em; text-transform:uppercase; }
+    .pricing-price { font-family:var(--ff-head); font-size:1.35rem; font-weight:800; color:var(--white); margin-bottom:6px; letter-spacing:-.02em; }
+    .pricing-detail { font-size:.78rem; font-weight:500; color:rgba(255,255,255,.45); margin-bottom:20px; }
     .btn-white { background:var(--white); color:var(--blue); font-family:var(--ff-head); font-weight:700; }
     .btn-white:hover { background:#e0eaff; }
     .btn-white-outline { background:transparent; color:var(--white); border:1.5px solid rgba(255,255,255,.35); }
@@ -621,17 +630,14 @@
       border-color: rgba(29,78,216,.25);
     }
 
-    /* ---- Screenshoted image area ---- */
     .project-img-wrap {
       position: relative;
       background: #0d1526;
-      /* browser chrome bar */
       padding-top: 32px;
       overflow: hidden;
       flex-shrink: 0;
     }
 
-    /* fake browser chrome */
     .project-browser-bar {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -664,18 +670,17 @@
       position: absolute;
       left: 8px; top: 50%;
       transform: translateY(-50%);
-      font-size: .6rem;
+      font-size: .58rem;
+      font-weight: 500;
       color: rgba(255,255,255,.3);
       font-family: var(--ff-head);
-      letter-spacing: .03em;
+      letter-spacing: .02em;
       white-space: nowrap;
     }
 
-    /* actual screenshot */
     .project-screenshot {
       display: block;
       width: 100%;
-      /* maintain real aspect ratio, no cropping */
       height: auto;
       max-height: 280px;
       object-fit: contain;
@@ -688,17 +693,15 @@
       transform: scale(1.03) translateY(-4px);
     }
 
-    /* ---- Number badge ---- */
     .project-num {
       position: absolute; top: 40px; left: 12px; z-index: 3;
-      font-family: var(--ff-head); font-size: .66rem; font-weight: 800;
-      letter-spacing: .1em; text-transform: uppercase;
+      font-family: var(--ff-head); font-size: .62rem; font-weight: 800;
+      letter-spacing: .12em; text-transform: uppercase;
       background: var(--blue); color: var(--white);
       padding: 3px 9px; border-radius: var(--radius-xl);
       box-shadow: 0 2px 8px rgba(29,78,216,.4);
     }
 
-    /* ---- Card body ---- */
     .project-body {
       padding: 20px 22px 22px;
       display: flex;
@@ -709,22 +712,22 @@
       display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px;
     }
     .project-tag {
-      font-family: var(--ff-head); font-size: .68rem; font-weight: 700;
-      letter-spacing: .07em; text-transform: uppercase;
+      font-family: var(--ff-head); font-size: .65rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
       background: rgba(29,78,216,.07); color: var(--blue);
       border: 1px solid rgba(29,78,216,.14);
       border-radius: var(--radius-xl); padding: 3px 10px;
     }
     .project-title {
-      font-size: 1rem; font-weight: 800;
+      font-size: .95rem; font-weight: 700;
       color: var(--ink); margin-bottom: 7px; line-height: 1.3;
+      letter-spacing: -.01em;
     }
     .project-desc {
-      font-size: .875rem; color: var(--muted);
+      font-size: .875rem; font-weight: 400; color: var(--muted);
       line-height: 1.6; margin-bottom: 18px; flex: 1;
     }
 
-    /* ---- Link row ---- */
     .project-links {
       display: flex; gap: 8px; margin-top: auto;
     }
@@ -768,9 +771,9 @@
     .vid-wrap { position:relative; padding-bottom:56.25%; height:0; overflow:hidden; }
     .vid-wrap iframe { position:absolute; inset:0; width:100%; height:100%; border:none; }
     .tutorial-body { padding:20px; }
-    .tutorial-title { font-size:1rem; font-weight:700; margin-bottom:8px; }
-    .tutorial-desc { color:var(--muted); font-size:.88rem; line-height:1.6; margin-bottom:14px; }
-    .tutorial-meta { display:flex; flex-wrap:wrap; gap:14px; font-size:.8rem; color:var(--muted); }
+    .tutorial-title { font-size:.95rem; font-weight:700; margin-bottom:8px; letter-spacing:-.01em; }
+    .tutorial-desc { color:var(--muted); font-size:.87rem; font-weight:400; line-height:1.6; margin-bottom:14px; }
+    .tutorial-meta { display:flex; flex-wrap:wrap; gap:14px; font-size:.78rem; font-weight:500; color:var(--muted); }
     .tutorial-meta i { margin-right:4px; color:var(--blue); }
     .tutorials-cta { text-align:center; margin-top:40px; }
 
@@ -793,10 +796,10 @@
     .blog-img img { width:100%; height:100%; object-fit:cover; transition:transform .6s; }
     .blog-card:hover .blog-img img { transform:scale(1.06); }
     .blog-body { padding:24px; }
-    .blog-meta { display:flex; gap:16px; font-size:.8rem; color:var(--muted); margin-bottom:10px; }
+    .blog-meta { display:flex; gap:16px; font-size:.78rem; font-weight:500; color:var(--muted); margin-bottom:10px; }
     .blog-meta i { margin-right:4px; color:var(--blue); }
-    .blog-title { font-size:1.05rem; font-weight:700; margin-bottom:10px; line-height:1.4; }
-    .blog-excerpt { color:var(--muted); font-size:.9rem; line-height:1.65; margin-bottom:18px; }
+    .blog-title { font-size:1rem; font-weight:700; margin-bottom:10px; line-height:1.4; letter-spacing:-.01em; }
+    .blog-excerpt { color:var(--muted); font-size:.88rem; font-weight:400; line-height:1.65; margin-bottom:18px; }
     .blog-cta { text-align:center; margin-top:40px; }
 
     @media (max-width:900px) { .blog-grid { grid-template-columns:1fr 1fr; } }
@@ -822,7 +825,7 @@
     }
     .testimonial-text {
       position:relative; z-index:1;
-      font-size:.93rem; font-style:italic;
+      font-size:.9rem; font-style:italic; font-weight:400;
       color:var(--slate); line-height:1.75; margin-bottom:24px;
     }
     .testimonial-author { display:flex; align-items:center; gap:14px; }
@@ -830,8 +833,8 @@
       width:48px; height:48px; border-radius:50%; object-fit:cover;
       border:2px solid rgba(29,78,216,.2);
     }
-    .author-name { font-family:var(--ff-head); font-weight:700; font-size:.95rem; }
-    .author-role { font-size:.8rem; color:var(--muted); margin-top:2px; }
+    .author-name { font-family:var(--ff-head); font-weight:700; font-size:.9rem; letter-spacing:.01em; }
+    .author-role { font-size:.78rem; font-weight:500; color:var(--muted); margin-top:2px; }
 
     @media (max-width:900px) { .testimonials-grid { grid-template-columns:1fr 1fr; } }
     @media (max-width:580px) { .testimonials-grid { grid-template-columns:1fr; } }
@@ -842,8 +845,8 @@
     .contact-grid {
       display:grid; grid-template-columns:400px 1fr; gap:60px; align-items:start;
     }
-    .contact-info-title { font-size:1.8rem; font-weight:800; margin-bottom:12px; }
-    .contact-info-desc { color:var(--muted); line-height:1.7; margin-bottom:32px; }
+    .contact-info-title { font-size:1.7rem; font-weight:800; margin-bottom:12px; letter-spacing:-.02em; }
+    .contact-info-desc { color:var(--muted); line-height:1.7; margin-bottom:32px; font-size:.95rem; font-weight:400; }
     .contact-method {
       display:flex; align-items:center; gap:14px; margin-bottom:20px;
     }
@@ -853,8 +856,8 @@
       display:flex; align-items:center; justify-content:center;
       font-size:1.1rem; flex-shrink:0;
     }
-    .contact-method h4 { font-family:var(--ff-head); font-size:.85rem; font-weight:700; margin-bottom:2px; }
-    .contact-method a, .contact-method p { color:var(--muted); font-size:.9rem; }
+    .contact-method h4 { font-family:var(--ff-head); font-size:.82rem; font-weight:700; margin-bottom:2px; letter-spacing:.03em; text-transform:uppercase; }
+    .contact-method a, .contact-method p { color:var(--muted); font-size:.9rem; font-weight:400; }
     .contact-method a:hover { color:var(--blue); }
 
     .social-row { display:flex; gap:10px; margin-top:24px; }
@@ -873,13 +876,13 @@
       border-radius:var(--radius-lg); padding:36px;
     }
     .form-group { margin-bottom:20px; }
-    .form-label { display:block; font-family:var(--ff-head); font-size:.85rem; font-weight:700; color:var(--ink2); margin-bottom:8px; }
+    .form-label { display:block; font-family:var(--ff-head); font-size:.8rem; font-weight:700; color:var(--ink2); margin-bottom:8px; letter-spacing:.04em; text-transform:uppercase; }
     .form-input {
       width:100%;
       padding:12px 16px;
       background:var(--white); border:1.5px solid var(--border);
       border-radius:var(--radius-md);
-      font-family:var(--ff-body); font-size:.95rem; color:var(--ink2);
+      font-family:var(--ff-body); font-size:.92rem; font-weight:400; color:var(--ink2);
       transition: border-color .2s, box-shadow .2s;
     }
     .form-input:focus { outline:none; border-color:var(--blue); box-shadow:var(--shadow-glow); }
@@ -901,22 +904,22 @@
     .footer-grid {
       display:grid; grid-template-columns:280px 1fr 1fr; gap:60px; margin-bottom:60px;
     }
-    .footer-brand .logo { font-size:1.5rem; margin-bottom:14px; display:block; }
-    .footer-desc { color:#94a3b8; font-size:.9rem; line-height:1.7; margin-bottom:20px; }
+    .footer-brand .logo { font-size:1.4rem; margin-bottom:14px; display:block; }
+    .footer-desc { color:#94a3b8; font-size:.88rem; font-weight:400; line-height:1.7; margin-bottom:20px; }
     .footer-col-title {
-      font-family:var(--ff-head); font-size:.85rem; font-weight:700;
-      color:rgba(255,255,255,.5); letter-spacing:.1em; text-transform:uppercase;
+      font-family:var(--ff-head); font-size:.75rem; font-weight:700;
+      color:rgba(255,255,255,.5); letter-spacing:.12em; text-transform:uppercase;
       margin-bottom:20px; padding-bottom:12px;
       border-bottom:1px solid rgba(255,255,255,.07);
     }
     .footer-links li { margin-bottom:10px; }
-    .footer-links a { color:#94a3b8; font-size:.9rem; transition:color .2s; }
+    .footer-links a { color:#94a3b8; font-size:.88rem; font-weight:400; transition:color .2s; }
     .footer-links a:hover { color:var(--white); }
     .footer-bottom {
       display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
       padding-top:24px; border-top:1px solid rgba(255,255,255,.07);
     }
-    .footer-copy { color:#64748b; font-size:.85rem; }
+    .footer-copy { color:#64748b; font-size:.82rem; font-weight:500; }
     .footer-copy span { color:var(--blue-mid); }
 
     @media (max-width:860px) { .footer-grid { grid-template-columns:1fr 1fr; } }
@@ -1099,7 +1102,7 @@
         <div class="hero-floating-card hero-card-1">
           <i class="fas fa-shield-alt"></i>
           <div>
-            <div style="font-size:.7rem;color:#94a3b8;margin-bottom:2px">Expertise</div>
+            <div style="font-size:.68rem;color:#94a3b8;margin-bottom:2px;font-weight:500">Expertise</div>
             Security Specialist
           </div>
         </div>
@@ -1109,7 +1112,7 @@
         <div class="hero-floating-card hero-card-2">
           <i class="fas fa-code"></i>
           <div>
-            <div style="font-size:.7rem;color:#94a3b8;margin-bottom:2px">Stack</div>
+            <div style="font-size:.68rem;color:#94a3b8;margin-bottom:2px;font-weight:500">Stack</div>
             Full Stack Dev
           </div>
         </div>
@@ -1168,7 +1171,7 @@
     <div style="text-align:center;margin-bottom:56px" data-reveal>
       <div class="section-label" style="display:inline-flex">My Services</div>
       <h2 class="section-title">What I <span>Offer</span></h2>
-      <p style="color:var(--muted);max-width:520px;margin:0 auto">Professional services tailored to bring your digital vision to life.</p>
+      <p style="color:var(--muted);max-width:520px;margin:0 auto;font-size:.95rem;font-weight:400">Professional services tailored to bring your digital vision to life.</p>
     </div>
 
     <div class="services-grid">
@@ -1220,7 +1223,7 @@
           </div>
           <div class="pricing-card featured">
             <h5>Standard</h5>
-            <div class="pricing-price">₦30,000 / session</div>
+            <div class="pricing-price">₦40,000 / session</div>
             <div class="pricing-detail">4 sessions/month recommended</div>
             <a href="#" class="btn btn-white whatsapp-link" data-message="I'm interested in the Standard Package for Tech Counseling" style="width:100%;justify-content:center">Get Started</a>
           </div>
@@ -1242,7 +1245,7 @@
     <div style="text-align:center;margin-bottom:56px" data-reveal>
       <div class="section-label" style="display:inline-flex">Portfolio</div>
       <h2 class="section-title">Featured <span>Projects</span></h2>
-      <p style="color:var(--muted);max-width:500px;margin:0 auto">A selection of work that showcases my skills across web development, security, and design.</p>
+      <p style="color:var(--muted);max-width:500px;margin:0 auto;font-size:.95rem;font-weight:400">A selection of work that showcases my skills across web development, security, and design.</p>
     </div>
 
     <div class="projects-grid">
@@ -1254,7 +1257,7 @@
             <span class="browser-dot"></span>
             <span class="browser-dot"></span>
             <span class="browser-dot"></span>
-            <div class="browser-url"><span class="browser-url-text">hostel.iauestudentsaffairs.com</span></div>
+            <div class="browser-url"><span class="browser-url-text">portal.iauestudentsaffairs.com</span></div>
           </div>
           <div class="project-num">01</div>
           <img class="project-screenshot" src="https://github.com/esauvictor/esauvictor.github.io/raw/main/biodata.jpg" alt="IAUE Bio-data Capture" loading="lazy">
@@ -1267,8 +1270,8 @@
           <h3 class="project-title">IAUE Students Bio-data Capture</h3>
           <p class="project-desc">Comprehensive student data collection system with secure authentication and real-time validation features.</p>
           <div class="project-links">
-            <a href="https://hostel.iauestudentsaffairs.com/" class="btn btn-glass-solid" target="_blank" style="font-size:.82rem;padding:9px 16px"><i class="fas fa-external-link-alt"></i> Live</a>
-            <a href="https://github.com/esauvictor/IAUE-Hostel-Student-Bio-data-Capture-and-Allocation-System.git" class="btn btn-glass" target="_blank" style="font-size:.82rem;padding:9px 16px"><i class="fab fa-github"></i> Code</a>
+            <a href="https://portal.iauestudentsaffairs.com/" class="btn btn-glass-solid" target="_blank" style="font-size:.8rem;padding:9px 16px"><i class="fas fa-external-link-alt"></i> Live</a>
+            <a href="https://github.com/esauvictor/IAUE-Hostel-Student-Bio-data-Capture-and-Allocation-System.git" class="btn btn-glass" target="_blank" style="font-size:.8rem;padding:9px 16px"><i class="fab fa-github"></i> Code</a>
           </div>
         </div>
       </div>
@@ -1280,7 +1283,7 @@
             <span class="browser-dot"></span>
             <span class="browser-dot"></span>
             <span class="browser-dot"></span>
-            <div class="browser-url"><span class="browser-url-text">hostel.iauestudentsaffairs.com/admin</span></div>
+            <div class="browser-url"><span class="browser-url-text">portal.iauestudentsaffairs.com/admin/login</span></div>
           </div>
           <div class="project-num">02</div>
           <img class="project-screenshot" src="https://github.com/esauvictor/esauvictor.github.io/raw/main/hostel%20portal.jpg" alt="Hostel Allocation Dashboard" loading="lazy">
@@ -1293,8 +1296,8 @@
           <h3 class="project-title">Hostel Allocation Dashboard</h3>
           <p class="project-desc">Interactive management system with real-time reporting, bed allocation, and integrated payment processing.</p>
           <div class="project-links">
-            <a href="https://hostel.iauestudentsaffairs.com/admin/login" class="btn btn-glass-solid" target="_blank" style="font-size:.82rem;padding:9px 16px"><i class="fas fa-external-link-alt"></i> Live</a>
-            <a href="https://github.com/esauvictor/IAUE-Hostel-Student-Bio-data-Capture-and-Allocation-System.git" class="btn btn-glass" target="_blank" style="font-size:.82rem;padding:9px 16px"><i class="fab fa-github"></i> Code</a>
+            <a href="https://portal.iauestudentsaffairs.com/admin/login" class="btn btn-glass-solid" target="_blank" style="font-size:.8rem;padding:9px 16px"><i class="fas fa-external-link-alt"></i> Live</a>
+            <a href="https://github.com/esauvictor/IAUE-Hostel-Student-Bio-data-Capture-and-Allocation-System.git" class="btn btn-glass" target="_blank" style="font-size:.8rem;padding:9px 16px"><i class="fab fa-github"></i> Code</a>
           </div>
         </div>
       </div>
@@ -1319,8 +1322,8 @@
           <h3 class="project-title">IAUE SA Website</h3>
           <p class="project-desc">Security audit, hardening, and feature enhancement for the IAUE Students' Affairs Unit portal.</p>
           <div class="project-links">
-            <a href="https://iauestudentsaffairs.com/" class="btn btn-glass-solid" target="_blank" style="font-size:.82rem;padding:9px 16px"><i class="fas fa-external-link-alt"></i> Live</a>
-            <a href="https://raw.githubusercontent.com/esauvictor/esauvictor.github.io/main/iauesa.html" class="btn btn-glass" target="_blank" style="font-size:.82rem;padding:9px 16px"><i class="fab fa-github"></i> Code</a>
+            <a href="https://iauestudentsaffairs.com/" class="btn btn-glass-solid" target="_blank" style="font-size:.8rem;padding:9px 16px"><i class="fas fa-external-link-alt"></i> Live</a>
+            <a href="https://raw.githubusercontent.com/esauvictor/esauvictor.github.io/main/iauesa.html" class="btn btn-glass" target="_blank" style="font-size:.8rem;padding:9px 16px"><i class="fab fa-github"></i> Code</a>
           </div>
         </div>
       </div>
@@ -1335,7 +1338,7 @@
             <div class="browser-url"><span class="browser-url-text">esauvictor.github.io/restaurant</span></div>
           </div>
           <div class="project-num">04</div>
-          <img class="project-screenshot" src="https://github.com/esauvictor/esauvictor.github.io/raw/main/kitchenstar.jpeg" alt="Kitchen Star" loading="lazy">
+          <img class="project-screenshot" src="https://github.com/esauvictor/esauvictor.github.io/raw/main/kitchenstar.jpg" alt="Kitchen Star" loading="lazy">
         </div>
         <div class="project-body">
           <div class="project-tags">
@@ -1345,8 +1348,8 @@
           <h3 class="project-title">Kitchen Star Food Vendor</h3>
           <p class="project-desc">Sleek, mobile-first food vendor site for online menu display and seamless customer engagement.</p>
           <div class="project-links">
-            <a href="https://esauvictor.github.io/restaurant.html" class="btn btn-glass-solid" target="_blank" style="font-size:.82rem;padding:9px 16px"><i class="fas fa-external-link-alt"></i> Live</a>
-            <a href="https://raw.githubusercontent.com/esauvictor/esauvictor.github.io/main/restaurant.html" class="btn btn-glass" target="_blank" style="font-size:.82rem;padding:9px 16px"><i class="fab fa-github"></i> Code</a>
+            <a href="https://esauvictor.github.io/restaurant.html" class="btn btn-glass-solid" target="_blank" style="font-size:.8rem;padding:9px 16px"><i class="fas fa-external-link-alt"></i> Live</a>
+            <a href="https://raw.githubusercontent.com/esauvictor/esauvictor.github.io/main/restaurant.html" class="btn btn-glass" target="_blank" style="font-size:.8rem;padding:9px 16px"><i class="fab fa-github"></i> Code</a>
           </div>
         </div>
       </div>
@@ -1361,7 +1364,7 @@
             <div class="browser-url"><span class="browser-url-text">omaspray.com.ng</span></div>
           </div>
           <div class="project-num">05</div>
-          <img class="project-screenshot" src="https://github.com/esauvictor/esauvictor.github.io/raw/main/oma.jpeg" alt="Oma's Spray" loading="lazy">
+          <img class="project-screenshot" src="https://github.com/esauvictor/esauvictor.github.io/raw/main/oma.jpg" alt="Oma's Spray" loading="lazy">
         </div>
         <div class="project-body">
           <div class="project-tags">
@@ -1371,8 +1374,8 @@
           <h3 class="project-title">Oma's Spray Perfume Store</h3>
           <p class="project-desc">Modern e-commerce platform for premium fragrances with intuitive navigation and smooth checkout.</p>
           <div class="project-links">
-            <a href="https://omaspray.com.ng/" class="btn btn-glass-solid" target="_blank" style="font-size:.82rem;padding:9px 16px"><i class="fas fa-external-link-alt"></i> Live</a>
-            <a href="https://raw.githubusercontent.com/omaspray/omaspray.github.io/main/index.html" class="btn btn-glass" target="_blank" style="font-size:.82rem;padding:9px 16px"><i class="fab fa-github"></i> Code</a>
+            <a href="https://omaspray.com.ng/" class="btn btn-glass-solid" target="_blank" style="font-size:.8rem;padding:9px 16px"><i class="fas fa-external-link-alt"></i> Live</a>
+            <a href="https://raw.githubusercontent.com/omaspray/omaspray.github.io/main/index.html" class="btn btn-glass" target="_blank" style="font-size:.8rem;padding:9px 16px"><i class="fab fa-github"></i> Code</a>
           </div>
         </div>
       </div>
@@ -1387,7 +1390,7 @@
             <div class="browser-url"><span class="browser-url-text">esauvictor.github.io/Gym</span></div>
           </div>
           <div class="project-num">06</div>
-          <img class="project-screenshot" src="https://github.com/esauvictor/esauvictor.github.io/raw/main/gym.jpeg" alt="PowerGym" loading="lazy">
+          <img class="project-screenshot" src="https://github.com/esauvictor/esauvictor.github.io/raw/main/gym.jpg" alt="PowerGym" loading="lazy">
         </div>
         <div class="project-body">
           <div class="project-tags">
@@ -1397,8 +1400,8 @@
           <h3 class="project-title">PowerGym</h3>
           <p class="project-desc">Clean and engaging gym centre website highlighting services, training programs, and contact details.</p>
           <div class="project-links">
-            <a href="https://esauvictor.github.io/Gym" class="btn btn-glass-solid" target="_blank" style="font-size:.82rem;padding:9px 16px"><i class="fas fa-external-link-alt"></i> Live</a>
-            <a href="https://raw.githubusercontent.com/esauvictor/esauvictor.github.io/main/Gym.html" class="btn btn-glass" target="_blank" style="font-size:.82rem;padding:9px 16px"><i class="fab fa-github"></i> Code</a>
+            <a href="https://esauvictor.github.io/Gym" class="btn btn-glass-solid" target="_blank" style="font-size:.8rem;padding:9px 16px"><i class="fas fa-external-link-alt"></i> Live</a>
+            <a href="https://raw.githubusercontent.com/esauvictor/esauvictor.github.io/main/Gym.html" class="btn btn-glass" target="_blank" style="font-size:.8rem;padding:9px 16px"><i class="fab fa-github"></i> Code</a>
           </div>
         </div>
       </div>
@@ -1413,7 +1416,7 @@
     <div style="text-align:center;margin-bottom:56px" data-reveal>
       <div class="section-label" style="display:inline-flex">Learning Center</div>
       <h2 class="section-title">Free <span>Tutorials</span></h2>
-      <p style="color:var(--muted);max-width:500px;margin:0 auto">Practical, no-fluff tutorials on web development, data analytics, and cyber security.</p>
+      <p style="color:var(--muted);max-width:500px;margin:0 auto;font-size:.95rem;font-weight:400">Practical, no-fluff tutorials on web development, data analytics, and cyber security.</p>
     </div>
 
     <div class="tutorials-grid">
@@ -1481,7 +1484,7 @@
     <div style="text-align:center;margin-bottom:56px" data-reveal>
       <div class="section-label" style="display:inline-flex">My Blog</div>
       <h2 class="section-title">Thoughts & <span>Reflections</span></h2>
-      <p style="color:var(--muted);max-width:500px;margin:0 auto">Exploring my journey, challenges, and lessons learned in the tech world.</p>
+      <p style="color:var(--muted);max-width:500px;margin:0 auto;font-size:.95rem;font-weight:400">Exploring my journey, challenges, and lessons learned in the tech world.</p>
     </div>
 
     <div class="blog-grid">
@@ -1491,7 +1494,7 @@
           <div class="blog-meta"><span><i class="fas fa-calendar-alt"></i>Apr 10, 2024</span><span><i class="fas fa-clock"></i>5 min read</span></div>
           <h3 class="blog-title">A Day in the Life of a Developer</h3>
           <p class="blog-excerpt">Today was one of those days where I spent hours debugging a seemingly simple issue. The frustration mounted as solutions I thought were perfect just didn't work...</p>
-          <a href="https://esauvictor.github.io/post.html?id=1" class="btn btn-ghost" style="font-size:.88rem;padding:9px 16px">Read More →</a>
+          <a href="https://esauvictor.github.io/post.html?id=1" class="btn btn-ghost" style="font-size:.85rem;padding:9px 16px">Read More →</a>
         </div>
       </div>
       <div class="blog-card" data-reveal data-delay="2">
@@ -1500,7 +1503,7 @@
           <div class="blog-meta"><span><i class="fas fa-calendar-alt"></i>May 3, 2025</span><span><i class="fas fa-clock"></i>8 min read</span></div>
           <h3 class="blog-title">Overcoming Imposter Syndrome</h3>
           <p class="blog-excerpt">There are days when I wake up feeling like a fraud in this field. How did I get here? Do I really belong? These thoughts have been my constant companions...</p>
-          <a href="https://esauvictor.github.io/post.html?id=2" class="btn btn-ghost" style="font-size:.88rem;padding:9px 16px">Read More →</a>
+          <a href="https://esauvictor.github.io/post.html?id=2" class="btn btn-ghost" style="font-size:.85rem;padding:9px 16px">Read More →</a>
         </div>
       </div>
       <div class="blog-card" data-reveal data-delay="3">
@@ -1509,7 +1512,7 @@
           <div class="blog-meta"><span><i class="fas fa-calendar-alt"></i>Jun 12, 2025</span><span><i class="fas fa-clock"></i>6 min read</span></div>
           <h3 class="blog-title">Building Something That Matters</h3>
           <p class="blog-excerpt">When I see the impact of projects I've worked on — especially those helping students — it reminds me why I fell in love with coding in the first place...</p>
-          <a href="https://esauvictor.github.io/post.html?id=3" class="btn btn-ghost" style="font-size:.88rem;padding:9px 16px">Read More →</a>
+          <a href="https://esauvictor.github.io/post.html?id=3" class="btn btn-ghost" style="font-size:.85rem;padding:9px 16px">Read More →</a>
         </div>
       </div>
     </div>
@@ -1675,7 +1678,7 @@
 <button id="btt" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
 
 <!-- =================== SCRIPTS =================== -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ---- Preloader ----
 (function(){
   const loader = document.getElementById('preloader');
