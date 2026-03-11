@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <meta name="description" content="Thank you for contacting Esau Victor">
   <title>Thank You | Esau Victor</title>
   <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
@@ -19,62 +19,67 @@
       --violet:    #7c3aed;
       --green:     #10b981;
       --ink:       #0b1220;
-      --ink2:      #1e293b;
       --muted:     #64748b;
-      --border:    rgba(255,255,255,.1);
-      --white:     #ffffff;
     }
 
-    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      height: 100%;
+    }
 
     body {
       font-family: 'Montserrat', sans-serif;
       background: var(--ink);
-      color: var(--white);
+      color: #fff;
+      height: 100%;
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      padding: 16px;
     }
 
-    /* ---- Grid background ---- */
+    /* Grid bg */
     body::before {
       content: '';
       position: fixed; inset: 0;
       background-image:
         linear-gradient(rgba(29,78,216,.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(29,78,216,.1) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+      background-size: 50px 50px;
+      mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 10%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 10%, transparent 100%);
+      pointer-events: none;
       z-index: 0;
     }
 
-    /* ---- Glow orb ---- */
+    /* Glow orb */
     .glow-orb {
       position: fixed;
-      width: 600px; height: 600px;
+      width: clamp(300px, 80vw, 560px);
+      height: clamp(300px, 80vw, 560px);
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(29,78,216,.25) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(29,78,216,.22) 0%, transparent 70%);
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       z-index: 0;
+      pointer-events: none;
       animation: orb-pulse 4s ease-in-out infinite;
     }
     @keyframes orb-pulse {
-      0%,100% { transform: translate(-50%,-50%) scale(1); opacity: .7; }
-      50%      { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+      0%,100% { opacity: .7; transform: translate(-50%,-50%) scale(1); }
+      50%      { opacity: 1;  transform: translate(-50%,-50%) scale(1.12); }
     }
 
-    /* ---- Floating particles ---- */
-    .particles {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    }
+    /* Particles */
+    .particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
     .particle {
       position: absolute;
-      width: 4px; height: 4px;
       border-radius: 50%;
       background: var(--blue-mid);
       opacity: 0;
@@ -82,47 +87,52 @@
     }
     @keyframes float-up {
       0%   { opacity: 0; transform: translateY(0) scale(0); }
-      10%  { opacity: .8; transform: translateY(-20px) scale(1); }
-      90%  { opacity: .3; }
-      100% { opacity: 0; transform: translateY(-200px) scale(0.3); }
+      10%  { opacity: .6; transform: translateY(-15px) scale(1); }
+      90%  { opacity: .15; }
+      100% { opacity: 0; transform: translateY(-160px) scale(.3); }
+    }
+
+    /* ---- Wrapper ---- */
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
     }
 
     /* ---- Card ---- */
     .card {
-      position: relative; z-index: 1;
+      width: 100%;
       background: rgba(255,255,255,.04);
       backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255,255,255,.08);
-      border-radius: 28px;
-      padding: 56px 52px;
-      max-width: 520px;
-      width: 90%;
+      border-radius: 22px;
+      padding: clamp(24px, 5vw, 48px) clamp(18px, 5vw, 40px);
       text-align: center;
-      box-shadow: 0 32px 80px rgba(0,0,0,.4), 0 0 0 1px rgba(29,78,216,.2);
-      animation: card-in 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
+      box-shadow: 0 20px 60px rgba(0,0,0,.45), 0 0 0 1px rgba(29,78,216,.18);
       opacity: 0;
-      transform: translateY(40px) scale(0.97);
+      transform: translateY(28px) scale(.97);
+      animation: card-in .8s cubic-bezier(0.16,1,0.3,1) .1s forwards;
     }
     @keyframes card-in {
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* ---- Icon ring animation ---- */
+    /* ---- Icon ring ---- */
     .icon-wrap {
       position: relative;
-      width: 100px; height: 100px;
-      margin: 0 auto 36px;
+      width: clamp(68px, 17vw, 90px);
+      height: clamp(68px, 17vw, 90px);
+      margin: 0 auto clamp(16px, 3.5vw, 28px);
+      flex-shrink: 0;
     }
-
-    /* SVG checkmark circle */
-    .check-svg {
-      width: 100px; height: 100px;
-    }
-    .check-circle {
-      fill: none;
-      stroke: rgba(29,78,216,.2);
-      stroke-width: 3;
-    }
+    .check-svg { width: 100%; height: 100%; display: block; }
+    .check-circle { fill: none; stroke: rgba(29,78,216,.18); stroke-width: 3; }
     .check-progress {
       fill: none;
       stroke: url(#grad);
@@ -132,91 +142,84 @@
       stroke-dashoffset: 283;
       transform-origin: center;
       transform: rotate(-90deg);
-      animation: draw-circle 1s cubic-bezier(0.16,1,0.3,1) 0.3s forwards;
+      animation: draw-circle 1s cubic-bezier(0.16,1,0.3,1) .4s forwards;
     }
-    @keyframes draw-circle {
-      to { stroke-dashoffset: 0; }
-    }
+    @keyframes draw-circle { to { stroke-dashoffset: 0; } }
 
-    /* Icon in center */
     .icon-center {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
     }
     .icon-center i {
-      font-size: 2.2rem;
+      font-size: clamp(1.3rem, 4vw, 1.9rem);
       color: var(--blue-mid);
       opacity: 0;
-      transform: scale(0.5) rotate(-20deg);
-      animation: icon-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) 1s forwards;
+      transform: scale(.5) rotate(-20deg);
+      animation: icon-pop .5s cubic-bezier(0.34,1.56,0.64,1) 1.1s forwards;
     }
-    @keyframes icon-pop {
-      to { opacity: 1; transform: scale(1) rotate(0deg); }
-    }
+    @keyframes icon-pop { to { opacity: 1; transform: scale(1) rotate(0); } }
 
-    /* Ripple rings */
     .ripple {
-      position: absolute; inset: -8px;
+      position: absolute; inset: -6px;
       border-radius: 50%;
-      border: 2px solid var(--blue-mid);
+      border: 1.5px solid var(--blue-mid);
       opacity: 0;
-      animation: ripple-out 2s ease-out 1.2s infinite;
+      animation: ripple-out 2s ease-out 1.3s infinite;
     }
-    .ripple:nth-child(2) { animation-delay: 1.7s; }
-    .ripple:nth-child(3) { animation-delay: 2.2s; }
+    .ripple:nth-child(2) { animation-delay: 1.8s; }
+    .ripple:nth-child(3) { animation-delay: 2.3s; }
     @keyframes ripple-out {
-      0%   { transform: scale(1); opacity: .5; }
+      0%   { transform: scale(1); opacity: .4; }
       100% { transform: scale(1.8); opacity: 0; }
     }
 
-    /* ---- Text ---- */
+    /* ---- Label ---- */
     .label {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      font-size: .72rem;
+      gap: 6px;
+      font-size: clamp(.62rem, 1.8vw, .7rem);
       font-weight: 700;
-      letter-spacing: .14em;
+      letter-spacing: .13em;
       text-transform: uppercase;
       color: var(--blue-mid);
-      background: rgba(29,78,216,.15);
-      border: 1px solid rgba(29,78,216,.3);
-      padding: 5px 14px;
+      background: rgba(29,78,216,.14);
+      border: 1px solid rgba(29,78,216,.28);
+      padding: 4px 12px;
       border-radius: 100px;
-      margin-bottom: 20px;
+      margin-bottom: clamp(8px, 2vw, 16px);
       opacity: 0;
-      animation: fade-up .6s ease 1.1s forwards;
+      animation: fade-up .5s ease 1.2s forwards;
     }
     .label::before {
       content: '';
-      width: 6px; height: 6px;
-      border-radius: 50%;
+      width: 5px; height: 5px; border-radius: 50%;
       background: var(--blue-mid);
-      animation: pulse-dot 2s infinite;
+      animation: blink 2s infinite;
     }
-    @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.3} }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
 
+    /* ---- Heading ---- */
     h1 {
-      font-size: clamp(1.7rem, 4vw, 2.2rem);
+      font-size: clamp(1.3rem, 5vw, 1.9rem);
       font-weight: 800;
-      color: var(--white);
       letter-spacing: -.03em;
       line-height: 1.1;
-      margin-bottom: 14px;
+      margin-bottom: clamp(6px, 1.5vw, 12px);
       opacity: 0;
-      animation: fade-up .6s ease 1.25s forwards;
+      animation: fade-up .5s ease 1.35s forwards;
     }
     h1 span { color: var(--blue-mid); }
 
+    /* ---- Subtitle ---- */
     .subtitle {
-      font-size: .95rem;
+      font-size: clamp(.8rem, 2.3vw, .92rem);
       font-weight: 400;
       color: #94a3b8;
       line-height: 1.7;
-      margin-bottom: 36px;
+      margin-bottom: clamp(16px, 3.5vw, 28px);
       opacity: 0;
-      animation: fade-up .6s ease 1.4s forwards;
+      animation: fade-up .5s ease 1.5s forwards;
     }
     .subtitle strong { color: rgba(255,255,255,.85); font-weight: 600; }
 
@@ -224,78 +227,79 @@
     .steps {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-bottom: 36px;
+      gap: 7px;
+      margin-bottom: clamp(16px, 3.5vw, 28px);
       text-align: left;
       opacity: 0;
-      animation: fade-up .6s ease 1.55s forwards;
+      animation: fade-up .5s ease 1.65s forwards;
     }
     .step {
       display: flex;
       align-items: center;
-      gap: 14px;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.07);
-      border-radius: 12px;
-      padding: 12px 16px;
-      font-size: .85rem;
+      gap: 10px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 10px;
+      padding: clamp(8px, 2vw, 11px) clamp(10px, 2.5vw, 14px);
+      font-size: clamp(.75rem, 2vw, .83rem);
       font-weight: 500;
       color: #94a3b8;
     }
     .step-ico {
-      width: 32px; height: 32px; flex-shrink: 0;
-      border-radius: 8px;
-      background: rgba(29,78,216,.2);
+      width: 26px; height: 26px; flex-shrink: 0;
+      border-radius: 6px;
+      background: rgba(29,78,216,.18);
       display: flex; align-items: center; justify-content: center;
       color: var(--blue-mid);
-      font-size: .85rem;
+      font-size: .75rem;
     }
-    .step-ico.green { background: rgba(16,185,129,.15); color: var(--green); }
+    .step-ico.green { background: rgba(16,185,129,.12); color: var(--green); }
 
-    /* ---- CTA button ---- */
+    /* ---- Button ---- */
     .btn {
       display: inline-flex;
       align-items: center;
-      gap: 9px;
-      padding: 13px 28px;
+      justify-content: center;
+      gap: 8px;
+      padding: clamp(10px, 2.5vw, 13px) clamp(20px, 5vw, 28px);
       background: var(--blue);
-      color: var(--white);
-      border-radius: 12px;
+      color: #fff;
+      border-radius: 11px;
       font-family: 'Montserrat', sans-serif;
       font-weight: 700;
-      font-size: .9rem;
+      font-size: clamp(.8rem, 2.2vw, .9rem);
       letter-spacing: .02em;
       border: none;
       cursor: pointer;
       text-decoration: none;
       transition: all .22s cubic-bezier(0.16,1,0.3,1);
-      box-shadow: 0 8px 24px rgba(29,78,216,.35);
+      box-shadow: 0 8px 24px rgba(29,78,216,.3);
       opacity: 0;
-      animation: fade-up .6s ease 1.7s forwards;
+      animation: fade-up .5s ease 1.8s forwards;
     }
     .btn:hover {
       background: var(--blue-dark);
-      transform: translateY(-3px);
-      box-shadow: 0 14px 36px rgba(29,78,216,.45);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(29,78,216,.4);
     }
 
     /* ---- Timer bar ---- */
-    .timer-bar-wrap {
-      margin-top: 28px;
+    .timer-wrap {
+      margin-top: clamp(14px, 3vw, 22px);
       opacity: 0;
-      animation: fade-up .6s ease 1.85s forwards;
+      animation: fade-up .5s ease 1.95s forwards;
     }
     .timer-label {
-      font-size: .72rem;
+      font-size: clamp(.6rem, 1.6vw, .68rem);
       font-weight: 600;
       color: var(--muted);
-      letter-spacing: .06em;
+      letter-spacing: .07em;
       text-transform: uppercase;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .timer-track {
       height: 3px;
-      background: rgba(255,255,255,.07);
+      background: rgba(255,255,255,.06);
       border-radius: 100px;
       overflow: hidden;
     }
@@ -311,119 +315,111 @@
     /* ---- Footer ---- */
     footer {
       position: relative; z-index: 1;
-      margin-top: 32px;
-      font-size: .78rem;
+      font-size: clamp(.68rem, 1.7vw, .76rem);
       font-weight: 500;
-      color: #334155;
+      color: #1e293b;
       letter-spacing: .03em;
+      text-align: center;
       opacity: 0;
-      animation: fade-up .6s ease 2s forwards;
+      animation: fade-up .5s ease 2.1s forwards;
     }
     footer span { color: var(--blue-mid); }
 
-    /* shared fade-up */
     @keyframes fade-up {
-      from { opacity: 0; transform: translateY(14px); }
+      from { opacity: 0; transform: translateY(10px); }
       to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 480px) {
-      .card { padding: 40px 28px; }
-      h1 { font-size: 1.6rem; }
     }
   </style>
 </head>
 <body>
 
   <div class="glow-orb"></div>
-
-  <!-- Particles -->
   <div class="particles" id="particles"></div>
 
-  <!-- Card -->
-  <div class="card">
+  <div class="wrapper">
 
-    <!-- Animated icon -->
-    <div class="icon-wrap">
-      <div class="ripple"></div>
-      <div class="ripple"></div>
-      <div class="ripple"></div>
-      <svg class="check-svg" viewBox="0 0 100 100">
-        <defs>
-          <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#1d4ed8"/>
-            <stop offset="100%" stop-color="#7c3aed"/>
-          </linearGradient>
-        </defs>
-        <circle class="check-circle" cx="50" cy="50" r="45"/>
-        <circle class="check-progress" cx="50" cy="50" r="45"/>
-      </svg>
-      <div class="icon-center">
-        <i class="fas fa-paper-plane"></i>
+    <div class="card">
+
+      <!-- Animated icon -->
+      <div class="icon-wrap">
+        <div class="ripple"></div>
+        <div class="ripple"></div>
+        <div class="ripple"></div>
+        <svg class="check-svg" viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#1d4ed8"/>
+              <stop offset="100%" stop-color="#7c3aed"/>
+            </linearGradient>
+          </defs>
+          <circle class="check-circle" cx="50" cy="50" r="45"/>
+          <circle class="check-progress" cx="50" cy="50" r="45"/>
+        </svg>
+        <div class="icon-center">
+          <i class="fas fa-paper-plane"></i>
+        </div>
       </div>
+
+      <div class="label">Message Delivered</div>
+
+      <h1>Got it, <span>loud & clear!</span></h1>
+
+      <p class="subtitle">
+        Thanks for reaching out to <strong>Esau Victor</strong>.<br>
+        Your message is in — here's what happens next.
+      </p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-ico green"><i class="fas fa-check"></i></div>
+          Message received &amp; logged
+        </div>
+        <div class="step">
+          <div class="step-ico"><i class="fas fa-search"></i></div>
+          Reviewing your inquiry
+        </div>
+        <div class="step">
+          <div class="step-ico"><i class="fas fa-reply"></i></div>
+          Reply within 24–48 hours
+        </div>
+      </div>
+
+      <a href="https://esauvictor.github.io" class="btn">
+        <i class="fas fa-arrow-left"></i> Back to Portfolio
+      </a>
+
+      <div class="timer-wrap">
+        <div class="timer-label">Auto-redirecting in 8s</div>
+        <div class="timer-track">
+          <div class="timer-fill"></div>
+        </div>
+      </div>
+
     </div>
 
-    <div class="label">Message Delivered</div>
-
-    <h1>Got it, <span>loud & clear!</span></h1>
-
-    <p class="subtitle">
-      Thanks for reaching out to <strong>Esau Victor</strong>.<br>
-      Your message is in — here's what happens next.
-    </p>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-ico green"><i class="fas fa-check"></i></div>
-        Message received & logged
-      </div>
-      <div class="step">
-        <div class="step-ico"><i class="fas fa-search"></i></div>
-        Reviewing your inquiry
-      </div>
-      <div class="step">
-        <div class="step-ico"><i class="fas fa-reply"></i></div>
-        Reply within 24–48 hours
-      </div>
-    </div>
-
-    <a href="https://esauvictor.github.io" class="btn">
-      <i class="fas fa-arrow-left"></i> Back to Portfolio
-    </a>
-
-    <div class="timer-bar-wrap">
-      <div class="timer-label">Auto-redirecting in 8s</div>
-      <div class="timer-track">
-        <div class="timer-fill" id="timerFill"></div>
-      </div>
-    </div>
+    <footer>&copy; <span id="yr"></span> <span>Esau Victor</span>. All rights reserved.</footer>
 
   </div>
 
-  <footer>&copy; <span id="yr"></span> <span>Esau Victor</span>. All rights reserved.</footer>
-
   <script>
-    // Year
     document.getElementById('yr').textContent = new Date().getFullYear();
 
-    // Auto redirect after 8s (matches timer bar)
     setTimeout(() => {
       window.location.href = 'https://esauvictor.github.io';
-    }, 10200); // slight buffer after animation starts at 2.2s + 8s
+    }, 10400);
 
-    // Spawn particles
+    // Particles
     const container = document.getElementById('particles');
-    for (let i = 0; i < 28; i++) {
+    for (let i = 0; i < 20; i++) {
       const p = document.createElement('div');
+      const size = 2 + Math.random() * 3;
       p.className = 'particle';
       p.style.cssText = `
-        left: ${Math.random() * 100}%;
-        top: ${40 + Math.random() * 50}%;
-        --dur: ${4 + Math.random() * 6}s;
-        --delay: ${Math.random() * 6}s;
-        width: ${2 + Math.random() * 4}px;
-        height: ${2 + Math.random() * 4}px;
-        opacity: 0;
+        left:${Math.random()*100}%;
+        top:${30+Math.random()*55}%;
+        width:${size}px;height:${size}px;
+        --dur:${4+Math.random()*5}s;
+        --delay:${Math.random()*5}s;
       `;
       container.appendChild(p);
     }
