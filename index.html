@@ -773,36 +773,90 @@
     </div>
   </section>
 
-  <!-- Contact -->
-  <section id="contact" class="section">
-    <div class="container">
-      <h2>contact()</h2>
-      <div class="contact-grid">
-        <div>
-          <p style="margin-bottom:1rem; color:var(--text-secondary);">Let's collaborate on your next project. Available for freelance, contracts, and full-time opportunities.</p>
-          <div class="contact-detail"><div class="contact-icon"><i class="fas fa-envelope"></i></div><div><strong>email</strong><br><a href="mailto:esauvictor@icloud.com" style="color:var(--primary-bright);">esauvictor@icloud.com</a></div></div>
-          <div class="contact-detail"><div class="contact-icon"><i class="fab fa-whatsapp"></i></div><div><strong>whatsapp</strong><br><a href="https://wa.me/2348132084092" style="color:var(--primary-bright);">+234 813 208 4092</a></div></div>
-          <div class="contact-detail"><div class="contact-icon"><i class="fab fa-github"></i></div><div><strong>github</strong><br><a href="https://github.com/esauvictor" style="color:var(--primary-bright);">/esauvictor</a></div></div>
-          <div class="social-row">
-            <a href="https://github.com/esauvictor" class="social-ico" target="_blank"><i class="fab fa-github"></i></a>
-            <a href="https://linkedin.com/in/esau-victor" class="social-ico" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-            <a href="https://x.com/esau_vee" class="social-ico" target="_blank"><i class="fab fa-x"></i></a>
-            <a href="https://wa.me/2348132084092" class="social-ico" target="_blank"><i class="fab fa-whatsapp"></i></a>
+ <!-- Contact -->
+<section id="contact" class="section">
+  <div class="container">
+    <h2>contact()</h2>
+
+    <div class="contact-grid">
+      
+      <!-- LEFT -->
+      <div>
+        <p style="margin-bottom:1rem; color:var(--text-secondary);">
+          Let's collaborate on your next project. Available for freelance, contracts, and full-time opportunities.
+        </p>
+
+        <div class="contact-detail">
+          <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+          <div>
+            <strong>email</strong><br>
+            <a href="mailto:esauvictor@icloud.com">esauvictor@icloud.com</a>
           </div>
         </div>
-        <div>
-         <form action="https://api.staticforms.xyz/submit" method="POST" class="contact-form">
-          <input type="hidden" name="accessKey" value="sf_n72knfdn65gg51ni92d9fdm7">
-          <input type="hidden" name="redirectTo" value="https://esauvictor.github.io/thank-you.html">
-            <div class="form-group"><input type="text" name="name" placeholder="$your_name" required></div>
-            <div class="form-group"><input type="email" name="email" placeholder="$your_email" required></div>
-            <div class="form-group"><textarea name="message" rows="4" placeholder="// project details..."></textarea></div>
-            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;"><i class="fas fa-paper-plane"></i> send_message()</button>
-          </form>
+
+        <div class="contact-detail">
+          <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
+          <div>
+            <strong>whatsapp</strong><br>
+            <a href="https://wa.me/2348132084092">+234 813 208 4092</a>
+          </div>
+        </div>
+
+        <div class="contact-detail">
+          <div class="contact-icon"><i class="fab fa-github"></i></div>
+          <div>
+            <strong>github</strong><br>
+            <a href="https://github.com/esauvictor">/esauvictor</a>
+          </div>
+        </div>
+
+        <div class="social-row">
+          <a href="https://github.com/esauvictor" class="social-ico" target="_blank"><i class="fab fa-github"></i></a>
+          <a href="https://linkedin.com/in/esau-victor" class="social-ico" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://x.com/esau_vee" class="social-ico" target="_blank"><i class="fab fa-x"></i></a>
+          <a href="https://wa.me/2348132084092" class="social-ico" target="_blank"><i class="fab fa-whatsapp"></i></a>
         </div>
       </div>
+
+      <!-- RIGHT (FORM) -->
+      <div>
+        <form action="https://api.staticforms.xyz/submit" method="POST" class="contact-form">
+
+          <input type="hidden" name="accessKey" value="sf_n72knfdn65gg51ni92d9fdm7">
+          <input type="hidden" name="redirectTo" value="https://esauvictor.github.io/thank-you.html">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">your_name</label>
+              <input type="text" id="name" name="name" class="form-input" placeholder="$john_doe" required>
+            </div>
+
+            <div class="form-group">
+              <label for="email">your_email</label>
+              <input type="email" id="email" name="email" class="form-input" placeholder="$your_email" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="subject">subject</label>
+            <input type="text" id="subject" name="subject" class="form-input" placeholder="// project inquiry..." required>
+          </div>
+
+          <div class="form-group">
+            <label for="message">message</label>
+            <textarea id="message" name="message" class="form-input" rows="4" placeholder="// project details..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
+            <i class="fas fa-paper-plane"></i> send_message()
+          </button>
+
+        </form>
+      </div>
+
     </div>
-  </section>
+  </div>
+</section>
 </main>
 
 <footer>
