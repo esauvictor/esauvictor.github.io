@@ -822,31 +822,36 @@
 
       <!-- RIGHT (FORM) -->
       <div>
-  <form id="contactForm" class="contact-form">
+<form id="contactForm" class="contact-form">
 
   <input type="hidden" name="accessKey" value="sf_n72knfdn65gg51ni92d9fdm7">
+
+  <!-- improves delivery -->
+  <input type="hidden" name="replyTo" value="email">
+
+  <!-- spam protection -->
   <input type="text" name="honeypot" style="display:none">
 
   <div class="form-row">
     <div class="form-group">
       <label>your_name</label>
-      <input type="text" name="name" class="form-input" required>
+      <input type="text" name="name" class="form-input" placeholder="$your_name" required>
     </div>
 
     <div class="form-group">
       <label>your_email</label>
-      <input type="email" name="email" class="form-input" required>
+      <input type="email" name="email" class="form-input" placeholder="$your_email" required>
     </div>
   </div>
 
   <div class="form-group">
     <label>subject</label>
-    <input type="text" name="subject" class="form-input" required>
+    <input type="text" name="subject" class="form-input" placeholder="// project inquiry..." required>
   </div>
 
   <div class="form-group">
     <label>message</label>
-    <textarea name="message" class="form-input" rows="4" required></textarea>
+    <textarea name="message" class="form-input" rows="4" placeholder="// project details..." required></textarea>
   </div>
 
   <button type="submit" class="btn btn-primary" style="width:100%;">
