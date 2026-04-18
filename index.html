@@ -824,13 +824,17 @@
       <div>
         <form action="https://api.staticforms.xyz/submit" method="POST" class="contact-form">
 
+          <!-- StaticForms Config -->
           <input type="hidden" name="accessKey" value="sf_n72knfdn65gg51ni92d9fdm7">
-          <input type="hidden" name="redirectTo" value="https://esauvictor.github.io/thank-you.html">
+          <input type="hidden" name="_redirectTo" value="https://esauvictor.github.io/thank-you.html">
+
+          <!-- Anti-spam (recommended) -->
+          <input type="text" name="honeypot" style="display:none">
 
           <div class="form-row">
             <div class="form-group">
               <label for="name">your_name</label>
-              <input type="text" id="name" name="name" class="form-input" placeholder="$john_doe" required>
+              <input type="text" id="name" name="name" class="form-input" placeholder="$jyour_name" required>
             </div>
 
             <div class="form-group">
@@ -859,6 +863,17 @@
     </div>
   </div>
 </section>
+
+<!-- ✅ FORCE REDIRECT FALLBACK -->
+<script>
+  const form = document.querySelector(".contact-form");
+
+  form.addEventListener("submit", function () {
+    setTimeout(() => {
+      window.location.href = "https://esauvictor.github.io/thank-you.html";
+    }, 1200);
+  });
+</script>
 </main>
 
 <footer>
