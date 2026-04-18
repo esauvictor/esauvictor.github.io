@@ -822,44 +822,38 @@
 
       <!-- RIGHT (FORM) -->
       <div>
-        <form action="https://api.staticforms.xyz/submit" method="POST" class="contact-form">
+     <form class="contact-form" id="contactForm">
 
-          <!-- StaticForms Config -->
-          <input type="hidden" name="accessKey" value="sf_n72knfdn65gg51ni92d9fdm7">
-          <input type="hidden" name="_redirectTo" value="https://esauvictor.github.io/thank-you.html">
+  <input type="hidden" name="accessKey" value="sf_n72knfdn65gg51ni92d9fdm7">
+  <input type="text" name="honeypot" style="display:none">
 
-          <!-- Anti-spam (recommended) -->
-          <input type="text" name="honeypot" style="display:none">
+  <div class="form-row">
+    <div class="form-group">
+      <label>your_name</label>
+      <input type="text" name="name" class="form-input" required>
+    </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label for="name">your_name</label>
-              <input type="text" id="name" name="name" class="form-input" placeholder="$your_name" required>
-            </div>
+    <div class="form-group">
+      <label>your_email</label>
+      <input type="email" name="email" class="form-input" required>
+    </div>
+  </div>
 
-            <div class="form-group">
-              <label for="email">your_email</label>
-              <input type="email" id="email" name="email" class="form-input" placeholder="$your_email" required>
-            </div>
-          </div>
+  <div class="form-group">
+    <label>subject</label>
+    <input type="text" name="subject" class="form-input" required>
+  </div>
 
-          <div class="form-group">
-            <label for="subject">subject</label>
-            <input type="text" id="subject" name="subject" class="form-input" placeholder="// project inquiry..." required>
-          </div>
+  <div class="form-group">
+    <label>message</label>
+    <textarea name="message" class="form-input" rows="4" required></textarea>
+  </div>
 
-          <div class="form-group">
-            <label for="message">message</label>
-            <textarea id="message" name="message" class="form-input" rows="4" placeholder="// project details..." required></textarea>
-          </div>
-
-          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
-            <i class="fas fa-paper-plane"></i> send_message()
-          </button>
-
-        </form>
+  <button type="submit" class="btn btn-primary" style="width:100%;">
+    <i class="fas fa-paper-plane"></i> send_message()
+  </button>
+</form>
       </div>
-
     </div>
   </div>
 </section>
