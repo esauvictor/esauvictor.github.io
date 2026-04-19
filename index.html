@@ -775,7 +775,7 @@
     </div>
   </section>
 
- <!-- Contact -->
+<!-- Contact -->
 <section id="contact" class="section">
   <div class="container">
     <h2>contact()</h2>
@@ -818,9 +818,7 @@
       <!-- RIGHT (FORM) -->
       <div>
         <form id="contactForm" class="contact-form">
-          <!-- Web3Forms access key -->
           <input type="hidden" name="access_key" value="56e9022d-f892-4b9a-b2fb-72561a3aeb7c">
-          <!-- Spam protection -->
           <input type="checkbox" name="botcheck" style="display:none">
           <div class="form-row">
             <div class="form-group">
@@ -849,6 +847,26 @@
     </div>
   </div>
 </section>
+
+<style>
+  .contact-detail a,
+  .contact-detail a:visited {
+    color: #e8943a;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .contact-detail a:hover {
+    color: #f5b06a;
+  }
+
+  .social-ico {
+    color: #e8943a;
+    transition: color 0.2s ease;
+  }
+  .social-ico:hover {
+    color: #f5b06a;
+  }
+</style>
 
 <script>
   const form = document.getElementById("contactForm");
