@@ -1,193 +1,98 @@
-# 🚀 Esau Victor — Portfolio Website
+# Esau Victor
 
 <p align="center">
-  <a href="https://esauvictor.github.io/">
-    <img src="https://img.shields.io/badge/🌐_Live_Portfolio-View_Site-ff7828?style=for-the-badge" />
-  </a>
-  <img src="https://komarev.com/ghpvc/?username=esauvictor&style=for-the-badge&color=ff7828" />
+  <img src="https://avatars.githubusercontent.com/u/94287719?v=4" width="120" style="border-radius:50%" />
+</p>
+
+<p align="center">
+  Backend-Focused Full Stack Developer <br>
+  Laravel • PHP • Scalable Systems • API Architecture
 </p>
 
 ---
 
-## 🧠 Overview
+## 🚀 About Me
 
-This is a **high-performance, developer-focused portfolio website** built to showcase real-world backend engineering work — not just UI.
+I build **production-grade backend systems** and **scalable web applications**.
 
-Unlike traditional portfolios, this project emphasizes:
-
-* ⚡ **Problem → Solution case studies**
-* 📊 Measurable impact (performance, automation, scale)
-* 🧩 System thinking and backend architecture
-
----
-
-## ✨ Key Features
-
-* 🎯 **Terminal-Inspired UI** — Reflects developer workflow
-* 📱 **Fully Responsive Design** — Works across all devices
-* ⚡ **Custom Interactions**
-
-  * Animated cursor system
-  * Hover states & micro-interactions
-  * Scroll-based reveal animations
-* 🧩 **Structured Sections**
-
-  * Hero (value-driven positioning)
-  * About (terminal-style profile)
-  * Tech Stack (categorized system view)
-  * Projects (case-study format)
-  * Testimonials (dynamic slider)
-  * Contact (API-powered form)
-* 💬 **Live Chat Integration**
-* 📩 **Async Contact Form with Validation**
+- ⚙️ Laravel expert (high-performance apps)
+- 🔐 Secure API design (JWT, OAuth, payments)
+- 📊 Systems handling thousands of users
+- 🌍 Remote-ready (async, documented workflows)
 
 ---
 
-## 🛠 Tech Stack
+## 🧰 Tech Stack
 
-### Core
+### Backend
+<p>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" width="30"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-plain.svg" width="30"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" width="30"/>
+</p>
 
-* HTML5
-* CSS3 (Custom Properties, Advanced Layouts)
-* Vanilla JavaScript (No frameworks)
+### Database
+<p>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" width="30"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" width="30"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" width="30"/>
+</p>
 
-### Backend Expertise (Showcased)
+### Frontend
+<p>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" width="30"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" width="30"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" width="30"/>
+</p>
 
-* Laravel
-* PHP 8+
-* REST APIs
-* Payment Integration (Paystack, Flutterwave)
-
-### Integrations
-
-* Web3Forms (Contact API)
-* Tawk.to (Live Chat)
-* Font Awesome (Icons)
-* Google Fonts
+### DevOps
+<p>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" width="30"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nginx/nginx-original.svg" width="30"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" width="30"/>
+</p>
 
 ---
 
-## 📌 Highlighted Projects
+## 📂 Featured Projects
 
-### 🎓 IAUE Student Bio-data System
-
-* Eliminated duplicate entries for **5,000+ students**
-* Automated validation and data processing
-* Built with Laravel + MySQL
+### 🧾 IAUE Bio-data System
+- Built for 5,000+ students
+- Eliminated duplicate entries
+- Automated data validation
 
 🔗 https://portal.iauestudentsaffairs.com/
 
 ---
 
 ### 🏨 Hostel Allocation System
-
-* Reduced allocation time by **70%**
-* Automated payments and room assignment
-* Real-time admin dashboard
+- Reduced allocation time by **70%**
+- Payment verification + automation
+- Real-time admin dashboard
 
 ---
 
-### 🛒 Oma’s Spray E-commerce
-
-* Built ordering system with cart + invoice
-* Integrated WhatsApp ordering flow
-* Improved sales accessibility
+### 🛒 Oma’s Spray (E-commerce)
+- Product catalog + cart system
+- WhatsApp order integration
+- Invoice generation
 
 🔗 https://omaspray.com.ng/
 
 ---
 
-## 📂 Project Structure
+## 📊 GitHub Stats
 
-```
-portfolio/
-├── index.html          # Main application (SPA-style)
-├── assets/
-│   ├── images/         # Project assets
-├── thank-you.html      # Form success page
-└── README.md
-```
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=esauvictor&show_icons=true&hide_border=true" />
+  <img src="https://github-readme-streak-stats.herokuapp.com/?user=esauvictor&hide_border=true" />
+</p>
 
 ---
 
-## ⚙️ Installation & Setup
+## 🌍 Availability
 
-```bash
-git clone https://github.com/esauvictor/esauvictor.github.io.git
-cd esauvictor.github.io
-```
-
-Open:
-
-```bash
-index.html
-```
-
----
-
-## 🎨 Customization
-
-* Update content in `index.html`
-* Replace images in `/assets/images/`
-* Modify theme via CSS variables (`:root`)
-* Add new projects in the Projects section
-* Update API keys for forms
-
----
-
-## 🔐 Form Configuration
-
-This project uses **Web3Forms**.
-
-Update your API key:
-
-```html
-<input type="hidden" name="access_key" value="YOUR_KEY">
-```
-
----
-
-## 📈 Performance & Design Choices
-
-* No heavy frameworks (fast load times)
-* Lazy-loaded images
-* Lightweight animations (Intersection Observer)
-* Minimal dependencies for better performance
-
----
-
-## 🚀 Future Improvements
-
-* Dark / Light mode toggle
-* Blog or CMS integration
-* Project filtering system
-* PWA support
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome. Open an issue or submit a pull request.
-
----
-
-## 📜 License
-
-MIT License
-
----
-
-## 📬 Contact
-
-* 📧 Email: [esauvictor@icloud.com](mailto:esauvictor@icloud.com)
-* 💼 LinkedIn: https://linkedin.com/in/esau-victor
-* 🐦 X: https://x.com/esau_vee
-* 💻 GitHub: https://github.com/esauvictor
-
----
-
-## ⚡ Final Note
-
-This portfolio reflects how I approach development:
-
-**Not just building interfaces — but designing systems that solve real problems, scale, and deliver measurable results.**
+```txt
+STATUS: AVAILABLE_FOR_REMOTE_WORK
+TYPE: FREELANCE / CONTRACT / FULL-TIME
+TIMEZONE: GMT+1
