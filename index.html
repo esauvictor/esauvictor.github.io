@@ -37,13 +37,10 @@
       --line: rgba(255,255,255,0.04);
     }
 
-    /* ── SCROLLBAR ── */
     ::-webkit-scrollbar { width:4px; }
     ::-webkit-scrollbar-track { background:var(--bg); }
     ::-webkit-scrollbar-thumb { background:var(--green); border-radius:2px; }
-    ::-webkit-scrollbar-track { background:var(--bg); }
 
-    /* ── BASE ── */
     html { scroll-behavior:smooth; }
     body {
       font-family: var(--mono);
@@ -53,7 +50,6 @@
       overflow-x:hidden;
     }
 
-    /* ── SCANLINES ── */
     body::before {
       content:'';
       position:fixed;
@@ -69,7 +65,6 @@
       z-index:9999;
     }
 
-    /* ── CURSOR ── */
     * { cursor: none !important; }
     #cursor {
       position:fixed;
@@ -93,7 +88,6 @@
       transform:translate(-50%,-50%);
     }
 
-    /* ── NOISE OVERLAY ── */
     body::after {
       content:'';
       position:fixed;
@@ -104,10 +98,8 @@
       opacity:0.4;
     }
 
-    /* ── CONTAINER ── */
     .container { max-width:1280px; margin:0 auto; padding:0 2rem; }
 
-    /* ── SECTION ── */
     .section {
       padding:6rem 0;
       border-bottom:1px solid var(--line);
@@ -115,7 +107,6 @@
     }
     .section:last-of-type { border-bottom:none; }
 
-    /* ── SECTION HEADING ── */
     .sec-head {
       display:flex;
       align-items:center;
@@ -143,7 +134,6 @@
       background: linear-gradient(90deg, var(--border2), transparent);
     }
 
-    /* ── NAV ── */
     .navbar {
       position:sticky;
       top:0;
@@ -214,7 +204,6 @@
       .hamburger { display:block; }
     }
 
-    /* ── HERO ── */
     .hero {
       padding:5rem 0 6rem;
       position:relative;
@@ -375,7 +364,6 @@
       .hero-buttons { justify-content:center; }
     }
 
-    /* ── ABOUT ── */
     .terminal-block {
       background:var(--bg1);
       border:1px solid var(--border);
@@ -425,7 +413,6 @@
     }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-    /* ── TECH STACK ── */
     .stack-grid {
       display:grid;
       grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
@@ -479,7 +466,6 @@
       background:var(--green-faint);
     }
 
-    /* ── PROJECTS ── */
     .projects-grid {
       display:grid;
       grid-template-columns:repeat(3,1fr);
@@ -598,7 +584,6 @@
     .project-link:hover { color:var(--green); }
     .project-link::before { content:'→'; color:var(--green); font-size:.6rem; }
 
-    /* ── TESTIMONIALS ── */
     .slider-container { position:relative; overflow:hidden; margin:2rem 0; }
     .testimonials-track {
       display:flex;
@@ -644,7 +629,6 @@
       color:var(--green);
     }
 
-    /* ── CONTACT ── */
     .contact-wrap {
       display:grid;
       grid-template-columns:1fr 1.3fr;
@@ -730,7 +714,6 @@
       transform:translateY(-2px);
     }
 
-    /* form */
     .contact-form-head {
       font-size:.6rem;
       letter-spacing:.12em;
@@ -827,7 +810,6 @@
       color:var(--red);
     }
 
-    /* ── FOOTER ── */
     footer {
       padding:1.5rem 0;
       border-top:1px solid var(--border);
@@ -851,7 +833,6 @@
       letter-spacing:.08em;
     }
 
-    /* ── REVEAL ── */
     [data-reveal] {
       opacity:0;
       transform:translateY(24px);
@@ -859,7 +840,6 @@
     }
     [data-reveal].visible { opacity:1; transform:translateY(0); }
 
-    /* ── STATUS INDICATOR ── */
     .status-dot {
       display:inline-block;
       width:7px; height:7px;
@@ -877,7 +857,6 @@
 </head>
 <body>
 
-<!-- cursor -->
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
 
@@ -905,16 +884,21 @@
   <div class="hero-glow"></div>
   <div class="container hero-grid">
     <div class="hero-content">
+      <!-- TONE CHANGE: badge from "AVAILABLE FOR HIRE" to something confident, not desperate -->
+      <div class="hero-badge">SELECTIVE ABOUT PROJECTS</div>
       <h1 class="hero-name">Full<br>Stack<br><span class="accent">Dev.</span></h1>
+      <!-- TONE CHANGE: role line stays, it's neutral -->
       <p class="hero-role">role = "Laravel &amp; PHP Engineer"</p>
+      <!-- TONE CHANGE: desc reframed — not "building solutions" pitch, just a statement of standards -->
       <p class="hero-desc">
-        I architect scalable backend systems, high-performance APIs, and production-grade web apps.
-        Building solutions that solve real problems with clean, maintainable code.
-        Port Harcourt, NG — remote-ready.
+        Scalable backend systems. High-performance APIs. Production-grade code.
+        The work either meets the standard or it doesn't ship.
+        Port Harcourt, NG — remote-capable.
       </p>
       <div class="hero-buttons">
         <a href="#projects" class="btn btn-primary"><i class="fas fa-code-branch"></i> <span>view_projects()</span></a>
-        <a href="#contact" class="btn btn-outline"><i class="fas fa-terminal"></i> <span>hire_me()</span></a>
+        <!-- TONE CHANGE: "hire_me()" → "let's_talk()" — peer-to-peer, not supplicant -->
+        <a href="#contact" class="btn btn-outline"><i class="fas fa-terminal"></i> <span>let's_talk()</span></a>
       </div>
     </div>
     <div class="hero-visual">
@@ -948,14 +932,16 @@
         <div style="padding-left:1.5rem"><span class="t-str">'role'</span>     =&gt; <span class="t-val">'Backend-focused Full Stack Developer'</span>,</div>
         <div style="padding-left:1.5rem"><span class="t-str">'location'</span> =&gt; <span class="t-val">'Port Harcourt, Rivers State, NG'</span>,</div>
         <div style="padding-left:1.5rem"><span class="t-str">'focus'</span>    =&gt; [<span class="t-val">'Laravel'</span>, <span class="t-val">'PHP'</span>, <span class="t-val">'MySQL'</span>, <span class="t-val">'API Design'</span>],</div>
-        <div style="padding-left:1.5rem"><span class="t-str">'status'</span>   =&gt; <span class="t-val">'open_to_work'</span> <span class="t-comment">// remote & freelance</span></div>
+        <!-- TONE CHANGE: status from 'open_to_work' (sounds unemployed) to 'selective_availability' -->
+        <div style="padding-left:1.5rem"><span class="t-str">'status'</span>   =&gt; <span class="t-val">'selective_availability'</span> <span class="t-comment">// quality projects only</span></div>
         <div>];</div>
         <div style="margin-top:.8rem; color:var(--text2); font-size:.75rem;">
           <span class="t-comment">/*</span><br>
-          <span class="t-comment">&nbsp;* I specialize in Laravel, PHP, MySQL, and modern API design.</span><br>
-          <span class="t-comment">&nbsp;* Built systems handling thousands of concurrent users,</span><br>
-          <span class="t-comment">&nbsp;* automated complex workflows, integrated third-party services.</span><br>
-          <span class="t-comment">&nbsp;* Clean code, scalability, and real-world impact drive my work.</span><br>
+          <!-- TONE CHANGE: comment block from capability pitch to standards statement -->
+          <span class="t-comment">&nbsp;* Laravel, PHP, MySQL, API architecture — that's the craft.</span><br>
+          <span class="t-comment">&nbsp;* Systems built to last: thousands of concurrent users,</span><br>
+          <span class="t-comment">&nbsp;* zero-compromise reliability, no shortcuts.</span><br>
+          <span class="t-comment">&nbsp;* If the code isn't clean, it doesn't go out.</span><br>
           <span class="t-comment">&nbsp;*/</span>
         </div>
         <div style="margin-top:.8rem"><span class="t-prompt">❯</span> <span class="t-cursor"></span></div>
@@ -1193,10 +1179,11 @@
     <div class="contact-wrap" data-reveal>
 
       <div class="contact-left">
+        <!-- TONE CHANGE: from "available for..." supplication to "got a problem worth solving?" — frames the client as needing to qualify -->
         <p class="contact-tagline">
-          Let's collaborate on your next project.<br>
-          Available for freelance, contracts,<br>
-          and full-time opportunities.
+          Got a problem worth solving?<br>
+          Serious projects. Serious people.<br>
+          Let's find out if it's a fit.
         </p>
         <div class="contact-detail">
           <div class="contact-icon"><i class="fas fa-envelope"></i></div>
@@ -1228,7 +1215,8 @@
       </div>
 
       <div class="contact-right">
-        <div class="contact-form-head"><span>$</span> new Message().send()</div>
+        <!-- TONE CHANGE: form head — less transactional, more conversational -->
+        <div class="contact-form-head"><span>$</span> new Conversation().start()</div>
         <form id="contactForm" class="contact-form">
           <input type="hidden" name="access_key" value="56e9022d-f892-4b9a-b2fb-72561a3aeb7c">
           <input type="checkbox" name="botcheck" style="display:none" tabindex="-1">
@@ -1244,11 +1232,11 @@
           </div>
           <div class="form-group">
             <label>subject</label>
-            <input type="text" name="subject" class="form-input" placeholder="// project inquiry..." required>
+            <input type="text" name="subject" class="form-input" placeholder="// what are we solving..." required>
           </div>
           <div class="form-group">
             <label>message</label>
-            <textarea name="message" class="form-input" rows="4" placeholder="// describe your project..." required></textarea>
+            <textarea name="message" class="form-input" rows="4" placeholder="// tell me about the problem..." required></textarea>
           </div>
           <button type="submit" class="submit-btn" id="submitBtn">
             <i class="fas fa-paper-plane"></i> <span>send_message()</span>
@@ -1273,7 +1261,6 @@
 </footer>
 
 <script>
-  // cursor
   const cur = document.getElementById('cursor');
   const ring = document.getElementById('cursor-ring');
   document.addEventListener('mousemove', e => {
@@ -1287,7 +1274,6 @@
     el.addEventListener('mouseleave', () => { cur.style.transform = 'scale(1)'; ring.style.borderColor = 'rgba(255,120,40,0.65)'; ring.style.transform = 'translate(-50%,-50%) scale(1)'; });
   });
 
-  // nav
   const ham = document.getElementById('hamburger');
   const nav = document.getElementById('navLinks');
   ham.addEventListener('click', () => {
@@ -1299,7 +1285,6 @@
     ham.innerHTML = '<i class="fas fa-bars"></i>';
   }));
 
-  // smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       const t = document.querySelector(a.getAttribute('href'));
@@ -1307,13 +1292,11 @@
     });
   });
 
-  // reveal
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.08 });
   document.querySelectorAll('[data-reveal]').forEach(el => obs.observe(el));
 
-  // testimonials slider
   const track = document.getElementById('testimonialsTrack');
   if (track) {
     const slides = Array.from(track.children);
@@ -1336,7 +1319,6 @@
     setTimeout(() => { update(); startAuto(); }, 100);
   }
 
-  // contact form
   const form = document.getElementById('contactForm');
   const submitBtn = document.getElementById('submitBtn');
   const formStatus = document.getElementById('formStatus');
@@ -1373,10 +1355,8 @@
     }
   });
 
-  // year
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // dev tools block
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     const b = ['c','u','a','s'];
