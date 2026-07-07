@@ -927,14 +927,14 @@
       <div class="terminal-body">
         <div><span class="t-prompt">❯</span> <span class="t-cmd">php</span> profile.php</div>
         <div style="margin-top:.8rem"><span class="t-key">$developer</span> = [</div>
-        <div style="padding-left:1.5rem"><span class="t-str">'name'</span>     =&gt; <span class="t-val">'Esau Victor'</span>,</div>
-        <div style="padding-left:1.5rem"><span class="t-str">'role'</span>     =&gt; <span class="t-val">'Backend-focused Full Stack Developer'</span>,</div>
-        <div style="padding-left:1.5rem"><span class="t-str">'location'</span> =&gt; <span class="t-val">'Port Harcourt, Rivers State, NG'</span>,</div>
-        <div style="padding-left:1.5rem"><span class="t-str">'focus'</span>    =&gt; [<span class="t-val">'Laravel'</span>, <span class="t-val">'PHP'</span>, <span class="t-val">'MySQL'</span>, <span class="t-val">'API Design'</span>],</div>
+        <div style="padding-left:1.5rem"><span class="t-str">'name'</span>     =&gt; <span class="t-val" id="aboutName">'Esau Victor'</span>,</div>
+        <div style="padding-left:1.5rem"><span class="t-str">'role'</span>     =&gt; <span class="t-val" id="aboutRole">'Backend-focused Full Stack Developer'</span>,</div>
+        <div style="padding-left:1.5rem"><span class="t-str">'location'</span> =&gt; <span class="t-val" id="aboutLocation">'Port Harcourt, Rivers State, NG'</span>,</div>
+        <div style="padding-left:1.5rem"><span class="t-str">'focus'</span>    =&gt; <span id="aboutFocus">['Laravel', 'PHP', 'MySQL', 'API Design']</span>,</div>
         <!-- TONE CHANGE: status from 'open_to_work' (sounds unemployed) to 'selective_availability' -->
-        <div style="padding-left:1.5rem"><span class="t-str">'status'</span>   =&gt; <span class="t-val">'selective_availability'</span> <span class="t-comment">// quality projects only</span></div>
+        <div style="padding-left:1.5rem"><span class="t-str">'status'</span>   =&gt; <span class="t-val" id="aboutStatus">'selective_availability'</span> <span class="t-comment" id="aboutStatusNote">// quality projects only</span></div>
         <div>];</div>
-        <div style="margin-top:.8rem; color:var(--text2); font-size:.75rem;">
+        <div style="margin-top:.8rem; color:var(--text2); font-size:.75rem;" id="aboutBio">
           <span class="t-comment">/*</span><br>
           <!-- TONE CHANGE: comment block from capability pitch to standards statement -->
           <span class="t-comment">&nbsp;* Laravel, PHP, MySQL, API architecture — that's the craft.</span><br>
@@ -957,56 +957,7 @@
       <h2 class="sec-title">tech_stack<span>()</span></h2>
       <div class="sec-line"></div>
     </div>
-    <div class="stack-grid" data-reveal>
-      <div class="stack-cell">
-        <div class="stack-cell-head"><i class="fas fa-server"></i> BACKEND_CORE</div>
-        <div class="stack-tags">
-          <span class="stack-tag">PHP 8.x</span><span class="stack-tag">Laravel 10/11</span>
-          <span class="stack-tag">RESTful APIs</span><span class="stack-tag">GraphQL</span>
-          <span class="stack-tag">Node.js</span><span class="stack-tag">Express.js</span>
-        </div>
-      </div>
-      <div class="stack-cell">
-        <div class="stack-cell-head"><i class="fas fa-database"></i> DATABASES</div>
-        <div class="stack-tags">
-          <span class="stack-tag">MySQL</span><span class="stack-tag">PostgreSQL</span>
-          <span class="stack-tag">MongoDB</span><span class="stack-tag">Redis</span>
-          <span class="stack-tag">Elasticsearch</span><span class="stack-tag">Firebase</span>
-        </div>
-      </div>
-      <div class="stack-cell">
-        <div class="stack-cell-head"><i class="fas fa-code"></i> FRONTEND</div>
-        <div class="stack-tags">
-          <span class="stack-tag">React</span><span class="stack-tag">Vue.js</span>
-          <span class="stack-tag">Alpine.js</span><span class="stack-tag">Tailwind CSS</span>
-          <span class="stack-tag">Livewire</span><span class="stack-tag">Blade</span>
-        </div>
-      </div>
-      <div class="stack-cell">
-        <div class="stack-cell-head"><i class="fas fa-cloud"></i> DEVOPS</div>
-        <div class="stack-tags">
-          <span class="stack-tag">Docker</span><span class="stack-tag">Laravel Forge</span>
-          <span class="stack-tag">AWS (EC2/S3)</span><span class="stack-tag">CI/CD</span>
-          <span class="stack-tag">Nginx</span><span class="stack-tag">Ubuntu</span>
-        </div>
-      </div>
-      <div class="stack-cell">
-        <div class="stack-cell-head"><i class="fas fa-tools"></i> TOOLS</div>
-        <div class="stack-tags">
-          <span class="stack-tag">Git/GitHub</span><span class="stack-tag">PHPUnit</span>
-          <span class="stack-tag">Pest</span><span class="stack-tag">Postman</span>
-          <span class="stack-tag">VS Code</span><span class="stack-tag">Tinkerwell</span>
-        </div>
-      </div>
-      <div class="stack-cell">
-        <div class="stack-cell-head"><i class="fas fa-shield-alt"></i> SECURITY &amp; PAYMENTS</div>
-        <div class="stack-tags">
-          <span class="stack-tag">JWT/OAuth2</span><span class="stack-tag">Paystack API</span>
-          <span class="stack-tag">Flutterwave</span><span class="stack-tag">SSL/TLS</span>
-          <span class="stack-tag">CSRF/XSS</span><span class="stack-tag">Rate Limiting</span>
-        </div>
-      </div>
-    </div>
+    <div class="stack-grid" id="stackGrid" data-reveal></div>
   </div>
 </section>
 
@@ -1447,6 +1398,53 @@ fetch(`${API_BASE}/testimonials.php`)
     // re-init the carousel now that real slides exist
     if (typeof initTestimonialsCarousel === 'function') {
       initTestimonialsCarousel();
+    }
+  })
+  .catch(() => { /* fail silently — keep whatever fallback markup exists */ });
+</script>
+
+<script>
+fetch(`${API_BASE}/tech-stack.php`)
+  .then(res => res.json())
+  .then(data => {
+    const grid = document.getElementById('stackGrid');
+    if (!grid || !data.tech_stack || !data.tech_stack.length) return;
+
+    grid.innerHTML = data.tech_stack.map(c => `
+      <div class="stack-cell">
+        <div class="stack-cell-head"><i class="${c.icon || 'fas fa-code'}"></i> ${c.category}</div>
+        <div class="stack-tags">${c.tags.map(t => `<span class="stack-tag">${t}</span>`).join('')}</div>
+      </div>
+    `).join('');
+  })
+  .catch(() => { /* fail silently — keep whatever fallback markup exists */ });
+</script>
+
+<script>
+fetch(`${API_BASE}/about.php`)
+  .then(res => res.json())
+  .then(data => {
+    const a = data.about;
+    if (!a) return;
+
+    const nameEl = document.getElementById('aboutName');
+    const roleEl = document.getElementById('aboutRole');
+    const locEl = document.getElementById('aboutLocation');
+    const focusEl = document.getElementById('aboutFocus');
+    const statusEl = document.getElementById('aboutStatus');
+    const statusNoteEl = document.getElementById('aboutStatusNote');
+    const bioEl = document.getElementById('aboutBio');
+
+    if (nameEl && a.name) nameEl.textContent = `'${a.name}'`;
+    if (roleEl && a.role) roleEl.textContent = `'${a.role}'`;
+    if (locEl && a.location) locEl.textContent = `'${a.location}'`;
+    if (focusEl && a.focus && a.focus.length) focusEl.textContent = `[${a.focus.map(f => `'${f}'`).join(', ')}]`;
+    if (statusEl && a.status) statusEl.textContent = `'${a.status}'`;
+    if (statusNoteEl) statusNoteEl.textContent = a.status_note ? `// ${a.status_note}` : '';
+
+    if (bioEl && a.bio && a.bio.length) {
+      const lines = a.bio.map(line => `<span class="t-comment">&nbsp;* ${line}</span><br>`).join('');
+      bioEl.innerHTML = `<span class="t-comment">/*</span><br>${lines}<span class="t-comment">&nbsp;*/</span>`;
     }
   })
   .catch(() => { /* fail silently — keep whatever fallback markup exists */ });
