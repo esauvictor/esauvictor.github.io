@@ -1031,18 +1031,7 @@
       <div class="sec-line"></div>
     </div>
     <div class="slider-container">
-      <div class="testimonials-track" id="testimonialsTrack">
-        <div class="testimonial-card"><div class="testimonial-text">"Esau built a robust student portal that cut admin work by 60%. True Laravel expert."</div><div class="testimonial-name">Dr. Sampson O. Wagbara</div><div class="testimonial-role">Dean, Students' Affairs — IAUE</div></div>
-        <div class="testimonial-card"><div class="testimonial-text">"The payment API integration was flawless — reliable, documented, and secure."</div><div class="testimonial-name">Ngozi Eze</div><div class="testimonial-role">CTO, Payvantage</div></div>
-        <div class="testimonial-card"><div class="testimonial-text">"Custom inventory system that exceeded expectations. Highly recommend."</div><div class="testimonial-name">Oluwaseun Adeyemi</div><div class="testimonial-role">Operations Manager</div></div>
-        <div class="testimonial-card"><div class="testimonial-text">"Revamped our legacy PHP app, improved performance by 40%."</div><div class="testimonial-name">Fatima Bello</div><div class="testimonial-role">Product Lead, Medilab</div></div>
-        <div class="testimonial-card"><div class="testimonial-text">"Clean backend architecture, handles peak loads without glitches."</div><div class="testimonial-name">Emmanuel Nwosu</div><div class="testimonial-role">IT Director</div></div>
-        <div class="testimonial-card"><div class="testimonial-text">"Helped us migrate to a secure Laravel backend, saved weeks of work."</div><div class="testimonial-name">Grace Okafor</div><div class="testimonial-role">Data Manager</div></div>
-        <div class="testimonial-card"><div class="testimonial-text">"One of few devs who understand business logic + clean code."</div><div class="testimonial-name">Oma Favour</div><div class="testimonial-role">Founder, Oma's Spray</div></div>
-        <div class="testimonial-card"><div class="testimonial-text">"From DB design to API docs, meticulous work. A true specialist."</div><div class="testimonial-name">Chinwe Ikeji</div><div class="testimonial-role">Tech Lead</div></div>
-        <div class="testimonial-card"><div class="testimonial-text">"Debugged a critical Laravel queue issue, saved us from outage."</div><div class="testimonial-name">Ibrahim Musa</div><div class="testimonial-role">DevOps Engineer</div></div>
-        <div class="testimonial-card"><div class="testimonial-text">"Go-to for PHP backend work — reliable, skilled, always on time."</div><div class="testimonial-name">Tolulope Adebayo</div><div class="testimonial-role">Freelance Consultant</div></div>
-      </div>
+      <div class="testimonials-track" id="testimonialsTrack"></div>
     </div>
     <div class="slider-controls">
       <button class="slider-btn" id="prevBtn"><i class="fas fa-chevron-left"></i> prev</button>
@@ -1179,9 +1168,11 @@
   }, { threshold: 0.08 });
   document.querySelectorAll('[data-reveal]').forEach(el => obs.observe(el));
 
-  const track = document.getElementById('testimonialsTrack');
-  if (track) {
+  function initTestimonialsCarousel() {
+    const track = document.getElementById('testimonialsTrack');
+    if (!track) return;
     const slides = Array.from(track.children);
+    if (!slides.length) return;
     let idx = 0;
     let auto;
     const spv = () => window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1;
@@ -1200,6 +1191,7 @@
     track.addEventListener('mouseleave', startAuto);
     setTimeout(() => { update(); startAuto(); }, 100);
   }
+  initTestimonialsCarousel();
 
   const form = document.getElementById('contactForm');
   const submitBtn = document.getElementById('submitBtn');
@@ -1297,7 +1289,11 @@ fetch(`${API_BASE}/projects.php`)
           <div class="project-index">PROJECT_${String(i + 1).padStart(3, '0')}</div>
           <h3 class="project-title">${p.title}</h3>
           <div class="project-tags">${p.tech_stack.map(t => `<span class="project-tag">${t}</span>`).join('')}</div>
-          <p>${p.summary || ''}</p>
+          <div>
+            ${p.problem ? `<div class="problem-item"><span class="problem-label">⚠ PROBLEM</span><div class="problem-text">${p.problem}</div></div>` : ''}
+            ${p.solution ? `<div class="solution-item"><span class="solution-label">✓ SOLUTION</span><div class="solution-text">${p.solution}</div></div>` : ''}
+            ${(!p.problem && !p.solution && p.summary) ? `<p>${p.summary}</p>` : ''}
+          </div>
           <div class="project-links">
             ${p.project_url ? `<a href="${p.project_url}" class="project-link" target="_blank">live</a>` : ''}
             ${p.github_url ? `<a href="${p.github_url}" class="project-link" target="_blank">code</a>` : ''}
@@ -1312,6 +1308,29 @@ fetch(`${API_BASE}/projects.php`)
         entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
       }, { threshold: 0.08 }).observe(el);
     });
+  })
+  .catch(() => { /* fail silently — keep whatever fallback markup exists */ });
+</script>
+
+<script>
+fetch(`${API_BASE}/testimonials.php`)
+  .then(res => res.json())
+  .then(data => {
+    const track = document.getElementById('testimonialsTrack');
+    if (!track || !data.testimonials || !data.testimonials.length) return;
+
+    track.innerHTML = data.testimonials.map(t => `
+      <div class="testimonial-card">
+        <div class="testimonial-text">"${t.quote}"</div>
+        <div class="testimonial-name">${t.author_name}</div>
+        <div class="testimonial-role">${t.author_role || ''}</div>
+      </div>
+    `).join('');
+
+    // re-init the carousel now that real slides exist
+    if (typeof initTestimonialsCarousel === 'function') {
+      initTestimonialsCarousel();
+    }
   })
   .catch(() => { /* fail silently — keep whatever fallback markup exists */ });
 </script>
