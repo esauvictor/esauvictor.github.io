@@ -833,166 +833,115 @@
 
     <!-- JavaScript -->
     <script>
-        // Blog posts data
-        const blogPosts = {
-            1: {
-                title: "A Day in the Life of a Developer",
-                date: "April 10, 2024",
-                content: `
-                    <p>Ever wondered what a typical day looks like for a software developer? Spoiler: It's more than just typing lines of code. From morning stand-ups to late-night debugging, the day is a mix of logic, creativity, problem-solving, and—yes—a few cups of coffee.</p>
-                    
-                    <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Developer workplace">
-                    
-                    <p>My day usually starts with a cup of coffee and checking my emails. Then I join the morning stand-up meeting with my team where we discuss what we accomplished yesterday, what we plan to do today, and any blockers we might have.</p>
-                    
-                    <p>After the meeting, I dive into my development tasks. This could involve writing new features, fixing bugs, or refactoring code. I try to work in focused sessions, often using the Pomodoro technique (25 minutes of work followed by a 5-minute break) to maintain productivity.</p>
-                    
-                    <p>Lunch break is a welcome change from staring at the screen. I often use this time to stretch, take a short walk, or chat with colleagues about non-work-related topics.</p>
-                    
-                    <p>In the afternoon, the energy levels might dip a bit, so I usually tackle less intensive tasks like code reviews, documentation, or planning for upcoming features. This is also a good time for meetings or catch-ups with other teams.</p>
-                    
-                    <p>Before wrapping up for the day, I make sure to note down what I accomplished and what I need to work on tomorrow. This helps me hit the ground running the next morning.</p>
-                    
-                    <p>Occasionally, I'll stay late to fix a critical bug or finish an important feature. But I try to maintain a healthy work-life balance and avoid making overtime a regular habit.</p>
-                    
-                    <p>Evening is for relaxation - reading, exercising, or spending time with family. But I'll admit, my mind sometimes wanders back to an interesting problem I encountered during the day. That's the developer's life for you - constantly thinking and learning!</p>
-                `,
-                tags: ["Web Development", "Career", "Productivity"],
-                wordCount: 450
-            },
-            2: {
-                title: "Overcoming Imposter Syndrome",
-                date: "May 3, 2025",
-                content: `
-                    <p>Even after years in tech, many developers still ask themselves: "Am I good enough?" That persistent self-doubt is called Imposter Syndrome, and it's more common than you'd think—even among the most skilled professionals.</p>
-                    
-                    <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Person thinking">
-                    
-                    <p>I first experienced Imposter Syndrome early in my career. Despite positive feedback from colleagues and successful project deliveries, I felt like I was faking my way through and waiting to be "exposed" as a fraud. I thought I just got lucky or that my successes were flukes.</p>
-                    
-                    <p>The feelings resurfaced when I transitioned to more senior roles or learned new technologies. Each new challenge brought with it the fear that I wasn't qualified enough to handle it.</p>
-                    
-                    <p>Here are some strategies that helped me cope with and overcome these feelings:</p>
-                    
-                    <h2>1. Acknowledge Your Feelings</h2>
-                    <p>The first step is recognizing that Imposter Syndrome is real and common. Accepting that these feelings are normal helps reduce their power over you.</p>
-                    
-                    <h2>2. Track Your Wins</h2>
-                    <p>Keep a record of your achievements, positive feedback, and successful projects. When self-doubt creeps in, review this list to remind yourself of your capabilities.</p>
-                    
-                    <h2>3. Reframe Your Thoughts</h2>
-                    <p>When negative thoughts arise, challenge them. Ask yourself: "What evidence do I have that supports this belief? What evidence contradicts it?"</p>
-                    
-                    <h2>4. Focus on Growth, Not Perfection</h2>
-                    <p>Embrace the mindset that you're always learning and improving. Set small, achievable goals to build confidence gradually.</p>
-                    
-                    <h2>5. Connect with Others</h2>
-                    <p>Talk to colleagues or join professional communities. You'll likely find that many people share similar feelings. Mentorship can also be powerful—helping others often reinforces your own knowledge.</p>
-                    
-                    <p>Remember that Imposter Syndrome doesn't disappear completely, but it becomes less paralyzing over time. When I feel it now, I recognize it as a signal to pause, reflect on my progress, and then continue moving forward.</p>
-                `,
-                tags: ["Career Development", "Mental Health", "Productivity"],
-                wordCount: 520
-            },
-            3: {
-                title: "Building Something That Matters",
-                date: "June 12, 2025",
-                content: `
-                    <p>There's a unique thrill in deploying an app or script that actually makes a difference—to a team, a user, or a community. Beyond code and deadlines, the real reward in tech is building something that solves a real problem.</p>
-                    
-                    <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="People working together">
-                    
-                    <p>Early in my career, I focused mostly on technical challenges—clean code, optimized algorithms, perfect architecture. While these are important, I realized that great technical solutions don't automatically translate to meaningful impact.</p>
-                    
-                    <p>The shift happened when I worked on a project that directly improved our team's workflow. By automating repetitive tasks, we saved hours of work each week and reduced human error. The positive feedback from my team was incredibly rewarding.</p>
-                    
-                    <h2>Understanding Real Needs</h2>
-                    <p>The key to building something that matters is understanding the actual problems people face. This requires:</p>
-                    <ul>
-                        <li>Active listening to stakeholders</li>
-                        <li>Observing workflows and pain points</li>
-                        <li>Asking the right questions</li>
-                        <li>Validating assumptions before building</li>
-                    </ul>
-                    
-                    <h2>Measuring Impact</h2>
-                    <p>After deployment, it's crucial to measure whether your solution is making a difference. This could involve:</p>
-                    <ul>
-                        <li>Tracking usage metrics</li>
-                        <li>Gathering user feedback</li>
-                        <li>Measuring business outcomes</li>
-                        <li>Iterating based on results</li>
-                    </ul>
-                    
-                    <h2>The Bigger Picture</h2>
-                    <p>While individual contributions matter, the greatest impact comes from collaboration. Working with cross-functional teams brings diverse perspectives that can lead to innovative solutions.</p>
-                    
-                    <p>Remember that not every project will be a success. Some solutions might not resonate with users, or business priorities might shift. Treat these as learning opportunities rather than failures.</p>
-                    
-                    <p>The most satisfying moments in my career have come from creating tools that people actually use and find valuable. Whether it's a small internal script that saves time or a public application that solves a real problem, building something that matters is what makes tech work fulfilling.</p>
-                `,
-                tags: ["Software Development", "Problem Solving", "Impact"],
-                wordCount: 580
-            }
-        };
+        const API_BASE = 'https://renaissanceassembly.org/secure/api';
 
         // Get URL parameter
         function getURLParameter(name) {
             return new URLSearchParams(window.location.search).get(name);
         }
 
-        // Calculate reading time
-        function calculateReadingTime(wordCount) {
+        // Estimate reading time from raw HTML content (strip tags, count words)
+        function calculateReadingTime(htmlContent) {
+            const text = htmlContent.replace(/<[^>]*>/g, ' ');
+            const wordCount = (text.trim().match(/\S+/g) || []).length;
             const wordsPerMinute = 200;
-            const minutes = Math.ceil(wordCount / wordsPerMinute);
+            const minutes = Math.max(1, Math.ceil(wordCount / wordsPerMinute));
             return `${minutes} min read`;
         }
 
-        // Load blog post content
-        function loadBlogPost() {
-            const postId = getURLParameter('id');
-            const post = blogPosts[postId];
-            
-            if (post) {
+        function formatDate(isoString) {
+            if (!isoString) return '';
+            const d = new Date(isoString);
+            return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        // Runs once real post content is in the DOM: copy buttons, fade-in, image hover.
+        function enhancePostContent() {
+            addCopyButtons();
+
+            const contentElements = document.querySelectorAll('.post-content > *');
+            contentElements.forEach((el, i) => {
+                el.style.opacity = '0';
+                el.style.animation = `fadeIn 0.5s ease-out ${i * 0.1}s forwards`;
+            });
+
+            document.querySelectorAll('.post-content img').forEach(img => {
+                img.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+                img.addEventListener('mouseenter', () => {
+                    img.style.transform = 'scale(1.02)';
+                    img.style.boxShadow = '0 15px 30px rgba(0,0,0,0.2)';
+                });
+                img.addEventListener('mouseleave', () => {
+                    img.style.transform = 'scale(1)';
+                    img.style.boxShadow = 'var(--shadow-md)';
+                });
+            });
+        }
+
+        // Load blog post content from the API
+        async function loadBlogPost() {
+            const slug = getURLParameter('slug');
+            if (!slug) {
+                document.getElementById('post-content').innerHTML = '<p>Blog post not found.</p>';
+                document.querySelector('.nav-prev').style.display = 'none';
+                document.querySelector('.nav-next').style.display = 'none';
+                return;
+            }
+
+            try {
+                const [postRes, listRes] = await Promise.all([
+                    fetch(`${API_BASE}/posts.php?slug=${encodeURIComponent(slug)}`),
+                    fetch(`${API_BASE}/posts.php`)
+                ]);
+
+                if (!postRes.ok) throw new Error('not found');
+                const postData = await postRes.json();
+                const post = postData.post;
+
+                const listData = await listRes.json();
+                const posts = listData.posts || [];
+
                 document.getElementById('post-title').textContent = post.title;
-                document.getElementById('post-date').querySelector('span').textContent = post.date;
-                document.getElementById('post-content').innerHTML = post.content;
-                document.getElementById('reading-time').querySelector('span').textContent = calculateReadingTime(post.wordCount);
-                
-                // Load tags
+                document.getElementById('post-date').querySelector('span').textContent = formatDate(post.published_at);
+                document.getElementById('reading-time').querySelector('span').textContent = calculateReadingTime(post.content || '');
+
+                let contentHtml = post.content || '';
+                if (post.cover_image_url) {
+                    contentHtml = `<img src="${post.cover_image_url}" alt="${post.title}">` + contentHtml;
+                }
+                document.getElementById('post-content').innerHTML = contentHtml;
+
+                // No tags field from the API yet — hide the tags row rather than show stale data.
                 const tagsContainer = document.getElementById('post-tags');
                 tagsContainer.innerHTML = '';
-                post.tags.forEach(tag => {
-                    const tagElement = document.createElement('span');
-                    tagElement.className = 'tag';
-                    tagElement.textContent = tag;
-                    tagsContainer.appendChild(tagElement);
-                });
-                
-                // Setup navigation
-                const prevId = parseInt(postId) - 1;
-                const nextId = parseInt(postId) + 1;
+
+                // Prev/Next based on published order in the full list.
+                const idx = posts.findIndex(p => p.slug === slug);
                 const prevLink = document.querySelector('.nav-prev');
                 const nextLink = document.querySelector('.nav-next');
-                
-                if (blogPosts[prevId]) {
-                    prevLink.href = `post.html?id=${prevId}`;
-                    document.getElementById('prev-post-title').textContent = blogPosts[prevId].title;
+
+                const prevPost = idx > 0 ? posts[idx - 1] : null;
+                const nextPost = idx >= 0 && idx < posts.length - 1 ? posts[idx + 1] : null;
+
+                if (prevPost) {
+                    prevLink.href = `post.html?slug=${encodeURIComponent(prevPost.slug)}`;
+                    prevLink.style.display = '';
+                    document.getElementById('prev-post-title').textContent = prevPost.title;
                 } else {
                     prevLink.style.display = 'none';
                 }
-                
-                if (blogPosts[nextId]) {
-                    nextLink.href = `post.html?id=${nextId}`;
-                    document.getElementById('next-post-title').textContent = blogPosts[nextId].title;
+
+                if (nextPost) {
+                    nextLink.href = `post.html?slug=${encodeURIComponent(nextPost.slug)}`;
+                    nextLink.style.display = '';
+                    document.getElementById('next-post-title').textContent = nextPost.title;
                 } else {
                     nextLink.style.display = 'none';
                 }
-                
-                // Update document title
+
                 document.title = `${post.title} - Esau Victor`;
-            } else {
-                // Handle case where post ID is invalid
+                enhancePostContent();
+            } catch (err) {
                 document.getElementById('post-content').innerHTML = '<p>Blog post not found.</p>';
                 document.querySelector('.nav-prev').style.display = 'none';
                 document.querySelector('.nav-next').style.display = 'none';
@@ -1076,33 +1025,11 @@
         // Load the blog post when page loads
         window.addEventListener('load', () => {
             loadBlogPost();
-            addCopyButtons();
-            
-            // Add smooth fade-in for content
-            const contentElements = document.querySelectorAll('.post-content > *');
-            contentElements.forEach((el, i) => {
-                el.style.opacity = '0';
-                el.style.animation = `fadeIn 0.5s ease-out ${i * 0.1}s forwards`;
-            });
-            
-            // Add hover effect to images
-            document.querySelectorAll('.post-content img').forEach(img => {
-                img.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
-                img.addEventListener('mouseenter', () => {
-                    img.style.transform = 'scale(1.02)';
-                    img.style.boxShadow = '0 15px 30px rgba(0,0,0,0.2)';
-                });
-                img.addEventListener('mouseleave', () => {
-                    img.style.transform = 'scale(1)';
-                    img.style.boxShadow = 'var(--shadow-md)';
-                });
-            });
         });
 
         // Handle navigation changes
         window.addEventListener('popstate', () => {
             loadBlogPost();
-            addCopyButtons();
         });
     </script>
 </body>
