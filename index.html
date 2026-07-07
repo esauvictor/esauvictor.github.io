@@ -1243,15 +1243,132 @@
 </script>
 
 <!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/6585afc107843602b804d2c0/1hi93d54d';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
+<!-- Floating Chat Button -->
+<button id="customChatBtn" onclick="openTawk()" title="Chat with us" style="position:fixed;bottom:130px;right:20px;z-index:9999;display:flex;align-items:center;gap:10px;background:#111;color:#fff;border:1px solid rgba(201,168,76,0.4);border-radius:50px;padding:8px 18px 8px 8px;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.6);transition:opacity 0.3s ease,transform 0.2s ease;">    
+    <span style="position:relative;flex-shrink:0;width:36px;height:36px;border-radius:50%;overflow:hidden;border:1px solid rgba(201,168,76,0.3);">        
+        <!-- Updated to your custom GitHub Avatar Link -->
+        <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Chat" style="width:100%;height:100%;object-fit:cover;background:#fff;">        
+        <span style="position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:#c9a84c;border:2px solid #111;"></span>    
+    </span>    
+    <span style="font-weight:bold;font-size:14px;">Chat with us</span>
+</button>
+
+<!-- Tawk.to Embedded Engine with Custom Launcher Control -->
+<script>
+(function () {    
+    var _open = false;
+
+    // Helper logic to pinpoint Tawk.to frames specifically
+    function _isTawk(el) {        
+        if (!el || el.tagName !== 'IFRAME') return false;        
+        var src   = el.getAttribute('src')   || '';        
+        var cls   = el.className             || '';        
+        var title = el.getAttribute('title') || '';        
+        var name  = el.getAttribute('name')  || '';        
+        if (cls.indexOf('VIpgJd') !== -1)     return false;        
+        if (title.indexOf('Translate') !== -1) return false;        
+        if (name === 'votingFrame')            return false;        
+        return (src === 'about:blank' || src === '');    
+    }
+
+    function _hide(el) {        
+        el.style.setProperty('display',    'none',   'important');        
+        el.style.setProperty('visibility', 'hidden', 'important');        
+        el.style.setProperty('opacity',    '0',      'important');    
+    }
+
+    function _show(el) {        
+        el.style.removeProperty('display');        
+        el.style.removeProperty('visibility');        
+        el.style.removeProperty('opacity');    
+    }
+
+    function _hideAll() {        
+        document.querySelectorAll('iframe').forEach(function (f) {            
+            if (_isTawk(f)) _hide(f);        
+        });    
+    }
+
+    function _showAll() {        
+        document.querySelectorAll('iframe').forEach(function (f) {            
+            if (_isTawk(f)) _show(f);        
+        });    
+    }
+
+    // Watch for dynamic style updates on Tawk iframes to enforce hiding
+    var _styleWatcher = new MutationObserver(function (muts) {        
+        if (_open) return;        
+        muts.forEach(function (m) {            
+            if (_isTawk(m.target)) _hide(m.target);        
+        });    
+    });
+
+    // Handle initial injection of Tawk.to elements into DOM tree structure
+    var _domWatcher = new MutationObserver(function (muts) {        
+        muts.forEach(function (m) {            
+            m.addedNodes.forEach(function (node) {                
+                if (node.nodeType !== 1) return;                
+                var frames = node.tagName === 'IFRAME'                    
+                    ? [node]                    
+                    : Array.from(node.querySelectorAll('iframe'));                
+                frames.forEach(function (f) {                    
+                    if (_isTawk(f)) {                        
+                        if (!_open) _hide(f);                        
+                        _styleWatcher.observe(f, { attributes: true, attributeFilter: ['style'] });                    
+                    }                
+                });            
+            });        
+        });    
+    });
+
+    _domWatcher.observe(document.documentElement, { childList: true, subtree: true });
+
+    // Polling backup container fallback
+    var _poll = setInterval(function () { if (!_open) _hideAll(); }, 80);
+
+    window.Tawk_API = window.Tawk_API || {};    
+    window.Tawk_LoadStart = new Date();
+
+    Tawk_API.onLoad = function () {        
+        clearInterval(_poll);        
+        Tawk_API.hideWidget();
+
+        Tawk_API.onChatMaximized = function () {            
+            _open = true;            
+            _showAll();            
+            var b = document.getElementById('customChatBtn');            
+            if (b) { b.style.opacity = '0'; b.style.pointerEvents = 'none'; }        
+        };        
+        
+        Tawk_API.onChatMinimized = function () {            
+            Tawk_API.hideWidget();        
+        };        
+        
+        Tawk_API.onChatHidden = function () {            
+            _open = false;            
+            _hideAll();            
+            var b = document.getElementById('customChatBtn');            
+            if (b) { b.style.opacity = '1'; b.style.pointerEvents = 'auto'; }        
+        };
+    };
+
+    // Initialize your specific property widget
+    var s1 = document.createElement('script'),        
+        s0 = document.getElementsByTagName('script')[0];    
+    s1.async = true;    
+    s1.src = 'https://embed.tawk.to/6a017718eb073e1c334f0c4e/default';    
+    s1.charset = 'UTF-8';    
+    s1.setAttribute('crossorigin', '*');    
+    s0.parentNode.insertBefore(s1, s0);
+
+    // Global triggering function assigned to button's click context
+    window.openTawk = function () {        
+        if (typeof Tawk_API !== 'undefined' && typeof Tawk_API.maximize === 'function') {            
+            _open = true;            
+            _showAll();            
+            Tawk_API.maximize();        
+        }    
+    };
 })();
 </script>
 <!--End of Tawk.to Script-->
