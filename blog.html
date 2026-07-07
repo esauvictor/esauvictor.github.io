@@ -171,40 +171,9 @@
   <section class="section" id="blog">
     <h1 class="section-title">My Blog</h1>
     <p class="section-subtitle">Sharing my thoughts, experiences, and insights in the tech world</p>
-    <div class="blog-grid">
-      <div class="blog-card">
-        <div class="blog-image">
-          <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="A Day in the Life of a Developer" />
-        </div>
-        <div class="blog-content">
-          <h3>A Day in the Life of a Developer</h3>
-          <div class="blog-meta">April 10, 2024 • 5 min read</div>
-          <p class="blog-excerpt">A typical day for a software developer involves more than just typing code. From stand-ups to debugging, it's a balance of logic and creativity.</p>
-          <a href="post.html?id=1" class="btn btn-outline">Read More</a>
-        </div>
-      </div>
-      <div class="blog-card">
-        <div class="blog-image">
-          <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Overcoming Imposter Syndrome" />
-        </div>
-        <div class="blog-content">
-          <h3>Overcoming Imposter Syndrome</h3>
-          <div class="blog-meta">May 3, 2025 • 8 min read</div>
-          <p class="blog-excerpt">Imposter Syndrome affects even the best developers. Learn how to manage self-doubt and grow your confidence in tech.</p>
-          <a href="post.html?id=2" class="btn btn-outline">Read More</a>
-        </div>
-      </div>
-      <div class="blog-card">
-        <div class="blog-image">
-          <img src="https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg" alt="Building Something That Matters" />
-        </div>
-        <div class="blog-content">
-          <h3>Building Something That Matters</h3>
-          <div class="blog-meta">June 12, 2025 • 6 min read</div>
-          <p class="blog-excerpt">Discover the real reward in tech—building solutions that impact people, not just pushing code to production.</p>
-          <a href="post.html?id=3" class="btn btn-outline">Read More</a>
-        </div>
-      </div>
+    <div class="blog-grid" id="blogGrid">
+    </div>
+    <div style="text-align:center; margin-top:3rem; margin-bottom: 3rem;" id="noPosts">
     </div>
     <div class="blog-pagination">
       <button class="pagination-btn" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
@@ -241,6 +210,45 @@
         btn.classList.add("active");
       });
     });
+
+    const API_BASE = 'https://renaissanceassembly.org/secure/api';
+
+    function formatDate(isoString) {
+      if (!isoString) return '';
+      const d = new Date(isoString);
+      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    fetch(`${API_BASE}/posts.php`)
+      .then(res => res.json())
+      .then(data => {
+        const grid = document.getElementById('blogGrid');
+        const noPosts = document.getElementById('noPosts');
+        if (!grid) return;
+
+        if (!data.posts || !data.posts.length) {
+          noPosts.innerHTML = '<p style="color:#6b7280;">No posts yet — check back soon.</p>';
+          return;
+        }
+
+        grid.innerHTML = data.posts.map(p => `
+          <div class="blog-card">
+            <div class="blog-image">
+              <img src="${p.cover_image_url || 'https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg'}" alt="${p.title}" />
+            </div>
+            <div class="blog-content">
+              <h3>${p.title}</h3>
+              <div class="blog-meta">${formatDate(p.published_at)}</div>
+              <p class="blog-excerpt">${p.excerpt || ''}</p>
+              <a href="post.html?slug=${encodeURIComponent(p.slug)}" class="btn btn-outline">Read More</a>
+            </div>
+          </div>
+        `).join('');
+      })
+      .catch(() => {
+        const noPosts = document.getElementById('noPosts');
+        if (noPosts) noPosts.innerHTML = '<p style="color:#6b7280;">Couldn\'t load posts right now — please try again later.</p>';
+      });
   </script>
 </body>
 </html>
