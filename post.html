@@ -9,6 +9,8 @@
     <link rel="icon" href="https://esauvictor.blogspot.com/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Prism.js: syntax highlighting for code blocks in post content -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <title>Blog Post - Esau Victor</title>
     <style>
         :root {
@@ -678,6 +680,138 @@
             }
         }
 
+        /* Comments section */
+        .comments-section {
+            padding: 3rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .comments-section h2 {
+            margin-top: 0;
+        }
+
+        .comment-list {
+            margin: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .comment-item {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .comment-avatar {
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .comment-body {
+            background: var(--bg-color);
+            border-radius: var(--border-radius);
+            padding: 1rem 1.25rem;
+            flex: 1;
+        }
+
+        .comment-body .comment-meta {
+            display: flex;
+            gap: 0.75rem;
+            align-items: baseline;
+            margin-bottom: 0.4rem;
+        }
+
+        .comment-body strong {
+            color: var(--primary-dark);
+        }
+
+        .comment-body .comment-date {
+            font-size: 0.8rem;
+            color: var(--light-text);
+        }
+
+        .comment-body p {
+            margin: 0;
+            color: var(--text-color);
+            white-space: pre-wrap;
+        }
+
+        .comment-empty {
+            color: var(--light-text);
+            font-style: italic;
+        }
+
+        .comment-form {
+            background: var(--bg-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+        }
+
+        .comment-form h3 {
+            margin-bottom: 1rem;
+        }
+
+        .comment-form .form-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .comment-form input,
+        .comment-form textarea {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+
+        .comment-form input:focus,
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .comment-form-status {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .comment-form-status.success { color: #16a34a; }
+        .comment-form-status.error { color: #dc2626; }
+
+        /* Honeypot field — hidden from real visitors, catches bots */
+        .comment-form .hp-field {
+            position: absolute;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .comments-section {
+                padding: 2rem 1.5rem;
+            }
+        }
+
         /* Copy button for code blocks */
         .copy-btn {
             position: absolute;
@@ -777,6 +911,29 @@
                 <i class="fas fa-arrow-left"></i>
                 <span>Back to Blog</span>
             </a>
+
+            <section class="comments-section">
+                <h2>Comments (<span id="commentCount">0</span>)</h2>
+                <div class="comment-list" id="commentList">
+                    <p class="comment-empty">Loading comments…</p>
+                </div>
+
+                <form class="comment-form" id="commentForm">
+                    <h3>Leave a comment</h3>
+                    <!-- Honeypot: real visitors leave this blank, bots tend to fill everything -->
+                    <div class="hp-field" aria-hidden="true">
+                        <label for="website">Website</label>
+                        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                    </div>
+                    <div class="form-row">
+                        <input type="text" id="commentName" name="name" placeholder="Your name" required maxlength="100">
+                        <input type="email" id="commentEmail" name="email" placeholder="Your email (optional, not shown publicly)" maxlength="190">
+                    </div>
+                    <textarea id="commentBody" name="body" rows="4" placeholder="Write your comment…" required maxlength="3000"></textarea>
+                    <button type="submit" class="btn">Post Comment</button>
+                    <p class="comment-form-status" id="commentStatus"></p>
+                </form>
+            </section>
         </article>
     </main>
 
@@ -831,6 +988,17 @@
         </div>
     </footer>
 
+    <!-- Prism.js core + languages used by the code-block toolbar in the admin editor -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
     <!-- JavaScript -->
     <script>
         const API_BASE = 'https://renaissanceassembly.org/secure/api';
@@ -857,6 +1025,11 @@
 
         // Runs once real post content is in the DOM: copy buttons, fade-in, image hover.
         function enhancePostContent() {
+            // Syntax-highlight any <pre><code class="language-x"> blocks from the editor.
+            if (window.Prism) {
+                Prism.highlightAllUnder(document.getElementById('post-content'));
+            }
+
             addCopyButtons();
 
             const contentElements = document.querySelectorAll('.post-content > *');
@@ -941,11 +1114,116 @@
 
                 document.title = `${post.title} - Esau Victor`;
                 enhancePostContent();
+                loadComments(slug);
+                setupCommentForm(slug);
             } catch (err) {
                 document.getElementById('post-content').innerHTML = '<p>Blog post not found.</p>';
                 document.querySelector('.nav-prev').style.display = 'none';
                 document.querySelector('.nav-next').style.display = 'none';
             }
+        }
+
+        // ---- Comments ----
+
+        function escapeInitial(name) {
+            return (name || '?').trim().charAt(0).toUpperCase() || '?';
+        }
+
+        async function loadComments(slug) {
+            const listEl = document.getElementById('commentList');
+            const countEl = document.getElementById('commentCount');
+            try {
+                const res = await fetch(`${API_BASE}/comments.php?slug=${encodeURIComponent(slug)}`);
+                if (!res.ok) throw new Error('failed to load comments');
+                const data = await res.json();
+                const comments = data.comments || [];
+
+                countEl.textContent = comments.length;
+                listEl.innerHTML = '';
+
+                if (!comments.length) {
+                    listEl.innerHTML = '<p class="comment-empty">No comments yet — be the first to share your thoughts.</p>';
+                    return;
+                }
+
+                comments.forEach(c => {
+                    const item = document.createElement('div');
+                    item.className = 'comment-item';
+
+                    const avatar = document.createElement('div');
+                    avatar.className = 'comment-avatar';
+                    avatar.textContent = escapeInitial(c.author_name);
+
+                    const body = document.createElement('div');
+                    body.className = 'comment-body';
+
+                    const meta = document.createElement('div');
+                    meta.className = 'comment-meta';
+                    const nameEl = document.createElement('strong');
+                    nameEl.textContent = c.author_name || 'Anonymous';
+                    const dateEl = document.createElement('span');
+                    dateEl.className = 'comment-date';
+                    dateEl.textContent = formatDate(c.created_at);
+                    meta.appendChild(nameEl);
+                    meta.appendChild(dateEl);
+
+                    const textEl = document.createElement('p');
+                    // textContent, never innerHTML — comment bodies are user-submitted.
+                    textEl.textContent = c.body;
+
+                    body.appendChild(meta);
+                    body.appendChild(textEl);
+                    item.appendChild(avatar);
+                    item.appendChild(body);
+                    listEl.appendChild(item);
+                });
+            } catch (err) {
+                listEl.innerHTML = '<p class="comment-empty">Couldn\'t load comments right now.</p>';
+            }
+        }
+
+        function setupCommentForm(slug) {
+            const form = document.getElementById('commentForm');
+            const statusEl = document.getElementById('commentStatus');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                statusEl.textContent = '';
+                statusEl.className = 'comment-form-status';
+
+                const payload = {
+                    slug,
+                    name: document.getElementById('commentName').value.trim(),
+                    email: document.getElementById('commentEmail').value.trim(),
+                    body: document.getElementById('commentBody').value.trim(),
+                    website: document.getElementById('website').value, // honeypot
+                };
+
+                if (!payload.name || !payload.body) return;
+
+                const submitBtn = form.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+
+                try {
+                    const res = await fetch(`${API_BASE}/comments.php`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload),
+                    });
+                    const data = await res.json();
+
+                    if (!res.ok) throw new Error(data.error || 'Something went wrong');
+
+                    statusEl.textContent = data.message || 'Comment submitted — it will appear once approved.';
+                    statusEl.classList.add('success');
+                    form.reset();
+                } catch (err) {
+                    statusEl.textContent = err.message || 'Could not submit comment — please try again.';
+                    statusEl.classList.add('error');
+                } finally {
+                    submitBtn.disabled = false;
+                }
+            });
         }
 
         // Mobile navigation toggle
