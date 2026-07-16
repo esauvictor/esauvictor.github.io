@@ -1149,7 +1149,13 @@
         function enhancePostContent() {
             // Syntax-highlight any <pre><code class="language-x"> blocks from the editor.
             if (window.Prism) {
-                Prism.highlightAllUnder(document.getElementById('post-content'));
+                try {
+                    Prism.highlightAllUnder(document.getElementById('post-content'));
+                } catch (err) {
+                    // Very large or unusual code blocks can occasionally overwhelm
+                    // Prism's tokenizer — leave the code visible but unhighlighted
+                    // rather than losing the whole post over it.
+                }
             }
 
             addCopyButtons();
@@ -1171,6 +1177,29 @@
                     img.style.boxShadow = 'var(--shadow-md)';
                 });
             });
+        }
+
+        function escapeHtmlForCodeBlock(str) {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        // Some posts were saved before the admin editor auto-wrapped pasted
+        // code in <pre><code>, so their content is raw, unwrapped code —
+        // which the browser then mashes into one line (whitespace collapses
+        // outside <pre>). If the whole content has no block-level HTML in it
+        // and looks like code, wrap it for display so it renders properly
+        // without needing to re-save the post.
+        function autoWrapRawCodeContent(html) {
+            const hasBlockMarkup = /<(p|div|img|pre|ul|ol|li|table|h[1-6]|blockquote|figure)\b/i.test(html);
+            if (hasBlockMarkup) return html;
+
+            const lang = detectCommentCodeLanguage(html);
+            if (!lang) return html;
+
+            return `<pre><code class="language-${lang}">${escapeHtmlForCodeBlock(html)}</code></pre>`;
         }
 
         // Load blog post content from the API
@@ -1201,6 +1230,7 @@
                 document.getElementById('reading-time').querySelector('span').textContent = calculateReadingTime(post.content || '');
 
                 let contentHtml = post.content || '';
+                contentHtml = autoWrapRawCodeContent(contentHtml);
                 if (post.cover_image_url) {
                     contentHtml = `<img src="${post.cover_image_url}" alt="${post.title}">` + contentHtml;
                 }
@@ -1467,13 +1497,27 @@
                 const threadEl = document.createElement('div');
                 threadEl.className = 'comment-thread';
                 tree.forEach(node => {
-                    threadEl.appendChild(renderCommentNode(node, slug));
+                    try {
+                        threadEl.appendChild(renderCommentNode(node, slug));
+                    } catch (nodeErr) {
+                        // One malformed/oversized comment shouldn't take down
+                        // the rest of the thread — skip it, keep going.
+                        const fallback = document.createElement('p');
+                        fallback.className = 'comment-empty';
+                        fallback.textContent = 'A comment could not be displayed.';
+                        threadEl.appendChild(fallback);
+                    }
                 });
                 listEl.appendChild(threadEl);
 
                 // Highlight any comment bodies that were rendered as code.
-                if (window.Prism) {
-                    Prism.highlightAllUnder(listEl);
+                // Wrapped separately: an extremely large/complex code block
+                // can occasionally overwhelm Prism's tokenizer, and that
+                // failure should never erase the comments we just rendered.
+                try {
+                    if (window.Prism) Prism.highlightAllUnder(listEl);
+                } catch (highlightErr) {
+                    // Leave the plain, unhighlighted code block in place.
                 }
                 addCopyButtons();
             } catch (err) {
