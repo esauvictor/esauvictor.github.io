@@ -1,257 +1,607 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Esau Victor's blog - Sharing thoughts, experiences, and insights in web development, data analytics, and cyber security" />
-  <meta name="keywords" content="web development blog, data analytics blog, cyber security blog, programming blog" />
-  <meta name="author" content="Esau Victor" />
-  <link rel="icon" href="https://esauvictor.blogspot.com/favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <title>Esau Victor - Blog</title>
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      background: #f9fafb;
-      color: #1f2937;
-      scroll-behavior: smooth;
-    }
-    .navbar {
-      background: white;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      position: fixed;
-      width: 100%;
-      top: 0;
-      z-index: 1000;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .nav-links {
-      display: flex;
-      list-style: none;
-      gap: 1.5rem;
-    }
-    .nav-links a {
-      text-decoration: none;
-      color: #374151;
-      font-weight: 500;
-    }
-    .section-title {
-      text-align: center;
-      font-size: 2.5rem;
-      margin-top: 6rem;
-      margin-bottom: 2rem;
-      color: #1e40af;
-    }
-    .section-subtitle {
-      text-align: center;
-      color: #6b7280;
-      margin-bottom: 3rem;
-    }
-    .blog-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      padding: 0 2rem;
-    }
-    .blog-card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-      overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-    }
-    .blog-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-    }
-    .blog-image img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-    .blog-content {
-      padding: 1.5rem;
-    }
-    .blog-content h3 {
-      margin-bottom: 0.5rem;
-      font-size: 1.5rem;
-      color: #1e3a8a;
-    }
-    .blog-meta {
-      font-size: 0.9rem;
-      color: #6b7280;
-      margin-bottom: 1rem;
-    }
-    .blog-excerpt {
-      color: #4b5563;
-      margin-bottom: 1.5rem;
-    }
-    .btn {
-      padding: 0.5rem 1.5rem;
-      border-radius: 25px;
-      background-color: #3b82f6;
-      color: white;
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .btn-outline {
-      background: transparent;
-      border: 2px solid #3b82f6;
-      color: #3b82f6;
-    }
-    .btn-outline:hover {
-      background: #3b82f6;
-      color: white;
-    }
-    .blog-pagination {
-      display: flex;
-      justify-content: center;
-      margin-top: 3rem;
-      gap: 1rem;
-    }
-    .pagination-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: none;
-      background: #e5e7eb;
-      color: #1f2937;
-      cursor: pointer;
-    }
-    .pagination-btn.active, .pagination-btn:hover {
-      background: #3b82f6;
-      color: white;
-    }
-    #darkModeToggle, #backToTop {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #3b82f6;
-      color: white;
-      border: none;
-      border-radius: 30px;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      z-index: 2000;
-    }
-    #backToTop {
-      bottom: 70px;
-      display: none;
-    }
-    body.dark-mode {
-      background: #111827;
-      color: #e5e7eb;
-    }
-    body.dark-mode .navbar,
-    body.dark-mode .blog-card,
-    body.dark-mode footer {
-      background: #1f2937;
-      color: #e5e7eb;
-    }
-    body.dark-mode .btn-outline {
-      border-color: #60a5fa;
-      color: #60a5fa;
-    }
-    body.dark-mode .btn-outline:hover {
-      background: #60a5fa;
-      color: #111827;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Esau Victor's blog - Sharing thoughts, experiences, and insights in web development, data analytics, and cyber security" />
+<meta name="keywords" content="web development blog, data analytics blog, cyber security blog, programming blog" />
+<meta name="author" content="Esau Victor" />
+<link rel="icon" href="https://esauvictor.blogspot.com/favicon.ico" type="image/x-icon" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Esau Victor — Blog</title>
+<style>
+  :root{
+    --ink:#12172B;
+    --paper:#F3F5F8;
+    --card:#FFFFFF;
+    --line:#E3E7EE;
+    --muted:#6B7280;
+    --signal:#2F5FE0;
+    --signal-dim:#EAEFFD;
+    --amber:#D98A2B;
+    --amber-dim:#FBF0DF;
+    --radius:14px;
+    --mono:'JetBrains Mono', ui-monospace, monospace;
+    --display:'Space Grotesk', sans-serif;
+    --body:'Inter', sans-serif;
+  }
+  [data-theme="dark"]{
+    --ink:#E7EAF2;
+    --paper:#0B0F1C;
+    --card:#131A2B;
+    --line:#232C42;
+    --muted:#8B93A7;
+    --signal:#6C8DF5;
+    --signal-dim:#1B2338;
+    --amber:#E8A94A;
+    --amber-dim:#241C0F;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--body);
+    transition:background .25s ease, color .25s ease;
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:100;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0.85rem 1.5rem;
+    background:var(--card);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{
+    font-family:var(--mono);
+    font-size:0.9rem;
+    color:var(--muted);
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    gap:0.4rem;
+  }
+  .brand strong{color:var(--ink);}
+  .brand .dot{color:var(--amber);}
+  .theme-btn{
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink);
+    width:36px;
+    height:36px;
+    border-radius:9px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1rem;
+  }
+  .theme-btn:focus-visible, a:focus-visible, button:focus-visible{
+    outline:2px solid var(--signal);
+    outline-offset:2px;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    max-width:920px;
+    margin:0 auto;
+    padding:3rem 1.5rem 1.75rem;
+    text-align:left;
+  }
+  .prompt{
+    font-family:var(--mono);
+    font-size:0.85rem;
+    color:var(--signal);
+    margin:0 0 0.75rem;
+    display:flex;
+    align-items:center;
+    gap:0.35rem;
+  }
+  .prompt .cursor{
+    width:8px;
+    height:1.1em;
+    background:var(--signal);
+    display:inline-block;
+    animation:blink 1.1s steps(1) infinite;
+  }
+  @keyframes blink{50%{opacity:0;}}
+  h1.title{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:clamp(1.9rem, 5vw, 2.75rem);
+    margin:0 0 0.5rem;
+    letter-spacing:-0.01em;
+  }
+  .subtitle{
+    font-family:var(--mono);
+    font-size:0.9rem;
+    color:var(--muted);
+    margin:0;
+  }
+  .subtitle::before{content:"// ";color:var(--amber);}
+
+  /* ---------- filters ---------- */
+  .filters{
+    max-width:920px;
+    margin:0 auto;
+    padding:0 1.5rem 1.5rem;
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.5rem;
+  }
+  .chip{
+    font-family:var(--mono);
+    font-size:0.78rem;
+    padding:0.4rem 0.85rem;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--muted);
+    cursor:pointer;
+    white-space:nowrap;
+    transition:all .15s ease;
+  }
+  .chip:hover{border-color:var(--signal);color:var(--ink);}
+  .chip.active{
+    background:var(--signal);
+    border-color:var(--signal);
+    color:#fff;
+  }
+
+  /* ---------- grid ---------- */
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:0 1.5rem 2rem;
+  }
+  .blog-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    gap:1.25rem;
+  }
+  .blog-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .blog-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 24px rgba(18,23,43,0.08);
+    border-color:var(--signal);
+  }
+  [data-theme="dark"] .blog-card:hover{
+    box-shadow:0 10px 24px rgba(0,0,0,0.35);
+  }
+  .thumb{
+    position:relative;
+    aspect-ratio:16/10;
+    overflow:hidden;
+    background:var(--line);
+  }
+  .thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .tag{
+    position:absolute;
+    top:0.6rem;
+    left:0.6rem;
+    font-family:var(--mono);
+    font-size:0.68rem;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    padding:0.25rem 0.55rem;
+    border-radius:999px;
+    background:var(--amber-dim);
+    color:var(--amber);
+    backdrop-filter:blur(4px);
+  }
+  .card-body{
+    padding:1.1rem 1.15rem 1.25rem;
+    display:flex;
+    flex-direction:column;
+    flex:1;
+  }
+  .meta{
+    font-family:var(--mono);
+    font-size:0.72rem;
+    color:var(--muted);
+    margin-bottom:0.5rem;
+  }
+  .meta::before{content:"> ";color:var(--signal);}
+  h3.card-title{
+    font-family:var(--display);
+    font-size:1.15rem;
+    line-height:1.3;
+    margin:0 0 0.5rem;
+    color:var(--ink);
+  }
+  .excerpt{
+    font-size:0.9rem;
+    line-height:1.55;
+    color:var(--muted);
+    margin:0 0 1rem;
+    flex:1;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .read-more{
+    font-family:var(--mono);
+    font-size:0.8rem;
+    color:var(--signal);
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    gap:0.3rem;
+    width:fit-content;
+  }
+  .read-more::after{content:"→";transition:transform .15s ease;}
+  .blog-card:hover .read-more::after{transform:translateX(3px);}
+
+  /* ---------- empty / error states ---------- */
+  .state-box{
+    max-width:920px;
+    margin:0 auto;
+    padding:2.5rem 1.5rem;
+    text-align:center;
+  }
+  .state-box .console{
+    font-family:var(--mono);
+    font-size:0.85rem;
+    color:var(--muted);
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:1.5rem;
+    display:inline-block;
+    text-align:left;
+    max-width:100%;
+  }
+  .state-box .console .ok{color:var(--signal);}
+  .state-box .console .err{color:#DC5B5B;}
+
+  .skeleton-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    gap:1.25rem;
+  }
+  .skeleton{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .skeleton .thumb{background:var(--line);animation:pulse 1.4s ease-in-out infinite;}
+  .skeleton .bar{height:0.7rem;background:var(--line);border-radius:4px;margin:0.9rem 1.15rem;animation:pulse 1.4s ease-in-out infinite;}
+  .skeleton .bar.short{width:40%;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
+
+  /* ---------- pagination ---------- */
+  .blog-pagination{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:0.4rem;
+    margin:2.5rem 0 1rem;
+    flex-wrap:wrap;
+  }
+  .page-btn{
+    min-width:36px;
+    height:36px;
+    padding:0 0.6rem;
+    border-radius:9px;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--ink);
+    font-family:var(--mono);
+    font-size:0.82rem;
+    cursor:pointer;
+  }
+  .page-btn:hover:not(:disabled){border-color:var(--signal);color:var(--signal);}
+  .page-btn.active{background:var(--signal);border-color:var(--signal);color:#fff;}
+  .page-btn:disabled{opacity:0.35;cursor:not-allowed;}
+  .page-ellipsis{
+    font-family:var(--mono);
+    color:var(--muted);
+    padding:0 0.25rem;
+    font-size:0.82rem;
+  }
+
+  .footer-nav{
+    text-align:center;
+    padding:1rem 1.5rem 3rem;
+  }
+  .btn-home{
+    font-family:var(--mono);
+    font-size:0.85rem;
+    color:var(--signal);
+    text-decoration:none;
+    border:1px solid var(--line);
+    padding:0.6rem 1.3rem;
+    border-radius:999px;
+    display:inline-block;
+    transition:all .15s ease;
+  }
+  .btn-home:hover{background:var(--signal-dim);border-color:var(--signal);}
+
+  #backToTop{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--ink);
+    cursor:pointer;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 4px 12px rgba(18,23,43,0.12);
+    z-index:200;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .prompt .cursor{animation:none;}
+    .skeleton .thumb, .skeleton .bar{animation:none;}
+    html{scroll-behavior:auto;}
+  }
+
+  /* ---------- small phones (Galaxy S8 = 360px) ---------- */
+  @media (max-width:400px){
+    .topbar{padding:0.7rem 1rem;}
+    .hero{padding:2rem 1rem 1.25rem;}
+    h1.title{font-size:1.6rem;}
+    .filters{padding:0 1rem 1.25rem;gap:0.4rem;}
+    .chip{font-size:0.72rem;padding:0.35rem 0.7rem;}
+    .wrap{padding:0 1rem 1.5rem;}
+    .blog-grid, .skeleton-grid{grid-template-columns:1fr;gap:1rem;}
+    .card-body{padding:1rem;}
+    h3.card-title{font-size:1.05rem;}
+    .page-btn{min-width:32px;height:32px;font-size:0.76rem;}
+  }
+</style>
 </head>
 <body>
 
-  <section class="section" id="blog">
-    <h1 class="section-title">My Blog</h1>
-    <p class="section-subtitle">Sharing my thoughts, experiences, and insights in the tech world</p>
-    <div class="blog-grid" id="blogGrid">
-    </div>
-    <div style="text-align:center; margin-top:3rem; margin-bottom: 3rem;" id="noPosts">
-    </div>
-    <div class="blog-pagination">
-      <button class="pagination-btn" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
-      <button class="pagination-btn active" aria-current="page">1</button>
-      <button class="pagination-btn">2</button>
-      <button class="pagination-btn">3</button>
-      <button class="pagination-btn" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
-    </div>
-     <div style="text-align:center; margin-top:3rem;">
-      <a href="https://esauvictor.github.io" class="btn">Back to Homepage</a>
-    </div>
+  <header class="topbar">
+    <a href="https://esauvictor.github.io" class="brand"><strong>esau</strong><span class="dot">.</span>victor</a>
+    <button id="themeBtn" class="theme-btn" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+  </header>
+
+  <section class="hero">
+    <p class="prompt">esau@devlog:~$ ls posts/<span class="cursor" aria-hidden="true"></span></p>
+    <h1 class="title">The Blog</h1>
+    <p class="subtitle">notes on web development, data analytics &amp; cyber security</p>
   </section>
 
-  <button id="darkModeToggle">🌙</button>
-  <button id="backToTop">↑</button>
+  <nav class="filters" id="filters" aria-label="Filter posts by category"></nav>
+
+  <main class="wrap">
+    <div class="skeleton-grid" id="skeletonGrid">
+      <div class="skeleton"><div class="thumb"></div><div class="bar short"></div><div class="bar"></div><div class="bar" style="width:70%"></div></div>
+      <div class="skeleton"><div class="thumb"></div><div class="bar short"></div><div class="bar"></div><div class="bar" style="width:70%"></div></div>
+      <div class="skeleton"><div class="thumb"></div><div class="bar short"></div><div class="bar"></div><div class="bar" style="width:70%"></div></div>
+    </div>
+
+    <div class="blog-grid" id="blogGrid" style="display:none;"></div>
+
+    <div class="state-box" id="stateBox" style="display:none;"></div>
+
+    <div class="blog-pagination" id="pagination"></div>
+  </main>
+
+  <div class="footer-nav">
+    <a href="https://esauvictor.github.io" class="btn-home">← Back to Homepage</a>
+  </div>
+
+  <button id="backToTop" aria-label="Back to top">↑</button>
 
   <script>
-    const darkToggle = document.getElementById("darkModeToggle");
-    darkToggle.addEventListener("click", () => {
-      document.body.classList.toggle("dark-mode");
+    // ---------- theme ----------
+    const root = document.documentElement;
+    const themeBtn = document.getElementById('themeBtn');
+    const savedTheme = localStorage.getItem('blog-theme');
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      root.setAttribute('data-theme', 'dark');
+      themeBtn.textContent = '☀️';
+    }
+    themeBtn.addEventListener('click', () => {
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        root.removeAttribute('data-theme');
+        themeBtn.textContent = '🌙';
+        localStorage.setItem('blog-theme', 'light');
+      } else {
+        root.setAttribute('data-theme', 'dark');
+        themeBtn.textContent = '☀️';
+        localStorage.setItem('blog-theme', 'dark');
+      }
     });
 
-    const backToTop = document.getElementById("backToTop");
-    window.addEventListener("scroll", () => {
-      backToTop.style.display = window.scrollY > 300 ? "block" : "none";
+    // ---------- back to top ----------
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.style.display = window.scrollY > 300 ? 'flex' : 'none';
     });
-    backToTop.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
+    backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-    document.querySelectorAll(".pagination-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelector(".pagination-btn.active")?.classList.remove("active");
-        btn.classList.add("active");
-      });
-    });
-
+    // ---------- data + pagination state ----------
     const API_BASE = 'https://renaissanceassembly.org/secure/api';
+    const PER_PAGE = window.matchMedia('(max-width:400px)').matches ? 4 : 6;
+
+    let allPosts = [];
+    let activeCategory = 'all';
+    let currentPage = 1;
+
+    const grid = document.getElementById('blogGrid');
+    const skeletonGrid = document.getElementById('skeletonGrid');
+    const stateBox = document.getElementById('stateBox');
+    const pagination = document.getElementById('pagination');
+    const filtersEl = document.getElementById('filters');
 
     function formatDate(isoString) {
       if (!isoString) return '';
       const d = new Date(isoString);
-      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function showState(html) {
+      grid.style.display = 'none';
+      pagination.innerHTML = '';
+      stateBox.style.display = 'block';
+      stateBox.innerHTML = html;
+    }
+
+    function getFilteredPosts() {
+      if (activeCategory === 'all') return allPosts;
+      return allPosts.filter(p => (p.category || '').toLowerCase() === activeCategory);
+    }
+
+    function renderFilters() {
+      const categories = Array.from(new Set(allPosts.map(p => p.category).filter(Boolean)));
+      if (categories.length < 2) { filtersEl.innerHTML = ''; return; }
+
+      const chips = [{ key: 'all', label: 'All Posts' }, ...categories.map(c => ({ key: c.toLowerCase(), label: c }))];
+      filtersEl.innerHTML = chips.map(c => `
+        <button class="chip ${activeCategory === c.key ? 'active' : ''}" data-key="${c.key}">${c.label}</button>
+      `).join('');
+
+      filtersEl.querySelectorAll('.chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeCategory = btn.dataset.key;
+          currentPage = 1;
+          renderFilters();
+          renderPage();
+        });
+      });
+    }
+
+    function renderPagination(totalPosts) {
+      const totalPages = Math.max(1, Math.ceil(totalPosts / PER_PAGE));
+      pagination.innerHTML = '';
+      if (totalPages <= 1) return; // dynamic: no pagination needed for a single page
+
+      const makeBtn = (label, page, opts = {}) => {
+        const btn = document.createElement('button');
+        btn.className = 'page-btn' + (opts.active ? ' active' : '');
+        btn.textContent = label;
+        btn.disabled = !!opts.disabled;
+        btn.setAttribute('aria-label', opts.aria || `Page ${page}`);
+        if (opts.current) btn.setAttribute('aria-current', 'page');
+        btn.addEventListener('click', () => {
+          currentPage = page;
+          renderPage();
+          document.querySelector('.hero').scrollIntoView({ behavior: 'smooth' });
+        });
+        return btn;
+      };
+
+      pagination.appendChild(makeBtn('‹', Math.max(1, currentPage - 1), { disabled: currentPage === 1, aria: 'Previous page' }));
+
+      const addEllipsis = () => {
+        const span = document.createElement('span');
+        span.className = 'page-ellipsis';
+        span.textContent = '…';
+        pagination.appendChild(span);
+      };
+
+      const pages = new Set([1, totalPages, currentPage, currentPage - 1, currentPage + 1]);
+      let prev = 0;
+      Array.from(pages).filter(p => p >= 1 && p <= totalPages).sort((a, b) => a - b).forEach(p => {
+        if (prev && p - prev > 1) addEllipsis();
+        pagination.appendChild(makeBtn(String(p), p, { active: p === currentPage, current: p === currentPage }));
+        prev = p;
+      });
+
+      pagination.appendChild(makeBtn('›', Math.min(totalPages, currentPage + 1), { disabled: currentPage === totalPages, aria: 'Next page' }));
+    }
+
+    function renderPage() {
+      const filtered = getFilteredPosts();
+
+      if (!filtered.length) {
+        showState(`
+          <div class="console">
+            <div><span class="ok">$</span> query posts --category=${activeCategory}</div>
+            <div style="margin-top:0.5rem;">No posts found in this category yet.</div>
+          </div>
+        `);
+        return;
+      }
+
+      const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      const start = (currentPage - 1) * PER_PAGE;
+      const pagePosts = filtered.slice(start, start + PER_PAGE);
+
+      stateBox.style.display = 'none';
+      grid.style.display = 'grid';
+      grid.innerHTML = pagePosts.map(p => `
+        <article class="blog-card" onclick="window.location.href='post.html?slug=${encodeURIComponent(p.slug)}'">
+          <div class="thumb">
+            <img src="${p.cover_image_url || 'https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg'}" alt="${p.title}" loading="lazy" />
+            ${p.category ? `<span class="tag">${p.category}</span>` : ''}
+          </div>
+          <div class="card-body">
+            <div class="meta">${formatDate(p.published_at)}</div>
+            <h3 class="card-title">${p.title}</h3>
+            <p class="excerpt">${p.excerpt || ''}</p>
+            <a href="post.html?slug=${encodeURIComponent(p.slug)}" class="read-more" onclick="event.stopPropagation()">Read more</a>
+          </div>
+        </article>
+      `).join('');
+
+      renderPagination(filtered.length);
     }
 
     fetch(`${API_BASE}/posts.php`)
       .then(res => res.json())
       .then(data => {
-        const grid = document.getElementById('blogGrid');
-        const noPosts = document.getElementById('noPosts');
-        if (!grid) return;
+        skeletonGrid.style.display = 'none';
+        allPosts = (data.posts || []).slice().sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
 
-        if (!data.posts || !data.posts.length) {
-          noPosts.innerHTML = '<p style="color:#6b7280;">No posts yet — check back soon.</p>';
+        if (!allPosts.length) {
+          showState(`
+            <div class="console">
+              <div><span class="ok">$</span> query posts --all</div>
+              <div style="margin-top:0.5rem;">No posts yet — check back soon.</div>
+            </div>
+          `);
           return;
         }
 
-        grid.innerHTML = data.posts.map(p => `
-          <div class="blog-card">
-            <div class="blog-image">
-              <img src="${p.cover_image_url || 'https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg'}" alt="${p.title}" />
-            </div>
-            <div class="blog-content">
-              <h3>${p.title}</h3>
-              <div class="blog-meta">${formatDate(p.published_at)}</div>
-              <p class="blog-excerpt">${p.excerpt || ''}</p>
-              <a href="post.html?slug=${encodeURIComponent(p.slug)}" class="btn btn-outline">Read More</a>
-            </div>
-          </div>
-        `).join('');
+        renderFilters();
+        renderPage();
       })
       .catch(() => {
-        const noPosts = document.getElementById('noPosts');
-        if (noPosts) noPosts.innerHTML = '<p style="color:#6b7280;">Couldn\'t load posts right now — please try again later.</p>';
+        skeletonGrid.style.display = 'none';
+        showState(`
+          <div class="console">
+            <div><span class="err">$</span> query posts --all</div>
+            <div style="margin-top:0.5rem;">Couldn't load posts right now — please try again later.</div>
+          </div>
+        `);
       });
   </script>
 </body>
 </html>
-
-
-
