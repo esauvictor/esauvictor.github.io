@@ -6,33 +6,66 @@
     <meta name="description" content="Individual blog post from Esau Victor's blog">
     <meta name="keywords" content="web development, data analytics, cyber security, programming">
     <meta name="author" content="Esau Victor">
-    <link rel="icon" href="https://esauvictor.blogspot.com/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- Prism.js: syntax highlighting for code blocks in post content -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <title>Blog Post - Esau Victor</title>
     <style>
         :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1e40af;
-            --secondary-color: #3b82f6;
-            --accent-color: #60a5fa;
-            --text-color: #1f2937;
-            --light-text: #6b7280;
-            --bg-color: #f7f8fa;
-            --card-bg: #ffffff;
-            --border-color: #e5e7eb;
-            --footer-bg: #14213d;
-            --footer-text: #cbd5f5;
+            /* ---- blog design tokens ---- */
+            --ink:#12172B;
+            --paper:#F3F5F8;
+            --card:#FFFFFF;
+            --line:#E3E7EE;
+            --muted:#6B7280;
+            --signal:#2F5FE0;
+            --signal-dim:#EAEFFD;
+            --amber:#D98A2B;
+            --amber-dim:#FBF0DF;
+            --radius:14px;
+            --mono:'JetBrains Mono', ui-monospace, monospace;
+            --display:'Space Grotesk', sans-serif;
+            --body-font:'Inter', sans-serif;
+
+            /* ---- aliases so the rest of this file's styling works unchanged ---- */
+            --primary-color: var(--signal);
+            --primary-dark: color-mix(in srgb, var(--signal) 82%, black);
+            --secondary-color: var(--signal);
+            --accent-color: var(--amber);
+            --text-color: var(--ink);
+            --light-text: var(--muted);
+            --bg-color: var(--paper);
+            --card-bg: var(--card);
+            --border-color: var(--line);
+            --footer-bg: #0B0F1C;
+            --footer-text: #AEB6C9;
             --transition: all 0.2s ease;
-            --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
-            --shadow-md: 0 6px 16px rgba(15, 23, 42, 0.08);
-            --shadow-lg: 0 20px 40px rgba(15, 23, 42, 0.12);
-            --border-radius: 14px;
+            --shadow-sm: 0 1px 2px rgba(18, 23, 43, 0.06);
+            --shadow-md: 0 6px 16px rgba(18, 23, 43, 0.08);
+            --shadow-lg: 0 20px 40px rgba(18, 23, 43, 0.12);
+            --border-radius: var(--radius);
             --content-width: 780px;
             --line-height: 1.7;
-            --mono-font: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            --mono-font: var(--mono);
+        }
+
+        [data-theme="dark"] {
+            --ink:#E7EAF2;
+            --paper:#0B0F1C;
+            --card:#131A2B;
+            --line:#232C42;
+            --muted:#8B93A7;
+            --signal:#6C8DF5;
+            --signal-dim:#1B2338;
+            --amber:#E8A94A;
+            --amber-dim:#241C0F;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.35);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.45);
         }
 
         * {
@@ -44,6 +77,7 @@
 
         html {
             -webkit-text-size-adjust: 100%;
+            scroll-behavior: smooth;
         }
 
         body {
@@ -54,11 +88,13 @@
             -webkit-font-smoothing: antialiased;
             font-size: 16px;
             overflow-x: hidden;
+            transition: background .25s ease, color .25s ease;
         }
 
         h1, h2, h3, h4 {
+            font-family: var(--display);
             line-height: 1.25;
-            color: #111827;
+            color: var(--text-color);
             font-weight: 700;
             letter-spacing: -0.01em;
         }
@@ -170,11 +206,11 @@
             position: fixed;
             top: 0;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: var(--card);
+            border-bottom: 1px solid var(--line);
             padding: 0.9rem 0;
-            box-shadow: var(--shadow-sm);
             z-index: 1000;
-            transition: var(--transition);
+            transition: var(--transition), background .25s ease, border-color .25s ease;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
         }
@@ -188,12 +224,28 @@
         }
 
         .logo {
-            font-weight: 700;
-            font-size: 1.05rem;
-            color: var(--primary-color);
+            font-family: var(--mono);
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-color);
             display: flex;
             align-items: center;
             gap: 0.5rem;
+        }
+
+        .theme-btn {
+            border: 1px solid var(--line);
+            background: var(--bg-color);
+            color: var(--text-color);
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            margin-left: 0.75rem;
         }
 
         .logo img {
@@ -330,6 +382,7 @@
             display: flex;
             align-items: center;
             gap: 0.4rem;
+            font-family: var(--mono);
         }
 
         /* ---------- Post content ---------- */
@@ -376,11 +429,11 @@
         .post-content code,
         .comment-body code {
             font-family: var(--mono-font);
-            background-color: #eef1f5;
+            background-color: var(--signal-dim);
             padding: 0.15rem 0.4rem;
             border-radius: 5px;
             font-size: 0.85em;
-            color: #b91c1c;
+            color: var(--signal);
         }
 
         .post-content pre,
@@ -440,16 +493,17 @@
         .tags:empty { display: none; }
 
         .tag {
-            background-color: #eef2ff;
-            color: var(--primary-dark);
+            font-family: var(--mono);
+            background-color: var(--amber-dim);
+            color: var(--amber);
             padding: 0.3rem 0.85rem;
             border-radius: 999px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 0.78rem;
+            font-weight: 500;
             transition: var(--transition);
         }
 
-        .tag:hover { background-color: var(--accent-color); color: white; }
+        .tag:hover { background-color: var(--amber); color: white; }
 
         /* ---------- Post navigation ---------- */
         .post-navigation {
@@ -487,8 +541,9 @@
         }
 
         .nav-link .nav-direction {
+            font-family: var(--mono);
             font-size: 0.72rem;
-            font-weight: 600;
+            font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.04em;
             color: var(--light-text);
@@ -535,7 +590,7 @@
             font-size: 0.85rem;
         }
 
-        .comment-avatar.is-author { background: #111827; }
+        .comment-avatar.is-author { background: var(--amber); }
 
         .comment-body {
             background: var(--bg-color);
@@ -554,7 +609,7 @@
             font-size: 0.9rem;
         }
 
-        .comment-body strong { color: #111827; }
+        .comment-body strong { color: var(--text-color); }
 
         .comment-body .comment-date {
             font-size: 0.76rem;
@@ -617,7 +672,7 @@
         .reply-form {
             display: none;
             margin-top: 0.75rem;
-            background: white;
+            background: var(--card);
             border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 0.85rem;
@@ -644,7 +699,7 @@
             border-radius: 8px;
             font-family: inherit;
             font-size: 0.88rem;
-            background: white;
+            background: var(--card);
             color: var(--text-color);
             transition: var(--transition);
         }
@@ -814,7 +869,7 @@
                 left: -100%;
                 width: 100%;
                 height: calc(100vh - 62px);
-                background-color: white;
+                background-color: var(--card);
                 flex-direction: column;
                 align-items: center;
                 justify-content: flex-start;
@@ -869,17 +924,20 @@
                 <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor">
                 <span>Esau Victor</span>
             </a>
-            <button class="hamburger" id="hamburger" aria-label="Menu">
-                <i class="fas fa-bars"></i>
-            </button>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="index.html#home">Home</a></li>
-                <li><a href="index.html#about">About</a></li>
-                <li><a href="index.html#services">Services</a></li>
-                <li><a href="index.html#projects">Projects</a></li>
-                <li><a href="blog.html" class="active">Blog</a></li>
-                <li><a href="index.html#contact">Contact</a></li>
-            </ul>
+            <div style="display:flex; align-items:center;">
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#services">Services</a></li>
+                    <li><a href="index.html#projects">Projects</a></li>
+                    <li><a href="blog.html" class="active">Blog</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+                <button id="themeBtn" class="theme-btn" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+                <button class="hamburger" id="hamburger" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -1026,6 +1084,29 @@
 
     <!-- JavaScript -->
     <script>
+        // ---------- theme (shared with blog.html via localStorage) ----------
+        (function () {
+            const root = document.documentElement;
+            const themeBtn = document.getElementById('themeBtn');
+            const savedTheme = localStorage.getItem('blog-theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                root.setAttribute('data-theme', 'dark');
+                themeBtn.textContent = '☀️';
+            }
+            themeBtn.addEventListener('click', () => {
+                const isDark = root.getAttribute('data-theme') === 'dark';
+                if (isDark) {
+                    root.removeAttribute('data-theme');
+                    themeBtn.textContent = '🌙';
+                    localStorage.setItem('blog-theme', 'light');
+                } else {
+                    root.setAttribute('data-theme', 'dark');
+                    themeBtn.textContent = '☀️';
+                    localStorage.setItem('blog-theme', 'dark');
+                }
+            });
+        })();
+
         const API_BASE = 'https://renaissanceassembly.org/secure/api';
 
         // Get URL parameter
