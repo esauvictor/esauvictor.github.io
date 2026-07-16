@@ -749,6 +749,111 @@
             font-style: italic;
         }
 
+        /* Threaded replies */
+        .comment-thread {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .comment-replies {
+            margin-top: 1.25rem;
+            margin-left: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            border-left: 2px solid #e5e7eb;
+            padding-left: 1.25rem;
+        }
+
+        .comment-avatar.is-author {
+            background: var(--primary-dark, #1f2937);
+        }
+
+        .comment-badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: white;
+            background: var(--primary-color);
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+        }
+
+        .comment-actions {
+            margin-top: 0.6rem;
+        }
+
+        .comment-reply-toggle {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .comment-reply-toggle:hover {
+            text-decoration: underline;
+        }
+
+        .reply-form {
+            display: none;
+            margin-top: 0.9rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+        }
+
+        .reply-form.open {
+            display: block;
+        }
+
+        .reply-form .form-row {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+
+        .reply-form input,
+        .reply-form textarea {
+            flex: 1;
+            min-width: 160px;
+            padding: 0.6rem 0.85rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .reply-form textarea {
+            width: 100%;
+            resize: vertical;
+            margin-bottom: 0.75rem;
+        }
+
+        .reply-form .reply-form-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .reply-form .btn.small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .reply-form-status {
+            font-size: 0.85rem;
+        }
+
+        .reply-form-status.success { color: #16a34a; }
+        .reply-form-status.error { color: #dc2626; }
+
         .comment-form {
             background: var(--bg-color);
             border-radius: var(--border-radius);
@@ -809,6 +914,11 @@
         @media (max-width: 768px) {
             .comments-section {
                 padding: 2rem 1.5rem;
+            }
+
+            .comment-replies {
+                margin-left: 1.25rem;
+                padding-left: 0.85rem;
             }
         }
 
@@ -1125,8 +1235,172 @@
 
         // ---- Comments ----
 
+        let currentPostSlug = null;
+
         function escapeInitial(name) {
             return (name || '?').trim().charAt(0).toUpperCase() || '?';
+        }
+
+        // Turn a flat list (each with id / parent_id) into a tree of
+        // { comment, children: [...] } nodes, top-level comments first.
+        function buildCommentTree(comments) {
+            const byId = new Map();
+            comments.forEach(c => byId.set(c.id, { comment: c, children: [] }));
+
+            const roots = [];
+            byId.forEach(node => {
+                const parentId = node.comment.parent_id;
+                if (parentId && byId.has(parentId)) {
+                    byId.get(parentId).children.push(node);
+                } else {
+                    roots.push(node);
+                }
+            });
+            return roots;
+        }
+
+        function buildReplyForm(slug, parentId) {
+            const wrap = document.createElement('div');
+            wrap.className = 'reply-form';
+
+            wrap.innerHTML = `
+                <div class="form-row">
+                    <input type="text" class="reply-name" placeholder="Your name" maxlength="100" required>
+                    <input type="email" class="reply-email" placeholder="Your email (optional, not shown publicly)" maxlength="190">
+                </div>
+                <textarea class="reply-body" rows="3" placeholder="Write your reply…" maxlength="3000" required></textarea>
+                <div class="reply-form-actions">
+                    <button type="button" class="btn small reply-submit">Post Reply</button>
+                    <button type="button" class="btn small secondary reply-cancel">Cancel</button>
+                    <span class="reply-form-status"></span>
+                </div>
+            `;
+
+            const submitBtn = wrap.querySelector('.reply-submit');
+            const cancelBtn = wrap.querySelector('.reply-cancel');
+            const statusEl = wrap.querySelector('.reply-form-status');
+            const nameInput = wrap.querySelector('.reply-name');
+            const emailInput = wrap.querySelector('.reply-email');
+            const bodyInput = wrap.querySelector('.reply-body');
+
+            cancelBtn.addEventListener('click', () => {
+                wrap.classList.remove('open');
+                statusEl.textContent = '';
+                statusEl.className = 'reply-form-status';
+            });
+
+            submitBtn.addEventListener('click', async () => {
+                const name = nameInput.value.trim();
+                const email = emailInput.value.trim();
+                const body = bodyInput.value.trim();
+
+                statusEl.textContent = '';
+                statusEl.className = 'reply-form-status';
+
+                if (!name || !body) {
+                    statusEl.textContent = 'Please add your name and a reply.';
+                    statusEl.classList.add('error');
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                try {
+                    const res = await fetch(`${API_BASE}/comments.php`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ slug, name, email, body, parent_id: parentId, website: '' }),
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Something went wrong');
+
+                    statusEl.textContent = data.message || 'Reply submitted — it will appear once approved.';
+                    statusEl.classList.add('success');
+                    nameInput.value = '';
+                    emailInput.value = '';
+                    bodyInput.value = '';
+                } catch (err) {
+                    statusEl.textContent = err.message || 'Could not submit reply — please try again.';
+                    statusEl.classList.add('error');
+                } finally {
+                    submitBtn.disabled = false;
+                }
+            });
+
+            return wrap;
+        }
+
+        function renderCommentNode(node, slug) {
+            const c = node.comment;
+            const item = document.createElement('div');
+            item.className = 'comment-item';
+
+            const avatar = document.createElement('div');
+            avatar.className = 'comment-avatar' + (c.is_author_reply ? ' is-author' : '');
+            avatar.textContent = escapeInitial(c.author_name);
+
+            const body = document.createElement('div');
+            body.className = 'comment-body';
+
+            const meta = document.createElement('div');
+            meta.className = 'comment-meta';
+            const nameEl = document.createElement('strong');
+            nameEl.textContent = c.author_name || 'Anonymous';
+            meta.appendChild(nameEl);
+
+            if (c.is_author_reply) {
+                const badge = document.createElement('span');
+                badge.className = 'comment-badge';
+                badge.textContent = 'Author';
+                meta.appendChild(badge);
+            }
+
+            const dateEl = document.createElement('span');
+            dateEl.className = 'comment-date';
+            dateEl.textContent = formatDate(c.created_at);
+            meta.appendChild(dateEl);
+
+            const textEl = document.createElement('p');
+            // textContent, never innerHTML — comment bodies are user-submitted.
+            textEl.textContent = c.body;
+
+            const actions = document.createElement('div');
+            actions.className = 'comment-actions';
+            const replyToggle = document.createElement('button');
+            replyToggle.type = 'button';
+            replyToggle.className = 'comment-reply-toggle';
+            replyToggle.textContent = 'Reply';
+            actions.appendChild(replyToggle);
+
+            const replyForm = buildReplyForm(slug, c.id);
+            replyToggle.addEventListener('click', () => {
+                replyForm.classList.toggle('open');
+            });
+
+            body.appendChild(meta);
+            body.appendChild(textEl);
+            body.appendChild(actions);
+            body.appendChild(replyForm);
+
+            item.appendChild(avatar);
+            item.appendChild(body);
+
+            const wrapper = document.createElement('div');
+            wrapper.appendChild(item);
+
+            if (node.children.length) {
+                const repliesEl = document.createElement('div');
+                repliesEl.className = 'comment-replies';
+                node.children.forEach(child => {
+                    repliesEl.appendChild(renderCommentNode(child, slug));
+                });
+                wrapper.appendChild(repliesEl);
+            }
+
+            return wrapper;
+        }
+
+        function countComments(nodes) {
+            return nodes.reduce((sum, n) => sum + 1 + countComments(n.children), 0);
         }
 
         async function loadComments(slug) {
@@ -1138,51 +1412,28 @@
                 const data = await res.json();
                 const comments = data.comments || [];
 
-                countEl.textContent = comments.length;
+                const tree = buildCommentTree(comments);
+                countEl.textContent = countComments(tree);
                 listEl.innerHTML = '';
 
-                if (!comments.length) {
+                if (!tree.length) {
                     listEl.innerHTML = '<p class="comment-empty">No comments yet — be the first to share your thoughts.</p>';
                     return;
                 }
 
-                comments.forEach(c => {
-                    const item = document.createElement('div');
-                    item.className = 'comment-item';
-
-                    const avatar = document.createElement('div');
-                    avatar.className = 'comment-avatar';
-                    avatar.textContent = escapeInitial(c.author_name);
-
-                    const body = document.createElement('div');
-                    body.className = 'comment-body';
-
-                    const meta = document.createElement('div');
-                    meta.className = 'comment-meta';
-                    const nameEl = document.createElement('strong');
-                    nameEl.textContent = c.author_name || 'Anonymous';
-                    const dateEl = document.createElement('span');
-                    dateEl.className = 'comment-date';
-                    dateEl.textContent = formatDate(c.created_at);
-                    meta.appendChild(nameEl);
-                    meta.appendChild(dateEl);
-
-                    const textEl = document.createElement('p');
-                    // textContent, never innerHTML — comment bodies are user-submitted.
-                    textEl.textContent = c.body;
-
-                    body.appendChild(meta);
-                    body.appendChild(textEl);
-                    item.appendChild(avatar);
-                    item.appendChild(body);
-                    listEl.appendChild(item);
+                const threadEl = document.createElement('div');
+                threadEl.className = 'comment-thread';
+                tree.forEach(node => {
+                    threadEl.appendChild(renderCommentNode(node, slug));
                 });
+                listEl.appendChild(threadEl);
             } catch (err) {
                 listEl.innerHTML = '<p class="comment-empty">Couldn\'t load comments right now.</p>';
             }
         }
 
         function setupCommentForm(slug) {
+            currentPostSlug = slug;
             const form = document.getElementById('commentForm');
             const statusEl = document.getElementById('commentStatus');
 
@@ -1312,4 +1563,3 @@
     </script>
 </body>
 </html>
-
