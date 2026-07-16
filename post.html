@@ -744,6 +744,18 @@
             white-space: pre-wrap;
         }
 
+        .comment-body pre {
+            position: relative;
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
         .comment-empty {
             color: var(--light-text);
             font-style: italic;
@@ -1241,6 +1253,24 @@
             return (name || '?').trim().charAt(0).toUpperCase() || '?';
         }
 
+        // Same idea as the admin editor's paste-detection: if a comment body
+        // looks like code, render it as a highlighted <pre><code> block
+        // instead of plain text. Detection only decides *how* to display —
+        // the text itself always goes in via textContent, never innerHTML,
+        // so this can't be used to inject markup.
+        function detectCommentCodeLanguage(text) {
+            const t = (text || '').trim();
+            if (!t) return null;
+            if (/<\?php/i.test(t)) return 'php';
+            if (/^\s*(SELECT|INSERT\s+INTO|UPDATE|DELETE\s+FROM|CREATE\s+TABLE|ALTER\s+TABLE)\b/i.test(t)) return 'sql';
+            if (/^#!.*\b(bash|sh)\b/.test(t) || /\b(sudo\s|apt-get\s|npm\s(install|run)|composer\s(require|install)|git\s(clone|commit|push))\b/.test(t)) return 'bash';
+            if (/^\s*<(!DOCTYPE|html|head|body|div|span|section|header|footer|nav|ul|table|form)\b/i.test(t)) return 'markup';
+            if (/^\s*(def\s+\w+\(.*\):|import\s+\w+|from\s+\w+\s+import)/m.test(t) && !/;/.test(t)) return 'python';
+            if (/\b(function\s*\w*\s*\(|=>|const\s+\w+\s*=|let\s+\w+\s*=|console\.log)\b/.test(t)) return 'javascript';
+            if (/\{[^}]*\}/.test(t) && /;/.test(t) && t.split('\n').length >= 2) return 'clike';
+            return null;
+        }
+
         // Turn a flat list (each with id / parent_id) into a tree of
         // { comment, children: [...] } nodes, top-level comments first.
         function buildCommentTree(comments) {
@@ -1363,6 +1393,19 @@
             // textContent, never innerHTML — comment bodies are user-submitted.
             textEl.textContent = c.body;
 
+            const lang = detectCommentCodeLanguage(c.body);
+            let contentEl = textEl;
+            if (lang) {
+                const pre = document.createElement('pre');
+                const codeEl = document.createElement('code');
+                codeEl.className = `language-${lang}`;
+                // textContent again — Prism highlights already-safe text,
+                // it never receives raw HTML from the comment.
+                codeEl.textContent = c.body;
+                pre.appendChild(codeEl);
+                contentEl = pre;
+            }
+
             const actions = document.createElement('div');
             actions.className = 'comment-actions';
             const replyToggle = document.createElement('button');
@@ -1377,7 +1420,7 @@
             });
 
             body.appendChild(meta);
-            body.appendChild(textEl);
+            body.appendChild(contentEl);
             body.appendChild(actions);
             body.appendChild(replyForm);
 
@@ -1427,6 +1470,12 @@
                     threadEl.appendChild(renderCommentNode(node, slug));
                 });
                 listEl.appendChild(threadEl);
+
+                // Highlight any comment bodies that were rendered as code.
+                if (window.Prism) {
+                    Prism.highlightAllUnder(listEl);
+                }
+                addCopyButtons();
             } catch (err) {
                 listEl.innerHTML = '<p class="comment-empty">Couldn\'t load comments right now.</p>';
             }
