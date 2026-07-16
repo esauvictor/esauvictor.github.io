@@ -276,12 +276,26 @@
             position: relative;
             background-color: #1e293b;
             color: #f8fafc;
-            padding: 1.5rem;
+            padding: 1.1rem 2.5rem 1.1rem 1.25rem;
             border-radius: 8px;
             overflow-x: auto;
-            margin: 2rem 0;
-            font-size: 0.95rem;
-            line-height: 1.6;
+            margin: 1.5rem 0;
+            font-size: 0.85rem;
+            line-height: 1.55;
+        }
+
+        /* Defensive reset: make sure no token ever renders with an
+           unexpected background/shadow, and keep text selection legible
+           against the dark background instead of a stray light box. */
+        .post-content pre code,
+        .comment-body pre code {
+            background: none;
+            text-shadow: none;
+        }
+
+        .post-content pre ::selection,
+        .comment-body pre ::selection {
+            background: rgba(255, 255, 255, 0.25);
         }
 
         .post-navigation {
@@ -748,12 +762,12 @@
             position: relative;
             background-color: #1e293b;
             color: #f8fafc;
-            padding: 1rem 1.25rem;
+            padding: 0.85rem 2.25rem 0.85rem 1rem;
             border-radius: 8px;
             overflow-x: auto;
             margin: 0;
-            font-size: 0.85rem;
-            line-height: 1.6;
+            font-size: 0.8rem;
+            line-height: 1.55;
         }
 
         .comment-empty {
@@ -950,6 +964,28 @@
 
         .copy-btn:hover {
             background: rgba(255,255,255,0.3);
+        }
+
+        /* Compact code blocks on narrow phones (Samsung S8 = 360px and similar) */
+        @media (max-width: 400px) {
+            .post-content pre {
+                padding: 0.85rem 2.1rem 0.85rem 0.9rem;
+                font-size: 0.75rem;
+                border-radius: 6px;
+                margin: 1.1rem 0;
+            }
+
+            .comment-body pre {
+                padding: 0.7rem 1.9rem 0.7rem 0.75rem;
+                font-size: 0.72rem;
+            }
+
+            .copy-btn {
+                top: 6px;
+                right: 6px;
+                padding: 3px 6px;
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
@@ -1604,12 +1640,13 @@
             document.querySelectorAll('pre').forEach(pre => {
                 // Skip if already has copy button
                 if (pre.querySelector('.copy-btn')) return;
-                
+
                 const button = document.createElement('button');
                 button.className = 'copy-btn';
+                button.type = 'button';
                 button.innerHTML = '<i class="far fa-copy"></i>';
                 button.title = 'Copy code';
-                
+
                 button.addEventListener('click', () => {
                     const code = pre.querySelector('code')?.innerText || pre.innerText;
                     navigator.clipboard.writeText(code).then(() => {
@@ -1619,27 +1656,10 @@
                         }, 2000);
                     });
                 });
-                
-                pre.style.position = 'relative';
-                button.style.position = 'absolute';
-                button.style.top = '10px';
-                button.style.right = '10px';
-                button.style.background = 'rgba(255,255,255,0.2)';
-                button.style.border = 'none';
-                button.style.color = 'white';
-                button.style.borderRadius = '4px';
-                button.style.padding = '5px 10px';
-                button.style.cursor = 'pointer';
-                button.style.transition = 'background 0.3s ease';
-                
-                button.addEventListener('mouseenter', () => {
-                    button.style.background = 'rgba(255,255,255,0.3)';
-                });
-                
-                button.addEventListener('mouseleave', () => {
-                    button.style.background = 'rgba(255,255,255,0.2)';
-                });
-                
+
+                // Sizing/position/colors all come from the .copy-btn CSS rule
+                // (including its mobile breakpoint) — no inline styles here,
+                // so responsive sizing actually takes effect.
                 pre.appendChild(button);
             });
         }
