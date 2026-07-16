@@ -419,7 +419,16 @@
         .post-content img:hover { transform: scale(1.015); }
 
         .post-content ul, .post-content ol { padding-left: 1.4rem; }
-        .post-content li { margin-bottom: 0.4rem; }
+        
+        .post-content li { 
+            margin-bottom: 0.4rem; 
+            text-align: justify;
+            text-justify: inter-word;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+            hyphens: auto;
+        }
+        
         .post-content li + li { margin-top: 0.15rem; }
 
         .post-content blockquote {
