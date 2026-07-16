@@ -434,6 +434,7 @@
             border-radius: 5px;
             font-size: 0.85em;
             color: var(--signal);
+            word-break: break-word;
         }
 
         .post-content pre,
@@ -456,6 +457,9 @@
             padding: 0;
             font-size: inherit;
             text-shadow: none;
+            white-space: pre;
+            word-break: normal;
+            word-wrap: normal;
         }
 
         .post-content pre ::selection,
@@ -894,16 +898,62 @@
         }
 
         @media (max-width: 480px) {
+            body {
+                font-size: 15px; /* Micro-adjustment for readable mobile paragraph text */
+            }
+
+            h1 { font-size: 1.6rem; line-height: 1.3; }
+            h2 { font-size: 1.25rem; margin-top: 1.6rem; }
+            h3 { font-size: 1.1rem; }
+
             .single-blog-container { padding-left: 0.5rem; padding-right: 0.5rem; }
             .single-blog { border-radius: 10px; }
 
-            .post-content pre { padding: 0.75rem 2.3rem 0.75rem 0.8rem; font-size: 0.76rem; }
+            .single-blog-header {
+                padding: 1.5rem 1rem 1.25rem;
+            }
+
+            .post-content {
+                padding: 1.25rem 1rem;
+            }
+
+            .post-content p {
+                font-size: 0.96rem; /* Enhanced mobile reading size */
+                margin-bottom: 1rem;
+            }
+
+            .post-content pre { 
+                padding: 0.75rem 2.3rem 0.75rem 0.8rem; 
+                font-size: 0.76rem; 
+                border-radius: 8px;
+            }
             .comment-body pre { padding: 0.65rem 2rem 0.65rem 0.7rem; font-size: 0.72rem; }
 
             .copy-btn { top: 6px; right: 6px; padding: 0.22rem 0.45rem; font-size: 0.72rem; }
 
             .single-blog-meta { font-size: 0.82rem; column-gap: 0.9rem; }
             .post-author span { display: none; }
+
+            .tags {
+                padding: 0 1rem;
+            }
+
+            .post-navigation {
+                padding: 1.25rem 1rem;
+            }
+
+            .comments-section {
+                padding: 1.5rem 1rem;
+            }
+
+            /* Prevent layout blowout on form fields */
+            .reply-form input,
+            .reply-form textarea,
+            .comment-form input,
+            .comment-form textarea {
+                font-size: 16px; /* Prevents auto iOS zoom on focus */
+                padding: 0.55rem 0.75rem;
+            }
         }
 
         @media (min-width: 1024px) {
