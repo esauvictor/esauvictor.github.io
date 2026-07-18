@@ -1196,6 +1196,20 @@
 
         const API_BASE = 'https://renaissanceassembly.org/secure/api';
 
+        // Retries a GET request a couple of times with a short backoff before
+        // giving up — smooths over the host's occasional transient connection
+        // blips so a comment/post page doesn't come up empty.
+        function fetchWithRetry(url, options = {}, retries = 2, delayMs = 800) {
+          return fetch(url, options).catch(err => {
+            if (retries > 0) {
+              return new Promise(resolve => setTimeout(resolve, delayMs))
+                .then(() => fetchWithRetry(url, options, retries - 1, delayMs * 2));
+            }
+            throw err;
+          });
+        }
+
+
         // Fire-and-forget page view tracking. Wrapped so a tracking failure
         // (network hiccup, ad blocker, etc.) never affects the rest of the page.
         fetch(`${API_BASE}/track.php`, {
@@ -1296,8 +1310,8 @@
 
             try {
                 const [postRes, listRes] = await Promise.all([
-                    fetch(`${API_BASE}/posts.php?slug=${encodeURIComponent(slug)}`),
-                    fetch(`${API_BASE}/posts.php`)
+                    fetchWithRetry(`${API_BASE}/posts.php?slug=${encodeURIComponent(slug)}`),
+                    fetchWithRetry(`${API_BASE}/posts.php`)
                 ]);
 
                 if (!postRes.ok) throw new Error('not found');
@@ -1562,7 +1576,7 @@
             const listEl = document.getElementById('commentList');
             const countEl = document.getElementById('commentCount');
             try {
-                const res = await fetch(`${API_BASE}/comments.php?slug=${encodeURIComponent(slug)}`);
+                const res = await fetchWithRetry(`${API_BASE}/comments.php?slug=${encodeURIComponent(slug)}`);
                 if (!res.ok) throw new Error('failed to load comments');
                 const data = await res.json();
                 const comments = data.comments || [];
