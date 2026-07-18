@@ -1642,7 +1642,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       const data = await res.json();
 
       if (!res.ok || !data.reply) {
-        thinking.textContent = data.error || 'Something went wrong. Please try again.';
+        thinking.textContent = (data.error || 'Something went wrong. Please try again.') + (data.debug ? ('\n\n[debug] ' + data.debug) : '');
         thinking.className = 'chat-msg error';
         return;
       }
