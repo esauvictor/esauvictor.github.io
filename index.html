@@ -1534,5 +1534,138 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   .catch(() => { /* fail silently — keep whatever fallback markup exists */ });
 </script>
 
+<!-- Live chat widget -->
+<style>
+  #chatToggle {
+    position: fixed; bottom: 20px; right: 20px; z-index: 9998;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--green); color: var(--bg); border: none;
+    font-size: 1.4rem; cursor: pointer;
+    box-shadow: 0 4px 18px var(--green-glow);
+    display: flex; align-items: center; justify-content: center;
+  }
+  #chatPanel {
+    position: fixed; bottom: 88px; right: 20px; z-index: 9998;
+    width: min(340px, calc(100vw - 40px)); height: min(480px, calc(100vh - 140px));
+    background: var(--bg1); border: 1px solid var(--border2); border-radius: 12px;
+    display: none; flex-direction: column; overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    font-family: var(--mono);
+  }
+  #chatPanel.open { display: flex; }
+  #chatHeader {
+    padding: 0.85rem 1rem; background: var(--bg2); border-bottom: 1px solid var(--border);
+    color: var(--text); font-size: 0.85rem; font-weight: 700;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  #chatHeader span.dot { color: var(--green); }
+  #chatClose { background: none; border: none; color: var(--text2); font-size: 1.1rem; cursor: pointer; }
+  #chatMessages {
+    flex: 1; overflow-y: auto; padding: 0.85rem; display: flex; flex-direction: column; gap: 0.6rem;
+  }
+  .chat-msg { font-size: 0.82rem; line-height: 1.45; padding: 0.55rem 0.7rem; border-radius: 8px; max-width: 88%; white-space: pre-wrap; }
+  .chat-msg.user { align-self: flex-end; background: var(--green-faint); border: 1px solid var(--border2); color: var(--text); }
+  .chat-msg.assistant { align-self: flex-start; background: var(--bg2); border: 1px solid var(--border); color: var(--text2); }
+  .chat-msg.error { align-self: flex-start; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); color: var(--red); }
+  #chatForm { display: flex; gap: 0.4rem; padding: 0.7rem; border-top: 1px solid var(--border); background: var(--bg2); }
+  #chatInput {
+    flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); font-family: var(--mono); font-size: 0.82rem; padding: 0.5rem 0.6rem; resize: none;
+  }
+  #chatSend {
+    background: var(--green); color: var(--bg); border: none; border-radius: 6px;
+    padding: 0 0.9rem; font-weight: 700; cursor: pointer; font-family: var(--mono);
+  }
+  #chatSend:disabled { opacity: 0.5; cursor: default; }
+</style>
+
+<button id="chatToggle" aria-label="Open chat"><i class="fas fa-comment-dots"></i></button>
+<div id="chatPanel">
+  <div id="chatHeader">
+    <span><span class="dot">●</span> Ask about Esau</span>
+    <button id="chatClose" aria-label="Close chat">✕</button>
+  </div>
+  <div id="chatMessages"></div>
+  <form id="chatForm">
+    <textarea id="chatInput" rows="1" placeholder="Ask about my skills, projects..." maxlength="1500"></textarea>
+    <button id="chatSend" type="submit">Send</button>
+  </form>
+</div>
+
+<script>
+(function () {
+  const CHAT_API = `${typeof API_BASE !== 'undefined' ? API_BASE : 'https://renaissanceassembly.org/secure/api'}/chat.php`;
+  const toggle = document.getElementById('chatToggle');
+  const panel = document.getElementById('chatPanel');
+  const closeBtn = document.getElementById('chatClose');
+  const messagesEl = document.getElementById('chatMessages');
+  const form = document.getElementById('chatForm');
+  const input = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('chatSend');
+
+  let history = []; // { role: 'user'|'assistant', content: string }
+
+  toggle.addEventListener('click', () => {
+    panel.classList.toggle('open');
+    if (panel.classList.contains('open') && messagesEl.children.length === 0) {
+      addMessage('assistant', "Hey! I can answer questions about Esau's skills, tech stack, and past projects. What would you like to know?");
+    }
+  });
+  closeBtn.addEventListener('click', () => panel.classList.remove('open'));
+
+  function addMessage(role, text) {
+    const el = document.createElement('div');
+    el.className = 'chat-msg ' + role;
+    el.textContent = text;
+    messagesEl.appendChild(el);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return el;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = '';
+    addMessage('user', text);
+    history.push({ role: 'user', content: text });
+    sendBtn.disabled = true;
+    const thinking = addMessage('assistant', 'Thinking…');
+
+    try {
+      const res = await fetch(CHAT_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history })
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.reply) {
+        thinking.textContent = data.error || 'Something went wrong. Please try again.';
+        thinking.className = 'chat-msg error';
+        return;
+      }
+
+      thinking.textContent = data.reply;
+      history.push({ role: 'assistant', content: data.reply });
+    } catch (err) {
+      thinking.textContent = "Couldn't reach the chat service. Please try again.";
+      thinking.className = 'chat-msg error';
+    } finally {
+      sendBtn.disabled = false;
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+  });
+
+  // Enter to send, Shift+Enter for a new line
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      form.requestSubmit();
+    }
+  });
+})();
+</script>
 </body>
 </html>
