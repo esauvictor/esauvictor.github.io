@@ -1243,136 +1243,7 @@
   console.log('%cThis is a developer tool — do not paste code here.', 'font-size:16px;');
 </script>
 
-<!--Start of Tawk.to Script-->
-<!-- Floating Chat Button -->
-<button id="customChatBtn" onclick="openTawk()" title="Chat with us" style="position:fixed;bottom:130px;right:20px;z-index:9999;display:flex;align-items:center;gap:10px;background:#111;color:#fff;border:1px solid rgba(201,168,76,0.4);border-radius:50px;padding:8px 18px 8px 8px;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.6);transition:opacity 0.3s ease,transform 0.2s ease;">    
-    <span style="position:relative;flex-shrink:0;width:36px;height:36px;border-radius:50%;overflow:hidden;border:1px solid rgba(201,168,76,0.3);">        
-        <!-- Updated to your custom GitHub Avatar Link -->
-        <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Chat" style="width:100%;height:100%;object-fit:cover;background:#fff;">        
-        <span style="position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:#c9a84c;border:2px solid #111;"></span>    
-    </span>    
-    <span style="font-weight:bold;font-size:14px;">let's_talk()</span>
-</button>
 
-<!-- Tawk.to Embedded Engine with Custom Launcher Control -->
-<script>
-(function () {    
-    var _open = false;
-
-    // Helper logic to pinpoint Tawk.to frames specifically
-    function _isTawk(el) {        
-        if (!el || el.tagName !== 'IFRAME') return false;        
-        var src   = el.getAttribute('src')   || '';        
-        var cls   = el.className             || '';        
-        var title = el.getAttribute('title') || '';        
-        var name  = el.getAttribute('name')  || '';        
-        if (cls.indexOf('VIpgJd') !== -1)     return false;        
-        if (title.indexOf('Translate') !== -1) return false;        
-        if (name === 'votingFrame')            return false;        
-        return (src === 'about:blank' || src === '');    
-    }
-
-    function _hide(el) {        
-        el.style.setProperty('display',    'none',   'important');        
-        el.style.setProperty('visibility', 'hidden', 'important');        
-        el.style.setProperty('opacity',    '0',      'important');    
-    }
-
-    function _show(el) {        
-        el.style.removeProperty('display');        
-        el.style.removeProperty('visibility');        
-        el.style.removeProperty('opacity');    
-    }
-
-    function _hideAll() {        
-        document.querySelectorAll('iframe').forEach(function (f) {            
-            if (_isTawk(f)) _hide(f);        
-        });    
-    }
-
-    function _showAll() {        
-        document.querySelectorAll('iframe').forEach(function (f) {            
-            if (_isTawk(f)) _show(f);        
-        });    
-    }
-
-    // Watch for dynamic style updates on Tawk iframes to enforce hiding
-    var _styleWatcher = new MutationObserver(function (muts) {        
-        if (_open) return;        
-        muts.forEach(function (m) {            
-            if (_isTawk(m.target)) _hide(m.target);        
-        });    
-    });
-
-    // Handle initial injection of Tawk.to elements into DOM tree structure
-    var _domWatcher = new MutationObserver(function (muts) {        
-        muts.forEach(function (m) {            
-            m.addedNodes.forEach(function (node) {                
-                if (node.nodeType !== 1) return;                
-                var frames = node.tagName === 'IFRAME'                    
-                    ? [node]                    
-                    : Array.from(node.querySelectorAll('iframe'));                
-                frames.forEach(function (f) {                    
-                    if (_isTawk(f)) {                        
-                        if (!_open) _hide(f);                        
-                        _styleWatcher.observe(f, { attributes: true, attributeFilter: ['style'] });                    
-                    }                
-                });            
-            });        
-        });    
-    });
-
-    _domWatcher.observe(document.documentElement, { childList: true, subtree: true });
-
-    // Polling backup container fallback
-    var _poll = setInterval(function () { if (!_open) _hideAll(); }, 80);
-
-    window.Tawk_API = window.Tawk_API || {};    
-    window.Tawk_LoadStart = new Date();
-
-    Tawk_API.onLoad = function () {        
-        clearInterval(_poll);        
-        Tawk_API.hideWidget();
-
-        Tawk_API.onChatMaximized = function () {            
-            _open = true;            
-            _showAll();            
-            var b = document.getElementById('customChatBtn');            
-            if (b) { b.style.opacity = '0'; b.style.pointerEvents = 'none'; }        
-        };        
-        
-        Tawk_API.onChatMinimized = function () {            
-            Tawk_API.hideWidget();        
-        };        
-        
-        Tawk_API.onChatHidden = function () {            
-            _open = false;            
-            _hideAll();            
-            var b = document.getElementById('customChatBtn');            
-            if (b) { b.style.opacity = '1'; b.style.pointerEvents = 'auto'; }        
-        };
-    };
-
-    // Initialize your specific property widget
-    var s1 = document.createElement('script'),        
-        s0 = document.getElementsByTagName('script')[0];    
-    s1.async = true;    
-    s1.src = 'https://embed.tawk.to/6a017718eb073e1c334f0c4e/default';    
-    s1.charset = 'UTF-8';    
-    s1.setAttribute('crossorigin', '*');    
-    s0.parentNode.insertBefore(s1, s0);
-
-    // Global triggering function assigned to button's click context
-    window.openTawk = function () {        
-        if (typeof Tawk_API !== 'undefined' && typeof Tawk_API.maximize === 'function') {            
-            _open = true;            
-            _showAll();            
-            Tawk_API.maximize();        
-        }    
-    };
-})();
-</script>
-<!--End of Tawk.to Script-->
 
 <script type="application/ld+json">
 {
@@ -1538,12 +1409,37 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 <style>
   #chatToggle {
     position: fixed; bottom: 20px; right: 20px; z-index: 9998;
-    width: 56px; height: 56px; border-radius: 50%;
-    background: var(--green); color: var(--bg); border: none;
-    font-size: 1.4rem; cursor: pointer;
-    box-shadow: 0 4px 18px var(--green-glow);
-    display: flex; align-items: center; justify-content: center;
+    display: flex; align-items: center; gap: 10px;
+    background: var(--bg1); color: var(--text); border: 1px solid var(--border2);
+    border-radius: 50px; padding: 8px 18px 8px 8px; cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0,0,0,.6);
+    font-family: var(--mono);
   }
+  #chatToggle .avatar-wrap {
+    position: relative; flex-shrink: 0; width: 36px; height: 36px;
+    border-radius: 50%; overflow: hidden; border: 1px solid var(--border2);
+  }
+  #chatToggle .avatar-wrap img { width: 100%; height: 100%; object-fit: cover; background: #fff; }
+  #chatToggle .avatar-wrap .dot-badge {
+    position: absolute; bottom: 0; right: 0; width: 10px; height: 10px;
+    border-radius: 50%; background: var(--green); border: 2px solid var(--bg1);
+  }
+  #chatToggle .toggle-label { font-weight: bold; font-size: 14px; }
+
+  #chatGreeting {
+    position: fixed; bottom: 88px; right: 20px; z-index: 9998;
+    max-width: min(260px, calc(100vw - 40px));
+    background: var(--bg1); border: 1px solid var(--border2); border-radius: 12px;
+    padding: 0.75rem 0.85rem; font-family: var(--mono); font-size: 0.8rem;
+    color: var(--text2); box-shadow: 0 10px 30px rgba(0,0,0,.5);
+    display: none; align-items: flex-start; gap: 0.5rem;
+  }
+  #chatGreeting.show { display: flex; }
+  #chatGreeting button {
+    background: none; border: none; color: var(--text3); cursor: pointer;
+    font-size: 0.9rem; line-height: 1; flex-shrink: 0;
+  }
+
   #chatPanel {
     position: fixed; bottom: 88px; right: 20px; z-index: 9998;
     width: min(340px, calc(100vw - 40px)); height: min(480px, calc(100vh - 140px));
@@ -1567,6 +1463,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   .chat-msg.user { align-self: flex-end; background: var(--green-faint); border: 1px solid var(--border2); color: var(--text); }
   .chat-msg.assistant { align-self: flex-start; background: var(--bg2); border: 1px solid var(--border); color: var(--text2); }
   .chat-msg.error { align-self: flex-start; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); color: var(--red); }
+  .chat-msg a { color: var(--green); }
   #chatForm { display: flex; gap: 0.4rem; padding: 0.7rem; border-top: 1px solid var(--border); background: var(--bg2); }
   #chatInput {
     flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
@@ -1579,7 +1476,19 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   #chatSend:disabled { opacity: 0.5; cursor: default; }
 </style>
 
-<button id="chatToggle" aria-label="Open chat"><i class="fas fa-comment-dots"></i></button>
+<button id="chatToggle" aria-label="Open chat">
+  <span class="avatar-wrap">
+    <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Chat">
+    <span class="dot-badge"></span>
+  </span>
+  <span class="toggle-label">let's_talk()</span>
+</button>
+
+<div id="chatGreeting">
+  <span>👋 Need help? I'm happy to answer questions about Esau while you look around.</span>
+  <button id="chatGreetingClose" aria-label="Dismiss">✕</button>
+</div>
+
 <div id="chatPanel">
   <div id="chatHeader">
     <span><span class="dot">●</span> Ask about Esau</span>
@@ -1591,6 +1500,28 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     <button id="chatSend" type="submit">Send</button>
   </form>
 </div>
+
+<script>
+(function () {
+  const greeting = document.getElementById('chatGreeting');
+  const greetingClose = document.getElementById('chatGreetingClose');
+  let greetingShown = false;
+
+  function maybeShowGreeting() {
+    if (greetingShown || sessionStorage.getItem('chatGreetingDismissed') === '1') return;
+    greetingShown = true;
+    greeting.classList.add('show');
+  }
+
+  function hideGreeting() {
+    greeting.classList.remove('show');
+    sessionStorage.setItem('chatGreetingDismissed', '1');
+  }
+
+  setTimeout(maybeShowGreeting, 10000); // pop up 10s after page load
+  greetingClose.addEventListener('click', hideGreeting);
+})();
+</script>
 
 <script>
 (function () {
@@ -1642,7 +1573,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       const data = await res.json();
 
       if (!res.ok || !data.reply) {
-        thinking.textContent = (data.error || 'Something went wrong. Please try again.') + (data.debug ? ('\n\n[debug] ' + data.debug) : '');
+        thinking.textContent = data.error || 'Something went wrong. Please try again.';
         thinking.className = 'chat-msg error';
         return;
       }
