@@ -1196,6 +1196,17 @@
 
         const API_BASE = 'https://renaissanceassembly.org/secure/api';
 
+        // Fire-and-forget page view tracking. Wrapped so a tracking failure
+        // (network hiccup, ad blocker, etc.) never affects the rest of the page.
+        fetch(`${API_BASE}/track.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            page: window.location.pathname + window.location.search,
+            referrer: document.referrer || ''
+          })
+        }).catch(() => {});
+
         // Get URL parameter
         function getURLParameter(name) {
             return new URLSearchParams(window.location.search).get(name);
