@@ -1464,16 +1464,30 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   .chat-msg.assistant { align-self: flex-start; background: var(--bg2); border: 1px solid var(--border); color: var(--text2); }
   .chat-msg.error { align-self: flex-start; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); color: var(--red); }
   .chat-msg a { color: var(--green); }
-  #chatForm { display: flex; gap: 0.4rem; padding: 0.7rem; border-top: 1px solid var(--border); background: var(--bg2); }
+  #chatForm { display: flex; flex-direction: column; gap: 0.4rem; padding: 0.7rem; border-top: 1px solid var(--border); background: var(--bg2); }
+  #chatInputRow { display: flex; gap: 0.4rem; align-items: flex-end; }
   #chatInput {
     flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
     color: var(--text); font-family: var(--mono); font-size: 0.82rem; padding: 0.5rem 0.6rem; resize: none;
   }
   #chatSend {
     background: var(--green); color: var(--bg); border: none; border-radius: 6px;
-    padding: 0 0.9rem; font-weight: 700; cursor: pointer; font-family: var(--mono);
+    padding: 0 0.9rem; height: 34px; font-weight: 700; cursor: pointer; font-family: var(--mono);
   }
   #chatSend:disabled { opacity: 0.5; cursor: default; }
+  #chatAttachBtn, #chatMicBtn {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text2); width: 34px; height: 34px; flex-shrink: 0; cursor: pointer; font-size: 0.9rem;
+  }
+  #chatMicBtn.listening { background: var(--red); border-color: var(--red); color: #fff; animation: micPulse 1s infinite; }
+  @keyframes micPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }
+  #chatAttachments { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .chat-chip {
+    display: flex; align-items: center; gap: 0.3rem; background: var(--bg); border: 1px solid var(--border2);
+    border-radius: 5px; padding: 0.2rem 0.4rem; font-size: 0.7rem; color: var(--text2); max-width: 140px;
+  }
+  .chat-chip span.name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chat-chip button { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 0.75rem; flex-shrink: 0; }
 </style>
 
 <button id="chatToggle" aria-label="Open chat">
@@ -1496,8 +1510,14 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   </div>
   <div id="chatMessages"></div>
   <form id="chatForm">
-    <textarea id="chatInput" rows="1" placeholder="Ask about my skills, projects..." maxlength="1500"></textarea>
-    <button id="chatSend" type="submit">Send</button>
+    <div id="chatAttachments"></div>
+    <div id="chatInputRow">
+      <button id="chatAttachBtn" type="button" title="Attach a file" aria-label="Attach a file"><i class="fas fa-paperclip"></i></button>
+      <button id="chatMicBtn" type="button" title="Speak instead of typing" aria-label="Voice input"><i class="fas fa-microphone"></i></button>
+      <textarea id="chatInput" rows="1" placeholder="Ask about my skills, projects..." maxlength="1500"></textarea>
+      <button id="chatSend" type="submit">Send</button>
+    </div>
+    <input type="file" id="chatFileInput" accept="image/png,image/jpeg,image/webp,image/gif,application/pdf,text/plain" multiple style="display:none;">
   </form>
 </div>
 
@@ -1533,8 +1553,16 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   const form = document.getElementById('chatForm');
   const input = document.getElementById('chatInput');
   const sendBtn = document.getElementById('chatSend');
+  const attachBtn = document.getElementById('chatAttachBtn');
+  const fileInput = document.getElementById('chatFileInput');
+  const attachmentsEl = document.getElementById('chatAttachments');
+  const micBtn = document.getElementById('chatMicBtn');
 
   let history = []; // { role: 'user'|'assistant', content: string }
+  let pendingFiles = []; // { name, mime_type, data (base64), size }
+
+  const MAX_FILES = 3;
+  const MAX_FILE_BYTES = 4 * 1024 * 1024; // 4MB
 
   toggle.addEventListener('click', () => {
     panel.classList.toggle('open');
@@ -1553,14 +1581,104 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     return el;
   }
 
+  // ---- File attachments ----
+  attachBtn.addEventListener('click', () => fileInput.click());
+
+  fileInput.addEventListener('change', () => {
+    const files = Array.from(fileInput.files || []);
+    fileInput.value = ''; // allow re-selecting the same file later
+
+    for (const file of files) {
+      if (pendingFiles.length >= MAX_FILES) {
+        addMessage('error', `You can attach up to ${MAX_FILES} files at a time.`);
+        break;
+      }
+      if (file.size > MAX_FILE_BYTES) {
+        addMessage('error', `"${file.name}" is too large (max 4MB).`);
+        continue;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        // reader.result is a data URL like "data:image/png;base64,AAAA..."
+        const base64 = reader.result.split(',')[1];
+        pendingFiles.push({ name: file.name, mime_type: file.type, data: base64, size: file.size });
+        renderAttachmentChips();
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  function renderAttachmentChips() {
+    attachmentsEl.innerHTML = '';
+    pendingFiles.forEach((f, i) => {
+      const chip = document.createElement('div');
+      chip.className = 'chat-chip';
+      chip.innerHTML = `<i class="fas fa-${f.mime_type.startsWith('image/') ? 'image' : 'file'}"></i><span class="name">${f.name}</span>`;
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.textContent = '✕';
+      removeBtn.addEventListener('click', () => {
+        pendingFiles.splice(i, 1);
+        renderAttachmentChips();
+      });
+      chip.appendChild(removeBtn);
+      attachmentsEl.appendChild(chip);
+    });
+  }
+
+  // ---- Voice input (Web Speech API) ----
+  const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognitionCtor) {
+    micBtn.style.display = 'none'; // not supported in this browser (e.g. Firefox)
+  } else {
+    const recognition = new SpeechRecognitionCtor();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+    let listening = false;
+
+    micBtn.addEventListener('click', () => {
+      if (listening) {
+        recognition.stop();
+        return;
+      }
+      try {
+        recognition.start();
+      } catch (e) { /* already started — ignore */ }
+    });
+
+    recognition.onstart = () => {
+      listening = true;
+      micBtn.classList.add('listening');
+    };
+    recognition.onend = () => {
+      listening = false;
+      micBtn.classList.remove('listening');
+    };
+    recognition.onerror = () => {
+      listening = false;
+      micBtn.classList.remove('listening');
+    };
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      input.value = (input.value ? input.value + ' ' : '') + transcript;
+      input.focus();
+    };
+  }
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const text = input.value.trim();
-    if (!text) return;
+    if (!text && pendingFiles.length === 0) return;
 
     input.value = '';
-    addMessage('user', text);
-    history.push({ role: 'user', content: text });
+    const attachmentsToSend = pendingFiles;
+    pendingFiles = [];
+    renderAttachmentChips();
+
+    const userBubbleText = text || (attachmentsToSend.length === 1 ? `📎 ${attachmentsToSend[0].name}` : `📎 ${attachmentsToSend.length} files`);
+    addMessage('user', userBubbleText);
+    history.push({ role: 'user', content: text || `[Attached: ${attachmentsToSend.map(f => f.name).join(', ')}]` });
     sendBtn.disabled = true;
     const thinking = addMessage('assistant', 'Thinking…');
 
@@ -1568,7 +1686,10 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       const res = await fetch(CHAT_API, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: history })
+        body: JSON.stringify({
+          messages: history,
+          attachments: attachmentsToSend.map(f => ({ mime_type: f.mime_type, data: f.data }))
+        })
       });
       const data = await res.json();
 
