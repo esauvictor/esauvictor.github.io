@@ -1478,6 +1478,25 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     border-radius: 14px; padding: 0.35rem 0.65rem; font-size: 0.72rem; cursor: pointer; font-family: var(--mono);
   }
   .chat-quick-chip:hover { border-color: var(--green); color: var(--text); }
+  #chatCharCount { font-size: 0.68rem; color: var(--text3); text-align: right; height: 0; visibility: hidden; }
+  #chatCharCount.show { height: auto; visibility: visible; }
+  #chatCharCount.warn { color: var(--amber, #ffb347); }
+  #chatCharCount.limit { color: var(--red); }
+  .typing-dots { display: inline-flex; gap: 3px; padding: 0.15rem 0; }
+  .typing-dots span {
+    width: 5px; height: 5px; border-radius: 50%; background: var(--text3);
+    animation: typingBounce 1.2s infinite ease-in-out;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
   #chatForm { display: flex; flex-direction: column; gap: 0.4rem; padding: 0.7rem; border-top: 1px solid var(--border); background: var(--bg2); }
   #chatInputRow { display: flex; gap: 0.4rem; align-items: flex-end; }
   #chatInput {
@@ -1525,7 +1544,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       <button id="chatClose" aria-label="Close chat">✕</button>
     </span>
   </div>
-  <div id="chatMessages"></div>
+  <div id="chatMessages" role="log" aria-live="polite" aria-label="Chat conversation"></div>
   <form id="chatForm">
     <div id="chatAttachments"></div>
     <div id="chatInputRow">
@@ -1534,6 +1553,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       <textarea id="chatInput" rows="1" placeholder="Ask about my skills, projects..." maxlength="1500"></textarea>
       <button id="chatSend" type="submit">Send</button>
     </div>
+    <div id="chatCharCount"></div>
     <input type="file" id="chatFileInput" accept="image/png,image/jpeg,image/webp,image/gif,application/pdf,text/plain" multiple style="display:none;">
   </form>
 </div>
@@ -1655,6 +1675,18 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     return wrap;
   }
 
+  function addTypingIndicator() {
+    const wrap = document.createElement('div');
+    wrap.className = 'chat-msg assistant';
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-msg-text';
+    bubble.innerHTML = '<span class="typing-dots"><span></span><span></span><span></span></span>';
+    wrap.appendChild(bubble);
+    messagesEl.appendChild(wrap);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return wrap;
+  }
+
   function removeQuickChips() {
     document.getElementById('chatQuickChips')?.remove();
   }
@@ -1690,11 +1722,19 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 
   toggle.addEventListener('click', () => {
     panel.classList.toggle('open');
-    if (panel.classList.contains('open') && messagesEl.children.length === 0) {
-      showGreetingAndChips();
+    if (panel.classList.contains('open')) {
+      if (messagesEl.children.length === 0) showGreetingAndChips();
+      input.focus();
     }
   });
   closeBtn.addEventListener('click', () => panel.classList.remove('open'));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && panel.classList.contains('open')) {
+      panel.classList.remove('open');
+      toggle.focus();
+    }
+  });
 
   clearBtn.addEventListener('click', () => {
     history = [];
@@ -1776,7 +1816,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   // ---- Sending ----
   async function sendToBackend(attachmentsToSend) {
     sendBtn.disabled = true;
-    const thinking = addMessage('assistant', 'Thinking…');
+    const thinking = addTypingIndicator();
 
     try {
       const res = await fetch(CHAT_API, {
@@ -1811,6 +1851,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 
     removeQuickChips();
     input.value = '';
+    charCount.classList.remove('show', 'warn', 'limit');
     const attachmentsToSend = pendingFiles;
     pendingFiles = [];
     renderAttachmentChips();
@@ -1829,6 +1870,22 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       e.preventDefault();
       form.requestSubmit();
     }
+  });
+
+  // Character counter — stays hidden until you're getting close to the limit
+  const charCount = document.getElementById('chatCharCount');
+  const CHAR_LIMIT = 1500;
+  input.addEventListener('input', () => {
+    const len = input.value.length;
+    const remaining = CHAR_LIMIT - len;
+    if (remaining > 150) {
+      charCount.classList.remove('show', 'warn', 'limit');
+      return;
+    }
+    charCount.textContent = `${len} / ${CHAR_LIMIT}`;
+    charCount.classList.add('show');
+    charCount.classList.toggle('warn', remaining > 20);
+    charCount.classList.toggle('limit', remaining <= 20);
   });
 })();
 </script>
