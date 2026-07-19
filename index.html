@@ -1268,11 +1268,11 @@ const API_BASE = 'https://renaissanceassembly.org/secure/api';
 // "connection refused" blips (confirmed via cPanel — not a code bug,
 // just transient resource throttling) so visitors don't see empty
 // sections for something that resolves itself in a second or two.
-function fetchWithRetry(url, options = {}, retries = 2, delayMs = 800) {
+function fetchWithRetry(url, options = {}, retries = 4, delayMs = 1000) {
   return fetch(url, options).catch(err => {
     if (retries > 0) {
       return new Promise(resolve => setTimeout(resolve, delayMs))
-        .then(() => fetchWithRetry(url, options, retries - 1, delayMs * 2));
+        .then(() => fetchWithRetry(url, options, retries - 1, delayMs * 1.8));
     }
     throw err;
   });
