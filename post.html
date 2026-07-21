@@ -7,6 +7,23 @@
     <meta name="keywords" content="web development, data analytics, cyber security, programming">
     <meta name="author" content="Esau Victor">
     <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
+    <link rel="alternate" type="application/rss+xml" title="Esau Victor — Blog RSS Feed" href="https://renaissanceassembly.org/secure/api/rss.php">
+
+    <!-- Open Graph / Twitter Card defaults — JS overrides these per-post once
+         the post loads, for the browsers/crawlers that execute JS. For the
+         ones that don't (WhatsApp, Facebook, some LinkedIn crawls), share
+         links generated via secure/api/share.php?slug=... instead, which
+         serves correct per-post tags server-side. -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Esau Victor — Blog">
+    <meta id="ogTitle" property="og:title" content="Esau Victor — Blog">
+    <meta id="ogDescription" property="og:description" content="Notes on web development, data analytics &amp; cyber security.">
+    <meta id="ogImage" property="og:image" content="https://avatars.githubusercontent.com/u/94287719?v=4">
+    <meta id="ogUrl" property="og:url" content="https://esauvictor.github.io/post.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta id="twitterTitle" name="twitter:title" content="Esau Victor — Blog">
+    <meta id="twitterDescription" name="twitter:description" content="Notes on web development, data analytics &amp; cyber security.">
+    <meta id="twitterImage" name="twitter:image" content="https://avatars.githubusercontent.com/u/94287719?v=4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -525,6 +542,49 @@
 
         .tag:hover { background-color: var(--amber); color: white; }
 
+        /* ---------- Share buttons ---------- */
+        .share-row {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.5rem clamp(1.25rem, 5vw, 2.25rem) 0;
+        }
+        .share-label { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
+        .share-links { display: flex; gap: 0.5rem; }
+        .share-links a, .share-links button {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--card); border: 1px solid var(--line); color: var(--ink);
+            font-size: 0.9rem; cursor: pointer; transition: var(--transition);
+        }
+        .share-links a:hover, .share-links button:hover { background: var(--signal); color: #fff; border-color: var(--signal); }
+
+        /* ---------- Related posts ---------- */
+        .related-heading {
+            font-family: var(--display); font-size: 1.3rem;
+            padding: 0 clamp(1.25rem, 5vw, 2.25rem); margin: 1.5rem 0 1rem;
+        }
+        .related-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+            padding: 0 clamp(1.25rem, 5vw, 2.25rem);
+        }
+        @media(max-width:700px){ .related-grid { grid-template-columns: 1fr; } }
+        .related-card {
+            display: block; border-radius: var(--radius); overflow: hidden;
+            background: var(--card); border: 1px solid var(--line); text-decoration: none;
+        }
+        .related-card img { width: 100%; height: 110px; object-fit: cover; display: block; }
+        .related-card span {
+            display: block; padding: 0.65rem 0.75rem; font-size: 0.82rem;
+            font-weight: 600; color: var(--ink); font-family: var(--body);
+        }
+
+        /* ---------- Site notice banner ---------- */
+        .site-notice {
+            display: flex; align-items: center; justify-content: center; gap: 1rem;
+            background: var(--signal); color: #fff; font-family: var(--mono); font-size: 0.82rem;
+            padding: 0.6rem 1rem; text-align: center;
+        }
+        .site-notice button { background: none; border: none; color: #fff; opacity: 0.8; cursor: pointer; font-size: 0.9rem; }
+
         /* ---------- Post navigation ---------- */
         .post-navigation {
             display: grid;
@@ -999,6 +1059,10 @@
     </style>
 </head>
 <body>
+<div id="siteNotice" class="site-notice" style="display:none;">
+  <span id="siteNoticeText"></span>
+  <button id="siteNoticeClose" aria-label="Dismiss">✕</button>
+</div>
     <!-- Reading progress bar -->
     <div class="progress-container">
         <div class="progress-bar" id="progressBar"></div>
@@ -1060,6 +1124,11 @@
                 <!-- Tags will be loaded here dynamically -->
             </div>
 
+            <div class="share-row">
+                <span class="share-label">Share:</span>
+                <div class="share-links" id="shareLinks"></div>
+            </div>
+
             <div class="post-navigation">
                 <a href="#" class="nav-link nav-prev">
                     <i class="fas fa-chevron-left"></i>
@@ -1076,6 +1145,8 @@
                     <i class="fas fa-chevron-right"></i>
                 </a>
             </div>
+
+            <div id="relatedPosts"></div>
 
             <a href="blog.html" class="btn secondary back-to-blog">
                 <i class="fas fa-arrow-left"></i>
@@ -1196,20 +1267,6 @@
 
         const API_BASE = 'https://renaissanceassembly.org/secure/api';
 
-        // Retries a GET request a couple of times with a short backoff before
-        // giving up — smooths over the host's occasional transient connection
-        // blips so a comment/post page doesn't come up empty.
-        function fetchWithRetry(url, options = {}, retries = 2, delayMs = 800) {
-          return fetch(url, options).catch(err => {
-            if (retries > 0) {
-              return new Promise(resolve => setTimeout(resolve, delayMs))
-                .then(() => fetchWithRetry(url, options, retries - 1, delayMs * 2));
-            }
-            throw err;
-          });
-        }
-
-
         // Fire-and-forget page view tracking. Wrapped so a tracking failure
         // (network hiccup, ad blocker, etc.) never affects the rest of the page.
         fetch(`${API_BASE}/track.php`, {
@@ -1220,6 +1277,40 @@
             referrer: document.referrer || ''
           })
         }).catch(() => {});
+
+        // Retries a GET request a couple of times with a short backoff before
+        // giving up — smooths over the host's occasional transient connection
+        // blips so a comment/post page doesn't come up empty.
+        function fetchWithRetry(url, options = {}, retries = 4, delayMs = 1000) {
+          return fetch(url, options).catch(err => {
+            if (retries > 0) {
+              return new Promise(resolve => setTimeout(resolve, delayMs))
+                .then(() => fetchWithRetry(url, options, retries - 1, delayMs * 1.8));
+            }
+            throw err;
+          });
+        }
+
+        // ---- site notice banner ----
+        (function () {
+          const bar = document.getElementById('siteNotice');
+          const text = document.getElementById('siteNoticeText');
+          const closeBtn = document.getElementById('siteNoticeClose');
+          if (sessionStorage.getItem('noticeDismissed') === '1') return;
+          fetch(`${API_BASE}/notice.php`)
+            .then(res => res.json())
+            .then(data => {
+              if (data.notice && data.notice.message) {
+                text.textContent = data.notice.message;
+                bar.style.display = 'flex';
+              }
+            })
+            .catch(() => {});
+          closeBtn.addEventListener('click', () => {
+            bar.style.display = 'none';
+            sessionStorage.setItem('noticeDismissed', '1');
+          });
+        })();
 
         // Get URL parameter
         function getURLParameter(name) {
@@ -1332,9 +1423,12 @@
                 }
                 document.getElementById('post-content').innerHTML = contentHtml;
 
-                // No tags field from the API yet — hide the tags row rather than show stale data.
+                // Tags now come from the API (category/tags were added to the
+                // posts table) — render them as pills instead of hiding the row.
                 const tagsContainer = document.getElementById('post-tags');
-                tagsContainer.innerHTML = '';
+                tagsContainer.innerHTML = (post.tags && post.tags.length)
+                    ? post.tags.map(t => `<span class="tag">#${t}</span>`).join('')
+                    : '';
 
                 // Prev/Next based on published order in the full list.
                 const idx = posts.findIndex(p => p.slug === slug);
@@ -1361,6 +1455,57 @@
                 }
 
                 document.title = `${post.title} - Esau Victor`;
+
+                // ---- Open Graph / Twitter Card: update for JS-executing crawlers ----
+                const pageUrl = `https://esauvictor.github.io/post.html?slug=${encodeURIComponent(slug)}`;
+                const shareImage = post.cover_image_url || 'https://avatars.githubusercontent.com/u/94287719?v=4';
+                document.getElementById('ogTitle').setAttribute('content', post.title);
+                document.getElementById('ogDescription').setAttribute('content', post.excerpt || '');
+                document.getElementById('ogImage').setAttribute('content', shareImage);
+                document.getElementById('ogUrl').setAttribute('content', pageUrl);
+                document.getElementById('twitterTitle').setAttribute('content', post.title);
+                document.getElementById('twitterDescription').setAttribute('content', post.excerpt || '');
+                document.getElementById('twitterImage').setAttribute('content', shareImage);
+
+                // ---- Related posts ----
+                const relatedEl = document.getElementById('relatedPosts');
+                const related = postData.related || [];
+                if (relatedEl && related.length) {
+                    relatedEl.innerHTML = `
+                        <h3 class="related-heading">Related posts</h3>
+                        <div class="related-grid">
+                          ${related.map(r => `
+                            <a class="related-card" href="post.html?slug=${encodeURIComponent(r.slug)}">
+                              <img src="${r.cover_image_url || 'https://avatars.githubusercontent.com/u/94287719?v=4'}" alt="${r.title}" loading="lazy">
+                              <span>${r.title}</span>
+                            </a>
+                          `).join('')}
+                        </div>`;
+                }
+
+                // ---- Social share buttons ----
+                // Point at the share.php proxy, not the raw page URL — that proxy
+                // serves correct per-post OG tags server-side, so previews work
+                // properly on WhatsApp/Facebook/etc, which don't run JS.
+                const shareUrl = `https://renaissanceassembly.org/secure/api/share.php?slug=${encodeURIComponent(slug)}`;
+                const shareText = encodeURIComponent(post.title);
+                const shareLinks = document.getElementById('shareLinks');
+                if (shareLinks) {
+                    shareLinks.innerHTML = `
+                        <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${encodeURIComponent(shareUrl)}" target="_blank" rel="noopener" aria-label="Share on X"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="https://wa.me/?text=${shareText}%20${encodeURIComponent(shareUrl)}" target="_blank" rel="noopener" aria-label="Share on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                        <button type="button" id="copyLinkBtn" aria-label="Copy link"><i class="fa-solid fa-link"></i></button>`;
+                    document.getElementById('copyLinkBtn').addEventListener('click', (e) => {
+                        navigator.clipboard?.writeText(shareUrl).then(() => {
+                            const btn = e.currentTarget;
+                            const original = btn.innerHTML;
+                            btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                            setTimeout(() => { btn.innerHTML = original; }, 1500);
+                        }).catch(() => {});
+                    });
+                }
+
                 enhancePostContent();
                 loadComments(slug);
                 setupCommentForm(slug);
