@@ -909,6 +909,10 @@
   </style>
 </head>
 <body>
+<div id="siteNotice" class="site-notice" style="display:none;">
+  <span id="siteNoticeText"></span>
+  <button id="siteNoticeClose" aria-label="Dismiss">✕</button>
+</div>
 
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
@@ -1330,6 +1334,27 @@ function fetchWithRetry(url, options = {}, retries = 4, delayMs = 1000) {
   });
 }
 
+// ---- site notice banner ----
+(function () {
+  const bar = document.getElementById('siteNotice');
+  const text = document.getElementById('siteNoticeText');
+  const closeBtn = document.getElementById('siteNoticeClose');
+  if (sessionStorage.getItem('noticeDismissed') === '1') return;
+  fetch(`${API_BASE}/notice.php`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.notice && data.notice.message) {
+        text.textContent = data.notice.message;
+        bar.style.display = 'flex';
+      }
+    })
+    .catch(() => {});
+  closeBtn.addEventListener('click', () => {
+    bar.style.display = 'none';
+    sessionStorage.setItem('noticeDismissed', '1');
+  });
+})();
+
 
 // Fire-and-forget page view tracking. Wrapped so a tracking failure
 // (network hiccup, ad blocker, etc.) never affects the rest of the page.
@@ -1534,6 +1559,12 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   #chatCharCount.show { height: auto; visibility: visible; }
   #chatCharCount.warn { color: var(--amber, #ffb347); }
   #chatCharCount.limit { color: var(--red); }
+  .site-notice {
+    display: flex; align-items: center; justify-content: center; gap: 1rem;
+    background: var(--green); color: var(--bg); font-family: var(--mono); font-size: 0.82rem;
+    padding: 0.6rem 1rem; text-align: center;
+  }
+  .site-notice button { background: none; border: none; color: var(--bg); opacity: 0.75; cursor: pointer; font-size: 0.9rem; }
   .typing-dots { display: inline-flex; gap: 3px; padding: 0.15rem 0; }
   .typing-dots span {
     width: 5px; height: 5px; border-radius: 50%; background: var(--text3);
