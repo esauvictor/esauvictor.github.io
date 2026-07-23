@@ -9,11 +9,7 @@
     <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
     <link rel="alternate" type="application/rss+xml" title="Esau Victor — Blog RSS Feed" href="https://esauvictor.name.ng/api/rss.php">
 
-    <!-- Open Graph / Twitter Card defaults — JS overrides these per-post once
-         the post loads, for the browsers/crawlers that execute JS. For the
-         ones that don't (WhatsApp, Facebook, some LinkedIn crawls), share
-         links generated via secure/api/share.php?slug=... instead, which
-         serves correct per-post tags server-side. -->
+    <!-- Open Graph / Twitter Card defaults -->
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Esau Victor — Blog">
     <meta id="ogTitle" property="og:title" content="Esau Victor — Blog">
@@ -48,9 +44,9 @@
             --display:'Space Grotesk', sans-serif;
             --body-font:'Inter', sans-serif;
 
-            /* ---- aliases so the rest of this file's styling works unchanged ---- */
+            /* ---- aliases ---- */
             --primary-color: var(--signal);
-            --primary-dark: color-mix(in srgb, var(--signal) 82%, black);
+            --primary-dark: #1a40b0;
             --secondary-color: var(--signal);
             --accent-color: var(--amber);
             --text-color: var(--ink);
@@ -77,6 +73,7 @@
             --line:#232C42;
             --muted:#8B93A7;
             --signal:#6C8DF5;
+            --primary-dark:#2546a3;
             --signal-dim:#1B2338;
             --amber:#E8A94A;
             --amber-dim:#241C0F;
@@ -337,7 +334,7 @@
         .single-blog-header {
             padding: clamp(1.5rem, 5vw, 2.25rem) clamp(1.25rem, 5vw, 2.25rem) 1.5rem;
             background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
-            color: white;
+            color: #ffffff;
             position: relative;
             overflow: hidden;
         }
@@ -353,11 +350,13 @@
             border-radius: 50%;
         }
 
-        .single-blog-header h1 {
+        /* Fix: Force title to always stay white in both light and dark mode */
+        .single-blog-header h1,
+        .single-blog-header #post-title {
             margin-bottom: 1.1rem;
-            color: white;
+            color: #ffffff !important;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
 
         /* ---------- Robust Meta Row ---------- */
@@ -366,13 +365,12 @@
             flex-wrap: wrap;
             align-items: center;
             gap: 0.6rem 1.25rem;
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.95);
             position: relative;
-            z-index: 2; /* Ensures text stays above background shapes */
+            z-index: 2;
             width: 100%;
         }
 
-        /* Defends units against breaking internally */
         .post-author, .post-date, .reading-time {
             display: inline-flex;
             align-items: center;
@@ -392,16 +390,19 @@
             font-weight: 600;
             display: inline-block;
             font-size: 0.88rem;
+            color: #ffffff;
         }
 
         .post-author span {
             font-size: 0.78rem;
             opacity: 0.85;
             margin-left: 0.25rem;
+            color: #ffffff;
         }
 
         .post-date, .reading-time {
             font-family: var(--mono);
+            color: #ffffff;
         }
 
         /* ---------- Post content ---------- */
@@ -574,7 +575,7 @@
         .related-card img { width: 100%; height: 110px; object-fit: cover; display: block; }
         .related-card span {
             display: block; padding: 0.65rem 0.75rem; font-size: 0.82rem;
-            font-weight: 600; color: var(--ink); font-family: var(--body);
+            font-weight: 600; color: var(--ink); font-family: var(--body-font);
         }
 
         /* ---------- Site notice banner ---------- */
@@ -991,11 +992,8 @@
         }
 
         @media (max-width: 480px) {
-            body {
-                font-size: 15px; 
-            }
+            body { font-size: 15px; }
 
-            /* Scaled-down header size to balance placeholder titles */
             h1 { font-size: 1.35rem; line-height: 1.35; }
             h2 { font-size: 1.25rem; margin-top: 1.6rem; }
             h3 { font-size: 1.1rem; }
@@ -1003,16 +1001,10 @@
             .single-blog-container { padding-left: 0.5rem; padding-right: 0.5rem; }
             .single-blog { border-radius: 10px; }
 
-            .single-blog-header {
-                padding: 1.25rem 1rem;
-            }
+            .single-blog-header { padding: 1.25rem 1rem; }
 
-            /* Hide the background circle on mobile so it doesn't overlap text */
-            .single-blog-header::before {
-                display: none !important;
-            }
+            .single-blog-header::before { display: none !important; }
 
-            /* Force metadata into a beautiful, un-clippable grid layout */
             .single-blog-meta {
                 display: grid;
                 grid-template-columns: auto auto;
@@ -1021,24 +1013,13 @@
                 font-size: 0.8rem;
             }
 
-            /* Let the Author span across both columns so it gets its own row */
-            .post-author {
-                grid-column: 1 / -1;
-            }
+            .post-author { grid-column: 1 / -1; }
 
-            .post-author img {
-                width: 28px;
-                height: 28px;
-            }
+            .post-author img { width: 28px; height: 28px; }
 
-            .post-content {
-                padding: 1.25rem 1rem;
-            }
+            .post-content { padding: 1.25rem 1rem; }
 
-            .post-content p {
-                font-size: 0.96rem; 
-                margin-bottom: 1rem;
-            }
+            .post-content p { font-size: 0.96rem; margin-bottom: 1rem; }
 
             .post-content pre { 
                 padding: 0.75rem 2.3rem 0.75rem 0.8rem; 
@@ -1049,17 +1030,11 @@
 
             .copy-btn { top: 6px; right: 6px; padding: 0.22rem 0.45rem; font-size: 0.72rem; }
 
-            .tags {
-                padding: 0 1rem;
-            }
+            .tags { padding: 0 1rem; }
 
-            .post-navigation {
-                padding: 1.25rem 1rem;
-            }
+            .post-navigation { padding: 1.25rem 1rem; }
 
-            .comments-section {
-                padding: 1.5rem 1rem;
-            }
+            .comments-section { padding: 1.5rem 1rem; }
 
             .reply-form input,
             .reply-form textarea,
@@ -1134,11 +1109,11 @@
             </header>
 
             <div class="post-content" id="post-content">
-                <!-- Content will be loaded here dynamically -->
+                <!-- Content loaded dynamically -->
             </div>
 
             <div class="tags" id="post-tags">
-                <!-- Tags will be loaded here dynamically -->
+                <!-- Tags loaded dynamically -->
             </div>
 
             <div class="share-row">
@@ -1178,7 +1153,6 @@
 
                 <form class="comment-form" id="commentForm">
                     <h3>Leave a comment</h3>
-                    <!-- Honeypot: real visitors leave this blank, bots tend to fill everything -->
                     <div class="hp-field" aria-hidden="true">
                         <label for="website">Website</label>
                         <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
@@ -1229,7 +1203,6 @@
                     <p>Get notified when I publish new posts</p>
                     <form class="subscribe-form" id="subscribeForm">
                         <input type="hidden" name="form" value="subscribe">
-                        <!-- Honeypot: real visitors leave this blank, bots tend to fill everything -->
                         <input type="text" name="honeypot" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
 
                         <div class="form-group">
@@ -1246,7 +1219,7 @@
         </div>
     </footer>
 
-    <!-- Prism.js core + languages used by the code-block toolbar in the admin editor -->
+    <!-- Prism.js core + components -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
@@ -1259,7 +1232,7 @@
 
     <!-- JavaScript -->
     <script>
-        // ---------- theme (shared with blog.html via localStorage) ----------
+        // ---------- theme ----------
         (function () {
             const root = document.documentElement;
             const themeBtn = document.getElementById('themeBtn');
@@ -1284,8 +1257,6 @@
 
         const API_BASE = 'https://esauvictor.name.ng/api';
 
-        // Fire-and-forget page view tracking. Wrapped so a tracking failure
-        // (network hiccup, ad blocker, etc.) never affects the rest of the page.
         fetch(`${API_BASE}/track.php`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1295,9 +1266,6 @@
           })
         }).catch(() => {});
 
-        // Retries a GET request a couple of times with a short backoff before
-        // giving up — smooths over the host's occasional transient connection
-        // blips so a comment/post page doesn't come up empty.
         function fetchWithRetry(url, options = {}, retries = 4, delayMs = 1000) {
           return fetch(url, options).catch(err => {
             if (retries > 0) {
@@ -1329,12 +1297,10 @@
           });
         })();
 
-        // Get URL parameter
         function getURLParameter(name) {
             return new URLSearchParams(window.location.search).get(name);
         }
 
-        // Estimate reading time from raw HTML content (strip tags, count words)
         function calculateReadingTime(htmlContent) {
             const text = htmlContent.replace(/<[^>]*>/g, ' ');
             const wordCount = (text.trim().match(/\S+/g) || []).length;
@@ -1349,17 +1315,11 @@
             return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
         }
 
-        // Runs once real post content is in the DOM: copy buttons, fade-in, image hover.
         function enhancePostContent() {
-            // Syntax-highlight any <pre><code class="language-x"> blocks from the editor.
             if (window.Prism) {
                 try {
                     Prism.highlightAllUnder(document.getElementById('post-content'));
-                } catch (err) {
-                    // Very large or unusual code blocks can occasionally overwhelm
-                    // Prism's tokenizer — leave the code visible but unhighlighted
-                    // rather than losing the whole post over it.
-                }
+                } catch (err) {}
             }
 
             addCopyButtons();
@@ -1390,12 +1350,6 @@
                 .replace(/>/g, '&gt;');
         }
 
-        // Some posts were saved before the admin editor auto-wrapped pasted
-        // code in <pre><code>, so their content is raw, unwrapped code —
-        // which the browser then mashes into one line (whitespace collapses
-        // outside <pre>). If the whole content has no block-level HTML in it
-        // and looks like code, wrap it for display so it renders properly
-        // without needing to re-save the post.
         function autoWrapRawCodeContent(html) {
             const hasBlockMarkup = /<(p|div|img|pre|ul|ol|li|table|h[1-6]|blockquote|figure)\b/i.test(html);
             if (hasBlockMarkup) return html;
@@ -1406,7 +1360,6 @@
             return `<pre><code class="language-${lang}">${escapeHtmlForCodeBlock(html)}</code></pre>`;
         }
 
-        // Load blog post content from the API
         async function loadBlogPost() {
             const slug = getURLParameter('slug');
             if (!slug) {
@@ -1440,14 +1393,11 @@
                 }
                 document.getElementById('post-content').innerHTML = contentHtml;
 
-                // Tags now come from the API (category/tags were added to the
-                // posts table) — render them as pills instead of hiding the row.
                 const tagsContainer = document.getElementById('post-tags');
                 tagsContainer.innerHTML = (post.tags && post.tags.length)
                     ? post.tags.map(t => `<span class="tag">#${t}</span>`).join('')
                     : '';
 
-                // Prev/Next based on published order in the full list.
                 const idx = posts.findIndex(p => p.slug === slug);
                 const prevLink = document.querySelector('.nav-prev');
                 const nextLink = document.querySelector('.nav-next');
@@ -1473,7 +1423,6 @@
 
                 document.title = `${post.title} - Esau Victor`;
 
-                // ---- Open Graph / Twitter Card: update for JS-executing crawlers ----
                 const pageUrl = `https://esauvictor.github.io/post.html?slug=${encodeURIComponent(slug)}`;
                 const shareImage = post.cover_image_url || 'https://avatars.githubusercontent.com/u/94287719?v=4';
                 document.getElementById('ogTitle').setAttribute('content', post.title);
@@ -1484,7 +1433,6 @@
                 document.getElementById('twitterDescription').setAttribute('content', post.excerpt || '');
                 document.getElementById('twitterImage').setAttribute('content', shareImage);
 
-                // ---- Related posts ----
                 const relatedEl = document.getElementById('relatedPosts');
                 const related = postData.related || [];
                 if (relatedEl && related.length) {
@@ -1500,10 +1448,6 @@
                         </div>`;
                 }
 
-                // ---- Social share buttons ----
-                // Point at the share.php proxy, not the raw page URL — that proxy
-                // serves correct per-post OG tags server-side, so previews work
-                // properly on WhatsApp/Facebook/etc, which don't run JS.
                 const shareUrl = `https://esauvictor.name.ng/api/share.php?slug=${encodeURIComponent(slug)}`;
                 const shareText = encodeURIComponent(post.title);
                 const shareLinks = document.getElementById('shareLinks');
@@ -1535,18 +1479,12 @@
         }
 
         // ---- Comments ----
-
         let currentPostSlug = null;
 
         function escapeInitial(name) {
             return (name || '?').trim().charAt(0).toUpperCase() || '?';
         }
 
-        // Same idea as the admin editor's paste-detection: if a comment body
-        // looks like code, render it as a highlighted <pre><code> block
-        // instead of plain text. Detection only decides *how* to display —
-        // the text itself always goes in via textContent, never innerHTML,
-        // so this can't be used to inject markup.
         function detectCommentCodeLanguage(text) {
             const t = (text || '').trim();
             if (!t) return null;
@@ -1560,8 +1498,6 @@
             return null;
         }
 
-        // Turn a flat list (each with id / parent_id) into a tree of
-        // { comment, children: [...] } nodes, top-level comments first.
         function buildCommentTree(comments) {
             const byId = new Map();
             comments.forEach(c => byId.set(c.id, { comment: c, children: [] }));
@@ -1679,7 +1615,6 @@
             meta.appendChild(dateEl);
 
             const textEl = document.createElement('p');
-            // textContent, never innerHTML — comment bodies are user-submitted.
             textEl.textContent = c.body;
 
             const lang = detectCommentCodeLanguage(c.body);
@@ -1688,8 +1623,6 @@
                 const pre = document.createElement('pre');
                 const codeEl = document.createElement('code');
                 codeEl.className = `language-${lang}`;
-                // textContent again — Prism highlights already-safe text,
-                // it never receives raw HTML from the comment.
                 codeEl.textContent = c.body;
                 pre.appendChild(codeEl);
                 contentEl = pre;
@@ -1759,8 +1692,6 @@
                     try {
                         threadEl.appendChild(renderCommentNode(node, slug));
                     } catch (nodeErr) {
-                        // One malformed/oversized comment shouldn't take down
-                        // the rest of the thread — skip it, keep going.
                         const fallback = document.createElement('p');
                         fallback.className = 'comment-empty';
                         fallback.textContent = 'A comment could not be displayed.';
@@ -1769,15 +1700,9 @@
                 });
                 listEl.appendChild(threadEl);
 
-                // Highlight any comment bodies that were rendered as code.
-                // Wrapped separately: an extremely large/complex code block
-                // can occasionally overwhelm Prism's tokenizer, and that
-                // failure should never erase the comments we just rendered.
                 try {
                     if (window.Prism) Prism.highlightAllUnder(listEl);
-                } catch (highlightErr) {
-                    // Leave the plain, unhighlighted code block in place.
-                }
+                } catch (highlightErr) {}
                 addCopyButtons();
             } catch (err) {
                 listEl.innerHTML = '<p class="comment-empty">Couldn\'t load comments right now.</p>';
@@ -1799,7 +1724,7 @@
                     name: document.getElementById('commentName').value.trim(),
                     email: document.getElementById('commentEmail').value.trim(),
                     body: document.getElementById('commentBody').value.trim(),
-                    website: document.getElementById('website').value, // honeypot
+                    website: document.getElementById('website').value,
                 };
 
                 if (!payload.name || !payload.body) return;
@@ -1829,8 +1754,6 @@
             });
         }
 
-        // Newsletter subscribe form — posts to the public subscribe handler
-        // in submissions.php, which emails the subscription (no page redirect).
         const SUBSCRIBE_URL = 'https://renaissanceassembly.org/secure/admin/submissions.php';
 
         const subscribeForm = document.getElementById('subscribeForm');
@@ -1877,7 +1800,6 @@
                 '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
         });
         
-        // Close mobile menu when clicking a link
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
@@ -1885,10 +1807,8 @@
             });
         });
         
-        // Update copyright year
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Scroll progress bar
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -1896,10 +1816,8 @@
             document.getElementById('progressBar').style.width = scrolled + '%';
         });
 
-        // Add copy button to code blocks
         function addCopyButtons() {
             document.querySelectorAll('pre').forEach(pre => {
-                // Skip if already has copy button
                 if (pre.querySelector('.copy-btn')) return;
 
                 const button = document.createElement('button');
@@ -1918,19 +1836,14 @@
                     });
                 });
 
-                // Sizing/position/colors all come from the .copy-btn CSS rule
-                // (including its mobile breakpoint) — no inline styles here,
-                // so responsive sizing actually takes effect.
                 pre.appendChild(button);
             });
         }
 
-        // Load the blog post when page loads
         window.addEventListener('load', () => {
             loadBlogPost();
         });
 
-        // Handle navigation changes
         window.addEventListener('popstate', () => {
             loadBlogPost();
         });
