@@ -322,7 +322,7 @@
         .single-blog-container {
             max-width: var(--content-width);
             margin: 0 auto;
-            padding: clamp(4.5rem, 8vw, 6rem) clamp(0.75rem, 3vw, 1rem) 2rem;
+            padding: clamp(2rem, 4vw, 3rem) clamp(0.75rem, 3vw, 1rem) 2rem;
         }
 
         .single-blog {
@@ -579,11 +579,30 @@
 
         /* ---------- Site notice banner ---------- */
         .site-notice {
-            display: flex; align-items: center; justify-content: center; gap: 1rem;
-            background: var(--signal); color: #fff; font-family: var(--mono); font-size: 0.82rem;
-            padding: 0.6rem 1rem; text-align: center;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 0.75rem;
+            background: var(--signal); 
+            color: #fff; 
+            font-family: var(--mono); 
+            font-size: 0.82rem;
+            padding: 0.6rem 1rem; 
+            text-align: center;
+            position: relative;
+            z-index: 1002;
+            margin-top: 60px;
         }
-        .site-notice button { background: none; border: none; color: #fff; opacity: 0.8; cursor: pointer; font-size: 0.9rem; }
+        .site-notice button { 
+            background: none; 
+            border: none; 
+            color: #fff; 
+            opacity: 0.85; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            padding: 0.2rem 0.5rem;
+            flex-shrink: 0;
+        }
 
         /* ---------- Post navigation ---------- */
         .post-navigation {
@@ -965,8 +984,6 @@
             .nav-links a { padding: 0.5rem 1rem; font-size: 1rem; }
 
             .hamburger { display: block; }
-
-            .single-blog-container { padding-top: 4.5rem; }
 
             .post-navigation { grid-template-columns: 1fr; }
 
