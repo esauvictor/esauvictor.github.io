@@ -7,7 +7,7 @@
     <meta name="keywords" content="web development, data analytics, cyber security, programming">
     <meta name="author" content="Esau Victor">
     <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
-    <link rel="alternate" type="application/rss+xml" title="Esau Victor — Blog RSS Feed" href="https://renaissanceassembly.org/secure/api/rss.php">
+    <link rel="alternate" type="application/rss+xml" title="Esau Victor — Blog RSS Feed" href="https://esauvictor.name.ng/api/rss.php">
 
     <!-- Open Graph / Twitter Card defaults — JS overrides these per-post once
          the post loads, for the browsers/crawlers that execute JS. For the
@@ -1071,18 +1071,18 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container container">
-            <a href="/" class="logo">
+            <a href="index.html" class="logo">
                 <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor">
                 <span>Esau Victor</span>
             </a>
             <div style="display:flex; align-items:center;">
                 <ul class="nav-links" id="navLinks">
-                    <li><a href="https://esauvictor.github.io/#home">Home</a></li>
-                    <li><a href="https://esauvictor.github.io/#about">About</a></li>
-                    <li><a href="https://esauvictor.github.io/#testimonials">Testimonials</a></li>
-                    <li><a href="https://esauvictor.github.io/#projects">Projects</a></li>
-                    <li><a href="https://esauvictor.github.io/blog.html" class="active">Blog</a></li>
-                    <li><a href="https://esauvictor.github.io/#contact">Contact</a></li>
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#services">Services</a></li>
+                    <li><a href="index.html#projects">Projects</a></li>
+                    <li><a href="blog.html" class="active">Blog</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
                 </ul>
                 <button id="themeBtn" class="theme-btn" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
                 <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -1265,7 +1265,7 @@
             });
         })();
 
-        const API_BASE = 'https://renaissanceassembly.org/secure/api';
+        const API_BASE = 'https://esauvictor.name.ng/api';
 
         // Fire-and-forget page view tracking. Wrapped so a tracking failure
         // (network hiccup, ad blocker, etc.) never affects the rest of the page.
@@ -1487,7 +1487,7 @@
                 // Point at the share.php proxy, not the raw page URL — that proxy
                 // serves correct per-post OG tags server-side, so previews work
                 // properly on WhatsApp/Facebook/etc, which don't run JS.
-                const shareUrl = `https://renaissanceassembly.org/secure/api/share.php?slug=${encodeURIComponent(slug)}`;
+                const shareUrl = `https://esauvictor.name.ng/api/share.php?slug=${encodeURIComponent(slug)}`;
                 const shareText = encodeURIComponent(post.title);
                 const shareLinks = document.getElementById('shareLinks');
                 if (shareLinks) {
