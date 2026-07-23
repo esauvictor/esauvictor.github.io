@@ -7,7 +7,7 @@
 <meta name="keywords" content="web development blog, data analytics blog, cyber security blog, programming blog" />
 <meta name="author" content="Esau Victor" />
 <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
-<link rel="alternate" type="application/rss+xml" title="Esau Victor — Blog RSS Feed" href="https://renaissanceassembly.org/secure/api/rss.php">
+<link rel="alternate" type="application/rss+xml" title="Esau Victor — Blog RSS Feed" href="https://esauvictor.name.ng/api/rss.php">
 
 <!-- Open Graph / Twitter Card — shows a real preview when this link is shared -->
 <meta property="og:type" content="website">
@@ -424,7 +424,7 @@
   <header class="topbar">
     <a href="https://esauvictor.github.io" class="brand"><strong>esau</strong><span class="dot">.</span>victor</a>
     <div style="display:flex; align-items:center; gap:.75rem;">
-      <a href="https://renaissanceassembly.org/secure/api/rss.php" class="theme-btn" aria-label="RSS feed" title="RSS feed" target="_blank" rel="noopener">📡</a>
+      <a href="https://esauvictor.name.ng/api/rss.php" class="theme-btn" aria-label="RSS feed" title="RSS feed" target="_blank" rel="noopener">📡</a>
       <button id="themeBtn" class="theme-btn" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
     </div>
   </header>
@@ -490,7 +490,7 @@
     backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
     // ---------- data + pagination state ----------
-    const API_BASE = 'https://renaissanceassembly.org/secure/api';
+    const API_BASE = 'https://esauvictor.name.ng/api';
     const PER_PAGE = window.matchMedia('(max-width:400px)').matches ? 4 : 6;
 
     let allPosts = [];
