@@ -103,8 +103,6 @@
             font-size: 16px;
             overflow-x: hidden;
             transition: background .25s ease, color .25s ease;
-            /* Clears the fixed navbar so content (e.g. the post title) never
-               starts hidden underneath it, with or without the site notice. */
             padding-top: 64px;
         }
 
@@ -258,11 +256,18 @@
             height: 36px;
             border-radius: 9px;
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
+            font-size: 0.95rem;
             margin-left: 0.75rem;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .theme-btn:hover {
+            border-color: var(--signal);
+            color: var(--signal);
         }
 
         .logo img {
@@ -353,7 +358,6 @@
             border-radius: 50%;
         }
 
-        /* Fix: Force title to always stay white in both light and dark mode */
         .single-blog-header h1,
         .single-blog-header #post-title {
             margin-bottom: 1.1rem;
@@ -1078,7 +1082,7 @@
                     <li><a href="blog.html" class="active">Blog</a></li>
                     <li><a href="/#contact">Contact</a></li>
                 </ul>
-                <button id="themeBtn" class="theme-btn" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+                <button id="themeBtn" class="theme-btn" aria-label="Toggle dark mode" title="Toggle dark mode"><i class="fas fa-moon"></i></button>
                 <button class="hamburger" id="hamburger" aria-label="Menu">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -1239,21 +1243,28 @@
             const root = document.documentElement;
             const themeBtn = document.getElementById('themeBtn');
             const savedTheme = localStorage.getItem('blog-theme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                root.setAttribute('data-theme', 'dark');
-                themeBtn.textContent = '☀️';
+            
+            function setTheme(isDark) {
+                if (isDark) {
+                    root.setAttribute('data-theme', 'dark');
+                    themeBtn.innerHTML = '<i class="fas fa-sun"></i>';
+                    localStorage.setItem('blog-theme', 'dark');
+                } else {
+                    root.removeAttribute('data-theme');
+                    themeBtn.innerHTML = '<i class="fas fa-moon"></i>';
+                    localStorage.setItem('blog-theme', 'light');
+                }
             }
+
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                setTheme(true);
+            } else {
+                setTheme(false);
+            }
+
             themeBtn.addEventListener('click', () => {
                 const isDark = root.getAttribute('data-theme') === 'dark';
-                if (isDark) {
-                    root.removeAttribute('data-theme');
-                    themeBtn.textContent = '🌙';
-                    localStorage.setItem('blog-theme', 'light');
-                } else {
-                    root.setAttribute('data-theme', 'dark');
-                    themeBtn.textContent = '☀️';
-                    localStorage.setItem('blog-theme', 'dark');
-                }
+                setTheme(!isDark);
             });
         })();
 
