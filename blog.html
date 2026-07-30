@@ -20,6 +20,7 @@
 <meta name="twitter:title" content="Esau Victor — Blog">
 <meta name="twitter:description" content="Notes on web development, data analytics &amp; cyber security.">
 <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/94287719?v=4">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -92,10 +93,16 @@
     height:36px;
     border-radius:9px;
     cursor:pointer;
-    display:flex;
+    display:inline-flex;
     align-items:center;
     justify-content:center;
-    font-size:1rem;
+    font-size:0.95rem;
+    flex-shrink:0;
+    transition:border-color 0.2s ease, color 0.2s ease;
+  }
+  .theme-btn:hover{
+    border-color:var(--signal);
+    color:var(--signal);
   }
   .theme-btn:focus-visible, a:focus-visible, button:focus-visible{
     outline:2px solid var(--signal);
@@ -319,7 +326,7 @@
     min-width:36px;
     height:36px;
     padding:0 0.6rem;
-    border-radius:9px;
+    border-radius:999px;
     border:1px solid var(--line);
     background:var(--card);
     color:var(--ink);
@@ -424,8 +431,8 @@
   <header class="topbar">
     <a href="https://esauvictor.github.io" class="brand"><strong>esau</strong><span class="dot">.</span>victor</a>
     <div style="display:flex; align-items:center; gap:.75rem;">
-      <a href="https://esauvictor.name.ng/api/rss.php" class="theme-btn" aria-label="RSS feed" title="RSS feed" target="_blank" rel="noopener">📡</a>
-      <button id="themeBtn" class="theme-btn" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+      <a href="https://esauvictor.name.ng/api/rss.php" class="theme-btn" aria-label="RSS feed" title="RSS feed" target="_blank" rel="noopener"><i class="fas fa-rss"></i></a>
+      <button id="themeBtn" class="theme-btn" aria-label="Toggle dark mode" title="Toggle dark mode"><i class="fas fa-moon"></i></button>
     </div>
   </header>
 
@@ -458,28 +465,35 @@
     <a href="https://esauvictor.github.io" class="btn-home">← Back to Homepage</a>
   </div>
 
-  <button id="backToTop" aria-label="Back to top">↑</button>
+  <button id="backToTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
 
   <script>
     // ---------- theme ----------
     const root = document.documentElement;
     const themeBtn = document.getElementById('themeBtn');
     const savedTheme = localStorage.getItem('blog-theme');
-    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      root.setAttribute('data-theme', 'dark');
-      themeBtn.textContent = '☀️';
+
+    function setTheme(isDark) {
+      if (isDark) {
+        root.setAttribute('data-theme', 'dark');
+        themeBtn.innerHTML = '<i class="fas fa-sun"></i>';
+        localStorage.setItem('blog-theme', 'dark');
+      } else {
+        root.removeAttribute('data-theme');
+        themeBtn.innerHTML = '<i class="fas fa-moon"></i>';
+        localStorage.setItem('blog-theme', 'light');
+      }
     }
+
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setTheme(true);
+    } else {
+      setTheme(false);
+    }
+
     themeBtn.addEventListener('click', () => {
       const isDark = root.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        root.removeAttribute('data-theme');
-        themeBtn.textContent = '🌙';
-        localStorage.setItem('blog-theme', 'light');
-      } else {
-        root.setAttribute('data-theme', 'dark');
-        themeBtn.textContent = '☀️';
-        localStorage.setItem('blog-theme', 'dark');
-      }
+      setTheme(!isDark);
     });
 
     // ---------- back to top ----------
@@ -565,7 +579,7 @@
     function renderPagination(totalPosts) {
       const totalPages = Math.max(1, Math.ceil(totalPosts / PER_PAGE));
       pagination.innerHTML = '';
-      if (totalPages <= 1) return; // dynamic: no pagination needed for a single page
+      if (totalPages <= 1) return;
 
       const makeBtn = (label, page, opts = {}) => {
         const btn = document.createElement('button');
