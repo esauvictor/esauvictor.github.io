@@ -864,7 +864,7 @@
     }
 
     footer {
-      padding:1.5rem 0;
+      padding:2.5rem 0 3.5rem 0;
       border-top:1px solid var(--border);
     }
     .footer-inner {
@@ -880,6 +880,16 @@
       letter-spacing:.04em;
     }
     .footer-left span { color:var(--green); }
+    .footer-left a.footer-link {
+      color: var(--green);
+      text-decoration: none;
+      margin-left: 0.5rem;
+      transition: opacity 0.2s;
+    }
+    .footer-left a.footer-link:hover {
+      text-decoration: underline;
+      opacity: 0.85;
+    }
     .footer-right {
       font-size:.58rem;
       color:var(--text3);
@@ -911,7 +921,7 @@
 <body>
 <div id="siteNotice" class="site-notice" style="display:none;">
   <span id="siteNoticeText"></span>
-  <button id="siteNoticeClose" aria-label="Dismiss">✕</button>
+  <button id="siteNoticeClose" aria-label="Dismiss"><i class="fas fa-times"></i></button>
 </div>
 
 <div id="cursor"></div>
@@ -941,11 +951,8 @@
   <div class="hero-glow"></div>
   <div class="container hero-grid">
     <div class="hero-content">
-      <!-- TONE CHANGE: badge from "AVAILABLE FOR HIRE" to something confident, not desperate -->
       <h1 class="hero-name">Full<br>Stack<br><span class="accent">Dev.</span></h1>
-      <!-- TONE CHANGE: role line stays, it's neutral -->
       <p class="hero-role">role = "Laravel &amp; PHP Engineer"</p>
-      <!-- TONE CHANGE: desc reframed — not "building solutions" pitch, just a statement of standards -->
       <p class="hero-desc">
         Scalable backend systems. High-performance APIs. Production-grade code.
         The work either meets the standard or it doesn't ship.
@@ -953,7 +960,6 @@
       </p>
       <div class="hero-buttons">
         <a href="#projects" class="btn btn-primary"><i class="fas fa-code-branch"></i> <span>view_projects()</span></a>
-        <!-- TONE CHANGE: "hire_me()" → "let's_talk()" — peer-to-peer, not supplicant -->
         <a href="#contact" class="btn btn-outline"><i class="fas fa-terminal"></i> <span>let's_talk()</span></a>
       </div>
     </div>
@@ -988,12 +994,10 @@
         <div style="padding-left:1.5rem"><span class="t-str">'role'</span>     =&gt; <span class="t-val" id="aboutRole">'Backend-focused Full Stack Developer'</span>,</div>
         <div style="padding-left:1.5rem"><span class="t-str">'location'</span> =&gt; <span class="t-val" id="aboutLocation">'Port Harcourt, Rivers State, NG'</span>,</div>
         <div style="padding-left:1.5rem"><span class="t-str">'focus'</span>    =&gt; [<span class="t-val" id="aboutFocus">'Laravel', 'PHP', 'MySQL', 'API Design'</span>],</div>
-        <!-- TONE CHANGE: status from 'open_to_work' (sounds unemployed) to 'selective_availability' -->
         <div style="padding-left:1.5rem"><span class="t-str">'status'</span>   =&gt; <span class="t-val" id="aboutStatus">'selective_availability'</span> <span class="t-comment" id="aboutStatusNote">// quality projects only</span></div>
         <div>];</div>
         <div style="margin-top:.8rem; color:var(--text2); font-size:.75rem;" id="aboutBio">
           <span class="t-comment">/*</span><br>
-          <!-- TONE CHANGE: comment block from capability pitch to standards statement -->
           <span class="t-comment">&nbsp;* Laravel, PHP, MySQL, API architecture — that's the craft.</span><br>
           <span class="t-comment">&nbsp;* Systems built to last: thousands of concurrent users,</span><br>
           <span class="t-comment">&nbsp;* zero-compromise reliability, no shortcuts.</span><br>
@@ -1108,7 +1112,6 @@
     <div class="contact-wrap" data-reveal>
 
       <div class="contact-left">
-        <!-- TONE CHANGE: from "available for..." supplication to "got a problem worth solving?" — frames the client as needing to qualify -->
         <p class="contact-tagline">
           Got a problem worth solving?<br>
           Serious projects. Serious people.<br>
@@ -1145,7 +1148,6 @@
       </div>
 
       <div class="contact-right">
-        <!-- TONE CHANGE: form head — less transactional, more conversational -->
         <div class="contact-form-head"><span>$</span> new Conversation().start()</div>
         <form id="contactForm" class="contact-form">
           <input type="checkbox" name="botcheck" style="display:none" tabindex="-1">
@@ -1184,7 +1186,7 @@
   <div class="container footer-inner">
     <div class="footer-left">
       © <span id="year"></span> <span>esau victor</span> — full stack developer (laravel &amp; php)
-      | <a href="privacy.html" style="color:var(--green); text-decoration:none;">Privacy Policy</a>
+      | <a href="privacy.html" class="footer-link">Privacy Policy</a>
     </div>
     <div class="footer-right">crafted with &lt;/&gt; and systems thinking</div>
   </div>
@@ -1301,8 +1303,6 @@
   console.log('%cThis is a developer tool — do not paste code here.', 'font-size:16px;');
 </script>
 
-
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1321,11 +1321,6 @@
 <script>
 const API_BASE = 'https://esauvictor.name.ng/api';
 
-// Retries a GET request a couple of times with a short backoff before
-// giving up. This is specifically to smooth over the host's occasional
-// "connection refused" blips (confirmed via cPanel — not a code bug,
-// just transient resource throttling) so visitors don't see empty
-// sections for something that resolves itself in a second or two.
 function fetchWithRetry(url, options = {}, retries = 4, delayMs = 1000) {
   return fetch(url, options).catch(err => {
     if (retries > 0) {
@@ -1357,9 +1352,6 @@ function fetchWithRetry(url, options = {}, retries = 4, delayMs = 1000) {
   });
 })();
 
-
-// Fire-and-forget page view tracking. Wrapped so a tracking failure
-// (network hiccup, ad blocker, etc.) never affects the rest of the page.
 fetch(`${API_BASE}/track.php`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
@@ -1402,7 +1394,7 @@ fetchWithRetry(`${API_BASE}/about.php`)
         '<span class="t-comment">&nbsp;*/</span>';
     }
   })
-  .catch(() => { /* fail silently — keep whatever fallback markup exists */ });
+  .catch(() => {});
 </script>
 
 <script>
@@ -1419,7 +1411,7 @@ fetchWithRetry(`${API_BASE}/tech-stack.php`)
       </div>
     `).join('');
   })
-  .catch(() => { /* fail silently — keep whatever fallback markup exists */ });
+  .catch(() => {});
 </script>
 
 <script>
@@ -1451,14 +1443,13 @@ fetchWithRetry(`${API_BASE}/projects.php`)
       </div>
     `).join('');
 
-    // re-trigger your existing scroll-reveal observer on the new cards
     document.querySelectorAll('[data-reveal]').forEach(el => {
       new IntersectionObserver((entries) => {
         entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
       }, { threshold: 0.08 }).observe(el);
     });
   })
-  .catch(() => { /* fail silently — keep whatever fallback markup exists */ });
+  .catch(() => {});
 </script>
 
 <script>
@@ -1476,12 +1467,11 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       </div>
     `).join('');
 
-    // re-init the carousel now that real slides exist
     if (typeof initTestimonialsCarousel === 'function') {
       initTestimonialsCarousel();
     }
   })
-  .catch(() => { /* fail silently — keep whatever fallback markup exists */ });
+  .catch(() => {});
 </script>
 
 <!-- Live chat widget -->
@@ -1493,6 +1483,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     border-radius: 50px; padding: 8px 18px 8px 8px; cursor: pointer;
     box-shadow: 0 10px 30px rgba(0,0,0,.6);
     font-family: var(--mono);
+    transition: bottom 0.2s ease;
   }
   #chatToggle .avatar-wrap {
     position: relative; flex-shrink: 0; width: 36px; height: 36px;
@@ -1512,12 +1503,14 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     padding: 0.75rem 0.85rem; font-family: var(--mono); font-size: 0.8rem;
     color: var(--text2); box-shadow: 0 10px 30px rgba(0,0,0,.5);
     display: none; align-items: flex-start; gap: 0.5rem;
+    transition: bottom 0.2s ease;
   }
   #chatGreeting.show { display: flex; }
   #chatGreeting button {
     background: none; border: none; color: var(--text3); cursor: pointer;
     font-size: 0.9rem; line-height: 1; flex-shrink: 0;
   }
+  #chatGreeting button:hover { color: var(--green); }
 
   #chatPanel {
     position: fixed; bottom: 88px; right: 20px; z-index: 9998;
@@ -1526,6 +1519,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     display: none; flex-direction: column; overflow: hidden;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     font-family: var(--mono);
+    transition: bottom 0.2s ease;
   }
   #chatPanel.open { display: flex; }
   #chatHeader {
@@ -1535,7 +1529,8 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   }
   #chatHeader span.dot { color: var(--green); }
   #chatHeaderActions { display: flex; gap: 0.6rem; align-items: center; }
-  #chatClearBtn, #chatClose { background: none; border: none; color: var(--text2); font-size: 1rem; cursor: pointer; }
+  #chatClearBtn, #chatClose { background: none; border: none; color: var(--text2); font-size: 0.9rem; cursor: pointer; }
+  #chatClearBtn:hover, #chatClose:hover { color: var(--green); }
   #chatMessages {
     flex: 1; overflow-y: auto; padding: 0.85rem; display: flex; flex-direction: column; gap: 0.6rem;
   }
@@ -1618,7 +1613,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 
 <div id="chatGreeting">
   <span>👋 Need help? I'm happy to answer questions about Esau while you look around.</span>
-  <button id="chatGreetingClose" aria-label="Dismiss">✕</button>
+  <button id="chatGreetingClose" aria-label="Dismiss"><i class="fas fa-times"></i></button>
 </div>
 
 <div id="chatPanel">
@@ -1626,7 +1621,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     <span><span class="dot">●</span> Ask about Esau</span>
     <span id="chatHeaderActions">
       <button id="chatClearBtn" type="button" title="Clear conversation" aria-label="Clear conversation"><i class="fas fa-rotate-left"></i></button>
-      <button id="chatClose" aria-label="Close chat">✕</button>
+      <button id="chatClose" aria-label="Close chat"><i class="fas fa-times"></i></button>
     </span>
   </div>
   <div id="chatMessages" role="log" aria-live="polite" aria-label="Chat conversation"></div>
@@ -1642,6 +1637,37 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     <input type="file" id="chatFileInput" accept="image/png,image/jpeg,image/webp,image/gif,application/pdf,text/plain" multiple style="display:none;">
   </form>
 </div>
+
+<!-- Scroll handling script to prevent footer overlap -->
+<script>
+(function() {
+  const toggle = document.getElementById('chatToggle');
+  const greeting = document.getElementById('chatGreeting');
+  const panel = document.getElementById('chatPanel');
+  const footer = document.querySelector('footer');
+
+  if (!footer || !toggle) return;
+
+  function adjustPosition() {
+    const footerRect = footer.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    if (footerRect.top < windowHeight) {
+      const overlap = windowHeight - footerRect.top + 10;
+      toggle.style.bottom = `${overlap + 20}px`;
+      if (greeting) greeting.style.bottom = `${overlap + 88}px`;
+      if (panel) panel.style.bottom = `${overlap + 88}px`;
+    } else {
+      toggle.style.bottom = '20px';
+      if (greeting) greeting.style.bottom = '88px';
+      if (panel) panel.style.bottom = '88px';
+    }
+  }
+
+  window.addEventListener('scroll', adjustPosition);
+  window.addEventListener('resize', adjustPosition);
+})();
+</script>
 
 <script>
 (function () {
@@ -1660,7 +1686,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     sessionStorage.setItem('chatGreetingDismissed', '1');
   }
 
-  setTimeout(maybeShowGreeting, 10000); // pop up 10s after page load
+  setTimeout(maybeShowGreeting, 10000);
   greetingClose.addEventListener('click', hideGreeting);
 })();
 </script>
@@ -1689,17 +1715,16 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     'How do I get in touch?'
   ];
 
-  let history = []; // { role: 'user'|'assistant', content: string }
-  let pendingFiles = []; // { name, mime_type, data (base64), size }
+  let history = [];
+  let pendingFiles = [];
 
   const MAX_FILES = 3;
-  const MAX_FILE_BYTES = 4 * 1024 * 1024; // 4MB
+  const MAX_FILE_BYTES = 4 * 1024 * 1024;
 
   function saveHistory() {
-    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(history)); } catch (e) { /* storage full/unavailable — conversation just won't persist */ }
+    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(history)); } catch (e) {}
   }
 
-  // ---- Minimal markdown -> safe HTML (bold, italic, code, links, line breaks) ----
   function renderMarkdown(raw) {
     let s = raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
@@ -1796,14 +1821,13 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     messagesEl.scrollTop = messagesEl.scrollHeight;
   }
 
-  // ---- Restore any conversation from earlier on this visit ----
   try {
     const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]');
     if (Array.isArray(saved) && saved.length > 0) {
       history = saved;
       saved.forEach(m => addMessage(m.role, m.content, m.role === 'assistant' ? { allowCopy: true } : {}));
     }
-  } catch (e) { /* corrupted/unavailable storage — just start fresh */ }
+  } catch (e) {}
 
   toggle.addEventListener('click', () => {
     panel.classList.toggle('open');
@@ -1828,7 +1852,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     showGreetingAndChips();
   });
 
-  // ---- File attachments ----
   attachBtn.addEventListener('click', () => fileInput.click());
 
   fileInput.addEventListener('change', () => {
@@ -1862,7 +1885,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       chip.innerHTML = `<i class="fas fa-${f.mime_type.startsWith('image/') ? 'image' : 'file'}"></i><span class="name">${f.name}</span>`;
       const removeBtn = document.createElement('button');
       removeBtn.type = 'button';
-      removeBtn.textContent = '✕';
+      removeBtn.innerHTML = '<i class="fas fa-times"></i>';
       removeBtn.addEventListener('click', () => {
         pendingFiles.splice(i, 1);
         renderAttachmentChips();
@@ -1872,7 +1895,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     });
   }
 
-  // ---- Voice input (Web Speech API) ----
   const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognitionCtor) {
     micBtn.style.display = 'none';
@@ -1885,7 +1907,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 
     micBtn.addEventListener('click', () => {
       if (listening) { recognition.stop(); return; }
-      try { recognition.start(); } catch (e) { /* already started */ }
+      try { recognition.start(); } catch (e) {}
     });
 
     recognition.onstart = () => { listening = true; micBtn.classList.add('listening'); };
@@ -1898,7 +1920,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     };
   }
 
-  // ---- Sending ----
   async function sendToBackend(attachmentsToSend) {
     sendBtn.disabled = true;
     const thinking = addTypingIndicator();
@@ -1949,7 +1970,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     sendToBackend(attachmentsToSend.map(f => ({ mime_type: f.mime_type, data: f.data })));
   });
 
-  // Enter to send, Shift+Enter for a new line
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -1957,7 +1977,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     }
   });
 
-  // Character counter — stays hidden until you're getting close to the limit
   const charCount = document.getElementById('chatCharCount');
   const CHAR_LIMIT = 1500;
   input.addEventListener('input', () => {
