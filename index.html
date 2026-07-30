@@ -885,6 +885,19 @@
       color:var(--text3);
       letter-spacing:.08em;
     }
+    .footer-links {
+      display:flex;
+      align-items:center;
+      gap:1rem;
+      font-size:.62rem;
+      letter-spacing:.04em;
+    }
+    .footer-links a {
+      color:var(--text3);
+      text-decoration:none;
+      transition:color .2s;
+    }
+    .footer-links a:hover { color:var(--green); }
 
     [data-reveal] {
       opacity:0;
@@ -1180,10 +1193,13 @@
 
 </main>
 
-<footer>
+<footer id="siteFooter">
   <div class="container footer-inner">
     <div class="footer-left">
       © <span id="year"></span> <span>esau victor</span> — full stack developer (laravel &amp; php)
+    </div>
+    <div class="footer-links">
+      <a href="privacy.html">privacy policy</a>
     </div>
     <div class="footer-right">crafted with &lt;/&gt; and systems thinking</div>
   </div>
@@ -1492,6 +1508,8 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     border-radius: 50px; padding: 8px 18px 8px 8px; cursor: pointer;
     box-shadow: 0 10px 30px rgba(0,0,0,.6);
     font-family: var(--mono);
+    transition: transform .2s ease;
+    will-change: transform;
   }
   #chatToggle .avatar-wrap {
     position: relative; flex-shrink: 0; width: 36px; height: 36px;
@@ -1511,6 +1529,8 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     padding: 0.75rem 0.85rem; font-family: var(--mono); font-size: 0.8rem;
     color: var(--text2); box-shadow: 0 10px 30px rgba(0,0,0,.5);
     display: none; align-items: flex-start; gap: 0.5rem;
+    transition: transform .2s ease;
+    will-change: transform;
   }
   #chatGreeting.show { display: flex; }
   #chatGreeting button {
@@ -1525,6 +1545,8 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     display: none; flex-direction: column; overflow: hidden;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     font-family: var(--mono);
+    transition: transform .2s ease;
+    will-change: transform;
   }
   #chatPanel.open { display: flex; }
   #chatHeader {
@@ -1648,19 +1670,71 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   const greetingClose = document.getElementById('chatGreetingClose');
   let greetingShown = false;
 
+  // Some mobile/in-app browsers (private mode, locked-down WebViews, some
+  // Samsung Internet configs) throw when sessionStorage is touched at all.
+  // Guard every access so a storage error never silently kills this script
+  // and the greeting still shows on every device/browser.
+  function safeGet(key) {
+    try { return sessionStorage.getItem(key); } catch (e) { return null; }
+  }
+  function safeSet(key, val) {
+    try { sessionStorage.setItem(key, val); } catch (e) { /* ignore */ }
+  }
+
   function maybeShowGreeting() {
-    if (greetingShown || sessionStorage.getItem('chatGreetingDismissed') === '1') return;
+    if (greetingShown || safeGet('chatGreetingDismissed') === '1') return;
     greetingShown = true;
     greeting.classList.add('show');
   }
 
   function hideGreeting() {
     greeting.classList.remove('show');
-    sessionStorage.setItem('chatGreetingDismissed', '1');
+    safeSet('chatGreetingDismissed', '1');
   }
 
-  setTimeout(maybeShowGreeting, 10000); // pop up 10s after page load
+  // Primary trigger: 10s after load.
+  setTimeout(maybeShowGreeting, 10000);
+  // Fallback: if the tab was backgrounded/throttled (common on mobile,
+  // where timers pause until the tab is foregrounded), show as soon as
+  // the page actually becomes visible.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') maybeShowGreeting();
+  });
+
   greetingClose.addEventListener('click', hideGreeting);
+
+  // ---- Keep the widget from covering the footer ----
+  // As the footer scrolls into view, lift the toggle button, greeting
+  // bubble, and chat panel up by however much the footer overlaps their
+  // normal bottom-right spot, so the footer stays fully readable/clickable.
+  const footer = document.getElementById('siteFooter');
+  const toggleBtn = document.getElementById('chatToggle');
+  const panelEl = document.getElementById('chatPanel');
+  const GAP = 16; // breathing room above the footer
+
+  function adjustForFooter() {
+    if (!footer) return;
+    const footerRect = footer.getBoundingClientRect();
+    const overlap = window.innerHeight - footerRect.top;
+    const lift = overlap > 0 ? Math.ceil(overlap + GAP) : 0;
+    const transform = lift > 0 ? `translateY(-${lift}px)` : '';
+    toggleBtn.style.transform = transform;
+    greeting.style.transform = transform;
+    panelEl.style.transform = transform;
+  }
+
+  let footerRaf = null;
+  function scheduleAdjust() {
+    if (footerRaf) return;
+    footerRaf = requestAnimationFrame(() => {
+      footerRaf = null;
+      adjustForFooter();
+    });
+  }
+
+  window.addEventListener('scroll', scheduleAdjust, { passive: true });
+  window.addEventListener('resize', scheduleAdjust);
+  adjustForFooter();
 })();
 </script>
 
