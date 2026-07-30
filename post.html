@@ -103,6 +103,9 @@
             font-size: 16px;
             overflow-x: hidden;
             transition: background .25s ease, color .25s ease;
+            /* Clears the fixed navbar so content (e.g. the post title) never
+               starts hidden underneath it, with or without the site notice. */
+            padding-top: 64px;
         }
 
         h1, h2, h3, h4 {
@@ -592,7 +595,6 @@
             text-align: center;
             position: relative;
             z-index: 1002;
-            margin-top: 60px;
         }
         .site-notice button { 
             background: none; 
@@ -1424,7 +1426,7 @@
                 document.title = `${post.title} - Esau Victor`;
 
                 const pageUrl = `https://esauvictor.github.io/post.html?slug=${encodeURIComponent(slug)}`;
-                const shareImage = post.cover_image_url || 'https://avatars.githubusercontent.com/u/94287719?v=4';
+                const shareImage = post.cover_image_url || 'https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg';
                 document.getElementById('ogTitle').setAttribute('content', post.title);
                 document.getElementById('ogDescription').setAttribute('content', post.excerpt || '');
                 document.getElementById('ogImage').setAttribute('content', shareImage);
@@ -1441,7 +1443,7 @@
                         <div class="related-grid">
                           ${related.map(r => `
                             <a class="related-card" href="post.html?slug=${encodeURIComponent(r.slug)}">
-                              <img src="${r.cover_image_url || 'https://avatars.githubusercontent.com/u/94287719?v=4'}" alt="${r.title}" loading="lazy">
+                              <img src="${r.cover_image_url || 'https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg'}" alt="${r.title}" loading="lazy">
                               <span>${r.title}</span>
                             </a>
                           `).join('')}
