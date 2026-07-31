@@ -870,10 +870,64 @@
     }
 
     footer {
-      padding:1.5rem 0;
+      padding:4rem 0 0;
       border-top:1px solid var(--border);
+      background:var(--bg1);
     }
-    .footer-inner {
+    .footer-grid {
+      display:grid;
+      grid-template-columns:1.4fr 1fr 1fr;
+      gap:2.5rem;
+      padding-bottom:2.5rem;
+    }
+    .footer-col-title {
+      font-size:.66rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--green);
+      margin-bottom:1.1rem;
+      font-weight:700;
+    }
+    .footer-brand {
+      font-family:var(--mono);
+      font-size:1.05rem;
+      color:var(--text);
+      margin-bottom:.7rem;
+    }
+    .footer-brand em { color:var(--green); font-style:normal; }
+    .footer-tagline {
+      font-size:.72rem;
+      color:var(--text3);
+      line-height:1.6;
+      max-width:34ch;
+      margin-bottom:1.3rem;
+    }
+    .footer-social-row { display:flex; gap:.6rem; }
+    .footer-social-row a {
+      display:flex; align-items:center; justify-content:center;
+      width:32px; height:32px; border-radius:8px;
+      border:1px solid var(--border2); color:var(--text2);
+      text-decoration:none; font-size:.8rem;
+      transition:border-color .2s, color .2s, background .2s;
+    }
+    .footer-social-row a:hover { color:var(--green); border-color:var(--green); background:rgba(255,120,40,0.08); }
+    .footer-link-list { list-style:none; display:flex; flex-direction:column; gap:.65rem; }
+    .footer-link-list a {
+      font-size:.74rem;
+      color:var(--text2);
+      text-decoration:none;
+      letter-spacing:.02em;
+      transition:color .2s;
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+    }
+    .footer-link-list a:hover { color:var(--green); }
+    .footer-link-list a i { font-size:.68rem; color:var(--text3); width:12px; }
+    .footer-link-list a:hover i { color:var(--green); }
+    .footer-bottom {
+      border-top:1px solid var(--border);
+      padding:1.25rem 0;
       display:flex;
       justify-content:space-between;
       align-items:center;
@@ -891,31 +945,12 @@
       color:var(--text3);
       letter-spacing:.08em;
     }
-    .footer-links {
-      display:flex;
-      align-items:center;
-      gap:1rem;
+    @media (max-width:820px) {
+      .footer-grid { grid-template-columns:1fr 1fr; row-gap:2.2rem; }
+      .footer-brand-col { grid-column:1 / -1; }
     }
-    .footer-privacy-link {
-      display:inline-flex;
-      align-items:center;
-      gap:.4rem;
-      font-size:.68rem;
-      font-weight:600;
-      letter-spacing:.04em;
-      color:var(--green);
-      text-decoration:none;
-      background:rgba(255,120,40,0.1);
-      border:1px solid rgba(255,120,40,0.45);
-      border-radius:50px;
-      padding:.4rem .85rem;
-      transition:background .2s, border-color .2s, transform .2s;
-    }
-    .footer-privacy-link i { font-size:.7rem; }
-    .footer-privacy-link:hover {
-      background:rgba(255,120,40,0.2);
-      border-color:var(--green);
-      transform:translateY(-1px);
+    @media (max-width:520px) {
+      .footer-grid { grid-template-columns:1fr; }
     }
 
     [data-reveal] {
@@ -1213,14 +1248,44 @@
 </main>
 
 <footer id="siteFooter">
-  <div class="container footer-inner">
-    <div class="footer-left">
-      © <span id="year"></span> <span>esau victor</span> — full stack developer (laravel &amp; php)
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand-col">
+        <div class="footer-brand">esau<em>.</em>victor<em>()</em></div>
+        <p class="footer-tagline">Full-stack developer building Laravel &amp; PHP systems — from church management platforms to custom web apps.</p>
+        <div class="footer-social-row">
+          <a href="https://github.com/esauvictor" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          <a href="https://linkedin.com/in/esau-victor" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://x.com/esau_vee" target="_blank" rel="noopener" aria-label="X"><i class="fab fa-x"></i></a>
+          <a href="https://wa.me/2348132084092" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Navigate</div>
+        <ul class="footer-link-list">
+          <li><a href="#about">About</a></li>
+          <li><a href="#tech">Stack</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="https://esauvictor.github.io/blog.html">Blog</a></li>
+          <li><a href="#testimonials">Clients</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <ul class="footer-link-list">
+          <li><a href="privacy.html"><i class="fas fa-shield-halved"></i> Privacy &amp; Cookie Policy</a></li>
+          <li><a href="mailto:esauvictor@icloud.com"><i class="fas fa-envelope"></i> esauvictor@icloud.com</a></li>
+          <li><a href="#" id="cookiePrefsLink"><i class="fas fa-sliders"></i> Cookie Preferences</a></li>
+        </ul>
+      </div>
     </div>
-    <a href="privacy.html" class="footer-privacy-link">
-      <i class="fas fa-shield-halved"></i> privacy policy
-    </a>
-    <div class="footer-right">crafted with &lt;/&gt; and systems thinking</div>
+    <div class="footer-bottom">
+      <div class="footer-left">
+        © <span id="year"></span> <span>esau victor</span> — full stack developer (laravel &amp; php)
+      </div>
+      <div class="footer-right">crafted with &lt;/&gt; and systems thinking</div>
+    </div>
   </div>
 </footer>
 
@@ -1692,11 +1757,60 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   }
   .chat-chip span.name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .chat-chip button { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 0.75rem; flex-shrink: 0; }
+  #cookieConsent {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 10000;
+    background: var(--bg1); border-top: 1px solid var(--border2);
+    box-shadow: 0 -10px 30px rgba(0,0,0,.5);
+    font-family: var(--mono);
+    padding: env(safe-area-inset-bottom, 0) 0 0;
+    transform: translateY(100%);
+    transition: transform .35s ease;
+  }
+  #cookieConsent.show { transform: translateY(0); }
+  .cookie-inner {
+    max-width: 1280px; margin: 0 auto;
+    padding: 1rem 1.5rem calc(1rem + env(safe-area-inset-bottom, 0));
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .cookie-icon {
+    flex-shrink: 0; width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,120,40,0.12); border: 1px solid var(--border2);
+    color: var(--green); font-size: 1rem;
+  }
+  .cookie-text {
+    flex: 1 1 280px; min-width: 0;
+    font-size: .74rem; line-height: 1.6; color: var(--text2);
+  }
+  .cookie-text strong { color: var(--text); }
+  .cookie-text a { color: var(--green); text-decoration: none; }
+  .cookie-text a:hover { text-decoration: underline; }
+  .cookie-actions { display: flex; gap: .6rem; flex-shrink: 0; margin-left: auto; }
+  .cookie-btn {
+    font-family: var(--mono); font-size: .72rem; font-weight: 700;
+    border-radius: 8px; padding: .6rem 1.1rem; cursor: pointer;
+    white-space: nowrap; transition: background .2s, border-color .2s, transform .2s;
+  }
+  .cookie-btn-primary {
+    background: var(--green); color: var(--bg); border: 1px solid var(--green);
+  }
+  .cookie-btn-primary:hover { background: #ff9a52; transform: translateY(-1px); }
+  .cookie-btn-outline {
+    background: transparent; color: var(--text2); border: 1px solid var(--border2);
+  }
+  .cookie-btn-outline:hover { border-color: var(--text2); color: var(--text); }
+  @media (max-width: 560px) {
+    .cookie-inner { padding: 1rem 1.25rem calc(1rem + env(safe-area-inset-bottom, 0)); }
+    .cookie-actions { width: 100%; margin-left: 0; }
+    .cookie-btn { flex: 1; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     #chatToggle, .greeting-bubble, #chatPanel.open, #chatToggle .avatar-wrap .dot-badge::after {
       animation: none !important;
     }
     #chatToggle, .greeting-bubble { opacity: 1 !important; }
+    #cookieConsent { transition: none !important; }
   }
 </style>
 
@@ -1735,6 +1849,21 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     <div id="chatCharCount"></div>
     <input type="file" id="chatFileInput" accept="image/png,image/jpeg,image/webp,image/gif,application/pdf,text/plain" multiple style="display:none;">
   </form>
+</div>
+
+<div id="cookieConsent" role="dialog" aria-live="polite" aria-label="Cookie consent">
+  <div class="cookie-inner">
+    <div class="cookie-icon"><i class="fas fa-cookie-bite"></i></div>
+    <div class="cookie-text">
+      <strong>This site uses cookies.</strong>
+      We use essential and analytics cookies to keep the site working well and understand how it's used. See our
+      <a href="privacy.html">Privacy &amp; Cookie Policy</a> for details.
+    </div>
+    <div class="cookie-actions">
+      <button id="cookieDecline" type="button" class="cookie-btn cookie-btn-outline">Decline</button>
+      <button id="cookieAccept" type="button" class="cookie-btn cookie-btn-primary">Accept all</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -1776,20 +1905,67 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 
   greetingClose.addEventListener('click', hideGreeting);
 
+  // ---- Cookie consent banner ----
+  const cookieBanner = document.getElementById('cookieConsent');
+  const cookieAccept = document.getElementById('cookieAccept');
+  const cookieDecline = document.getElementById('cookieDecline');
+  const cookiePrefsLink = document.getElementById('cookiePrefsLink');
+  const COOKIE_KEY = 'cookieConsentChoice';
+
+  function safeLocalGet(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+  }
+  function safeLocalSet(key, val) {
+    try { localStorage.setItem(key, val); } catch (e) { /* ignore */ }
+  }
+
+  function showCookieBanner() {
+    if (!cookieBanner) return;
+    cookieBanner.classList.add('show');
+    scheduleAdjust();
+  }
+  function hideCookieBanner() {
+    if (!cookieBanner) return;
+    cookieBanner.classList.remove('show');
+    scheduleAdjust();
+  }
+  function recordChoice(choice) {
+    safeLocalSet(COOKIE_KEY, choice);
+    hideCookieBanner();
+  }
+
+  if (cookieBanner) {
+    if (!safeLocalGet(COOKIE_KEY)) {
+      setTimeout(showCookieBanner, 900);
+    }
+    cookieAccept && cookieAccept.addEventListener('click', () => recordChoice('accepted'));
+    cookieDecline && cookieDecline.addEventListener('click', () => recordChoice('declined'));
+    cookiePrefsLink && cookiePrefsLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showCookieBanner();
+    });
+  }
+
   // ---- Keep the widget from covering the footer ----
   // As the footer scrolls into view, lift the toggle button, greeting
   // bubble, and chat panel up by however much the footer overlaps their
   // normal bottom-right spot, so the footer stays fully readable/clickable.
+  // The same lift also applies while the cookie banner is showing, so the
+  // widget never sits underneath it either.
   const footer = document.getElementById('siteFooter');
   const toggleBtn = document.getElementById('chatToggle');
   const panelEl = document.getElementById('chatPanel');
-  const GAP = 16; // breathing room above the footer
+  const GAP = 16; // breathing room above the footer/banner
 
   function adjustForFooter() {
     if (!footer) return;
     const footerRect = footer.getBoundingClientRect();
     const overlap = window.innerHeight - footerRect.top;
-    const lift = overlap > 0 ? Math.ceil(overlap + GAP) : 0;
+    const footerLift = overlap > 0 ? Math.ceil(overlap + GAP) : 0;
+    const bannerLift = (cookieBanner && cookieBanner.classList.contains('show'))
+      ? Math.ceil(cookieBanner.getBoundingClientRect().height + GAP)
+      : 0;
+    const lift = Math.max(footerLift, bannerLift);
     const transform = lift > 0 ? `translateY(-${lift}px)` : '';
     toggleBtn.style.transform = transform;
     greeting.style.transform = transform;
