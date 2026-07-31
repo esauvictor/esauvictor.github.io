@@ -895,15 +895,28 @@
       display:flex;
       align-items:center;
       gap:1rem;
-      font-size:.62rem;
+    }
+    .footer-privacy-link {
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+      font-size:.68rem;
+      font-weight:600;
       letter-spacing:.04em;
-    }
-    .footer-links a {
-      color:var(--text3);
+      color:var(--green);
       text-decoration:none;
-      transition:color .2s;
+      background:rgba(255,120,40,0.1);
+      border:1px solid rgba(255,120,40,0.45);
+      border-radius:50px;
+      padding:.4rem .85rem;
+      transition:background .2s, border-color .2s, transform .2s;
     }
-    .footer-links a:hover { color:var(--green); }
+    .footer-privacy-link i { font-size:.7rem; }
+    .footer-privacy-link:hover {
+      background:rgba(255,120,40,0.2);
+      border-color:var(--green);
+      transform:translateY(-1px);
+    }
 
     [data-reveal] {
       opacity:0;
@@ -1204,9 +1217,9 @@
     <div class="footer-left">
       © <span id="year"></span> <span>esau victor</span> — full stack developer (laravel &amp; php)
     </div>
-    <div class="footer-links">
-      <a href="privacy.html">privacy policy</a>
-    </div>
+    <a href="privacy.html" class="footer-privacy-link">
+      <i class="fas fa-shield-halved"></i> privacy policy
+    </a>
     <div class="footer-right">crafted with &lt;/&gt; and systems thinking</div>
   </div>
 </footer>
@@ -1510,35 +1523,77 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   #chatToggle {
     position: fixed; bottom: 20px; right: 20px; z-index: 9998;
     display: flex; align-items: center; gap: 10px;
-    background: var(--bg1); color: var(--text); border: 1px solid var(--border2);
-    border-radius: 50px; padding: 8px 18px 8px 8px; cursor: pointer;
-    box-shadow: 0 10px 30px rgba(0,0,0,.6);
+    background: linear-gradient(135deg, #ff9a52, var(--green));
+    color: #1a0f04; border: none;
+    border-radius: 50px; padding: 8px 20px 8px 8px; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(255,120,40,0.45), 0 4px 14px rgba(0,0,0,.55);
     font-family: var(--mono);
-    transition: transform .2s ease;
+    transition: transform .2s ease, box-shadow .25s ease, filter .25s ease;
     will-change: transform;
+    opacity: 0;
+    animation: chatPopIn .5s ease .3s forwards, chatBreathe 3.2s ease-in-out 1.2s infinite;
+  }
+  #chatToggle:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 12px 32px rgba(255,120,40,0.65), 0 6px 16px rgba(0,0,0,.6);
+  }
+  #chatToggle:active { filter: brightness(0.96); }
+  @keyframes chatPopIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes chatBreathe {
+    0%, 100% { box-shadow: 0 8px 24px rgba(255,120,40,0.45), 0 4px 14px rgba(0,0,0,.55); }
+    50% { box-shadow: 0 8px 32px rgba(255,120,40,0.75), 0 4px 16px rgba(0,0,0,.6); }
   }
   #chatToggle .avatar-wrap {
     position: relative; flex-shrink: 0; width: 36px; height: 36px;
-    border-radius: 50%; overflow: hidden; border: 1px solid var(--border2);
+    border-radius: 50%; overflow: hidden; border: 2px solid rgba(26,15,4,0.35);
   }
   #chatToggle .avatar-wrap img { width: 100%; height: 100%; object-fit: cover; background: #fff; }
   #chatToggle .avatar-wrap .dot-badge {
     position: absolute; bottom: 0; right: 0; width: 10px; height: 10px;
-    border-radius: 50%; background: var(--green); border: 2px solid var(--bg1);
+    border-radius: 50%; background: #2ee06a; border: 2px solid #fff2;
   }
-  #chatToggle .toggle-label { font-weight: bold; font-size: 14px; }
+  #chatToggle .avatar-wrap .dot-badge::after {
+    content: ''; position: absolute; inset: -2px; border-radius: 50%;
+    border: 2px solid #2ee06a; animation: dotPing 2s ease-out infinite;
+  }
+  @keyframes dotPing {
+    0% { transform: scale(1); opacity: .8; }
+    100% { transform: scale(2.4); opacity: 0; }
+  }
+  #chatToggle .toggle-label { font-weight: 800; font-size: 14px; letter-spacing: -.01em; }
 
   #chatGreeting {
     position: fixed; bottom: 88px; right: 20px; z-index: 9998;
     max-width: min(260px, calc(100vw - 40px));
-    background: var(--bg1); border: 1px solid var(--border2); border-radius: 12px;
-    padding: 0.75rem 0.85rem; font-family: var(--mono); font-size: 0.8rem;
-    color: var(--text2); box-shadow: 0 10px 30px rgba(0,0,0,.5);
-    display: none; align-items: flex-start; gap: 0.5rem;
+    display: none;
     transition: transform .2s ease;
     will-change: transform;
   }
-  #chatGreeting.show { display: flex; }
+  #chatGreeting.show { display: block; }
+  .greeting-bubble {
+    position: relative;
+    display: flex; align-items: flex-start; gap: 0.5rem;
+    background: var(--bg1); border: 1px solid var(--green);
+    border-radius: 14px;
+    padding: 0.8rem 0.9rem; font-family: var(--mono); font-size: 0.8rem;
+    color: var(--text2); box-shadow: 0 10px 30px rgba(0,0,0,.55), 0 0 0 1px rgba(255,120,40,0.1);
+    opacity: 0;
+    animation: greetingPop .35s ease forwards;
+  }
+  .greeting-bubble::after {
+    content: '';
+    position: absolute; bottom: -8px; right: 22px;
+    width: 14px; height: 14px;
+    background: var(--bg1); border-right: 1px solid var(--green); border-bottom: 1px solid var(--green);
+    transform: rotate(45deg);
+  }
+  @keyframes greetingPop {
+    from { opacity: 0; transform: translateY(10px) scale(.94); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
   #chatGreeting button {
     background: none; border: none; color: var(--text3); cursor: pointer;
     font-size: 0.9rem; line-height: 1; flex-shrink: 0;
@@ -1554,7 +1609,11 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     transition: transform .2s ease;
     will-change: transform;
   }
-  #chatPanel.open { display: flex; }
+  #chatPanel.open { display: flex; animation: panelPop .25s ease; }
+  @keyframes panelPop {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
   #chatHeader {
     padding: 0.85rem 1rem; background: var(--bg2); border-bottom: 1px solid var(--border);
     color: var(--text); font-size: 0.85rem; font-weight: 700;
@@ -1633,6 +1692,12 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   }
   .chat-chip span.name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .chat-chip button { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 0.75rem; flex-shrink: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    #chatToggle, .greeting-bubble, #chatPanel.open, #chatToggle .avatar-wrap .dot-badge::after {
+      animation: none !important;
+    }
+    #chatToggle, .greeting-bubble { opacity: 1 !important; }
+  }
 </style>
 
 <button id="chatToggle" aria-label="Open chat">
@@ -1644,8 +1709,10 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 </button>
 
 <div id="chatGreeting">
-  <span>👋 Need help? I'm happy to answer questions about Esau while you look around.</span>
-  <button id="chatGreetingClose" aria-label="Dismiss">✕</button>
+  <div class="greeting-bubble">
+    <span>👋 Need help? I'm happy to answer questions about Esau while you look around.</span>
+    <button id="chatGreetingClose" aria-label="Dismiss">✕</button>
+  </div>
 </div>
 
 <div id="chatPanel">
