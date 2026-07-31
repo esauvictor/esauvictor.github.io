@@ -1507,10 +1507,13 @@ fetchWithRetry(`${API_BASE}/about.php`)
   .catch(() => { /* fail silently — keep whatever fallback markup exists */ })
   .finally(() => { document.dispatchEvent(new Event('aboutDataReady')); });
 
-// ---- "about" terminal: real typewriter sequence ----
-// Types the command like someone typing it live, then prints the output
-// line by line once the about.php data (or a timeout) has settled, so the
-// animation always reflects the real, current profile content.
+// ---- "about" terminal: continuous typewriter loop ----
+// Types the command and every output line character by character, like
+// someone actually typing/running it, then loops the whole sequence again.
+// Looping pauses whenever the section scrolls out of view (saves CPU/battery)
+// and picks back up — with a fresh run — once it's back in view. Colors are
+// preserved exactly because we walk and retype the real DOM tree (including
+// nested spans) rather than typing plain text and swapping it after.
 (function () {
   const section = document.getElementById('about');
   const cmdText = document.getElementById('aboutCmdText');
@@ -1518,12 +1521,43 @@ fetchWithRetry(`${API_BASE}/about.php`)
   const finalPrompt = document.getElementById('aboutFinalPrompt');
   if (!section || !cmdText || !output || !finalPrompt) return;
 
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduceMotion) return; // leave the static markup exactly as authored
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; // leave static markup as authored
+
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  function cloneTemplate(el) {
+    const t = document.createElement('div');
+    t.innerHTML = el.innerHTML;
+    return t;
+  }
+
+  // Retypes `template`'s content into `el`, character by character, walking
+  // into nested elements (spans, <br>) so syntax-highlight colors stay intact
+  // and appear progressively as each character lands.
+  async function typeInto(el, template, charDelay) {
+    async function walk(src, dest) {
+      for (const child of Array.from(src.childNodes)) {
+        if (child.nodeType === Node.TEXT_NODE) {
+          const text = child.textContent;
+          const textNode = document.createTextNode('');
+          dest.appendChild(textNode);
+          for (let i = 0; i < text.length; i++) {
+            textNode.textContent += text[i];
+            if (charDelay) await sleep(charDelay);
+          }
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+          const clone = child.cloneNode(false);
+          dest.appendChild(clone);
+          await walk(child, clone);
+        }
+      }
+    }
+    el.innerHTML = '';
+    await walk(template, el);
+  }
 
   let dataReady = false;
   document.addEventListener('aboutDataReady', () => { dataReady = true; }, { once: true });
-
   function waitForData(cb) {
     if (dataReady) { cb(); return; }
     let done = false;
@@ -1532,73 +1566,64 @@ fetchWithRetry(`${API_BASE}/about.php`)
     setTimeout(finish, 1500);
   }
 
-  function typeCommand(full, el, done) {
-    el.textContent = '';
-    let i = 0;
-    (function step() {
-      if (i <= full.length) {
-        el.textContent = full.slice(0, i);
-        i++;
-        setTimeout(step, 42);
-      } else {
-        done();
-      }
-    })();
+  let cmdTemplate = null;
+  let lineTemplates = null;
+  let visible = false;
+  let looping = false;
+
+  function captureTemplates() {
+    cmdTemplate = cloneTemplate(cmdText);
+    lineTemplates = Array.from(output.children).map(el => ({ el, template: cloneTemplate(el) }));
   }
 
-  function revealOutput() {
-    const lines = Array.from(output.children);
-    lines.forEach(line => {
-      line.style.opacity = '0';
-      line.style.transform = 'translateY(4px)';
-      line.style.transition = 'opacity .25s ease, transform .25s ease';
-    });
+  async function playOnce() {
+    cmdText.textContent = '';
+    lineTemplates.forEach(({ el }) => { el.innerHTML = ''; });
     output.style.display = '';
-    let i = 0;
-    (function next() {
-      if (i >= lines.length) {
-        finalPrompt.style.display = '';
-        finalPrompt.style.opacity = '0';
-        requestAnimationFrame(() => {
-          finalPrompt.style.transition = 'opacity .3s ease';
-          finalPrompt.style.opacity = '1';
-        });
-        return;
-      }
-      const line = lines[i];
-      requestAnimationFrame(() => {
-        line.style.opacity = '1';
-        line.style.transform = 'translateY(0)';
-      });
-      i++;
-      setTimeout(next, 90);
-    })();
-  }
-
-  function runSequence() {
-    const full = (cmdText.textContent || 'php profile.php').trim();
-    output.style.display = 'none';
     finalPrompt.style.display = 'none';
-    typeCommand(full, cmdText, () => {
-      setTimeout(() => waitForData(revealOutput), 250);
-    });
+
+    await typeInto(cmdText, cmdTemplate, 42);
+    await sleep(300);
+
+    for (const { el, template } of lineTemplates) {
+      await typeInto(el, template, 9);
+      await sleep(110);
+    }
+
+    finalPrompt.style.display = '';
+    finalPrompt.style.opacity = '0';
+    finalPrompt.style.transition = 'none';
+    await sleep(16);
+    finalPrompt.style.transition = 'opacity .3s ease';
+    finalPrompt.style.opacity = '1';
+
+    await sleep(2600); // hold on the finished output before looping again
   }
 
-  let started = false;
-  function startOnce() {
-    if (started) return;
-    started = true;
-    setTimeout(runSequence, 250); // let the section's own fade-in settle first
+  async function loop() {
+    if (looping) return;
+    looping = true;
+    while (visible) {
+      await playOnce();
+      if (!visible) break;
+      await sleep(500);
+    }
+    looping = false;
   }
 
   const io = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        startOnce();
-        io.disconnect();
+        visible = true;
+        waitForData(() => {
+          if (!cmdTemplate) captureTemplates();
+          loop();
+        });
+      } else {
+        visible = false;
       }
     });
-  }, { threshold: 0.3 });
+  }, { threshold: 0.25 });
   io.observe(section);
 })();
 </script>
