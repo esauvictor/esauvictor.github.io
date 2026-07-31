@@ -1604,6 +1604,23 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     box-shadow: 0 12px 32px rgba(255,120,40,0.65), 0 6px 16px rgba(0,0,0,.6);
   }
   #chatToggle:active { filter: brightness(0.96); }
+
+  #backToTop {
+    position: fixed; bottom: 20px; left: 20px; z-index: 9996;
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg1); border: 1px solid var(--border2); color: var(--green);
+    cursor: pointer; font-size: .95rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,.5);
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease, visibility .25s, border-color .2s, background .2s;
+    will-change: transform;
+  }
+  #backToTop.show { opacity: 1; visibility: visible; pointer-events: auto; }
+  #backToTop:hover { border-color: var(--green); background: rgba(255,120,40,0.1); }
+  @media (prefers-reduced-motion: reduce) {
+    #backToTop { transition: opacity .01s linear, visibility .01s linear; }
+  }
   @keyframes chatPopIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -1852,6 +1869,10 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   </form>
 </div>
 
+<button id="backToTop" aria-label="Back to top" title="Back to top">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
 <div id="cookieConsent" role="dialog" aria-live="polite" aria-label="Cookie consent">
   <div class="cookie-inner">
     <div class="cookie-icon"><i class="fas fa-cookie-bite"></i></div>
@@ -1949,13 +1970,14 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 
   // ---- Keep the widget from covering the footer ----
   // As the footer scrolls into view, lift the toggle button, greeting
-  // bubble, and chat panel up by however much the footer overlaps their
-  // normal bottom-right spot, so the footer stays fully readable/clickable.
-  // The same lift also applies while the cookie banner is showing, so the
-  // widget never sits underneath it either.
+  // bubble, chat panel, and back-to-top button up by however much the
+  // footer overlaps their normal spot, so the footer stays fully
+  // readable/clickable. The same lift also applies while the cookie
+  // banner is showing, so nothing ever sits underneath it either.
   const footer = document.getElementById('siteFooter');
   const toggleBtn = document.getElementById('chatToggle');
   const panelEl = document.getElementById('chatPanel');
+  const backToTopBtn = document.getElementById('backToTop');
   const GAP = 16; // breathing room above the footer/banner
 
   function adjustForFooter() {
@@ -1971,6 +1993,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     toggleBtn.style.transform = transform;
     greeting.style.transform = transform;
     panelEl.style.transform = transform;
+    if (backToTopBtn) backToTopBtn.style.transform = transform;
   }
 
   let footerRaf = null;
@@ -1985,6 +2008,25 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   window.addEventListener('scroll', scheduleAdjust, { passive: true });
   window.addEventListener('resize', scheduleAdjust);
   adjustForFooter();
+
+  // ---- Back to top ----
+  // Only appears once the visitor has scrolled a screen or so down, so it
+  // never competes for attention with the hero or covers content up top.
+  if (backToTopBtn) {
+    const SHOW_AFTER = 480;
+    function toggleBackToTop() {
+      if (window.scrollY > SHOW_AFTER) backToTopBtn.classList.add('show');
+      else backToTopBtn.classList.remove('show');
+    }
+    window.addEventListener('scroll', toggleBackToTop, { passive: true });
+    toggleBackToTop();
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+      });
+    });
+  }
 })();
 </script>
 
