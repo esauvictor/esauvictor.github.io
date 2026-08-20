@@ -1449,6 +1449,27 @@ function fetchWithRetry(url, options = {}, retries = 4, delayMs = 1000) {
     .then(data => {
       if (data.notice && data.notice.message) {
         text.textContent = data.notice.message;
+
+        // If the notice includes a link, render it as a real, accessible <a>
+        // rather than plain text so it's clickable and keyboard-navigable.
+        const url = data.notice.url;
+        if (url && /^https?:\/\//i.test(url)) {
+          const link = document.createElement('a');
+          link.href = url;
+          link.textContent = data.notice.linkText || url;
+          link.rel = 'noopener noreferrer';
+          const isExternal = new URL(url, window.location.href).origin !== window.location.origin;
+          if (isExternal) {
+            link.target = '_blank';
+            const srNote = document.createElement('span');
+            srNote.className = 'sr-only';
+            srNote.textContent = ' (opens in new tab)';
+            link.appendChild(srNote);
+          }
+          text.appendChild(document.createTextNode(' '));
+          text.appendChild(link);
+        }
+
         bar.style.display = 'flex';
       }
     })
@@ -1859,6 +1880,9 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     padding: 0.6rem 1rem; text-align: center;
   }
   .site-notice button { background: none; border: none; color: var(--bg); opacity: 0.75; cursor: pointer; font-size: 0.9rem; }
+  .site-notice a { color: var(--bg); text-decoration: underline; font-weight: 600; }
+  .site-notice a:hover, .site-notice a:focus-visible { opacity: 0.8; }
+  .site-notice a:focus-visible { outline: 2px solid var(--bg); outline-offset: 2px; border-radius: 2px; }
   .typing-dots { display: inline-flex; gap: 3px; padding: 0.15rem 0; }
   .typing-dots span {
     width: 5px; height: 5px; border-radius: 50%; background: var(--text3);
