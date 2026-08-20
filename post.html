@@ -610,10 +610,6 @@
             padding: 0.2rem 0.5rem;
             flex-shrink: 0;
         }
-        .site-notice a { color: #fff; text-decoration: underline; font-weight: 600; }
-        .site-notice a:hover, .site-notice a:focus-visible { opacity: 0.85; }
-        .site-notice a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; border-radius: 2px; }
-        .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
         /* ---------- Post navigation ---------- */
         .post-navigation {
@@ -700,7 +696,14 @@
             font-size: 0.85rem;
         }
 
-        .comment-avatar.is-author { background: var(--amber); }
+        .comment-avatar.is-author { background: var(--amber); padding: 0; overflow: hidden; }
+        .comment-avatar.is-author img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+        }
 
         .comment-body {
             background: var(--bg-color);
@@ -1273,6 +1276,7 @@
         })();
 
         const API_BASE = 'https://esauvictor.name.ng/api';
+        const AUTHOR_AVATAR_URL = 'https://avatars.githubusercontent.com/u/94287719?v=4';
 
         fetch(`${API_BASE}/track.php`, {
           method: 'POST',
@@ -1304,28 +1308,6 @@
             .then(data => {
               if (data.notice && data.notice.message) {
                 text.textContent = data.notice.message;
-
-                // If the notice includes a link, render it as a real,
-                // accessible <a> element instead of plain text so it's
-                // clickable and keyboard-navigable.
-                const url = data.notice.url;
-                if (url && /^https?:\/\//i.test(url)) {
-                  const link = document.createElement('a');
-                  link.href = url;
-                  link.textContent = data.notice.linkText || url;
-                  link.rel = 'noopener noreferrer';
-                  const isExternal = new URL(url, window.location.href).origin !== window.location.origin;
-                  if (isExternal) {
-                    link.target = '_blank';
-                    const srNote = document.createElement('span');
-                    srNote.className = 'sr-only';
-                    srNote.textContent = ' (opens in new tab)';
-                    link.appendChild(srNote);
-                  }
-                  text.appendChild(document.createTextNode(' '));
-                  text.appendChild(link);
-                }
-
                 bar.style.display = 'flex';
               }
             })
@@ -1630,7 +1612,15 @@
 
             const avatar = document.createElement('div');
             avatar.className = 'comment-avatar' + (c.is_author_reply ? ' is-author' : '');
-            avatar.textContent = escapeInitial(c.author_name);
+            if (c.is_author_reply) {
+                const avatarImg = document.createElement('img');
+                avatarImg.src = AUTHOR_AVATAR_URL;
+                avatarImg.alt = c.author_name || 'Author';
+                avatarImg.loading = 'lazy';
+                avatar.appendChild(avatarImg);
+            } else {
+                avatar.textContent = escapeInitial(c.author_name);
+            }
 
             const body = document.createElement('div');
             body.className = 'comment-body';
