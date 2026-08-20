@@ -585,32 +585,6 @@
             font-weight: 600; color: var(--ink); font-family: var(--body-font);
         }
 
-        /* ---------- Site notice banner ---------- */
-        .site-notice {
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 0.75rem;
-            background: var(--signal); 
-            color: #fff; 
-            font-family: var(--mono); 
-            font-size: 0.82rem;
-            padding: 0.6rem 1rem; 
-            text-align: center;
-            position: relative;
-            z-index: 1002;
-        }
-        .site-notice button { 
-            background: none; 
-            border: none; 
-            color: #fff; 
-            opacity: 0.85; 
-            cursor: pointer; 
-            font-size: 1rem; 
-            padding: 0.2rem 0.5rem;
-            flex-shrink: 0;
-        }
-
         /* ---------- Post navigation ---------- */
         .post-navigation {
             display: grid;
@@ -1064,10 +1038,6 @@
     </style>
 </head>
 <body>
-<div id="siteNotice" class="site-notice" style="display:none;">
-  <span id="siteNoticeText"></span>
-  <button id="siteNoticeClose" aria-label="Dismiss">✕</button>
-</div>
     <!-- Reading progress bar -->
     <div class="progress-container">
         <div class="progress-bar" id="progressBar"></div>
@@ -1298,25 +1268,7 @@
         }
 
         // ---- site notice banner ----
-        (function () {
-          const bar = document.getElementById('siteNotice');
-          const text = document.getElementById('siteNoticeText');
-          const closeBtn = document.getElementById('siteNoticeClose');
-          if (sessionStorage.getItem('noticeDismissed') === '1') return;
-          fetch(`${API_BASE}/notice.php`)
-            .then(res => res.json())
-            .then(data => {
-              if (data.notice && data.notice.message) {
-                text.textContent = data.notice.message;
-                bar.style.display = 'flex';
-              }
-            })
-            .catch(() => {});
-          closeBtn.addEventListener('click', () => {
-            bar.style.display = 'none';
-            sessionStorage.setItem('noticeDismissed', '1');
-          });
-        })();
+        // Removed: notice banner disabled on this page.
 
         function getURLParameter(name) {
             return new URLSearchParams(window.location.search).get(name);
