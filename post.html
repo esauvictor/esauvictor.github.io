@@ -610,6 +610,10 @@
             padding: 0.2rem 0.5rem;
             flex-shrink: 0;
         }
+        .site-notice a { color: #fff; text-decoration: underline; font-weight: 600; }
+        .site-notice a:hover, .site-notice a:focus-visible { opacity: 0.85; }
+        .site-notice a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; border-radius: 2px; }
+        .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
         /* ---------- Post navigation ---------- */
         .post-navigation {
@@ -1300,6 +1304,28 @@
             .then(data => {
               if (data.notice && data.notice.message) {
                 text.textContent = data.notice.message;
+
+                // If the notice includes a link, render it as a real,
+                // accessible <a> element instead of plain text so it's
+                // clickable and keyboard-navigable.
+                const url = data.notice.url;
+                if (url && /^https?:\/\//i.test(url)) {
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.textContent = data.notice.linkText || url;
+                  link.rel = 'noopener noreferrer';
+                  const isExternal = new URL(url, window.location.href).origin !== window.location.origin;
+                  if (isExternal) {
+                    link.target = '_blank';
+                    const srNote = document.createElement('span');
+                    srNote.className = 'sr-only';
+                    srNote.textContent = ' (opens in new tab)';
+                    link.appendChild(srNote);
+                  }
+                  text.appendChild(document.createTextNode(' '));
+                  text.appendChild(link);
+                }
+
                 bar.style.display = 'flex';
               }
             })
