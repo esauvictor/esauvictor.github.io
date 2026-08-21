@@ -378,7 +378,7 @@
             width: 100%;
         }
 
-        .post-author, .post-date, .reading-time {
+        .post-author, .post-date, .reading-time, .view-count {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
@@ -407,7 +407,7 @@
             color: #ffffff;
         }
 
-        .post-date, .reading-time {
+        .post-date, .reading-time, .view-count {
             font-family: var(--mono);
             color: #ffffff;
         }
@@ -613,6 +613,36 @@
         }
         .share-links a:hover, .share-links button:hover { background: var(--signal); color: #fff; border-color: var(--signal); }
 
+        /* ---------- Reactions ---------- */
+        .reactions-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            padding: 0.85rem clamp(1.25rem, 5vw, 2.25rem) 0;
+        }
+        .reaction-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: var(--card);
+            color: var(--ink);
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .reaction-btn .reaction-emoji { font-size: 1rem; line-height: 1; }
+        .reaction-btn:hover { border-color: var(--signal); }
+        .reaction-btn.reacted {
+            background: var(--signal);
+            border-color: var(--signal);
+            color: #fff;
+        }
+        .reaction-btn:disabled { cursor: default; opacity: 0.9; }
+
         /* ---------- Related posts ---------- */
         .related-heading {
             font-family: var(--display); font-size: 1.3rem;
@@ -790,9 +820,11 @@
             border-radius: 999px;
         }
 
-        .comment-actions { margin-top: 0.5rem; }
+        .comment-actions { margin-top: 0.5rem; display: flex; align-items: center; gap: 0.9rem; }
 
-        .comment-reply-toggle {
+        .comment-reply-toggle,
+        .comment-edit-toggle,
+        .comment-delete-toggle {
             background: none;
             border: none;
             padding: 0;
@@ -802,7 +834,32 @@
             cursor: pointer;
         }
 
-        .comment-reply-toggle:hover { text-decoration: underline; }
+        .comment-delete-toggle { color: #dc2626; }
+
+        .comment-reply-toggle:hover,
+        .comment-edit-toggle:hover,
+        .comment-delete-toggle:hover { text-decoration: underline; }
+
+        .comment-edit-status.error { color: #dc2626; font-size: 0.8rem; }
+
+        .comment-edit-form {
+            margin-top: 0.6rem;
+            background: var(--card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.85rem;
+        }
+        .comment-edit-form textarea {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.88rem;
+            background: var(--card);
+            color: var(--text-color);
+            margin-bottom: 0.65rem;
+        }
 
         .reply-form {
             display: none;
@@ -1136,6 +1193,10 @@
                         <i class="far fa-clock"></i>
                         <span>5 min read</span>
                     </div>
+                    <div class="view-count" id="view-count">
+                        <i class="far fa-eye"></i>
+                        <span>0 views</span>
+                    </div>
                 </div>
             </header>
 
@@ -1149,6 +1210,10 @@
 
             <div class="post-content" id="post-content">
                 <!-- Content loaded dynamically -->
+            </div>
+
+            <div class="reactions-row" id="reactionsRow" aria-label="React to this post">
+                <!-- Reaction buttons loaded dynamically -->
             </div>
 
             <div class="tags" id="post-tags">
@@ -1469,6 +1534,8 @@
                 document.getElementById('post-title').textContent = post.title;
                 document.getElementById('post-date').querySelector('span').textContent = formatDate(post.published_at);
                 document.getElementById('reading-time').querySelector('span').textContent = calculateReadingTime(post.content || '');
+                const views = post.view_count || 0;
+                document.getElementById('view-count').querySelector('span').textContent = `${views.toLocaleString()} view${views === 1 ? '' : 's'}`;
 
                 let contentHtml = post.content || '';
                 contentHtml = autoWrapRawCodeContent(contentHtml);
@@ -1556,6 +1623,7 @@
                 enhancePostContent();
                 loadComments(slug);
                 setupCommentForm(slug);
+                setupReactions(slug);
             } catch (err) {
                 document.getElementById('post-content').innerHTML = '<p>Blog post not found.</p>';
                 document.querySelector('.nav-prev').style.display = 'none';
@@ -1655,6 +1723,9 @@
 
                     statusEl.textContent = data.message || 'Reply submitted — it will appear once approved.';
                     statusEl.classList.add('success');
+                    if (data.id && data.edit_token) {
+                        saveCommentToken(data.id, data.edit_token);
+                    }
                     nameInput.value = '';
                     emailInput.value = '';
                     bodyInput.value = '';
@@ -1729,6 +1800,98 @@
             replyToggle.textContent = 'Reply';
             actions.appendChild(replyToggle);
 
+            const myToken = getCommentToken(c.id);
+            if (myToken) {
+                const editBtn = document.createElement('button');
+                editBtn.type = 'button';
+                editBtn.className = 'comment-edit-toggle';
+                editBtn.textContent = 'Edit';
+                actions.appendChild(editBtn);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.type = 'button';
+                deleteBtn.className = 'comment-delete-toggle';
+                deleteBtn.textContent = 'Delete';
+                actions.appendChild(deleteBtn);
+
+                const editStatus = document.createElement('span');
+                editStatus.className = 'comment-edit-status';
+
+                editBtn.addEventListener('click', () => {
+                    if (body.querySelector('.comment-edit-form')) return; // already open
+
+                    const editWrap = document.createElement('div');
+                    editWrap.className = 'comment-edit-form';
+                    editWrap.innerHTML = `
+                        <textarea class="comment-edit-body" rows="3" maxlength="20000">${textEl.textContent.replace(/</g, '&lt;')}</textarea>
+                        <div class="reply-form-actions">
+                            <button type="button" class="btn small comment-edit-save">Save</button>
+                            <button type="button" class="btn small secondary comment-edit-cancel">Cancel</button>
+                            <span class="reply-form-status"></span>
+                        </div>
+                    `;
+                    contentEl.style.display = 'none';
+                    body.insertBefore(editWrap, actions);
+
+                    const saveBtn = editWrap.querySelector('.comment-edit-save');
+                    const cancelEditBtn = editWrap.querySelector('.comment-edit-cancel');
+                    const editStatusEl = editWrap.querySelector('.reply-form-status');
+                    const textarea = editWrap.querySelector('.comment-edit-body');
+
+                    cancelEditBtn.addEventListener('click', () => {
+                        editWrap.remove();
+                        contentEl.style.display = '';
+                    });
+
+                    saveBtn.addEventListener('click', async () => {
+                        const newBody = textarea.value.trim();
+                        if (!newBody) return;
+                        saveBtn.disabled = true;
+                        try {
+                            const res = await fetch(`${API_BASE}/comments.php`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ id: c.id, edit_token: myToken, body: newBody }),
+                            });
+                            const data = await res.json();
+                            if (!res.ok) throw new Error(data.error || 'Could not save changes.');
+
+                            textEl.textContent = newBody;
+                            c.body = newBody;
+                            editWrap.remove();
+                            contentEl.style.display = '';
+                        } catch (err) {
+                            editStatusEl.textContent = err.message || 'Could not save changes.';
+                            editStatusEl.classList.add('error');
+                        } finally {
+                            saveBtn.disabled = false;
+                        }
+                    });
+                });
+
+                deleteBtn.addEventListener('click', async () => {
+                    if (!confirm('Delete this comment? This can\'t be undone.')) return;
+                    deleteBtn.disabled = true;
+                    try {
+                        const res = await fetch(`${API_BASE}/comments.php`, {
+                            method: 'DELETE',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id: c.id, edit_token: myToken }),
+                        });
+                        const data = await res.json();
+                        if (!res.ok) throw new Error(data.error || 'Could not delete comment.');
+
+                        removeCommentToken(c.id);
+                        loadComments(slug); // resync — server cascade-deletes any replies too
+                    } catch (err) {
+                        editStatus.textContent = err.message || 'Could not delete comment.';
+                        editStatus.classList.add('error');
+                        actions.appendChild(editStatus);
+                        deleteBtn.disabled = false;
+                    }
+                });
+            }
+
             const replyForm = buildReplyForm(slug, c.id);
             replyToggle.addEventListener('click', () => {
                 replyForm.classList.toggle('open');
@@ -1802,6 +1965,88 @@
             }
         }
 
+        const REACTION_EMOJI = ['👍', '🔥', '💡', '❤️'];
+
+        // ---- Local storage of edit tokens for comments the visitor authored ----
+        // The server never lets us prove identity beyond "you have the token
+        // you were handed at submit time," so this is inherently per-browser:
+        // clearing site data forfeits edit/delete access to older comments.
+        function getMyCommentTokens() {
+            try {
+                return JSON.parse(localStorage.getItem('myCommentTokens') || '{}');
+            } catch (err) {
+                return {};
+            }
+        }
+        function saveCommentToken(id, token) {
+            const tokens = getMyCommentTokens();
+            tokens[id] = token;
+            localStorage.setItem('myCommentTokens', JSON.stringify(tokens));
+        }
+        function getCommentToken(id) {
+            return getMyCommentTokens()[id] || null;
+        }
+        function removeCommentToken(id) {
+            const tokens = getMyCommentTokens();
+            delete tokens[id];
+            localStorage.setItem('myCommentTokens', JSON.stringify(tokens));
+        }
+
+        async function setupReactions(slug) {
+            const row = document.getElementById('reactionsRow');
+            if (!row) return;
+
+            row.innerHTML = REACTION_EMOJI.map(e => `
+                <button type="button" class="reaction-btn" data-emoji="${e}" aria-pressed="false">
+                    <span class="reaction-emoji">${e}</span><span class="reaction-count">0</span>
+                </button>
+            `).join('');
+
+            function paint(counts, youReacted) {
+                row.querySelectorAll('.reaction-btn').forEach(btn => {
+                    const emoji = btn.dataset.emoji;
+                    btn.querySelector('.reaction-count').textContent = counts[emoji] ?? 0;
+                    const reacted = (youReacted || []).includes(emoji);
+                    btn.classList.toggle('reacted', reacted);
+                    btn.setAttribute('aria-pressed', reacted ? 'true' : 'false');
+                });
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/reactions.php?slug=${encodeURIComponent(slug)}`);
+                const data = await res.json();
+                if (data.counts) paint(data.counts, data.youReacted);
+            } catch (err) {
+                // Fail quietly — reactions are a nice-to-have, not core content.
+            }
+
+            row.addEventListener('click', async (e) => {
+                const btn = e.target.closest('.reaction-btn');
+                if (!btn || btn.classList.contains('reacted')) return;
+
+                btn.disabled = true;
+                // Optimistic update
+                const countEl = btn.querySelector('.reaction-count');
+                countEl.textContent = (parseInt(countEl.textContent, 10) || 0) + 1;
+                btn.classList.add('reacted');
+                btn.setAttribute('aria-pressed', 'true');
+
+                try {
+                    const res = await fetch(`${API_BASE}/reactions.php`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ slug, emoji: btn.dataset.emoji }),
+                    });
+                    const data = await res.json();
+                    if (typeof data.count === 'number') countEl.textContent = data.count;
+                } catch (err) {
+                    // Leave the optimistic state; a page refresh will resync.
+                } finally {
+                    btn.disabled = false;
+                }
+            });
+        }
+
         function setupCommentForm(slug) {
             currentPostSlug = slug;
             const form = document.getElementById('commentForm');
@@ -1837,6 +2082,9 @@
 
                     statusEl.textContent = data.message || 'Comment submitted — it will appear once approved.';
                     statusEl.classList.add('success');
+                    if (data.id && data.edit_token) {
+                        saveCommentToken(data.id, data.edit_token);
+                    }
                     form.reset();
                 } catch (err) {
                     statusEl.textContent = err.message || 'Could not submit comment — please try again.';
