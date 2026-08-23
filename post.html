@@ -1543,20 +1543,175 @@
 
         // ---------- Text-to-speech ----------
         // Reads the post aloud using the browser's built-in speech engine —
-        // no API, no cost. Code blocks are announced rather than read
-        // character-by-character, and long text is split into sentence-sized
-        // chunks because Chrome silently drops very long single utterances.
+        // no API, no cost. HTML code blocks (and any live, unescaped markup
+        // sitting directly in the post) are narrated the way a developer
+        // would explain them out loud — "an email field, required", "a
+        // dropdown with these options" — instead of being read as raw tag
+        // soup or skipped entirely. Non-HTML code (JS, PHP, SQL, ...) is
+        // still just announced by language, since reading code syntax aloud
+        // isn't useful. Long text is split into sentence-sized chunks
+        // because Chrome silently drops very long single utterances.
+
+        function simplifyUrlForSpeech(href) {
+            try {
+                return new URL(href, window.location.href).hostname.replace(/^www\./, '');
+            } catch (e) {
+                return href;
+            }
+        }
+
+        function capitalizeFirst(s) {
+            return s.charAt(0).toUpperCase() + s.slice(1);
+        }
+
+        // Describes a single <a> or <form> element the way an instructor
+        // would talk through it. `root` (used for radio-group lookups) is
+        // the document/element the field belongs to.
+        function describeHtmlNode(el, root) {
+            if (!el || !el.tagName) return '';
+            const tag = el.tagName.toLowerCase();
+
+            if (tag === 'a') {
+                const href = el.getAttribute('href') || '';
+                const text = (el.textContent || '').trim() || 'a link';
+                const opensNewTab = (el.getAttribute('target') || '').toLowerCase() === '_blank';
+                let out = `A link labeled "${text}"`;
+                if (href) out += ` pointing to ${simplifyUrlForSpeech(href)}`;
+                if (opensNewTab) out += ', which opens in a new tab';
+                return out + '.';
+            }
+
+            if (tag === 'form') {
+                const scope = root || el;
+                const parts = ['Here is a form with the following fields:'];
+                const labelMap = {};
+                scope.querySelectorAll('label[for]').forEach(l => {
+                    labelMap[l.getAttribute('for')] = (l.textContent || '').replace(/:\s*$/, '').trim();
+                });
+
+                const seenRadioGroups = new Set();
+                const typeWords = {
+                    text: 'a text field', email: 'an email field', tel: 'a phone number field',
+                    password: 'a password field', date: 'a date picker', number: 'a number field',
+                    search: 'a search field', url: 'a web address field',
+                };
+
+                el.querySelectorAll('input, select, textarea, button').forEach(field => {
+                    const id = field.getAttribute('id');
+                    const type = (field.getAttribute('type') || field.tagName.toLowerCase()).toLowerCase();
+                    const required = field.hasAttribute('required');
+                    const label = id && labelMap[id] ? labelMap[id] : null;
+
+                    if (field.tagName === 'BUTTON') {
+                        const label2 = (field.textContent || '').trim() || 'Submit';
+                        parts.push(`A ${type === 'submit' ? 'submit ' : ''}button labeled "${label2}".`);
+                        return;
+                    }
+                    if (field.tagName === 'SELECT') {
+                        const options = Array.from(field.querySelectorAll('option')).map(o => o.textContent.trim()).filter(Boolean);
+                        parts.push(`A dropdown${label ? ' for ' + label : ''}, with options: ${options.join(', ')}.`);
+                        return;
+                    }
+                    if (field.tagName === 'TEXTAREA') {
+                        parts.push(`A multi-line text box${label ? ' for ' + label : ''}${required ? ', required' : ''}.`);
+                        return;
+                    }
+                    if (type === 'radio') {
+                        const name = field.getAttribute('name');
+                        if (name && !seenRadioGroups.has(name)) {
+                            seenRadioGroups.add(name);
+                            const group = Array.from(el.querySelectorAll(`input[type="radio"][name="${name}"]`));
+                            const opts = group.map(r => {
+                                const rid = r.getAttribute('id');
+                                return rid && labelMap[rid] ? labelMap[rid] : 'an option';
+                            });
+                            parts.push(`A set of radio buttons for ${name}, choose between: ${opts.join(' or ')}.`);
+                        }
+                        return;
+                    }
+                    if (type === 'checkbox') {
+                        parts.push(`A checkbox${label ? ' for ' + label : ''}.`);
+                        return;
+                    }
+                    if (type === 'hidden' || type === 'submit') return;
+
+                    const desc = typeWords[type] || `a ${type} field`;
+                    parts.push(`${capitalizeFirst(desc)}${label ? ' for ' + label : ''}${required ? ', required' : ''}.`);
+                });
+
+                return parts.join(' ');
+            }
+
+            return (el.textContent || '').trim();
+        }
+
+        // Parses a raw HTML source string (from inside a <pre><code> block,
+        // or a full pasted document) and narrates its structure.
+        function describeHtmlSource(rawCode) {
+            if (!rawCode || !/[<>]/.test(rawCode)) return '';
+            try {
+                const doc = new DOMParser().parseFromString(rawCode, 'text/html');
+                const body = doc.body;
+                if (!body) return '';
+
+                const parts = [];
+                const titleEl = doc.querySelector('title');
+                if (titleEl && titleEl.textContent.trim()) {
+                    parts.push(`A full HTML page titled "${titleEl.textContent.trim()}".`);
+                }
+
+                Array.from(body.children).forEach(el => {
+                    const tag = el.tagName.toLowerCase();
+                    if (/^h[1-6]$/.test(tag)) {
+                        parts.push(`Heading: "${el.textContent.trim()}".`);
+                    } else if (tag === 'p') {
+                        const t = el.textContent.trim();
+                        if (t) parts.push(t);
+                    } else if (tag === 'a' || tag === 'form') {
+                        parts.push(describeHtmlNode(el, doc));
+                    }
+                });
+
+                return parts.join(' ');
+            } catch (e) {
+                return '';
+            }
+        }
+
         function extractSpeakableText(contentEl) {
             const clone = contentEl.cloneNode(true);
 
+            // Fenced code blocks: narrate HTML/markup meaningfully, just
+            // announce the language for anything else (JS, PHP, CSS, SQL...).
             clone.querySelectorAll('pre').forEach(pre => {
                 const codeEl = pre.querySelector('code');
                 const langMatch = codeEl && codeEl.className.match(/language-(\w+)/);
                 const lang = langMatch ? langMatch[1] : '';
+                const rawCode = (codeEl || pre).textContent;
+
+                let description = '';
+                if (!lang || lang === 'html' || lang === 'markup' || lang === 'xml') {
+                    description = describeHtmlSource(rawCode);
+                }
+
                 const note = document.createElement('p');
-                note.textContent = lang ? `Code example in ${lang}.` : 'Code example.';
+                note.textContent = description || (lang ? `Code example in ${lang}.` : 'Code example.');
                 pre.replaceWith(note);
             });
+
+            // Live (unescaped) forms and new-tab links sitting directly in
+            // the post — same narration treatment as parsed code blocks.
+            clone.querySelectorAll('form').forEach(form => {
+                const note = document.createElement('p');
+                note.textContent = describeHtmlNode(form, clone);
+                form.replaceWith(note);
+            });
+            clone.querySelectorAll('a[target="_blank"]').forEach(a => {
+                const note = document.createElement('span');
+                note.textContent = ' ' + describeHtmlNode(a) + ' ';
+                a.replaceWith(note);
+            });
+
             clone.querySelectorAll('img, svg, iframe, .comment-avatar').forEach(el => el.remove());
 
             return (clone.textContent || '').replace(/\s+/g, ' ').trim();
@@ -2322,105 +2477,4 @@
                 } catch (err) {
                     statusEl.textContent = err.message || 'Could not submit comment — please try again.';
                     statusEl.classList.add('error');
-                } finally {
-                    submitBtn.disabled = false;
-                }
-            });
-        }
-
-        const SUBSCRIBE_URL = 'https://renaissanceassembly.org/secure/admin/submissions.php';
-
-        const subscribeForm = document.getElementById('subscribeForm');
-        if (subscribeForm) {
-            subscribeForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const statusEl = document.getElementById('subscribeStatus');
-                const submitBtn = subscribeForm.querySelector('button[type="submit"]');
-                statusEl.textContent = '';
-                statusEl.className = 'comment-form-status';
-
-                const email = document.getElementById('subscribeEmail').value.trim();
-                if (!email) return;
-
-                submitBtn.disabled = true;
-                try {
-                    const res = await fetch(SUBSCRIBE_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: new URLSearchParams(new FormData(subscribeForm)),
-                    });
-                    const data = await res.json();
-                    if (!res.ok || !data.success) throw new Error(data.error || 'Something went wrong');
-
-                    statusEl.textContent = data.message || 'Thanks for subscribing!';
-                    statusEl.classList.add('success');
-                    subscribeForm.reset();
-                } catch (err) {
-                    statusEl.textContent = err.message || 'Could not subscribe right now — please try again.';
-                    statusEl.classList.add('error');
-                } finally {
-                    submitBtn.disabled = false;
-                }
-            });
-        }
-
-        // Mobile navigation toggle
-        const hamburger = document.getElementById('hamburger');
-        const navLinks = document.getElementById('navLinks');
-        
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            hamburger.innerHTML = navLinks.classList.contains('active') ? 
-                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
-        });
-        
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                hamburger.innerHTML = '<i class="fas fa-bars"></i>';
-            });
-        });
-        
-        document.getElementById('year').textContent = new Date().getFullYear();
-
-        window.addEventListener('scroll', () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById('progressBar').style.width = scrolled + '%';
-        });
-
-        function addCopyButtons() {
-            document.querySelectorAll('pre').forEach(pre => {
-                if (pre.querySelector('.copy-btn')) return;
-
-                const button = document.createElement('button');
-                button.className = 'copy-btn';
-                button.type = 'button';
-                button.innerHTML = '<i class="far fa-copy"></i>';
-                button.title = 'Copy code';
-
-                button.addEventListener('click', () => {
-                    const code = pre.querySelector('code')?.innerText || pre.innerText;
-                    navigator.clipboard.writeText(code).then(() => {
-                        button.innerHTML = '<i class="fas fa-check"></i>';
-                        setTimeout(() => {
-                            button.innerHTML = '<i class="far fa-copy"></i>';
-                        }, 2000);
-                    });
-                });
-
-                pre.appendChild(button);
-            });
-        }
-
-        window.addEventListener('load', () => {
-            loadBlogPost();
-        });
-
-        window.addEventListener('popstate', () => {
-            loadBlogPost();
-        });
-    </script>
-</body>
-</html>
+                } final
