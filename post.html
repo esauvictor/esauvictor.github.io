@@ -541,42 +541,30 @@
             width: 100%;
             max-width: 480px;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 0.9rem;
             border-radius: 12px;
             background: linear-gradient(160deg, #131A2B, #0B0F1C);
             border: 1px solid rgba(255,255,255,0.08);
-            padding: 0.7rem 1rem;
+            padding: 0.85rem 1rem;
             box-shadow: var(--shadow-md);
         }
         .video-panel-presenter { flex-shrink: 0; }
         .presenter-avatar {
             width: 60px;
-            height: 66px;
-            animation: presenterBreathe 3.4s ease-in-out infinite;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.12);
+            transition: box-shadow 0.25s ease, opacity 0.25s ease;
         }
-        .video-panel.is-talking .presenter-avatar { animation: presenterTalk 0.4s ease-in-out infinite; }
-        .video-panel.is-paused .presenter-avatar { opacity: 0.55; }
-
-        .presenter-shadow { fill: rgba(0,0,0,0.35); }
-        .presenter-blazer { fill: var(--signal); }
-        .presenter-shirt { fill: #F3F5F8; }
-        .presenter-neck, .presenter-head { fill: #E8B896; }
-        .presenter-hair { fill: #2B2118; }
-        .presenter-cheek { fill: var(--amber); opacity: 0.28; }
-        .presenter-eye { fill: #23283A; transform-box: fill-box; transform-origin: center; animation: presenterBlink 4.5s ease-in-out infinite; }
-        .presenter-eye-right { animation-delay: 0.05s; }
-        .presenter-brow { fill: none; stroke: #2B2118; stroke-width: 2.4; stroke-linecap: round; }
-        .presenter-mouth-closed {
-            fill: none; stroke: #7A3B2E; stroke-width: 3; stroke-linecap: round;
-            opacity: 1; transition: opacity 0.07s linear;
+        .video-panel.is-talking .presenter-avatar {
+            box-shadow: 0 0 0 2px var(--signal), 0 0 14px 2px color-mix(in srgb, var(--signal) 55%, transparent);
+            animation: presenterPulse 1.6s ease-in-out infinite;
         }
-        .presenter-mouth-open {
-            fill: #7A3B2E; opacity: 0; transition: opacity 0.07s linear;
-        }
-        @keyframes presenterBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.025); } }
-        @keyframes presenterTalk { 0%, 100% { transform: scale(1.01) translateY(0); } 50% { transform: scale(1.03) translateY(-2px); } }
-        @keyframes presenterBlink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+        .video-panel.is-paused .presenter-avatar { opacity: 0.55; box-shadow: 0 0 0 2px rgba(255,255,255,0.12); }
+        @keyframes presenterPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
 
         .video-panel-captions { flex: 1; min-width: 0; }
         .video-panel-badge {
@@ -606,22 +594,15 @@
             font-size: 0.95rem;
             color: #fff;
             margin-bottom: 0.3rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
         .video-panel-line {
             font-size: 0.85rem;
             line-height: 1.5;
             color: #C7CCDA;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
         }
         @media(max-width:520px){
             .video-panel { padding: 0.65rem 0.85rem; gap: 0.7rem; }
-            .presenter-avatar { width: 48px; height: 53px; }
+            .presenter-avatar { width: 48px; height: 48px; }
         }
 
         /* ---------- Karaoke-style read-along highlight ---------- */
@@ -1380,22 +1361,7 @@
             <div class="tts-avatar-wrap" id="ttsAvatarWrap" hidden>
                 <div class="video-panel">
                     <div class="video-panel-presenter">
-                        <svg class="presenter-avatar" id="presenterAvatar" viewBox="0 0 120 132" aria-hidden="true">
-                            <ellipse class="presenter-shadow" cx="60" cy="126" rx="34" ry="5"></ellipse>
-                            <path class="presenter-blazer" d="M20,132 C20,102 36,90 60,90 C84,90 100,102 100,132 Z"></path>
-                            <path class="presenter-shirt" d="M48,132 L52,96 L60,106 L68,96 L72,132 Z"></path>
-                            <rect class="presenter-neck" x="52" y="70" width="16" height="22" rx="6"></rect>
-                            <circle class="presenter-head" cx="60" cy="52" r="30"></circle>
-                            <path class="presenter-hair" d="M30,50 C28,26 44,14 60,14 C76,14 92,26 90,50 C86,38 76,30 60,30 C44,30 34,38 30,50 Z"></path>
-                            <ellipse class="presenter-eye presenter-eye-left" cx="49" cy="53" rx="3.2" ry="4"></ellipse>
-                            <ellipse class="presenter-eye presenter-eye-right" cx="71" cy="53" rx="3.2" ry="4"></ellipse>
-                            <path class="presenter-brow presenter-brow-left" d="M43,44 Q49,40 55,44"></path>
-                            <path class="presenter-brow presenter-brow-right" d="M65,44 Q71,40 77,44"></path>
-                            <path class="presenter-mouth-closed" id="presenterMouthClosed" d="M50,66 Q60,71 70,66"></path>
-                            <ellipse class="presenter-mouth-open" id="presenterMouthOpen" cx="60" cy="67" rx="9" ry="7"></ellipse>
-                            <circle class="presenter-cheek presenter-cheek-left" cx="42" cy="60" r="4"></circle>
-                            <circle class="presenter-cheek presenter-cheek-right" cx="78" cy="60" r="4"></circle>
-                        </svg>
+                        <img class="presenter-avatar" id="presenterAvatar" src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor">
                     </div>
                     <div class="video-panel-captions">
                         <div class="video-panel-badge"><span class="video-dot"></span>Presenting</div>
@@ -2142,8 +2108,6 @@
             const avatarWrap = document.getElementById('ttsAvatarWrap');
             const videoPanelHeading = document.getElementById('videoPanelHeading');
             const videoPanelLine = document.getElementById('videoPanelLine');
-            const mouthOpenEl = document.getElementById('presenterMouthOpen');
-            const mouthClosedEl = document.getElementById('presenterMouthClosed');
             if (!contentEl || !bar) return;
 
             const chunks = buildSpeechChunks(contentEl);
@@ -2200,11 +2164,7 @@
                 highlightedEl = null;
             }
 
-            // ---- Avatar mouth-flap ----
-            // The Web Speech API doesn't expose real audio amplitude, so
-            // this fakes lip-sync with a semi-random open/close flap while
-            // speech is active — close enough to read as "talking" without
-            // needing per-word timing data.
+            // ---- Presenter panel ----
             let headingsForPanel = null;
             function nearestHeadingText(el) {
                 if (!headingsForPanel) headingsForPanel = Array.from(contentEl.querySelectorAll('h2, h3'));
@@ -2219,32 +2179,19 @@
                 videoPanelHeading.textContent = nearestHeadingText(chunks[index].el);
                 videoPanelLine.textContent = chunks[index].text;
             }
-            let flapTimer = null;
-            function flap() {
-                if (!mouthOpenEl) return;
-                const isOpen = mouthOpenEl.style.opacity === '1';
-                mouthOpenEl.style.opacity = isOpen ? '0' : '1';
-                mouthClosedEl.style.opacity = isOpen ? '1' : '0';
-                flapTimer = setTimeout(flap, 90 + Math.random() * 90);
-            }
             function avatarStartTalking() {
                 if (!avatarWrap) return;
                 avatarWrap.querySelector('.video-panel').classList.add('is-talking');
                 avatarWrap.querySelector('.video-panel').classList.remove('is-paused');
-                flap();
             }
             function avatarPauseTalking() {
                 if (!avatarWrap) return;
-                clearTimeout(flapTimer);
                 avatarWrap.querySelector('.video-panel').classList.remove('is-talking');
                 avatarWrap.querySelector('.video-panel').classList.add('is-paused');
-                if (mouthOpenEl) { mouthOpenEl.style.opacity = '0'; mouthClosedEl.style.opacity = '1'; }
             }
             function avatarStopTalking() {
                 if (!avatarWrap) return;
-                clearTimeout(flapTimer);
                 avatarWrap.querySelector('.video-panel').classList.remove('is-talking', 'is-paused');
-                if (mouthOpenEl) { mouthOpenEl.style.opacity = '0'; mouthClosedEl.style.opacity = '1'; }
                 videoPanelHeading.textContent = 'Introduction';
                 videoPanelLine.textContent = '';
             }
@@ -2288,19 +2235,32 @@
                 updateVideoPanel(index);
 
                 const session = playSession;
+                const rate = parseFloat(rateSelect.value) || 1;
+                // Rough floor for how long this chunk should take to say out
+                // loud at this rate. If 'onend' fires much sooner than this,
+                // the OS almost certainly killed the audio in the background
+                // and fired the event anyway rather than the line actually
+                // finishing — the real cause of the skipping, independent of
+                // whether any visibility event caught the lock at all.
+                const expectedMs = (chunks[index].text.length / (14 * rate)) * 1000;
+                const startedAt = Date.now();
+
                 const utter = new SpeechSynthesisUtterance(chunks[index].text);
-                utter.rate = parseFloat(rateSelect.value) || 1;
+                utter.rate = rate;
                 if (preferredVoice) utter.voice = preferredVoice;
-                utter.onend = () => {
+                const handleFinish = () => {
                     if (session !== playSession) return;
+                    if (!speaking || paused) return;
                     if (document.hidden) return;
-                    if (speaking && !paused) speakFrom(index + 1);
+                    const elapsed = Date.now() - startedAt;
+                    if (chunks[index].text.length > 20 && elapsed < expectedMs * 0.4) {
+                        speakFrom(index); // suspiciously fast — replay, don't skip past it
+                        return;
+                    }
+                    speakFrom(index + 1);
                 };
-                utter.onerror = () => {
-                    if (session !== playSession) return;
-                    if (document.hidden) return;
-                    if (speaking && !paused) speakFrom(index + 1);
-                };
+                utter.onend = handleFinish;
+                utter.onerror = handleFinish;
                 speechSynthesis.speak(utter);
             }
 
@@ -2355,30 +2315,39 @@
             // silently drop the speech queue entirely when the screen
             // locks, so calling resume() alone isn't reliable — restart the
             // current line fresh instead of trusting the engine kept state.
+            function handleAutoPause() {
+                if (!speaking || paused) return;
+                playSession++;
+                speechSynthesis.cancel();
+                paused = true;
+                autoPaused = true;
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                playBtn.setAttribute('aria-label', 'Resume');
+                label.textContent = 'Paused';
+                avatarPauseTalking();
+            }
+            function handleAutoResume() {
+                if (!speaking || !paused || !autoPaused) return;
+                autoPaused = false;
+                playSession++;
+                speechSynthesis.cancel(); // clear any dead/stuck queue state
+                paused = false;
+                label.textContent = 'Reading aloud…';
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                playBtn.setAttribute('aria-label', 'Pause');
+                avatarStartTalking();
+                speakFrom(chunkIndex);
+            }
             document.addEventListener('visibilitychange', () => {
-                if (document.hidden) {
-                    if (speaking && !paused) {
-                        playSession++;
-                        speechSynthesis.cancel();
-                        paused = true;
-                        autoPaused = true;
-                        playBtn.innerHTML = '<i class="fas fa-play"></i>';
-                        playBtn.setAttribute('aria-label', 'Resume');
-                        label.textContent = 'Paused';
-                        avatarPauseTalking();
-                    }
-                } else if (speaking && paused && autoPaused) {
-                    autoPaused = false;
-                    playSession++;
-                    speechSynthesis.cancel(); // clear any dead/stuck queue state
-                    paused = false;
-                    label.textContent = 'Reading aloud…';
-                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                    playBtn.setAttribute('aria-label', 'Pause');
-                    avatarStartTalking();
-                    speakFrom(chunkIndex);
-                }
+                if (document.hidden) handleAutoPause();
+                else handleAutoResume();
             });
+            // visibilitychange doesn't reliably fire for an actual screen
+            // lock on every mobile browser — pagehide/pageshow catch it
+            // when that happens. Both handlers are idempotent (they check
+            // current state first), so it's safe for both to fire.
+            window.addEventListener('pagehide', handleAutoPause);
+            window.addEventListener('pageshow', handleAutoResume);
             window.addEventListener('beforeunload', () => speechSynthesis.cancel());
         }
 
