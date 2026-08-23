@@ -1406,20 +1406,20 @@
                         <img class="presenter-avatar" id="presenterAvatar" src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor">
                     </div>
                     <div class="video-panel-captions">
-                        <div class="video-panel-badge"><span class="video-dot"></span>Presenting</div>
+                        <div class="video-panel-badge"><span class="video-dot" aria-hidden="true"></span>Presenting</div>
                         <div class="video-panel-heading" id="videoPanelHeading">Introduction</div>
                         <div class="video-panel-line" id="videoPanelLine"></div>
                     </div>
                 </div>
             </div>
 
-            <div class="tts-bar" id="ttsBar" hidden>
+            <div class="tts-bar" id="ttsBar" hidden role="region" aria-label="Post narration controls">
                 <button type="button" class="tts-play" id="ttsPlayBtn" aria-label="Listen to this post">
                     <i class="fas fa-play"></i>
                 </button>
                 <div class="tts-info">
-                    <span class="tts-label" id="ttsLabel">Listen to this post</span>
-                    <div class="tts-progress-track"><div class="tts-progress-fill" id="ttsProgressFill"></div></div>
+                    <span class="tts-label" id="ttsLabel" aria-live="polite" aria-atomic="true">Listen to this post</span>
+                    <div class="tts-progress-track" id="ttsProgressTrack" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="tts-progress-fill" id="ttsProgressFill"></div></div>
                 </div>
                 <select class="tts-rate" id="ttsRate" aria-label="Playback speed">
                     <option value="0.85">0.85×</option>
@@ -1465,7 +1465,7 @@
                         </optgroup>
                     </select>
                 </div>
-                <div class="tts-translate-note" id="ttsTranslateNote" hidden></div>
+                <div class="tts-translate-note" id="ttsTranslateNote" hidden aria-live="polite" aria-atomic="true"></div>
             </div>
 
             <div class="post-content" id="post-content">
@@ -2358,9 +2358,8 @@
                 return found ? found.textContent.trim() : 'Introduction';
             }
             function textForChunk(index) {
-                if (currentLang !== 'en' && translationCache[currentLang] && translationCache[currentLang][index]) {
-                    return translationCache[currentLang][index];
-                }
+                const entry = currentLang !== 'en' ? translationCache[currentLang] : null;
+                if (entry && entry.texts && entry.texts[index] !== undefined) return entry.texts[index];
                 return chunks[index].text;
             }
             function updateVideoPanel(index) {
@@ -2403,29 +2402,48 @@
                 catch (e) { /* storage full or unavailable — cache just won't persist */ }
             }
             const LOW_RESOURCE_LANGS = { pcm: 1, yo: 1, ig: 1, ha: 1, sw: 1, am: 1, zu: 1 };
+            function normalizeForCompare(s) { return (s || '').trim().toLowerCase(); }
             async function translateOne(text, lang) {
                 try {
                     const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${lang}`);
                     const data = await res.json();
                     const t = data && data.responseData && data.responseData.translatedText;
-                    return (t && !/^MYMEMORY WARNING/i.test(t)) ? t : text;
+                    if (!t || /^MYMEMORY WARNING/i.test(t)) return { text, ok: false };
+                    // A "translation" identical to the source (for anything
+                    // longer than a couple of words) usually means the
+                    // service doesn't actually support this language pair
+                    // and is just echoing the input back — that's the
+                    // silent-failure case, not a real translation.
+                    const unchanged = text.length > 12 && normalizeForCompare(t) === normalizeForCompare(text);
+                    return { text: t, ok: !unchanged };
                 } catch (e) {
-                    return text; // offline or blocked — fall back to original
+                    return { text, ok: false }; // offline or blocked
                 }
             }
             let translateRunId = 0;
             async function translateAllChunks(lang) {
                 const runId = ++translateRunId;
-                translationCache[lang] = translationCache[lang] || {};
-                const cache = translationCache[lang];
+                if (!translationCache[lang]) translationCache[lang] = { texts: {}, failRatio: 0 };
+                const entry = translationCache[lang];
+                let attempted = 0, failed = 0;
                 for (let i = 0; i < chunks.length; i++) {
                     if (runId !== translateRunId) return; // language changed again mid-run
-                    if (cache[i]) continue;
-                    cache[i] = await translateOne(chunks[i].text, lang);
+                    if (entry.texts[i] !== undefined) continue;
+                    attempted++;
+                    const result = await translateOne(chunks[i].text, lang);
+                    entry.texts[i] = result.text;
+                    if (!result.ok) failed++;
                     if (translateNote) translateNote.textContent = `Translating… ${i + 1}/${chunks.length}`;
                     await new Promise(r => setTimeout(r, 150)); // stay polite to the free API
                 }
-                if (runId === translateRunId) persistTranslationCache();
+                if (runId !== translateRunId) return;
+                if (attempted > 0) entry.failRatio = failed / attempted;
+                persistTranslationCache();
+            }
+            function langLabel(code) {
+                if (!langSelect) return code;
+                const opt = langSelect.querySelector(`option[value="${code}"]`);
+                return opt ? opt.textContent : code;
             }
             function applyVoiceForLang(lang) {
                 if (!voiceSelect) return;
@@ -2463,7 +2481,20 @@
                         translateNote.textContent = 'Translating…';
                     }
                     await translateAllChunks(lang);
-                    if (translateNote && lang === currentLang) {
+                    if (lang !== currentLang) return; // superseded by a newer selection
+                    const failRatio = translationCache[lang] ? translationCache[lang].failRatio : 0;
+                    if (failRatio >= 0.6) {
+                        currentLang = 'en';
+                        localStorage.setItem('tts-lang', 'en');
+                        langSelect.value = 'en';
+                        applyVoiceForLang('en');
+                        if (translateNote) {
+                            translateNote.hidden = false;
+                            translateNote.textContent = `The translation service doesn't support ${langLabel(lang)} well enough right now — reading the original English instead.`;
+                        }
+                        return;
+                    }
+                    if (translateNote) {
                         translateNote.textContent = LOW_RESOURCE_LANGS[lang]
                             ? 'Machine translation — quality varies for this language, and most browsers have no matching voice to speak it in, so it may still read in an English voice.'
                             : 'Machine translation — for anything important, double-check against the original.';
@@ -2472,9 +2503,11 @@
                 });
             }
 
+            const progressTrack = document.getElementById('ttsProgressTrack');
             function updateProgress() {
                 const pct = Math.round((chunkIndex / chunks.length) * 100);
                 fill.style.width = pct + '%';
+                if (progressTrack) progressTrack.setAttribute('aria-valuenow', String(pct));
             }
 
             // Each cancel() bumps this. speak() calls made before the bump
@@ -2492,6 +2525,7 @@
                 paused = false;
                 chunkIndex = 0;
                 fill.style.width = '0%';
+                if (progressTrack) progressTrack.setAttribute('aria-valuenow', '0');
                 playBtn.innerHTML = '<i class="fas fa-play"></i>';
                 playBtn.setAttribute('aria-label', 'Listen to this post');
                 stopBtn.hidden = true;
@@ -2554,14 +2588,23 @@
                     avatarStartTalking();
                     speakFrom(0);
                 } else if (paused) {
-                    speechSynthesis.resume();
+                    // Deliberately not speechSynthesis.resume() — Chrome has
+                    // a long-standing bug where pause()/resume() cycles can
+                    // silently corrupt or skip ahead in the speech queue.
+                    // Restarting the current line fresh is slightly less
+                    // elegant (it replays from the start of the sentence
+                    // rather than mid-word) but is actually reliable.
+                    playSession++;
+                    speechSynthesis.cancel();
                     paused = false;
                     playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                     playBtn.setAttribute('aria-label', 'Pause');
                     label.textContent = 'Reading aloud…';
                     avatarStartTalking();
+                    speakFrom(chunkIndex);
                 } else {
-                    speechSynthesis.pause();
+                    playSession++;
+                    speechSynthesis.cancel();
                     paused = true;
                     playBtn.innerHTML = '<i class="fas fa-play"></i>';
                     playBtn.setAttribute('aria-label', 'Resume');
@@ -2573,17 +2616,13 @@
             stopBtn.addEventListener('click', resetToStart);
 
             rateSelect.addEventListener('change', () => {
-                if (!speaking) return;
-                const wasPaused = paused;
+                // If paused, the new rate simply takes effect next time
+                // speakFrom runs (it reads rateSelect.value live) — no need
+                // to touch the speech engine while nothing is playing.
+                if (!speaking || paused) return;
                 playSession++;
                 speechSynthesis.cancel();
-                paused = false;
                 speakFrom(chunkIndex);
-                if (wasPaused) {
-                    speechSynthesis.pause();
-                    paused = true;
-                    avatarPauseTalking();
-                }
             });
 
             if (voiceSelect) {
@@ -2592,17 +2631,10 @@
                     const chosen = voices.find(v => v.name === voiceSelect.value);
                     if (chosen) preferredVoice = chosen;
                     localStorage.setItem('tts-voice-name', voiceSelect.value);
-                    if (!speaking) return;
-                    const wasPaused = paused;
+                    if (!speaking || paused) return;
                     playSession++;
                     speechSynthesis.cancel();
-                    paused = false;
                     speakFrom(chunkIndex);
-                    if (wasPaused) {
-                        speechSynthesis.pause();
-                        paused = true;
-                        avatarPauseTalking();
-                    }
                 });
             }
 
