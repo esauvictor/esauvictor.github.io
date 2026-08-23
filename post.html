@@ -531,6 +531,48 @@
             .tts-rate { order: 3; margin-left: 48px; }
         }
 
+        .tts-options-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            margin: 0.6rem clamp(1.5rem, 5vw, 2.25rem) 0;
+            padding: 0.6rem 0.85rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--card, transparent);
+        }
+        .tts-option {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+        .tts-option label {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+        .tts-option select {
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            padding: 0.3rem 0.4rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg, transparent);
+            color: var(--ink);
+            max-width: 180px;
+        }
+        .tts-translate-note {
+            flex-basis: 100%;
+            font-size: 0.76rem;
+            color: var(--muted);
+            font-style: italic;
+        }
+
         /* ---------- Video presentation panel ---------- */
         .tts-avatar-wrap {
             display: flex;
@@ -1390,6 +1432,42 @@
                 </button>
             </div>
 
+            <div class="tts-options-row" id="ttsOptionsRow" hidden>
+                <div class="tts-option">
+                    <label for="ttsVoiceSelect"><i class="fas fa-microphone-alt"></i> Voice</label>
+                    <select id="ttsVoiceSelect" aria-label="Narration voice"></select>
+                </div>
+                <div class="tts-option">
+                    <label for="ttsLangSelect"><i class="fas fa-language"></i> Language</label>
+                    <select id="ttsLangSelect" aria-label="Translate this post">
+                        <option value="en">Original (English)</option>
+                        <optgroup label="African languages">
+                            <option value="pcm">Nigerian Pidgin</option>
+                            <option value="yo">Yorùbá</option>
+                            <option value="ig">Igbo</option>
+                            <option value="ha">Hausa</option>
+                            <option value="sw">Swahili</option>
+                            <option value="am">Amharic</option>
+                            <option value="zu">Zulu</option>
+                        </optgroup>
+                        <optgroup label="World languages">
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="pt">Portuguese</option>
+                            <option value="de">German</option>
+                            <option value="it">Italian</option>
+                            <option value="ar">Arabic</option>
+                            <option value="hi">Hindi</option>
+                            <option value="zh">Chinese (Simplified)</option>
+                            <option value="ja">Japanese</option>
+                            <option value="ru">Russian</option>
+                            <option value="tr">Turkish</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="tts-translate-note" id="ttsTranslateNote" hidden></div>
+            </div>
+
             <div class="post-content" id="post-content">
                 <!-- Content loaded dynamically -->
             </div>
@@ -1550,6 +1628,14 @@
 
         const API_BASE = 'https://esauvictor.name.ng/api';
         const AUTHOR_AVATAR_URL = 'https://avatars.githubusercontent.com/u/94287719?v=4';
+        // The synthetic voices below are the browser's built-in options —
+        // they can't be your actual voice. To have this post read in your
+        // real voice instead, record yourself reading it, host the file
+        // somewhere (e.g. a GitHub raw link), and paste that URL here.
+        // When this is set, playback automatically switches to your
+        // recording and the voice/language pickers are hidden, since those
+        // only apply to synthetic speech.
+        const NARRATION_AUDIO_URL = '';
 
         fetch(`${API_BASE}/track.php`, {
           method: 'POST',
@@ -2095,7 +2181,75 @@
             return chunks;
         }
 
+        // Used instead of synthetic speech when NARRATION_AUDIO_URL is set —
+        // plays a real recording with normal <audio> controls. No per-line
+        // highlighting here since a plain recording carries no per-sentence
+        // timing data, only playback rate/progress.
+        function initRealVoicePlayback(url) {
+            const bar = document.getElementById('ttsBar');
+            const playBtn = document.getElementById('ttsPlayBtn');
+            const stopBtn = document.getElementById('ttsStopBtn');
+            const label = document.getElementById('ttsLabel');
+            const fill = document.getElementById('ttsProgressFill');
+            const rateSelect = document.getElementById('ttsRate');
+            const avatarWrap = document.getElementById('ttsAvatarWrap');
+            if (!bar) return;
+            bar.hidden = false;
+            if (avatarWrap) avatarWrap.hidden = false;
+            label.textContent = 'Listen to this post';
+
+            const audio = new Audio(url);
+            audio.preload = 'none';
+            const panel = avatarWrap ? avatarWrap.querySelector('.video-panel') : null;
+
+            audio.addEventListener('timeupdate', () => {
+                if (audio.duration) fill.style.width = Math.round((audio.currentTime / audio.duration) * 100) + '%';
+            });
+            audio.addEventListener('ended', () => {
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                playBtn.setAttribute('aria-label', 'Listen to this post');
+                stopBtn.hidden = true;
+                label.textContent = 'Listen to this post';
+                fill.style.width = '0%';
+                if (panel) panel.classList.remove('is-talking', 'is-paused');
+            });
+
+            playBtn.addEventListener('click', () => {
+                if (audio.paused) {
+                    audio.play();
+                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    playBtn.setAttribute('aria-label', 'Pause');
+                    stopBtn.hidden = false;
+                    label.textContent = 'Reading aloud…';
+                    if (panel) { panel.classList.add('is-talking'); panel.classList.remove('is-paused'); }
+                } else {
+                    audio.pause();
+                    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    playBtn.setAttribute('aria-label', 'Resume');
+                    label.textContent = 'Paused';
+                    if (panel) { panel.classList.remove('is-talking'); panel.classList.add('is-paused'); }
+                }
+            });
+            stopBtn.addEventListener('click', () => {
+                audio.pause();
+                audio.currentTime = 0;
+                fill.style.width = '0%';
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                playBtn.setAttribute('aria-label', 'Listen to this post');
+                stopBtn.hidden = true;
+                label.textContent = 'Listen to this post';
+                if (panel) panel.classList.remove('is-talking', 'is-paused');
+            });
+            if (rateSelect) {
+                rateSelect.addEventListener('change', () => { audio.playbackRate = parseFloat(rateSelect.value) || 1; });
+            }
+            // Real media elements handle screen-lock/backgrounding through
+            // the browser's own media session — no manual pause/resume
+            // patching needed here the way synthetic speech requires.
+        }
+
         function initTextToSpeech() {
+            if (NARRATION_AUDIO_URL) { initRealVoicePlayback(NARRATION_AUDIO_URL); return; }
             if (!('speechSynthesis' in window)) return; // bar stays hidden, no support
 
             const contentEl = document.getElementById('post-content');
@@ -2108,6 +2262,10 @@
             const avatarWrap = document.getElementById('ttsAvatarWrap');
             const videoPanelHeading = document.getElementById('videoPanelHeading');
             const videoPanelLine = document.getElementById('videoPanelLine');
+            const optionsRow = document.getElementById('ttsOptionsRow');
+            const voiceSelect = document.getElementById('ttsVoiceSelect');
+            const langSelect = document.getElementById('ttsLangSelect');
+            const translateNote = document.getElementById('ttsTranslateNote');
             if (!contentEl || !bar) return;
 
             const chunks = buildSpeechChunks(contentEl);
@@ -2115,6 +2273,7 @@
 
             bar.hidden = false;
             if (avatarWrap) avatarWrap.hidden = false;
+            if (optionsRow) optionsRow.hidden = false;
 
             let chunkIndex = 0;
             let speaking = false;
@@ -2128,11 +2287,8 @@
             // prefer those instead. This is still synthetic speech — not a
             // human voice — just the least robotic option available for free.
             let preferredVoice = null;
-            function pickBestVoice() {
-                const voices = speechSynthesis.getVoices();
-                if (!voices.length) return null;
-                const english = voices.filter(v => /^en/i.test(v.lang));
-                const pool = english.length ? english : voices;
+            function pickBestVoice(pool) {
+                if (!pool || !pool.length) return null;
                 const scored = pool.map(v => {
                     let score = 0;
                     if (/natural|neural|enhanced|premium/i.test(v.name)) score += 3;
@@ -2143,10 +2299,37 @@
                 scored.sort((a, b) => b.score - a.score);
                 return scored[0].v;
             }
-            if ('onvoiceschanged' in speechSynthesis) {
-                speechSynthesis.onvoiceschanged = () => { preferredVoice = pickBestVoice(); };
+            function englishVoices() {
+                const voices = speechSynthesis.getVoices();
+                const english = voices.filter(v => /^en/i.test(v.lang));
+                return english.length ? english : voices;
             }
-            preferredVoice = pickBestVoice();
+            function populateVoiceSelect() {
+                if (!voiceSelect) return;
+                const voices = speechSynthesis.getVoices();
+                if (!voices.length) return;
+                const savedName = localStorage.getItem('tts-voice-name');
+                voiceSelect.innerHTML = '';
+                voices.forEach(v => {
+                    const opt = document.createElement('option');
+                    opt.value = v.name;
+                    opt.textContent = `${v.name} (${v.lang})`;
+                    voiceSelect.appendChild(opt);
+                });
+                const fallback = preferredVoice ? preferredVoice.name : voices[0].name;
+                const toSelect = savedName && voices.some(v => v.name === savedName) ? savedName : fallback;
+                voiceSelect.value = toSelect;
+                const chosen = voices.find(v => v.name === toSelect);
+                if (chosen) preferredVoice = chosen;
+            }
+            if ('onvoiceschanged' in speechSynthesis) {
+                speechSynthesis.onvoiceschanged = () => {
+                    if (!localStorage.getItem('tts-voice-name')) preferredVoice = pickBestVoice(englishVoices());
+                    populateVoiceSelect();
+                };
+            }
+            preferredVoice = pickBestVoice(englishVoices());
+            populateVoiceSelect();
 
             // ---- Karaoke-style line highlighting ----
             let highlightedEl = null;
@@ -2174,10 +2357,16 @@
                 }
                 return found ? found.textContent.trim() : 'Introduction';
             }
+            function textForChunk(index) {
+                if (currentLang !== 'en' && translationCache[currentLang] && translationCache[currentLang][index]) {
+                    return translationCache[currentLang][index];
+                }
+                return chunks[index].text;
+            }
             function updateVideoPanel(index) {
                 if (!videoPanelHeading || !chunks[index]) return;
                 videoPanelHeading.textContent = nearestHeadingText(chunks[index].el);
-                videoPanelLine.textContent = chunks[index].text;
+                videoPanelLine.textContent = textForChunk(index);
             }
             function avatarStartTalking() {
                 if (!avatarWrap) return;
@@ -2194,6 +2383,93 @@
                 avatarWrap.querySelector('.video-panel').classList.remove('is-talking', 'is-paused');
                 videoPanelHeading.textContent = 'Introduction';
                 videoPanelLine.textContent = '';
+            }
+
+            // ---- Translation ----
+            // Translates the narration + captions only — the actual post
+            // text on the page is left untouched, so links/formatting/code
+            // inside it are never at risk. Uses MyMemory's free, keyless
+            // translation API; results are cached (in memory, and in
+            // localStorage per post URL) so a language is only fetched once.
+            let currentLang = localStorage.getItem('tts-lang') || 'en';
+            const translationCache = {};
+            const TRANSLATE_CACHE_KEY = 'tts-translate-cache:' + location.pathname;
+            try {
+                const saved = JSON.parse(localStorage.getItem(TRANSLATE_CACHE_KEY) || '{}');
+                Object.assign(translationCache, saved);
+            } catch (e) { /* ignore corrupt cache */ }
+            function persistTranslationCache() {
+                try { localStorage.setItem(TRANSLATE_CACHE_KEY, JSON.stringify(translationCache)); }
+                catch (e) { /* storage full or unavailable — cache just won't persist */ }
+            }
+            const LOW_RESOURCE_LANGS = { pcm: 1, yo: 1, ig: 1, ha: 1, sw: 1, am: 1, zu: 1 };
+            async function translateOne(text, lang) {
+                try {
+                    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${lang}`);
+                    const data = await res.json();
+                    const t = data && data.responseData && data.responseData.translatedText;
+                    return (t && !/^MYMEMORY WARNING/i.test(t)) ? t : text;
+                } catch (e) {
+                    return text; // offline or blocked — fall back to original
+                }
+            }
+            let translateRunId = 0;
+            async function translateAllChunks(lang) {
+                const runId = ++translateRunId;
+                translationCache[lang] = translationCache[lang] || {};
+                const cache = translationCache[lang];
+                for (let i = 0; i < chunks.length; i++) {
+                    if (runId !== translateRunId) return; // language changed again mid-run
+                    if (cache[i]) continue;
+                    cache[i] = await translateOne(chunks[i].text, lang);
+                    if (translateNote) translateNote.textContent = `Translating… ${i + 1}/${chunks.length}`;
+                    await new Promise(r => setTimeout(r, 150)); // stay polite to the free API
+                }
+                if (runId === translateRunId) persistTranslationCache();
+            }
+            function applyVoiceForLang(lang) {
+                if (!voiceSelect) return;
+                if (lang === 'en') { populateVoiceSelect(); return; }
+                const voices = speechSynthesis.getVoices();
+                const match = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(lang.toLowerCase()));
+                if (match) { preferredVoice = match; voiceSelect.value = match.name; }
+                // No matching device voice — keeps reading with the current
+                // voice, which will mispronounce it. Flagged in the note.
+            }
+            if (langSelect) {
+                langSelect.value = currentLang;
+                langSelect.addEventListener('change', async () => {
+                    const lang = langSelect.value;
+                    currentLang = lang;
+                    localStorage.setItem('tts-lang', lang);
+                    if (speaking) {
+                        playSession++;
+                        speechSynthesis.cancel();
+                        speaking = false;
+                        paused = false;
+                        stopBtn.hidden = true;
+                        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                        playBtn.setAttribute('aria-label', 'Listen to this post');
+                        avatarStopTalking();
+                        clearHighlight();
+                    }
+                    if (lang === 'en') {
+                        if (translateNote) translateNote.hidden = true;
+                        applyVoiceForLang('en');
+                        return;
+                    }
+                    if (translateNote) {
+                        translateNote.hidden = false;
+                        translateNote.textContent = 'Translating…';
+                    }
+                    await translateAllChunks(lang);
+                    if (translateNote && lang === currentLang) {
+                        translateNote.textContent = LOW_RESOURCE_LANGS[lang]
+                            ? 'Machine translation — quality varies for this language, and most browsers have no matching voice to speak it in, so it may still read in an English voice.'
+                            : 'Machine translation — for anything important, double-check against the original.';
+                    }
+                    applyVoiceForLang(lang);
+                });
             }
 
             function updateProgress() {
@@ -2236,16 +2512,17 @@
 
                 const session = playSession;
                 const rate = parseFloat(rateSelect.value) || 1;
+                const speechText = textForChunk(index);
                 // Rough floor for how long this chunk should take to say out
                 // loud at this rate. If 'onend' fires much sooner than this,
                 // the OS almost certainly killed the audio in the background
                 // and fired the event anyway rather than the line actually
                 // finishing — the real cause of the skipping, independent of
                 // whether any visibility event caught the lock at all.
-                const expectedMs = (chunks[index].text.length / (14 * rate)) * 1000;
+                const expectedMs = (speechText.length / (14 * rate)) * 1000;
                 const startedAt = Date.now();
 
-                const utter = new SpeechSynthesisUtterance(chunks[index].text);
+                const utter = new SpeechSynthesisUtterance(speechText);
                 utter.rate = rate;
                 if (preferredVoice) utter.voice = preferredVoice;
                 const handleFinish = () => {
@@ -2253,7 +2530,7 @@
                     if (!speaking || paused) return;
                     if (document.hidden) return;
                     const elapsed = Date.now() - startedAt;
-                    if (chunks[index].text.length > 20 && elapsed < expectedMs * 0.4) {
+                    if (speechText.length > 20 && elapsed < expectedMs * 0.4) {
                         speakFrom(index); // suspiciously fast — replay, don't skip past it
                         return;
                     }
@@ -2308,6 +2585,26 @@
                     avatarPauseTalking();
                 }
             });
+
+            if (voiceSelect) {
+                voiceSelect.addEventListener('change', () => {
+                    const voices = speechSynthesis.getVoices();
+                    const chosen = voices.find(v => v.name === voiceSelect.value);
+                    if (chosen) preferredVoice = chosen;
+                    localStorage.setItem('tts-voice-name', voiceSelect.value);
+                    if (!speaking) return;
+                    const wasPaused = paused;
+                    playSession++;
+                    speechSynthesis.cancel();
+                    paused = false;
+                    speakFrom(chunkIndex);
+                    if (wasPaused) {
+                        speechSynthesis.pause();
+                        paused = true;
+                        avatarPauseTalking();
+                    }
+                });
+            }
 
             // Screen lock / tab switch pauses playback; waking it back up
             // resumes automatically — but only if *we* paused it, not if
