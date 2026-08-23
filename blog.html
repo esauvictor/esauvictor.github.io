@@ -579,6 +579,25 @@
 
   <button id="backToTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
 
+  <div class="newsletter-overlay" id="newsletterOverlay" hidden>
+    <div class="newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="newsletterTitle">
+      <button type="button" class="newsletter-close" id="newsletterClose" aria-label="Close">✕</button>
+      <div class="newsletter-icon"><i class="fas fa-envelope-open-text"></i></div>
+      <h2 id="newsletterTitle">Stay in the loop</h2>
+      <p class="newsletter-sub">Get new posts on web development, data analytics &amp; cyber security — straight to your inbox, no spam.</p>
+      <form class="newsletter-form" id="newsletterForm">
+        <input type="hidden" name="form" value="subscribe">
+        <input type="text" name="honeypot" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="newsletter-field">
+          <input type="email" id="newsletterEmail" name="email" placeholder="Your email address" required autocomplete="email">
+          <button type="submit">Subscribe</button>
+        </div>
+        <p class="newsletter-status" id="newsletterStatus"></p>
+      </form>
+      <button type="button" class="newsletter-dismiss" id="newsletterDismiss">Maybe later</button>
+    </div>
+  </div>
+
   <script>
     // ---------- theme ----------
     const root = document.documentElement;
@@ -942,24 +961,7 @@
           </div>
         `);
       });
-  </script>  <div class="newsletter-overlay" id="newsletterOverlay" hidden>
-    <div class="newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="newsletterTitle">
-      <button type="button" class="newsletter-close" id="newsletterClose" aria-label="Close">✕</button>
-      <div class="newsletter-icon"><i class="fas fa-envelope-open-text"></i></div>
-      <h2 id="newsletterTitle">Stay in the loop</h2>
-      <p class="newsletter-sub">Get new posts on web development, data analytics &amp; cyber security — straight to your inbox, no spam.</p>
-      <form class="newsletter-form" id="newsletterForm">
-        <input type="hidden" name="form" value="subscribe">
-        <input type="text" name="honeypot" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <div class="newsletter-field">
-          <input type="email" id="newsletterEmail" name="email" placeholder="Your email address" required autocomplete="email">
-          <button type="submit">Subscribe</button>
-        </div>
-        <p class="newsletter-status" id="newsletterStatus"></p>
-      </form>
-      <button type="button" class="newsletter-dismiss" id="newsletterDismiss">Maybe later</button>
-    </div>
-  </div>
+  </script>
 
 </body>
 </html>
