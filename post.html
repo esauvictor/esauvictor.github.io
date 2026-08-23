@@ -531,6 +531,51 @@
             .tts-rate { order: 3; margin-left: 48px; }
         }
 
+        /* ---------- Narrating avatar ---------- */
+        .tts-avatar-wrap {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0 -0.35rem;
+        }
+        .tts-avatar {
+            width: 84px;
+            height: 84px;
+            animation: avatarBreathe 3.2s ease-in-out infinite;
+        }
+        @media(max-width:520px){ .tts-avatar { width: 64px; height: 64px; } }
+
+        .avatar-body { fill: var(--signal); transition: filter 0.2s ease; }
+
+        .avatar-eye {
+            fill: #fff;
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: avatarBlink 4.5s ease-in-out infinite;
+        }
+        .avatar-eye-right { animation-delay: 0.05s; }
+
+        #avatarMouthClosed {
+            fill: none;
+            stroke: #fff;
+            stroke-width: 4;
+            stroke-linecap: round;
+            opacity: 1;
+            transition: opacity 0.07s linear;
+        }
+        #avatarMouthOpen {
+            fill: rgba(0,0,0,0.6);
+            opacity: 0;
+            transition: opacity 0.07s linear;
+        }
+
+        .tts-avatar-wrap.is-talking .tts-avatar { animation: avatarTalk 0.4s ease-in-out infinite; }
+        .tts-avatar-wrap.is-talking .avatar-body { filter: drop-shadow(0 0 8px var(--signal)); }
+        .tts-avatar-wrap.is-paused .avatar-body { opacity: 0.6; }
+
+        @keyframes avatarBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+        @keyframes avatarTalk { 0%, 100% { transform: scale(1.02) translateY(0); } 50% { transform: scale(1.05) translateY(-3px); } }
+        @keyframes avatarBlink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+
 
         .post-content > * + * { margin-top: 1.15rem; }
 
@@ -1273,6 +1318,16 @@
                 <ul class="toc-list" id="tocList"></ul>
             </nav>
 
+            <div class="tts-avatar-wrap" id="ttsAvatarWrap" hidden>
+                <svg class="tts-avatar" viewBox="0 0 100 100" aria-hidden="true">
+                    <circle class="avatar-body" cx="50" cy="52" r="40"></circle>
+                    <circle class="avatar-eye avatar-eye-left" cx="36" cy="46" r="5"></circle>
+                    <circle class="avatar-eye avatar-eye-right" cx="64" cy="46" r="5"></circle>
+                    <path class="avatar-mouth-closed" id="avatarMouthClosed" d="M36,68 Q50,71 64,68"></path>
+                    <ellipse class="avatar-mouth-open" id="avatarMouthOpen" cx="50" cy="70" rx="10" ry="8"></ellipse>
+                </svg>
+            </div>
+
             <div class="tts-bar" id="ttsBar" hidden>
                 <button type="button" class="tts-play" id="ttsPlayBtn" aria-label="Listen to this post">
                     <i class="fas fa-play"></i>
@@ -1678,6 +1733,213 @@
             }
         }
 
+        // ---- Pattern-based explainers for non-HTML code blocks ----
+        // These describe structure and shape (functions found, loop/query
+        // types, etc.) via regex, not by actually understanding the code's
+        // logic. They'll do well on typical tutorial-style snippets and
+        // fall back to a plain "Code example in X." on anything unusual —
+        // that's the tradeoff for staying free and fully client-side.
+
+        function truncateList(arr, max) {
+            if (arr.length <= max) return arr;
+            return arr.slice(0, max).concat(['and more']);
+        }
+
+        function describeSql(code) {
+            const stmt = code.trim();
+            const grabTable = (re) => {
+                const m = stmt.match(re);
+                return m ? m[1] : null;
+            };
+
+            if (/^SELECT\b/i.test(stmt)) {
+                const table = grabTable(/FROM\s+`?(\w+)`?/i);
+                let out = `A SQL query that selects data${table ? ' from the ' + table + ' table' : ''}`;
+                if (/\bJOIN\b/i.test(stmt)) out += ', joined with another table';
+                if (/\bWHERE\b/i.test(stmt)) out += ', filtered by a condition';
+                if (/\bGROUP BY\b/i.test(stmt)) out += ', grouped by a column';
+                if (/\bORDER BY\b/i.test(stmt)) out += ', and ordered by a column';
+                return out + '.';
+            }
+            if (/^INSERT\s+INTO\b/i.test(stmt)) {
+                const table = grabTable(/INSERT\s+INTO\s+`?(\w+)`?/i);
+                return `A SQL query that inserts a new row into the ${table || 'a'} table.`;
+            }
+            if (/^UPDATE\b/i.test(stmt)) {
+                const table = grabTable(/UPDATE\s+`?(\w+)`?/i);
+                return `A SQL query that updates rows in the ${table || 'a'} table${/\bWHERE\b/i.test(stmt) ? ', filtered by a condition' : ''}.`;
+            }
+            if (/^DELETE\s+FROM\b/i.test(stmt)) {
+                const table = grabTable(/DELETE\s+FROM\s+`?(\w+)`?/i);
+                return `A SQL query that deletes rows from the ${table || 'a'} table${/\bWHERE\b/i.test(stmt) ? ', filtered by a condition' : ''}.`;
+            }
+            if (/^CREATE\s+TABLE\b/i.test(stmt)) {
+                const table = grabTable(/CREATE\s+TABLE\s+(?:IF NOT EXISTS\s+)?`?(\w+)`?/i);
+                const colsMatch = stmt.match(/\(([\s\S]*)\)/);
+                let cols = [];
+                if (colsMatch) {
+                    cols = colsMatch[1].split(',')
+                        .map(c => c.trim().split(/\s+/)[0].replace(/`/g, ''))
+                        .filter(c => c && !/^(PRIMARY|UNIQUE|KEY|CONSTRAINT|FOREIGN)$/i.test(c));
+                }
+                let out = `A SQL statement that creates a new table called ${table || 'one'}`;
+                if (cols.length) out += `, with columns: ${truncateList(cols, 6).join(', ')}`;
+                return out + '.';
+            }
+            if (/^ALTER\s+TABLE\b/i.test(stmt)) {
+                const table = grabTable(/ALTER\s+TABLE\s+`?(\w+)`?/i);
+                return `A SQL statement that modifies the structure of the ${table || 'a'} table.`;
+            }
+            if (/^DROP\s+TABLE\b/i.test(stmt)) {
+                const table = grabTable(/DROP\s+TABLE\s+(?:IF EXISTS\s+)?`?(\w+)`?/i);
+                return `A SQL statement that deletes the ${table || 'a'} table entirely.`;
+            }
+            return '';
+        }
+
+        function describeJavaScript(code) {
+            const parts = [];
+            let m;
+
+            const funcs = [];
+            const funcRe = /function\s+(\w+)\s*\(([^)]*)\)/g;
+            while ((m = funcRe.exec(code))) funcs.push({ name: m[1], args: m[2].trim() });
+            const arrowRe = /(?:const|let|var)\s+(\w+)\s*=\s*(?:async\s*)?\(([^)]*)\)\s*=>/g;
+            while ((m = arrowRe.exec(code))) funcs.push({ name: m[1], args: m[2].trim() });
+
+            const classes = [];
+            const classRe = /class\s+(\w+)(?:\s+extends\s+(\w+))?/g;
+            while ((m = classRe.exec(code))) classes.push({ name: m[1], extends: m[2] });
+
+            classes.slice(0, 3).forEach(c => {
+                parts.push(`Defines a class called ${c.name}${c.extends ? ', extending ' + c.extends : ''}.`);
+            });
+            truncateList(funcs, 4).forEach(f => {
+                if (f === 'and more') { parts.push('...and more functions.'); return; }
+                const argCount = f.args ? f.args.split(',').filter(Boolean).length : 0;
+                parts.push(`Defines a function called ${f.name}${argCount ? ' that takes ' + argCount + ' parameter' + (argCount > 1 ? 's' : '') : ' with no parameters'}.`);
+            });
+
+            if (/\bfetch\s*\(/.test(code)) parts.push('It makes a network request using fetch.');
+            if (/addEventListener\s*\(/.test(code)) parts.push('It adds an event listener.');
+            if (/\bfor\s*\(/.test(code)) parts.push('It contains a loop.');
+            if (/\bif\s*\(/.test(code)) parts.push('It contains a conditional statement.');
+            if (/console\.log/.test(code)) parts.push('It logs output to the console.');
+
+            return parts.join(' ');
+        }
+
+        function describePhp(code) {
+            const parts = [];
+            let m;
+
+            const funcs = [];
+            const funcRe = /function\s+(\w+)\s*\(([^)]*)\)/g;
+            while ((m = funcRe.exec(code))) funcs.push({ name: m[1] });
+
+            const classes = [];
+            const classRe = /class\s+(\w+)(?:\s+extends\s+(\w+))?/g;
+            while ((m = classRe.exec(code))) classes.push({ name: m[1], extends: m[2] });
+
+            classes.slice(0, 3).forEach(c => {
+                parts.push(`Defines a class called ${c.name}${c.extends ? ', extending ' + c.extends : ''}.`);
+            });
+            truncateList(funcs, 4).forEach(f => {
+                if (f === 'and more') { parts.push('...and more functions.'); return; }
+                parts.push(`Defines a function called ${f.name}.`);
+            });
+
+            if (/->prepare\s*\(|mysqli_query|->query\s*\(/.test(code)) parts.push('It runs a database query.');
+            if (/\brequire(_once)?\s*\(|\binclude(_once)?\s*\(/.test(code)) parts.push('It includes another file.');
+            if (/\bforeach\s*\(/.test(code)) parts.push('It has a foreach loop.');
+            else if (/\bfor\s*\(/.test(code)) parts.push('It has a for loop.');
+            if (/\bif\s*\(/.test(code)) parts.push('It contains a conditional statement.');
+            if (/\becho\b|\bprint\b/.test(code)) parts.push('It outputs text to the page.');
+
+            return parts.join(' ');
+        }
+
+        function describePython(code) {
+            const parts = [];
+            let m;
+
+            const funcs = [];
+            const funcRe = /def\s+(\w+)\s*\(([^)]*)\)/g;
+            while ((m = funcRe.exec(code))) funcs.push({ name: m[1] });
+
+            const classes = [];
+            const classRe = /class\s+(\w+)(?:\(([^)]*)\))?/g;
+            while ((m = classRe.exec(code))) classes.push({ name: m[1], bases: m[2] });
+
+            classes.slice(0, 3).forEach(c => {
+                parts.push(`Defines a class called ${c.name}${c.bases ? ', inheriting from ' + c.bases : ''}.`);
+            });
+            truncateList(funcs, 4).forEach(f => {
+                if (f === 'and more') { parts.push('...and more functions.'); return; }
+                parts.push(`Defines a function called ${f.name}.`);
+            });
+
+            const imports = [];
+            const importRe = /^\s*import\s+([\w.]+)|^\s*from\s+([\w.]+)\s+import/gm;
+            while ((m = importRe.exec(code))) imports.push(m[1] || m[2]);
+            if (imports.length) parts.push(`It imports: ${truncateList([...new Set(imports)], 4).join(', ')}.`);
+
+            if (/\bfor\s+\w+\s+in\b/.test(code)) parts.push('It contains a for loop.');
+            if (/\bif\s+.+:/.test(code)) parts.push('It contains a conditional statement.');
+            if (/\bprint\s*\(/.test(code)) parts.push('It prints output.');
+
+            return parts.join(' ');
+        }
+
+        function describeCss(code) {
+            const selectors = [];
+            const ruleRe = /([^{}]+)\{[^{}]*\}/g;
+            let m;
+            while ((m = ruleRe.exec(code))) {
+                const sel = m[1].trim().replace(/\s+/g, ' ');
+                if (sel && !sel.startsWith('@')) selectors.push(sel);
+            }
+            if (!selectors.length) return '';
+
+            let out = `This CSS defines styles for: ${truncateList(selectors, 5).join(', ')}.`;
+            if (/@media/.test(code)) out += ' It includes a media query for responsive design.';
+            if (/display:\s*flex/.test(code)) out += ' It uses flexbox layout.';
+            if (/display:\s*grid/.test(code)) out += ' It uses grid layout.';
+            return out;
+        }
+
+        function describeBash(code) {
+            const lines = code.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
+            const commands = [];
+            lines.forEach(line => {
+                const m = line.match(/^([a-zA-Z0-9_.\-/]+)/);
+                if (m) commands.push(m[1].split('/').pop());
+            });
+            const unique = [...new Set(commands)].filter(c => c && !c.startsWith('!'));
+            if (!unique.length) return '';
+            return `This is a shell script that runs commands including: ${truncateList(unique, 6).join(', ')}.`;
+        }
+
+        const CODE_LANG_LABELS = {
+            sql: 'SQL', javascript: 'JavaScript', php: 'PHP',
+            python: 'Python', css: 'CSS', bash: 'Bash',
+        };
+        const CODE_LANG_ALIASES = { js: 'javascript', py: 'python', sh: 'bash', shell: 'bash' };
+
+        function describeCodeByLanguage(code, lang) {
+            const key = CODE_LANG_ALIASES[lang] || lang;
+            const describers = {
+                sql: describeSql, javascript: describeJavaScript, php: describePhp,
+                python: describePython, css: describeCss, bash: describeBash,
+            };
+            const fn = describers[key];
+            if (!fn) return '';
+
+            const structure = fn(code);
+            const label = CODE_LANG_LABELS[key] || lang;
+            return structure ? `Code example in ${label}. ${structure}` : '';
+        }
+
         function extractSpeakableText(contentEl) {
             const clone = contentEl.cloneNode(true);
 
@@ -1692,6 +1954,8 @@
                 let description = '';
                 if (!lang || lang === 'html' || lang === 'markup' || lang === 'xml') {
                     description = describeHtmlSource(rawCode);
+                } else {
+                    description = describeCodeByLanguage(rawCode, lang);
                 }
 
                 const note = document.createElement('p');
@@ -1744,16 +2008,55 @@
             const label = document.getElementById('ttsLabel');
             const fill = document.getElementById('ttsProgressFill');
             const rateSelect = document.getElementById('ttsRate');
+            const avatarWrap = document.getElementById('ttsAvatarWrap');
+            const mouthOpenEl = document.getElementById('avatarMouthOpen');
+            const mouthClosedEl = document.getElementById('avatarMouthClosed');
             if (!contentEl || !bar) return;
 
             const chunks = splitIntoSpeechChunks(extractSpeakableText(contentEl));
             if (!chunks.length) return;
 
             bar.hidden = false;
+            if (avatarWrap) avatarWrap.hidden = false;
 
             let chunkIndex = 0;
             let speaking = false;
             let paused = false;
+
+            // ---- Avatar mouth-flap ----
+            // The Web Speech API doesn't expose real audio amplitude, so
+            // this fakes lip-sync with a semi-random open/close flap while
+            // speech is active — close enough to read as "talking" without
+            // needing per-word timing data.
+            let flapTimer = null;
+            function flap() {
+                if (!mouthOpenEl) return;
+                const isOpen = mouthOpenEl.style.opacity === '1';
+                mouthOpenEl.style.opacity = isOpen ? '0' : '1';
+                mouthClosedEl.style.opacity = isOpen ? '1' : '0';
+                flapTimer = setTimeout(flap, 90 + Math.random() * 90);
+            }
+            function avatarStartTalking() {
+                if (!avatarWrap) return;
+                avatarWrap.classList.add('is-talking');
+                avatarWrap.classList.remove('is-paused');
+                flap();
+            }
+            function avatarPauseTalking() {
+                if (!avatarWrap) return;
+                clearTimeout(flapTimer);
+                avatarWrap.classList.remove('is-talking');
+                avatarWrap.classList.add('is-paused');
+                mouthOpenEl.style.opacity = '0';
+                mouthClosedEl.style.opacity = '1';
+            }
+            function avatarStopTalking() {
+                if (!avatarWrap) return;
+                clearTimeout(flapTimer);
+                avatarWrap.classList.remove('is-talking', 'is-paused');
+                mouthOpenEl.style.opacity = '0';
+                mouthClosedEl.style.opacity = '1';
+            }
 
             function updateProgress() {
                 const pct = Math.round((chunkIndex / chunks.length) * 100);
@@ -1770,6 +2073,7 @@
                 playBtn.setAttribute('aria-label', 'Listen to this post');
                 stopBtn.hidden = true;
                 label.textContent = 'Listen to this post';
+                avatarStopTalking();
             }
 
             function speakFrom(index) {
@@ -1800,6 +2104,7 @@
                     playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                     playBtn.setAttribute('aria-label', 'Pause');
                     stopBtn.hidden = false;
+                    avatarStartTalking();
                     speakFrom(0);
                 } else if (paused) {
                     speechSynthesis.resume();
@@ -1807,12 +2112,14 @@
                     playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                     playBtn.setAttribute('aria-label', 'Pause');
                     label.textContent = 'Reading aloud…';
+                    avatarStartTalking();
                 } else {
                     speechSynthesis.pause();
                     paused = true;
                     playBtn.innerHTML = '<i class="fas fa-play"></i>';
                     playBtn.setAttribute('aria-label', 'Resume');
                     label.textContent = 'Paused';
+                    avatarPauseTalking();
                 }
             });
 
@@ -1827,6 +2134,7 @@
                 if (wasPaused) {
                     speechSynthesis.pause();
                     paused = true;
+                    avatarPauseTalking();
                 }
             });
 
@@ -1839,6 +2147,7 @@
                     playBtn.innerHTML = '<i class="fas fa-play"></i>';
                     playBtn.setAttribute('aria-label', 'Resume');
                     label.textContent = 'Paused';
+                    avatarPauseTalking();
                 }
             });
             window.addEventListener('beforeunload', () => speechSynthesis.cancel());
