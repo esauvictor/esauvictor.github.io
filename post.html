@@ -2087,6 +2087,7 @@
             let chunkIndex = 0;
             let speaking = false;
             let paused = false;
+            let autoPaused = false; // true only when we paused it, not the user
 
             // ---- Best available voice ----
             // The browser default voice is usually the most robotic option
@@ -2249,16 +2250,32 @@
                 }
             });
 
-            // Don't let speech keep running silently in the background —
-            // pause it when the tab loses focus, and stop it if they navigate away.
+            // Screen lock / tab switch pauses playback; waking it back up
+            // resumes automatically — but only if *we* paused it, not if
+            // the person tapped pause themselves. Many mobile browsers also
+            // silently drop the speech queue entirely when the screen
+            // locks, so calling resume() alone isn't reliable — restart the
+            // current line fresh instead of trusting the engine kept state.
             document.addEventListener('visibilitychange', () => {
-                if (document.hidden && speaking && !paused) {
-                    speechSynthesis.pause();
-                    paused = true;
-                    playBtn.innerHTML = '<i class="fas fa-play"></i>';
-                    playBtn.setAttribute('aria-label', 'Resume');
-                    label.textContent = 'Paused';
-                    avatarPauseTalking();
+                if (document.hidden) {
+                    if (speaking && !paused) {
+                        speechSynthesis.pause();
+                        paused = true;
+                        autoPaused = true;
+                        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                        playBtn.setAttribute('aria-label', 'Resume');
+                        label.textContent = 'Paused';
+                        avatarPauseTalking();
+                    }
+                } else if (speaking && paused && autoPaused) {
+                    autoPaused = false;
+                    speechSynthesis.cancel(); // clear any dead/stuck queue state
+                    paused = false;
+                    label.textContent = 'Reading aloud…';
+                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    playBtn.setAttribute('aria-label', 'Pause');
+                    avatarStartTalking();
+                    speakFrom(chunkIndex);
                 }
             });
             window.addEventListener('beforeunload', () => speechSynthesis.cancel());
