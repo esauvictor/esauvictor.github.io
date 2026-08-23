@@ -576,6 +576,17 @@
         @keyframes avatarTalk { 0%, 100% { transform: scale(1.02) translateY(0); } 50% { transform: scale(1.05) translateY(-3px); } }
         @keyframes avatarBlink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
 
+        /* ---------- Karaoke-style read-along highlight ---------- */
+        .post-content .tts-highlight {
+            background: color-mix(in srgb, var(--signal) 14%, transparent);
+            box-shadow: -4px 0 0 0 var(--signal) inset;
+            border-radius: 6px;
+            padding: 0.1rem 0.5rem;
+            margin: 0 -0.5rem;
+            scroll-margin-top: 110px;
+            transition: background 0.2s ease;
+        }
+
 
         .post-content > * + * { margin-top: 1.15rem; }
 
@@ -1940,45 +1951,87 @@
             return structure ? `Code example in ${label}. ${structure}` : '';
         }
 
-        function extractSpeakableText(contentEl) {
-            const clone = contentEl.cloneNode(true);
+        // Best-effort language guess when a code block has no usable
+        // language- class (used as a fallback, not the primary path).
+        function sniffCodeLanguage(code) {
+            const trimmed = code.trim();
+            if (/^<\?php/i.test(trimmed)) return 'php';
+            if (/^(SELECT|INSERT\s+INTO|UPDATE|DELETE\s+FROM|CREATE\s+TABLE|ALTER\s+TABLE|DROP\s+TABLE)\b/i.test(trimmed)) return 'sql';
+            if (/^#!.*\b(bash|sh)\b/.test(trimmed) || /^\s*(cd|mkdir|npm|git|curl|sudo)\s/.test(trimmed)) return 'bash';
+            if (/^\s*(def|import|from)\s/.test(trimmed) && /:\s*$/m.test(trimmed)) return 'python';
+            if (/[{}]/.test(trimmed) && /:\s*[^;{]+;/.test(trimmed) && !/\bfunction\b|\bconst\b|\blet\b/.test(trimmed)) return 'css';
+            if (/^\s*<[a-zA-Z!]/.test(trimmed)) return 'html';
+            if (/\bfunction\b|=>|\bconst\b|\blet\b|\bvar\b/.test(trimmed)) return 'javascript';
+            return '';
+        }
 
-            // Fenced code blocks: narrate HTML/markup meaningfully, just
-            // announce the language for anything else (JS, PHP, CSS, SQL...).
-            clone.querySelectorAll('pre').forEach(pre => {
-                const codeEl = pre.querySelector('code');
-                const langMatch = codeEl && codeEl.className.match(/language-(\w+)/);
-                const lang = langMatch ? langMatch[1] : '';
-                const rawCode = (codeEl || pre).textContent;
+        function describeCodeBlock(pre) {
+            const codeEl = pre.querySelector('code');
+            // Accept "language-x", "lang-x", or a bare "x" token alongside
+            // known highlighter classes (hljs, etc.) — highlighters aren't
+            // consistent about naming.
+            const classes = codeEl ? codeEl.className : '';
+            let langMatch = classes.match(/(?:language|lang)-(\w+)/);
+            let lang = langMatch ? langMatch[1].toLowerCase() : '';
+            const rawCode = (codeEl || pre).textContent;
 
-                let description = '';
-                if (!lang || lang === 'html' || lang === 'markup' || lang === 'xml') {
-                    description = describeHtmlSource(rawCode);
-                } else {
-                    description = describeCodeByLanguage(rawCode, lang);
-                }
+            if (!lang) lang = sniffCodeLanguage(rawCode);
 
-                const note = document.createElement('p');
-                note.textContent = description || (lang ? `Code example in ${lang}.` : 'Code example.');
-                pre.replaceWith(note);
-            });
+            let description = '';
+            if (!lang || lang === 'html' || lang === 'markup' || lang === 'xml') {
+                description = describeHtmlSource(rawCode);
+            } else {
+                description = describeCodeByLanguage(rawCode, lang);
+            }
 
-            // Live (unescaped) forms and new-tab links sitting directly in
-            // the post — same narration treatment as parsed code blocks.
-            clone.querySelectorAll('form').forEach(form => {
-                const note = document.createElement('p');
-                note.textContent = describeHtmlNode(form, clone);
-                form.replaceWith(note);
-            });
-            clone.querySelectorAll('a[target="_blank"]').forEach(a => {
-                const note = document.createElement('span');
-                note.textContent = ' ' + describeHtmlNode(a) + ' ';
-                a.replaceWith(note);
-            });
+            return description || (lang ? `Code example in ${lang}.` : 'Code example.');
+        }
 
-            clone.querySelectorAll('img, svg, iframe, .comment-avatar').forEach(el => el.remove());
+        // Walks the live post content and returns one entry per readable
+        // block (paragraph, heading, list item, code block, form...) paired
+        // with the actual on-page element it came from. Keeping that
+        // element reference is what lets playback highlight the line
+        // currently being read, karaoke-style.
+        function collectSpeechBlocks(contentEl) {
+            const blocks = [];
+            const BLOCK_TAGS = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE'];
 
-            return (clone.textContent || '').replace(/\s+/g, ' ').trim();
+            function walk(node) {
+                Array.from(node.children).forEach(el => {
+                    const tag = el.tagName;
+
+                    if (tag === 'UL' || tag === 'OL') { walk(el); return; }
+                    if (tag === 'IMG' || tag === 'SVG' || tag === 'IFRAME') return;
+
+                    if (tag === 'PRE') {
+                        blocks.push({ el, text: describeCodeBlock(el) });
+                        return;
+                    }
+                    if (tag === 'FORM') {
+                        blocks.push({ el, text: describeHtmlNode(el, contentEl) });
+                        return;
+                    }
+                    if (tag === 'A' && (el.getAttribute('target') || '').toLowerCase() === '_blank') {
+                        blocks.push({ el, text: describeHtmlNode(el) });
+                        return;
+                    }
+                    if (BLOCK_TAGS.includes(tag)) {
+                        const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+                        if (text) blocks.push({ el, text });
+                        return;
+                    }
+                    // Unknown wrapper (e.g. a plain <div>) — recurse into it.
+                    if (el.children.length) {
+                        walk(el);
+                    } else {
+                        const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+                        if (text) blocks.push({ el, text });
+                    }
+                });
+            }
+
+            walk(contentEl);
+            return blocks;
         }
 
         function splitIntoSpeechChunks(text, maxLen) {
@@ -1998,6 +2051,18 @@
             return chunks;
         }
 
+        // Turns the post content into { el, text } speech chunks — each
+        // chunk short enough for reliable playback, still tagged with the
+        // on-page element it belongs to for highlighting during playback.
+        function buildSpeechChunks(contentEl) {
+            const blocks = collectSpeechBlocks(contentEl);
+            const chunks = [];
+            blocks.forEach(({ el, text }) => {
+                splitIntoSpeechChunks(text).forEach(t => chunks.push({ el, text: t }));
+            });
+            return chunks;
+        }
+
         function initTextToSpeech() {
             if (!('speechSynthesis' in window)) return; // bar stays hidden, no support
 
@@ -2013,7 +2078,7 @@
             const mouthClosedEl = document.getElementById('avatarMouthClosed');
             if (!contentEl || !bar) return;
 
-            const chunks = splitIntoSpeechChunks(extractSpeakableText(contentEl));
+            const chunks = buildSpeechChunks(contentEl);
             if (!chunks.length) return;
 
             bar.hidden = false;
@@ -2022,6 +2087,49 @@
             let chunkIndex = 0;
             let speaking = false;
             let paused = false;
+
+            // ---- Best available voice ----
+            // The browser default voice is usually the most robotic option
+            // it ships. Where better ones exist (often labelled "Natural",
+            // "Enhanced", "Premium", or from Google's higher-quality set),
+            // prefer those instead. This is still synthetic speech — not a
+            // human voice — just the least robotic option available for free.
+            let preferredVoice = null;
+            function pickBestVoice() {
+                const voices = speechSynthesis.getVoices();
+                if (!voices.length) return null;
+                const english = voices.filter(v => /^en/i.test(v.lang));
+                const pool = english.length ? english : voices;
+                const scored = pool.map(v => {
+                    let score = 0;
+                    if (/natural|neural|enhanced|premium/i.test(v.name)) score += 3;
+                    if (/google/i.test(v.name)) score += 2;
+                    if (v.localService === false) score += 1; // cloud voices tend to sound better
+                    return { v, score };
+                });
+                scored.sort((a, b) => b.score - a.score);
+                return scored[0].v;
+            }
+            if ('onvoiceschanged' in speechSynthesis) {
+                speechSynthesis.onvoiceschanged = () => { preferredVoice = pickBestVoice(); };
+            }
+            preferredVoice = pickBestVoice();
+
+            // ---- Karaoke-style line highlighting ----
+            let highlightedEl = null;
+            function setHighlight(el) {
+                if (el === highlightedEl) return;
+                if (highlightedEl) highlightedEl.classList.remove('tts-highlight');
+                if (el) {
+                    el.classList.add('tts-highlight');
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                highlightedEl = el;
+            }
+            function clearHighlight() {
+                if (highlightedEl) highlightedEl.classList.remove('tts-highlight');
+                highlightedEl = null;
+            }
 
             // ---- Avatar mouth-flap ----
             // The Web Speech API doesn't expose real audio amplitude, so
@@ -2074,6 +2182,7 @@
                 stopBtn.hidden = true;
                 label.textContent = 'Listen to this post';
                 avatarStopTalking();
+                clearHighlight();
             }
 
             function speakFrom(index) {
@@ -2083,9 +2192,11 @@
                 }
                 chunkIndex = index;
                 updateProgress();
+                setHighlight(chunks[index].el);
 
-                const utter = new SpeechSynthesisUtterance(chunks[index]);
+                const utter = new SpeechSynthesisUtterance(chunks[index].text);
                 utter.rate = parseFloat(rateSelect.value) || 1;
+                if (preferredVoice) utter.voice = preferredVoice;
                 utter.onend = () => {
                     if (speaking && !paused) speakFrom(index + 1);
                 };
