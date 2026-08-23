@@ -425,6 +425,114 @@
     background:var(--signal-dim); padding:.15rem .5rem; border-radius:999px;
   }
   .view-count { font-size:.72rem; color:var(--muted); font-family:var(--mono); }
+
+  /* ---------- Newsletter popup ---------- */
+  .newsletter-overlay {
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(11,15,28,0.55);
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.25rem;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .newsletter-overlay.visible { opacity: 1; pointer-events: auto; }
+  .newsletter-modal {
+    position: relative;
+    width: 100%; max-width: 420px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 2.25rem 1.75rem 1.75rem;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.28);
+    transform: translateY(12px) scale(0.98);
+    transition: transform 0.25s ease;
+  }
+  .newsletter-overlay.visible .newsletter-modal { transform: translateY(0) scale(1); }
+  .newsletter-close {
+    position: absolute; top: 0.85rem; right: 0.85rem;
+    width: 30px; height: 30px; border-radius: 50%;
+    border: 1px solid var(--line); background: var(--paper); color: var(--muted);
+    cursor: pointer; font-size: 0.8rem; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .newsletter-close:hover { color: var(--ink); border-color: var(--signal); }
+  .newsletter-icon {
+    width: 52px; height: 52px; margin: 0 auto 1rem;
+    border-radius: 50%;
+    background: var(--signal-dim);
+    color: var(--signal);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.35rem;
+  }
+  .newsletter-modal h2 {
+    font-family: var(--display);
+    font-size: 1.35rem;
+    margin: 0 0 0.6rem;
+    color: var(--ink);
+  }
+  .newsletter-sub {
+    font-family: var(--body);
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.55;
+    margin: 0 0 1.35rem;
+  }
+  .newsletter-field {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .newsletter-field input[type="email"] {
+    flex: 1;
+    min-width: 0;
+    padding: 0.7rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 0.9rem;
+    outline: none;
+  }
+  .newsletter-field input[type="email"]:focus { border-color: var(--signal); }
+  .newsletter-field button {
+    flex-shrink: 0;
+    padding: 0.7rem 1.25rem;
+    border-radius: 999px;
+    border: none;
+    background: var(--signal);
+    color: #fff;
+    font-family: var(--body);
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .newsletter-field button:hover { opacity: 0.9; }
+  .newsletter-field button:disabled { opacity: 0.6; cursor: default; }
+  @media (max-width: 380px) {
+    .newsletter-field { flex-direction: column; }
+  }
+  .newsletter-status {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    min-height: 1.1em;
+    margin: 0.7rem 0 0;
+  }
+  .newsletter-status.success { color: #1a9e6e; }
+  .newsletter-status.error { color: #d9534f; }
+  .newsletter-dismiss {
+    display: inline-block;
+    margin-top: 0.6rem;
+    background: none; border: none;
+    color: var(--muted);
+    font-family: var(--body);
+    font-size: 0.8rem;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .newsletter-dismiss:hover { color: var(--ink); }
+  .hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 </style>
 
   <div id="siteNotice" class="site-notice" style="display:none;">
@@ -506,6 +614,109 @@
       backToTop.style.display = window.scrollY > 300 ? 'flex' : 'none';
     });
     backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // ---------- newsletter popup ----------
+    (function () {
+      const SUBSCRIBE_URL = 'https://renaissanceassembly.org/secure/admin/submissions.php';
+      const DISMISS_DAYS = 7;
+
+      const overlay = document.getElementById('newsletterOverlay');
+      const modal = overlay.querySelector('.newsletter-modal');
+      const closeBtn = document.getElementById('newsletterClose');
+      const dismissBtn = document.getElementById('newsletterDismiss');
+      const form = document.getElementById('newsletterForm');
+      const statusEl = document.getElementById('newsletterStatus');
+
+      function alreadyHandled() {
+        if (localStorage.getItem('newsletterSubscribed') === '1') return true;
+        const dismissedAt = localStorage.getItem('newsletterDismissedAt');
+        if (dismissedAt && (Date.now() - Number(dismissedAt)) < DISMISS_DAYS * 24 * 60 * 60 * 1000) return true;
+        if (sessionStorage.getItem('newsletterShown') === '1') return true;
+        return false;
+      }
+
+      function openPopup() {
+        if (alreadyHandled()) return;
+        overlay.hidden = false;
+        // Next frame, so the transition actually animates in.
+        requestAnimationFrame(() => overlay.classList.add('visible'));
+        sessionStorage.setItem('newsletterShown', '1');
+        document.addEventListener('keydown', onKeydown);
+      }
+
+      function closePopup(remember) {
+        overlay.classList.remove('visible');
+        document.removeEventListener('keydown', onKeydown);
+        setTimeout(() => { overlay.hidden = true; }, 250);
+        if (remember) {
+          localStorage.setItem('newsletterDismissedAt', String(Date.now()));
+        }
+      }
+
+      function onKeydown(e) {
+        if (e.key === 'Escape') closePopup(true);
+      }
+
+      closeBtn.addEventListener('click', () => closePopup(true));
+      dismissBtn.addEventListener('click', () => closePopup(true));
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closePopup(true);
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = form.querySelector('button[type="submit"]');
+        statusEl.textContent = '';
+        statusEl.className = 'newsletter-status';
+
+        const email = document.getElementById('newsletterEmail').value.trim();
+        if (!email) return;
+
+        submitBtn.disabled = true;
+        try {
+          const res = await fetch(SUBSCRIBE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(new FormData(form)),
+          });
+          const data = await res.json();
+          if (!res.ok || !data.success) throw new Error(data.error || 'Something went wrong');
+
+          statusEl.textContent = data.message || 'Thanks for subscribing!';
+          statusEl.classList.add('success');
+          localStorage.setItem('newsletterSubscribed', '1');
+          form.reset();
+          setTimeout(() => closePopup(false), 1600);
+        } catch (err) {
+          statusEl.textContent = err.message || 'Could not subscribe right now — please try again.';
+          statusEl.classList.add('error');
+        } finally {
+          submitBtn.disabled = false;
+        }
+      });
+
+      // Trigger on whichever comes first: ~55% scroll depth, a 15s delay,
+      // or exit intent (desktop only — no reliable signal on mobile).
+      let triggered = false;
+      function tryTrigger() {
+        if (triggered) return;
+        triggered = true;
+        openPopup();
+      }
+
+      window.addEventListener('scroll', () => {
+        const scrolled = window.scrollY + window.innerHeight;
+        const full = document.documentElement.scrollHeight;
+        if (full > 0 && scrolled / full > 0.55) tryTrigger();
+      }, { passive: true });
+
+      setTimeout(tryTrigger, 15000);
+
+      document.addEventListener('mouseout', (e) => {
+        if (!e.relatedTarget && e.clientY <= 0) tryTrigger();
+      });
+    })();
+
 
     // ---------- data + pagination state ----------
     const API_BASE = 'https://esauvictor.name.ng/api';
@@ -731,6 +942,24 @@
           </div>
         `);
       });
-  </script>
+  </script>  <div class="newsletter-overlay" id="newsletterOverlay" hidden>
+    <div class="newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="newsletterTitle">
+      <button type="button" class="newsletter-close" id="newsletterClose" aria-label="Close">✕</button>
+      <div class="newsletter-icon"><i class="fas fa-envelope-open-text"></i></div>
+      <h2 id="newsletterTitle">Stay in the loop</h2>
+      <p class="newsletter-sub">Get new posts on web development, data analytics &amp; cyber security — straight to your inbox, no spam.</p>
+      <form class="newsletter-form" id="newsletterForm">
+        <input type="hidden" name="form" value="subscribe">
+        <input type="text" name="honeypot" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="newsletter-field">
+          <input type="email" id="newsletterEmail" name="email" placeholder="Your email address" required autocomplete="email">
+          <button type="submit">Subscribe</button>
+        </div>
+        <p class="newsletter-status" id="newsletterStatus"></p>
+      </form>
+      <button type="button" class="newsletter-dismiss" id="newsletterDismiss">Maybe later</button>
+    </div>
+  </div>
+
 </body>
 </html>
