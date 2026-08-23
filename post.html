@@ -531,50 +531,201 @@
             .tts-rate { order: 3; margin-left: 48px; }
         }
 
-        /* ---------- Narrating avatar ---------- */
-        .tts-avatar-wrap {
+        .tts-present {
+            flex-shrink: 0;
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--muted);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+        .tts-present:hover { color: var(--signal); border-color: var(--signal); }
+
+        /* ---------- Lesson presentation overlay ---------- */
+        .lesson-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
             display: flex;
+            flex-direction: column;
+            background:
+                radial-gradient(1200px 600px at 15% -10%, rgba(108,141,245,0.18), transparent 60%),
+                radial-gradient(900px 500px at 100% 110%, rgba(232,169,74,0.10), transparent 55%),
+                linear-gradient(160deg, #0A0E1A 0%, #0F1526 55%, #0A0E1A 100%);
+            color: #E7EAF2;
+        }
+        .lesson-topbar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.85rem clamp(1rem, 4vw, 2rem);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+        .lesson-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--display);
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #fff;
+        }
+        .lesson-brand i { color: var(--amber); }
+        .lesson-slide-counter {
+            margin-left: auto;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: #AEB6C9;
+            letter-spacing: 0.02em;
+        }
+        .lesson-topbar-actions { display: flex; gap: 0.5rem; }
+        .lesson-icon-btn {
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.04);
+            color: #E7EAF2;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .lesson-icon-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.25); }
+
+        .lesson-stage {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 1.5rem);
+            padding: clamp(1rem, 3vw, 2rem) clamp(0.5rem, 3vw, 2rem);
+        }
+        .lesson-nav {
+            flex-shrink: 0;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(255,255,255,0.05);
+            color: #E7EAF2;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .lesson-nav:hover { background: rgba(255,255,255,0.12); }
+        .lesson-nav:disabled { opacity: 0.3; cursor: default; }
+        .lesson-nav:disabled:hover { background: rgba(255,255,255,0.05); }
+
+        .lesson-slide-frame {
+            flex: 1;
+            min-width: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
             justify-content: center;
-            margin: 1.5rem 0 -0.35rem;
         }
-        .tts-avatar {
-            width: 84px;
-            height: 84px;
-            animation: avatarBreathe 3.2s ease-in-out infinite;
+        .lesson-slide {
+            width: 100%;
+            max-width: 880px;
+            height: 100%;
+            max-height: 620px;
+            background: var(--card, #fff);
+            color: var(--ink, #12172B);
+            border-radius: 18px;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.06);
+            padding: clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 5vw, 3.5rem);
+            overflow-y: auto;
+            animation: lessonSlideIn 0.32s ease;
         }
-        @media(max-width:520px){ .tts-avatar { width: 64px; height: 64px; } }
-
-        .avatar-body { fill: var(--signal); transition: filter 0.2s ease; }
-
-        .avatar-eye {
-            fill: #fff;
-            transform-box: fill-box;
-            transform-origin: center;
-            animation: avatarBlink 4.5s ease-in-out infinite;
+        [data-theme="dark"] .lesson-slide { background: var(--card); color: var(--ink); }
+        @keyframes lessonSlideIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .avatar-eye-right { animation-delay: 0.05s; }
-
-        #avatarMouthClosed {
-            fill: none;
-            stroke: #fff;
-            stroke-width: 4;
-            stroke-linecap: round;
-            opacity: 1;
-            transition: opacity 0.07s linear;
+        .lesson-slide-eyebrow {
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--signal);
+            margin-bottom: 0.6rem;
         }
-        #avatarMouthOpen {
-            fill: rgba(0,0,0,0.6);
-            opacity: 0;
-            transition: opacity 0.07s linear;
+        .lesson-slide-title {
+            font-size: clamp(1.4rem, 3.4vw, 2rem);
+            margin-bottom: 1.25rem;
+            padding-bottom: 0;
+        }
+        .lesson-slide-title::after { display: none; }
+        .lesson-slide-body {
+            font-size: clamp(1rem, 1.6vw, 1.12rem);
+            line-height: 1.75;
+        }
+        .lesson-slide-body p { margin-bottom: 1rem; }
+        .lesson-slide-body ul, .lesson-slide-body ol { margin: 0 0 1rem 1.4rem; }
+        .lesson-slide-body li { margin-bottom: 0.4rem; }
+        .lesson-slide-body pre { margin: 1rem 0; font-size: 0.85em; }
+        .lesson-slide-body img { margin: 1rem 0; border-radius: 12px; }
+        .lesson-slide-body .lesson-highlight {
+            background: color-mix(in srgb, var(--signal) 16%, transparent);
+            box-shadow: -4px 0 0 0 var(--signal) inset;
+            border-radius: 6px;
+            padding: 0.1rem 0.6rem;
+            margin: 0 -0.6rem;
+        }
+        @media(max-width:680px){
+            .lesson-nav { width: 36px; height: 36px; }
+            .lesson-slide { border-radius: 14px; }
+            .lesson-slide-counter { display: none; }
         }
 
-        .tts-avatar-wrap.is-talking .tts-avatar { animation: avatarTalk 0.4s ease-in-out infinite; }
-        .tts-avatar-wrap.is-talking .avatar-body { filter: drop-shadow(0 0 8px var(--signal)); }
-        .tts-avatar-wrap.is-paused .avatar-body { opacity: 0.6; }
-
-        @keyframes avatarBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
-        @keyframes avatarTalk { 0%, 100% { transform: scale(1.02) translateY(0); } 50% { transform: scale(1.05) translateY(-3px); } }
-        @keyframes avatarBlink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+        .lesson-controls {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            padding: 0.9rem clamp(1rem, 4vw, 2rem);
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .lesson-play {
+            flex-shrink: 0;
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            border: none;
+            background: var(--signal);
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .lesson-play:hover { opacity: 0.9; }
+        .lesson-progress-track {
+            flex: 1;
+            height: 4px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.14);
+            overflow: hidden;
+        }
+        .lesson-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--amber);
+            transition: width 0.2s linear;
+        }
+        .lesson-rate {
+            flex-shrink: 0;
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            padding: 0.35rem 0.5rem;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(255,255,255,0.05);
+            color: #E7EAF2;
+        }
+        .lesson-rate option { color: #12172B; }
 
         /* ---------- Karaoke-style read-along highlight ---------- */
         .post-content .tts-highlight {
@@ -1329,16 +1480,6 @@
                 <ul class="toc-list" id="tocList"></ul>
             </nav>
 
-            <div class="tts-avatar-wrap" id="ttsAvatarWrap" hidden>
-                <svg class="tts-avatar" viewBox="0 0 100 100" aria-hidden="true">
-                    <circle class="avatar-body" cx="50" cy="52" r="40"></circle>
-                    <circle class="avatar-eye avatar-eye-left" cx="36" cy="46" r="5"></circle>
-                    <circle class="avatar-eye avatar-eye-right" cx="64" cy="46" r="5"></circle>
-                    <path class="avatar-mouth-closed" id="avatarMouthClosed" d="M36,68 Q50,71 64,68"></path>
-                    <ellipse class="avatar-mouth-open" id="avatarMouthOpen" cx="50" cy="70" rx="10" ry="8"></ellipse>
-                </svg>
-            </div>
-
             <div class="tts-bar" id="ttsBar" hidden>
                 <button type="button" class="tts-play" id="ttsPlayBtn" aria-label="Listen to this post">
                     <i class="fas fa-play"></i>
@@ -1353,9 +1494,56 @@
                     <option value="1.25">1.25×</option>
                     <option value="1.5">1.5×</option>
                 </select>
+                <button type="button" class="tts-present" id="ttsPresentBtn" aria-label="Open lesson presentation" title="Present as lesson">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </button>
                 <button type="button" class="tts-stop" id="ttsStopBtn" aria-label="Stop" hidden>
                     <i class="fas fa-stop"></i>
                 </button>
+            </div>
+
+            <div class="lesson-overlay" id="lessonOverlay" hidden>
+                <div class="lesson-topbar">
+                    <div class="lesson-brand"><i class="fas fa-graduation-cap"></i> <span id="lessonBrandText">Lesson</span></div>
+                    <div class="lesson-slide-counter" id="lessonSlideCounter">Slide 1 of 1</div>
+                    <div class="lesson-topbar-actions">
+                        <button type="button" class="lesson-icon-btn" id="lessonFullscreenBtn" aria-label="Toggle fullscreen" title="Fullscreen">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button type="button" class="lesson-icon-btn" id="lessonCloseBtn" aria-label="Close presentation" title="Close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lesson-stage">
+                    <button type="button" class="lesson-nav lesson-nav-prev" id="lessonPrevBtn" aria-label="Previous slide">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="lesson-slide-frame">
+                        <div class="lesson-slide" id="lessonSlide">
+                            <div class="lesson-slide-eyebrow" id="lessonSlideEyebrow">Introduction</div>
+                            <h2 class="lesson-slide-title" id="lessonSlideTitle"></h2>
+                            <div class="lesson-slide-body" id="lessonSlideBody"></div>
+                        </div>
+                    </div>
+                    <button type="button" class="lesson-nav lesson-nav-next" id="lessonNextBtn" aria-label="Next slide">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <div class="lesson-controls">
+                    <button type="button" class="lesson-play" id="lessonPlayBtn" aria-label="Play">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <div class="lesson-progress-track"><div class="lesson-progress-fill" id="lessonProgressFill"></div></div>
+                    <select class="lesson-rate" id="lessonRate" aria-label="Playback speed">
+                        <option value="0.85">0.85×</option>
+                        <option value="1" selected>1×</option>
+                        <option value="1.25">1.25×</option>
+                        <option value="1.5">1.5×</option>
+                    </select>
+                </div>
             </div>
 
             <div class="post-content" id="post-content">
@@ -2063,6 +2251,39 @@
             return chunks;
         }
 
+        // ---- Lesson presentation: groups post content into slides ----
+        // A "slide" is everything between one h2/h3 heading and the next —
+        // the heading becomes the slide title, its content becomes the
+        // slide body. This mirrors how the table of contents groups the
+        // post, so the two stay in sync.
+        function computeSlideIndex(el, headings) {
+            let idx = 0;
+            for (let i = 0; i < headings.length; i++) {
+                if (headings[i].compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) idx = i + 1;
+            }
+            return idx;
+        }
+
+        function buildLessonSlides(contentEl) {
+            const headings = Array.from(contentEl.querySelectorAll(':scope > h2, :scope > h3'));
+            const rawSlides = headings.map(h => ({
+                headingEl: h,
+                title: h.textContent.trim(),
+                level: parseInt(h.tagName.slice(1), 10),
+                bodyElements: [],
+            }));
+            rawSlides.unshift({ headingEl: null, title: 'Introduction', level: 0, bodyElements: [] });
+
+            Array.from(contentEl.children).forEach(el => {
+                if (el.tagName === 'H2' || el.tagName === 'H3') return;
+                rawSlides[computeSlideIndex(el, headings)].bodyElements.push(el);
+            });
+
+            const dropIntro = rawSlides[0].bodyElements.length === 0;
+            const slides = dropIntro ? rawSlides.slice(1) : rawSlides;
+            return { slides, headings, indexOffset: dropIntro ? -1 : 0 };
+        }
+
         function initTextToSpeech() {
             if (!('speechSynthesis' in window)) return; // bar stays hidden, no support
 
@@ -2073,16 +2294,28 @@
             const label = document.getElementById('ttsLabel');
             const fill = document.getElementById('ttsProgressFill');
             const rateSelect = document.getElementById('ttsRate');
-            const avatarWrap = document.getElementById('ttsAvatarWrap');
-            const mouthOpenEl = document.getElementById('avatarMouthOpen');
-            const mouthClosedEl = document.getElementById('avatarMouthClosed');
+            const presentBtn = document.getElementById('ttsPresentBtn');
             if (!contentEl || !bar) return;
 
             const chunks = buildSpeechChunks(contentEl);
             if (!chunks.length) return;
 
             bar.hidden = false;
-            if (avatarWrap) avatarWrap.hidden = false;
+
+            // Tag every element a chunk points at so a cloned copy inside
+            // the presentation overlay can still be found and highlighted
+            // — cloning breaks direct reference equality, so a stable
+            // attribute is what lets the two views stay in sync.
+            let tagSeq = 0;
+            chunks.forEach(c => {
+                if (!c.el.dataset.lessonRef) c.el.dataset.lessonRef = 'lr-' + (tagSeq++);
+            });
+
+            const { slides: lessonSlides, headings: lessonHeadings, indexOffset: lessonOffset } = buildLessonSlides(contentEl);
+            chunks.forEach(c => {
+                c.slideIndex = Math.max(0, computeSlideIndex(c.el, lessonHeadings) + lessonOffset);
+            });
+            if (presentBtn) presentBtn.hidden = lessonSlides.length < 2;
 
             let chunkIndex = 0;
             let speaking = false;
@@ -2132,40 +2365,130 @@
                 highlightedEl = null;
             }
 
-            // ---- Avatar mouth-flap ----
-            // The Web Speech API doesn't expose real audio amplitude, so
-            // this fakes lip-sync with a semi-random open/close flap while
-            // speech is active — close enough to read as "talking" without
-            // needing per-word timing data.
-            let flapTimer = null;
-            function flap() {
-                if (!mouthOpenEl) return;
-                const isOpen = mouthOpenEl.style.opacity === '1';
-                mouthOpenEl.style.opacity = isOpen ? '0' : '1';
-                mouthClosedEl.style.opacity = isOpen ? '1' : '0';
-                flapTimer = setTimeout(flap, 90 + Math.random() * 90);
+            // ---- Lesson presentation ----
+            const lessonOverlay = document.getElementById('lessonOverlay');
+            const lessonSlideEl = document.getElementById('lessonSlide');
+            const lessonEyebrow = document.getElementById('lessonSlideEyebrow');
+            const lessonTitle = document.getElementById('lessonSlideTitle');
+            const lessonBody = document.getElementById('lessonSlideBody');
+            const lessonCounter = document.getElementById('lessonSlideCounter');
+            const lessonPrevBtn = document.getElementById('lessonPrevBtn');
+            const lessonNextBtn = document.getElementById('lessonNextBtn');
+            const lessonPlayBtn = document.getElementById('lessonPlayBtn');
+            const lessonProgressFill = document.getElementById('lessonProgressFill');
+            const lessonRate = document.getElementById('lessonRate');
+            const lessonCloseBtn = document.getElementById('lessonCloseBtn');
+            const lessonFullscreenBtn = document.getElementById('lessonFullscreenBtn');
+
+            let currentSlideIndex = 0;
+            let renderedSlideIndex = -1;
+            let lessonOpen = false;
+
+            function firstChunkIndexOfSlide(slideIdx) {
+                for (let i = 0; i < chunks.length; i++) {
+                    if (chunks[i].slideIndex === slideIdx) return i;
+                }
+                return 0;
             }
-            function avatarStartTalking() {
-                if (!avatarWrap) return;
-                avatarWrap.classList.add('is-talking');
-                avatarWrap.classList.remove('is-paused');
-                flap();
+
+            function renderSlide(slideIdx) {
+                if (slideIdx === renderedSlideIndex) return;
+                const slide = lessonSlides[slideIdx];
+                if (!slide) return;
+                renderedSlideIndex = slideIdx;
+
+                lessonEyebrow.textContent = slide.level === 3 ? 'Section' : (slideIdx === 0 && !slide.headingEl ? 'Introduction' : 'Lesson');
+                lessonTitle.textContent = slide.title;
+                lessonBody.innerHTML = '';
+                slide.bodyElements.forEach(el => lessonBody.appendChild(el.cloneNode(true)));
+                lessonCounter.textContent = `Slide ${slideIdx + 1} of ${lessonSlides.length}`;
+                lessonPrevBtn.disabled = slideIdx === 0;
+                lessonNextBtn.disabled = slideIdx === lessonSlides.length - 1;
+                lessonSlideEl.scrollTop = 0;
             }
-            function avatarPauseTalking() {
-                if (!avatarWrap) return;
-                clearTimeout(flapTimer);
-                avatarWrap.classList.remove('is-talking');
-                avatarWrap.classList.add('is-paused');
-                mouthOpenEl.style.opacity = '0';
-                mouthClosedEl.style.opacity = '1';
+
+            function highlightInLesson(el) {
+                if (!lessonOpen || !el || !el.dataset.lessonRef) return;
+                lessonBody.querySelectorAll('.lesson-highlight').forEach(n => n.classList.remove('lesson-highlight'));
+                const target = lessonBody.querySelector(`[data-lesson-ref="${el.dataset.lessonRef}"]`);
+                if (target) target.classList.add('lesson-highlight');
             }
-            function avatarStopTalking() {
-                if (!avatarWrap) return;
-                clearTimeout(flapTimer);
-                avatarWrap.classList.remove('is-talking', 'is-paused');
-                mouthOpenEl.style.opacity = '0';
-                mouthClosedEl.style.opacity = '1';
+
+            function syncLessonToChunk(index) {
+                const slideIdx = chunks[index] ? chunks[index].slideIndex : 0;
+                currentSlideIndex = slideIdx;
+                if (!lessonOpen) return;
+                renderSlide(slideIdx);
+                highlightInLesson(chunks[index].el);
+                lessonProgressFill.style.width = Math.round((index / chunks.length) * 100) + '%';
             }
+
+            function setLessonPlayIcon(playing) {
+                lessonPlayBtn.innerHTML = playing ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+                lessonPlayBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+            }
+
+            function openLesson() {
+                if (!lessonOverlay) return;
+                lessonOpen = true;
+                lessonOverlay.hidden = false;
+                renderedSlideIndex = -1;
+                renderSlide(currentSlideIndex);
+                if (chunks[chunkIndex]) highlightInLesson(chunks[chunkIndex].el);
+                lessonRate.value = rateSelect.value;
+                setLessonPlayIcon(speaking && !paused);
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeLesson() {
+                if (!lessonOverlay) return;
+                lessonOpen = false;
+                lessonOverlay.hidden = true;
+                document.body.style.overflow = '';
+                if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+            }
+
+            function seekToSlide(slideIdx) {
+                slideIdx = Math.max(0, Math.min(lessonSlides.length - 1, slideIdx));
+                const target = firstChunkIndexOfSlide(slideIdx);
+                speechSynthesis.cancel();
+                if (speaking) {
+                    paused = false;
+                    speakFrom(target);
+                } else {
+                    chunkIndex = target;
+                    updateProgress();
+                    setHighlight(chunks[target].el);
+                    syncLessonToChunk(target);
+                }
+            }
+
+            if (presentBtn) presentBtn.addEventListener('click', openLesson);
+            if (lessonCloseBtn) lessonCloseBtn.addEventListener('click', closeLesson);
+            if (lessonPrevBtn) lessonPrevBtn.addEventListener('click', () => seekToSlide(currentSlideIndex - 1));
+            if (lessonNextBtn) lessonNextBtn.addEventListener('click', () => seekToSlide(currentSlideIndex + 1));
+            if (lessonFullscreenBtn) {
+                lessonFullscreenBtn.addEventListener('click', () => {
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen().catch(() => {});
+                    } else if (lessonOverlay.requestFullscreen) {
+                        lessonOverlay.requestFullscreen().catch(() => {});
+                    }
+                });
+            }
+            if (lessonRate) {
+                lessonRate.addEventListener('change', () => {
+                    rateSelect.value = lessonRate.value;
+                    rateSelect.dispatchEvent(new Event('change'));
+                });
+            }
+            document.addEventListener('keydown', (e) => {
+                if (!lessonOpen) return;
+                if (e.key === 'Escape') closeLesson();
+                else if (e.key === 'ArrowRight') seekToSlide(currentSlideIndex + 1);
+                else if (e.key === 'ArrowLeft') seekToSlide(currentSlideIndex - 1);
+                else if (e.key === ' ') { e.preventDefault(); playBtn.click(); }
+            });
 
             function updateProgress() {
                 const pct = Math.round((chunkIndex / chunks.length) * 100);
@@ -2182,8 +2505,9 @@
                 playBtn.setAttribute('aria-label', 'Listen to this post');
                 stopBtn.hidden = true;
                 label.textContent = 'Listen to this post';
-                avatarStopTalking();
                 clearHighlight();
+                setLessonPlayIcon(false);
+                if (lessonOpen) { lessonProgressFill.style.width = '0%'; }
             }
 
             function speakFrom(index) {
@@ -2194,20 +2518,30 @@
                 chunkIndex = index;
                 updateProgress();
                 setHighlight(chunks[index].el);
+                syncLessonToChunk(index);
 
                 const utter = new SpeechSynthesisUtterance(chunks[index].text);
                 utter.rate = parseFloat(rateSelect.value) || 1;
                 if (preferredVoice) utter.voice = preferredVoice;
                 utter.onend = () => {
+                    // Mobile browsers often keep firing 'end' for queued
+                    // utterances in the background even though nothing is
+                    // actually being spoken (audio is killed on backgrounding
+                    // before the visibilitychange handler can react). Ignore
+                    // these so chunkIndex can't silently race ahead while the
+                    // screen is locked — only advance when we're genuinely
+                    // in the foreground and playing.
+                    if (document.hidden) return;
                     if (speaking && !paused) speakFrom(index + 1);
                 };
                 utter.onerror = () => {
+                    if (document.hidden) return;
                     if (speaking && !paused) speakFrom(index + 1);
                 };
                 speechSynthesis.speak(utter);
             }
 
-            playBtn.addEventListener('click', () => {
+            function handlePlayPauseClick() {
                 if (!speaking) {
                     speechSynthesis.cancel();
                     speaking = true;
@@ -2216,28 +2550,32 @@
                     playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                     playBtn.setAttribute('aria-label', 'Pause');
                     stopBtn.hidden = false;
-                    avatarStartTalking();
-                    speakFrom(0);
+                    setLessonPlayIcon(true);
+                    speakFrom(chunkIndex);
                 } else if (paused) {
                     speechSynthesis.resume();
                     paused = false;
                     playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                     playBtn.setAttribute('aria-label', 'Pause');
                     label.textContent = 'Reading aloud…';
-                    avatarStartTalking();
+                    setLessonPlayIcon(true);
                 } else {
                     speechSynthesis.pause();
                     paused = true;
                     playBtn.innerHTML = '<i class="fas fa-play"></i>';
                     playBtn.setAttribute('aria-label', 'Resume');
                     label.textContent = 'Paused';
-                    avatarPauseTalking();
+                    setLessonPlayIcon(false);
                 }
-            });
+            }
+
+            playBtn.addEventListener('click', handlePlayPauseClick);
+            if (lessonPlayBtn) lessonPlayBtn.addEventListener('click', handlePlayPauseClick);
 
             stopBtn.addEventListener('click', resetToStart);
 
             rateSelect.addEventListener('change', () => {
+                if (lessonRate) lessonRate.value = rateSelect.value;
                 if (!speaking) return;
                 const wasPaused = paused;
                 speechSynthesis.cancel();
@@ -2246,7 +2584,7 @@
                 if (wasPaused) {
                     speechSynthesis.pause();
                     paused = true;
-                    avatarPauseTalking();
+                    setLessonPlayIcon(false);
                 }
             });
 
@@ -2259,13 +2597,18 @@
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden) {
                     if (speaking && !paused) {
-                        speechSynthesis.pause();
+                        // pause() alone isn't trustworthy once the screen
+                        // locks — cancel outright so the queue can't keep
+                        // silently advancing in the background. chunkIndex
+                        // already points at the chunk in progress, so that's
+                        // exactly where we'll pick back up.
+                        speechSynthesis.cancel();
                         paused = true;
                         autoPaused = true;
                         playBtn.innerHTML = '<i class="fas fa-play"></i>';
                         playBtn.setAttribute('aria-label', 'Resume');
                         label.textContent = 'Paused';
-                        avatarPauseTalking();
+                        setLessonPlayIcon(false);
                     }
                 } else if (speaking && paused && autoPaused) {
                     autoPaused = false;
@@ -2274,7 +2617,7 @@
                     label.textContent = 'Reading aloud…';
                     playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                     playBtn.setAttribute('aria-label', 'Pause');
-                    avatarStartTalking();
+                    setLessonPlayIcon(true);
                     speakFrom(chunkIndex);
                 }
             });
