@@ -467,6 +467,71 @@
         .toc-list .toc-h3 { padding-left: 1.4rem; font-size: 0.85rem; }
         @media(max-width:700px){ .toc { margin-left: 1rem; margin-right: 1rem; } }
 
+        /* ---------- Text-to-speech ---------- */
+        .tts-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            margin: 1rem clamp(1.5rem, 5vw, 2.25rem) 0;
+            padding: 0.7rem 0.9rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: rgba(127,127,127,0.06);
+        }
+        .tts-play, .tts-stop {
+            flex-shrink: 0;
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            border: none;
+            background: var(--signal);
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: opacity 0.15s ease;
+        }
+        .tts-play:hover, .tts-stop:hover { opacity: 0.88; }
+        .tts-stop { background: transparent; border: 1px solid var(--border-color); color: var(--muted); }
+        .tts-stop:hover { color: var(--ink); border-color: var(--signal); }
+        .tts-info { flex: 1; min-width: 0; }
+        .tts-label {
+            display: block;
+            font-family: var(--mono);
+            font-size: 0.82rem;
+            color: var(--ink);
+            margin-bottom: 0.35rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .tts-progress-track {
+            height: 4px;
+            border-radius: 999px;
+            background: var(--border-color);
+            overflow: hidden;
+        }
+        .tts-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--signal);
+            transition: width 0.2s linear;
+        }
+        .tts-rate {
+            flex-shrink: 0;
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            padding: 0.3rem 0.4rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--card, transparent);
+            color: var(--ink);
+        }
+        @media(max-width:520px){
+            .tts-bar { margin-left: 1rem; margin-right: 1rem; flex-wrap: wrap; }
+            .tts-rate { order: 3; margin-left: 48px; }
+        }
+
+
         .post-content > * + * { margin-top: 1.15rem; }
 
         .post-content p {
@@ -1208,6 +1273,25 @@
                 <ul class="toc-list" id="tocList"></ul>
             </nav>
 
+            <div class="tts-bar" id="ttsBar" hidden>
+                <button type="button" class="tts-play" id="ttsPlayBtn" aria-label="Listen to this post">
+                    <i class="fas fa-play"></i>
+                </button>
+                <div class="tts-info">
+                    <span class="tts-label" id="ttsLabel">Listen to this post</span>
+                    <div class="tts-progress-track"><div class="tts-progress-fill" id="ttsProgressFill"></div></div>
+                </div>
+                <select class="tts-rate" id="ttsRate" aria-label="Playback speed">
+                    <option value="0.85">0.85×</option>
+                    <option value="1" selected>1×</option>
+                    <option value="1.25">1.25×</option>
+                    <option value="1.5">1.5×</option>
+                </select>
+                <button type="button" class="tts-stop" id="ttsStopBtn" aria-label="Stop" hidden>
+                    <i class="fas fa-stop"></i>
+                </button>
+            </div>
+
             <div class="post-content" id="post-content">
                 <!-- Content loaded dynamically -->
             </div>
@@ -1457,6 +1541,154 @@
             });
         })();
 
+        // ---------- Text-to-speech ----------
+        // Reads the post aloud using the browser's built-in speech engine —
+        // no API, no cost. Code blocks are announced rather than read
+        // character-by-character, and long text is split into sentence-sized
+        // chunks because Chrome silently drops very long single utterances.
+        function extractSpeakableText(contentEl) {
+            const clone = contentEl.cloneNode(true);
+
+            clone.querySelectorAll('pre').forEach(pre => {
+                const codeEl = pre.querySelector('code');
+                const langMatch = codeEl && codeEl.className.match(/language-(\w+)/);
+                const lang = langMatch ? langMatch[1] : '';
+                const note = document.createElement('p');
+                note.textContent = lang ? `Code example in ${lang}.` : 'Code example.';
+                pre.replaceWith(note);
+            });
+            clone.querySelectorAll('img, svg, iframe, .comment-avatar').forEach(el => el.remove());
+
+            return (clone.textContent || '').replace(/\s+/g, ' ').trim();
+        }
+
+        function splitIntoSpeechChunks(text, maxLen) {
+            maxLen = maxLen || 220;
+            const sentences = text.match(/[^.!?]+[.!?]+(\s+|$)|[^.!?]+$/g) || [text];
+            const chunks = [];
+            let buffer = '';
+            sentences.forEach(sentence => {
+                if (buffer && (buffer.length + sentence.length) > maxLen) {
+                    chunks.push(buffer.trim());
+                    buffer = sentence;
+                } else {
+                    buffer += sentence;
+                }
+            });
+            if (buffer.trim()) chunks.push(buffer.trim());
+            return chunks;
+        }
+
+        function initTextToSpeech() {
+            if (!('speechSynthesis' in window)) return; // bar stays hidden, no support
+
+            const contentEl = document.getElementById('post-content');
+            const bar = document.getElementById('ttsBar');
+            const playBtn = document.getElementById('ttsPlayBtn');
+            const stopBtn = document.getElementById('ttsStopBtn');
+            const label = document.getElementById('ttsLabel');
+            const fill = document.getElementById('ttsProgressFill');
+            const rateSelect = document.getElementById('ttsRate');
+            if (!contentEl || !bar) return;
+
+            const chunks = splitIntoSpeechChunks(extractSpeakableText(contentEl));
+            if (!chunks.length) return;
+
+            bar.hidden = false;
+
+            let chunkIndex = 0;
+            let speaking = false;
+            let paused = false;
+
+            function updateProgress() {
+                const pct = Math.round((chunkIndex / chunks.length) * 100);
+                fill.style.width = pct + '%';
+            }
+
+            function resetToStart() {
+                speechSynthesis.cancel();
+                speaking = false;
+                paused = false;
+                chunkIndex = 0;
+                fill.style.width = '0%';
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                playBtn.setAttribute('aria-label', 'Listen to this post');
+                stopBtn.hidden = true;
+                label.textContent = 'Listen to this post';
+            }
+
+            function speakFrom(index) {
+                if (index >= chunks.length) {
+                    resetToStart();
+                    return;
+                }
+                chunkIndex = index;
+                updateProgress();
+
+                const utter = new SpeechSynthesisUtterance(chunks[index]);
+                utter.rate = parseFloat(rateSelect.value) || 1;
+                utter.onend = () => {
+                    if (speaking && !paused) speakFrom(index + 1);
+                };
+                utter.onerror = () => {
+                    if (speaking && !paused) speakFrom(index + 1);
+                };
+                speechSynthesis.speak(utter);
+            }
+
+            playBtn.addEventListener('click', () => {
+                if (!speaking) {
+                    speechSynthesis.cancel();
+                    speaking = true;
+                    paused = false;
+                    label.textContent = 'Reading aloud…';
+                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    playBtn.setAttribute('aria-label', 'Pause');
+                    stopBtn.hidden = false;
+                    speakFrom(0);
+                } else if (paused) {
+                    speechSynthesis.resume();
+                    paused = false;
+                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    playBtn.setAttribute('aria-label', 'Pause');
+                    label.textContent = 'Reading aloud…';
+                } else {
+                    speechSynthesis.pause();
+                    paused = true;
+                    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    playBtn.setAttribute('aria-label', 'Resume');
+                    label.textContent = 'Paused';
+                }
+            });
+
+            stopBtn.addEventListener('click', resetToStart);
+
+            rateSelect.addEventListener('change', () => {
+                if (!speaking) return;
+                const wasPaused = paused;
+                speechSynthesis.cancel();
+                paused = false;
+                speakFrom(chunkIndex);
+                if (wasPaused) {
+                    speechSynthesis.pause();
+                    paused = true;
+                }
+            });
+
+            // Don't let speech keep running silently in the background —
+            // pause it when the tab loses focus, and stop it if they navigate away.
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && speaking && !paused) {
+                    speechSynthesis.pause();
+                    paused = true;
+                    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    playBtn.setAttribute('aria-label', 'Resume');
+                    label.textContent = 'Paused';
+                }
+            });
+            window.addEventListener('beforeunload', () => speechSynthesis.cancel());
+        }
+
 
         function formatDate(isoString) {
             if (!isoString) return '';
@@ -1544,6 +1776,7 @@
                 }
                 document.getElementById('post-content').innerHTML = contentHtml;
                 buildTableOfContents();
+                initTextToSpeech();
 
                 const tagsContainer = document.getElementById('post-tags');
                 tagsContainer.innerHTML = (post.tags && post.tags.length)
