@@ -2477,4 +2477,105 @@
                 } catch (err) {
                     statusEl.textContent = err.message || 'Could not submit comment — please try again.';
                     statusEl.classList.add('error');
-                } final
+                } finally {
+                    submitBtn.disabled = false;
+                }
+            });
+        }
+
+        const SUBSCRIBE_URL = 'https://renaissanceassembly.org/secure/admin/submissions.php';
+
+        const subscribeForm = document.getElementById('subscribeForm');
+        if (subscribeForm) {
+            subscribeForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const statusEl = document.getElementById('subscribeStatus');
+                const submitBtn = subscribeForm.querySelector('button[type="submit"]');
+                statusEl.textContent = '';
+                statusEl.className = 'comment-form-status';
+
+                const email = document.getElementById('subscribeEmail').value.trim();
+                if (!email) return;
+
+                submitBtn.disabled = true;
+                try {
+                    const res = await fetch(SUBSCRIBE_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams(new FormData(subscribeForm)),
+                    });
+                    const data = await res.json();
+                    if (!res.ok || !data.success) throw new Error(data.error || 'Something went wrong');
+
+                    statusEl.textContent = data.message || 'Thanks for subscribing!';
+                    statusEl.classList.add('success');
+                    subscribeForm.reset();
+                } catch (err) {
+                    statusEl.textContent = err.message || 'Could not subscribe right now — please try again.';
+                    statusEl.classList.add('error');
+                } finally {
+                    submitBtn.disabled = false;
+                }
+            });
+        }
+
+        // Mobile navigation toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+        
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+        
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        function addCopyButtons() {
+            document.querySelectorAll('pre').forEach(pre => {
+                if (pre.querySelector('.copy-btn')) return;
+
+                const button = document.createElement('button');
+                button.className = 'copy-btn';
+                button.type = 'button';
+                button.innerHTML = '<i class="far fa-copy"></i>';
+                button.title = 'Copy code';
+
+                button.addEventListener('click', () => {
+                    const code = pre.querySelector('code')?.innerText || pre.innerText;
+                    navigator.clipboard.writeText(code).then(() => {
+                        button.innerHTML = '<i class="fas fa-check"></i>';
+                        setTimeout(() => {
+                            button.innerHTML = '<i class="far fa-copy"></i>';
+                        }, 2000);
+                    });
+                });
+
+                pre.appendChild(button);
+            });
+        }
+
+        window.addEventListener('load', () => {
+            loadBlogPost();
+        });
+
+        window.addEventListener('popstate', () => {
+            loadBlogPost();
+        });
+    </script>
+</body>
+</html>
