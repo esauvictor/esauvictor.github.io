@@ -2401,7 +2401,6 @@
                 try { localStorage.setItem(TRANSLATE_CACHE_KEY, JSON.stringify(translationCache)); }
                 catch (e) { /* storage full or unavailable — cache just won't persist */ }
             }
-            const LOW_RESOURCE_LANGS = { pcm: 1 }; // still worth flagging — see note below
             function normalizeForCompare(s) { return (s || '').trim().toLowerCase(); }
             // A "translation" identical to the source (for anything longer
             // than a couple of words) usually means the service doesn't
@@ -2472,14 +2471,86 @@
                 const opt = langSelect.querySelector(`option[value="${code}"]`);
                 return opt ? opt.textContent : code;
             }
+            // True when the selected language has no matching voice on this
+            // device, so playback falls back to the free network voice
+            // (Google's keyless TTS endpoint) instead of mispronouncing the
+            // translated text in an English voice.
+            let useNetworkVoice = false;
             function applyVoiceForLang(lang) {
-                if (!voiceSelect) return;
-                if (lang === 'en') { populateVoiceSelect(); return; }
+                if (lang === 'en') {
+                    useNetworkVoice = false;
+                    if (voiceSelect) populateVoiceSelect();
+                    return;
+                }
                 const voices = speechSynthesis.getVoices();
                 const match = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(lang.toLowerCase()));
-                if (match) { preferredVoice = match; voiceSelect.value = match.name; }
-                // No matching device voice — keeps reading with the current
-                // voice, which will mispronounce it. Flagged in the note.
+                if (match) {
+                    useNetworkVoice = false;
+                    preferredVoice = match;
+                    if (voiceSelect) voiceSelect.value = match.name;
+                } else {
+                    useNetworkVoice = true;
+                }
+            }
+            // ---- Network voice fallback ----
+            // Most phones simply don't ship a built-in voice for Yoruba,
+            // Igbo, Hausa, Nigerian Pidgin, Amharic, etc. Rather than read
+            // the translated text in an English voice, use Google's free,
+            // keyless TTS endpoint (the same one gTTS and many open-source
+            // "read aloud" tools use) — it covers the same languages Google
+            // Translate supports as text, which now includes all of these.
+            // It has a short per-request character limit, so each line is
+            // split into smaller pieces and played back to back.
+            const networkAudio = new Audio();
+            function splitForTts(text, maxLen) {
+                const sentences = text.match(/[^.!?]+[.!?]*\s*|[^.!?]+$/g) || [text];
+                const pieces = [];
+                let cur = '';
+                for (const s of sentences) {
+                    if ((cur + s).length > maxLen) {
+                        if (cur.trim()) pieces.push(cur.trim());
+                        cur = s.length > maxLen ? s.slice(0, maxLen) : s;
+                    } else {
+                        cur += s;
+                    }
+                }
+                if (cur.trim()) pieces.push(cur.trim());
+                return pieces.length ? pieces : [text.slice(0, maxLen)];
+            }
+            function speakChunkViaNetwork(index, session, rate) {
+                const pieces = splitForTts(textForChunk(index), 190);
+                let i = 0;
+                networkAudio.onended = null;
+                networkAudio.onerror = null;
+                function playNext() {
+                    if (session !== playSession) return;
+                    if (i >= pieces.length) { speakFrom(index + 1); return; }
+                    const piece = pieces[i++];
+                    const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${encodeURIComponent(currentLang)}&q=${encodeURIComponent(piece)}`;
+                    networkAudio.src = url;
+                    networkAudio.playbackRate = rate;
+                    const playPromise = networkAudio.play();
+                    if (playPromise && playPromise.catch) {
+                        playPromise.catch(() => { if (session === playSession) speakFrom(index + 1); });
+                    }
+                }
+                networkAudio.onended = () => { if (session === playSession) playNext(); };
+                networkAudio.onerror = () => { if (session === playSession) speakFrom(index + 1); };
+                playNext();
+            }
+            function stopNetworkAudio() {
+                networkAudio.onended = null;
+                networkAudio.onerror = null;
+                networkAudio.pause();
+                networkAudio.removeAttribute('src');
+            }
+            // Every place that used to call speechSynthesis.cancel() now
+            // calls this instead, so switching between a device voice and
+            // the network voice (e.g. changing language mid-playback) always
+            // fully stops whichever engine was actually in use.
+            function cancelAllSpeech() {
+                speechSynthesis.cancel();
+                stopNetworkAudio();
             }
             if (langSelect) {
                 langSelect.value = currentLang;
@@ -2489,7 +2560,7 @@
                     localStorage.setItem('tts-lang', lang);
                     if (speaking) {
                         playSession++;
-                        speechSynthesis.cancel();
+                        cancelAllSpeech();
                         speaking = false;
                         paused = false;
                         stopBtn.hidden = true;
@@ -2521,12 +2592,12 @@
                         }
                         return;
                     }
+                    applyVoiceForLang(lang);
                     if (translateNote) {
-                        translateNote.textContent = LOW_RESOURCE_LANGS[lang]
-                            ? 'Machine translation — this language is newer to translation engines, and most browsers have no matching voice to speak it in, so it may still read in an English voice.'
+                        translateNote.textContent = useNetworkVoice
+                            ? 'Machine translation, read using a free online voice (no matching voice on this device) — for anything important, double-check against the original.'
                             : 'Machine translation — for anything important, double-check against the original.';
                     }
-                    applyVoiceForLang(lang);
                 });
             }
 
@@ -2547,7 +2618,7 @@
 
             function resetToStart() {
                 playSession++;
-                speechSynthesis.cancel();
+                cancelAllSpeech();
                 speaking = false;
                 paused = false;
                 chunkIndex = 0;
@@ -2574,6 +2645,12 @@
                 const session = playSession;
                 const rate = parseFloat(rateSelect.value) || 1;
                 const speechText = textForChunk(index);
+
+                if (useNetworkVoice) {
+                    speakChunkViaNetwork(index, session, rate);
+                    return;
+                }
+
                 // Rough floor for how long this chunk should take to say out
                 // loud at this rate. If 'onend' fires much sooner than this,
                 // the OS almost certainly killed the audio in the background
@@ -2605,7 +2682,7 @@
             playBtn.addEventListener('click', () => {
                 if (!speaking) {
                     playSession++;
-                    speechSynthesis.cancel();
+                    cancelAllSpeech();
                     speaking = true;
                     paused = false;
                     label.textContent = 'Reading aloud…';
@@ -2622,7 +2699,7 @@
                     // elegant (it replays from the start of the sentence
                     // rather than mid-word) but is actually reliable.
                     playSession++;
-                    speechSynthesis.cancel();
+                    cancelAllSpeech();
                     paused = false;
                     playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                     playBtn.setAttribute('aria-label', 'Pause');
@@ -2631,7 +2708,7 @@
                     speakFrom(chunkIndex);
                 } else {
                     playSession++;
-                    speechSynthesis.cancel();
+                    cancelAllSpeech();
                     paused = true;
                     playBtn.innerHTML = '<i class="fas fa-play"></i>';
                     playBtn.setAttribute('aria-label', 'Resume');
@@ -2648,7 +2725,7 @@
                 // to touch the speech engine while nothing is playing.
                 if (!speaking || paused) return;
                 playSession++;
-                speechSynthesis.cancel();
+                cancelAllSpeech();
                 speakFrom(chunkIndex);
             });
 
@@ -2660,7 +2737,7 @@
                     localStorage.setItem('tts-voice-name', voiceSelect.value);
                     if (!speaking || paused) return;
                     playSession++;
-                    speechSynthesis.cancel();
+                    cancelAllSpeech();
                     speakFrom(chunkIndex);
                 });
             }
@@ -2674,7 +2751,7 @@
             function handleAutoPause() {
                 if (!speaking || paused) return;
                 playSession++;
-                speechSynthesis.cancel();
+                cancelAllSpeech();
                 paused = true;
                 autoPaused = true;
                 playBtn.innerHTML = '<i class="fas fa-play"></i>';
@@ -2686,7 +2763,7 @@
                 if (!speaking || !paused || !autoPaused) return;
                 autoPaused = false;
                 playSession++;
-                speechSynthesis.cancel(); // clear any dead/stuck queue state
+                cancelAllSpeech(); // clear any dead/stuck queue state
                 paused = false;
                 label.textContent = 'Reading aloud…';
                 playBtn.innerHTML = '<i class="fas fa-pause"></i>';
@@ -2704,7 +2781,7 @@
             // current state first), so it's safe for both to fire.
             window.addEventListener('pagehide', handleAutoPause);
             window.addEventListener('pageshow', handleAutoResume);
-            window.addEventListener('beforeunload', () => speechSynthesis.cancel());
+            window.addEventListener('beforeunload', () => cancelAllSpeech());
         }
 
 
