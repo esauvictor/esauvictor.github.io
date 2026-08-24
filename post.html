@@ -1449,6 +1449,15 @@
                             <option value="sw">Swahili</option>
                             <option value="am">Amharic</option>
                             <option value="zu">Zulu</option>
+                            <option value="xh">Xhosa</option>
+                            <option value="rw">Kinyarwanda</option>
+                            <option value="sn">Shona</option>
+                            <option value="st">Sesotho</option>
+                            <option value="lg">Luganda</option>
+                            <option value="ak">Twi (Akan)</option>
+                            <option value="ee">Ewe</option>
+                            <option value="wo">Wolof</option>
+                            <option value="ff">Fulfulde</option>
                         </optgroup>
                         <optgroup label="World languages">
                             <option value="es">Spanish</option>
@@ -2424,22 +2433,33 @@
             // second server hop to the real provider, a request-per-chunk
             // pattern meant dozens of sequential round trips and was the
             // main cause of slow translation. Batching cuts that to one.
-            async function translateBatch(texts, lang) {
+            async function translateBatch(texts, lang, attempt = 0) {
                 if (!texts.length) return [];
+                const maxAttempts = 3;
                 try {
                     const res = await fetch(`${API_BASE}/translate.php`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        cache: 'no-store',
                         body: JSON.stringify({ texts, target: lang }),
                     });
                     if (!res.ok) throw new Error('translate.php HTTP ' + res.status);
                     const data = await res.json();
                     const arr = data && data.translated;
-                    if (!Array.isArray(arr) || arr.length !== texts.length) throw new Error('translate.php returned a mismatched batch');
-                    return arr.map((t, i) => ({ text: t || texts[i], ok: !!t && !looksUnchanged(texts[i], t) }));
+                    if (!Array.isArray(arr) || arr.length !== texts.length) {
+                        throw new Error('translate.php returned a mismatched batch');
+                    }
+                    return arr.map((t, i) => ({
+                        text: typeof t === 'string' && t.trim() ? t : texts[i],
+                        ok: typeof t === 'string' && t.trim() !== '' && !looksUnchanged(texts[i], t)
+                    }));
                 } catch (e) {
+                    if (attempt + 1 < maxAttempts) {
+                        await new Promise(resolve => setTimeout(resolve, 500 * (attempt + 1)));
+                        return translateBatch(texts, lang, attempt + 1);
+                    }
                     console.warn('[translate] backend batch failed for', lang, '-', e.message);
-                    return texts.map(t => ({ text: t, ok: false })); // offline, blocked, or backend not deployed yet
+                    return texts.map(t => ({ text: t, ok: false }));
                 }
             }
             let translateRunId = 0;
@@ -2458,10 +2478,14 @@
                 let failed = 0;
                 results.forEach((result, k) => {
                     const i = pending[k];
-                    entry.texts[i] = result.text;
-                    if (!result.ok) failed++;
+                    if (result.ok) {
+                        entry.texts[i] = result.text;
+                    } else {
+                        delete entry.texts[i]; // allow a later retry instead of caching failure forever
+                        failed++;
+                    }
                 });
-                entry.failRatio = failed / results.length;
+                entry.failRatio = results.length ? failed / results.length : 0;
                 persistTranslationCache();
             }
             // ---- Whole-page translation ----
@@ -2505,7 +2529,9 @@
                 if (pending.length) {
                     const results = await translateBatch(pending.map(({ el }) => pageOriginals.get(el)), lang);
                     if (runId !== pageTranslateRunId) return; // superseded by a newer language switch
-                    pending.forEach(({ el }, k) => cache.set(el, results[k].text));
+                    pending.forEach(({ el }, k) => {
+                        if (results[k].ok) cache.set(el, results[k].text);
+                    });
                 }
                 if (runId !== pageTranslateRunId) return;
                 targets.forEach(({ el }) => { el.textContent = cache.get(el); });
@@ -2686,18 +2712,16 @@
                         translateNote.hidden = false;
                         translateNote.textContent = 'Translating…';
                     }
-                    translatePageContent(lang); // page text updates independently of narration
+                    const pageTranslationPromise = translatePageContent(lang);
                     await translateAllChunks(lang);
+                    await pageTranslationPromise;
                     if (lang !== currentLang) return; // superseded by a newer selection
                     const failRatio = translationCache[lang] ? translationCache[lang].failRatio : 0;
                     if (failRatio >= 0.6) {
-                        currentLang = 'en';
-                        localStorage.setItem('tts-lang', 'en');
-                        langSelect.value = 'en';
-                        applyVoiceForLang('en');
+                        applyVoiceForLang(lang);
                         if (translateNote) {
                             translateNote.hidden = false;
-                            translateNote.textContent = `The translation service doesn't support ${langLabel(lang)} well enough right now — reading the original English instead.`;
+                            translateNote.textContent = `Some ${langLabel(lang)} translations could not be loaded yet. Please try again; successful translations are kept and failed items will retry.`;
                         }
                         return;
                     }
