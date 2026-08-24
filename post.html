@@ -2409,45 +2409,30 @@
             function looksUnchanged(source, translated) {
                 return source.length > 12 && normalizeForCompare(translated) === normalizeForCompare(source);
             }
-            // Google's free "gtx" client endpoint — no API key, CORS-open,
-            // widely used by lightweight web translators. It has by far the
-            // best coverage of African languages of any free option: Yoruba,
-            // Igbo, Hausa, Nigerian Pidgin, Swahili, Amharic, and Zulu were
-            // all added as proper Google Translate languages in 2022–2024,
-            // whereas MyMemory's African-language pairs are hit-or-miss.
-            // Tried first; MyMemory is the fallback if this is unavailable.
-            async function translateViaGoogle(text, lang) {
-                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${encodeURIComponent(lang)}&dt=t&q=${encodeURIComponent(text)}`;
-                const res = await fetch(url);
-                if (!res.ok) throw new Error('Google translate HTTP ' + res.status);
-                const data = await res.json();
-                const segments = data && data[0];
-                if (!Array.isArray(segments) || !segments.length) throw new Error('Empty Google translate response');
-                const t = segments.map(seg => seg[0]).join('');
-                if (!t) throw new Error('Empty Google translate text');
-                return t;
-            }
-            async function translateViaMyMemory(text, lang) {
-                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${lang}`);
-                const data = await res.json();
-                const t = data && data.responseData && data.responseData.translatedText;
-                if (!t || /^MYMEMORY WARNING/i.test(t)) throw new Error('MyMemory returned no usable translation');
-                return t;
-            }
+            // Translation now goes through our own backend (translate.php)
+            // instead of calling Google/MyMemory directly from the browser.
+            // Calling those unofficial endpoints client-side is fragile in
+            // practice — ad blockers and privacy extensions commonly block
+            // requests to translate.googleapis.com, and GitHub Pages-hosted
+            // static sites can get silently rate-limited. Doing the call
+            // server-side (translate.php) sidesteps both: the browser only
+            // ever talks to our own domain, and translate.php does the
+            // Google-then-MyMemory fallback itself.
             async function translateOne(text, lang) {
                 try {
-                    const t = await translateViaGoogle(text, lang);
-                    if (!looksUnchanged(text, t)) return { text: t, ok: true };
-                    console.warn('[translate] Google returned an unchanged/echoed string for', lang);
-                } catch (e) {
-                    console.warn('[translate] Google failed for', lang, '-', e.message);
-                }
-                try {
-                    const t = await translateViaMyMemory(text, lang);
+                    const res = await fetch(`${API_BASE}/translate.php`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text, target: lang }),
+                    });
+                    if (!res.ok) throw new Error('translate.php HTTP ' + res.status);
+                    const data = await res.json();
+                    const t = data && data.translated;
+                    if (!t) throw new Error('translate.php returned no text');
                     return { text: t, ok: !looksUnchanged(text, t) };
                 } catch (e) {
-                    console.warn('[translate] MyMemory failed for', lang, '-', e.message);
-                    return { text, ok: false }; // both services failed, or offline/blocked
+                    console.warn('[translate] backend failed for', lang, '-', e.message);
+                    return { text, ok: false }; // offline, blocked, or backend not deployed yet
                 }
             }
             let translateRunId = 0;
@@ -2469,6 +2454,55 @@
                 if (runId !== translateRunId) return;
                 if (attempted > 0) entry.failRatio = failed / attempted;
                 persistTranslationCache();
+            }
+            // ---- Whole-page translation ----
+            // Translates the actual visible post — title + body text — not
+            // just the narration. Reuses the same block list the narrator
+            // uses (collectSpeechBlocks), which already skips images, code
+            // blocks, and link/form descriptions, so code and links on the
+            // page are never touched. Trade-off: it replaces each block's
+            // textContent as a whole, so any inline formatting inside a
+            // paragraph (bold, inline links) is flattened when translated —
+            // switching back to English restores it exactly, since the
+            // original text is cached per element first.
+            const postTitleEl = document.getElementById('post-title');
+            const pageOriginals = new Map();  // el -> original text, filled once
+            const pageTransCache = {};        // lang -> Map(el -> translated text)
+            function pageTranslatableBlocks() {
+                return collectSpeechBlocks(contentEl).filter(
+                    b => !['PRE', 'FORM', 'A'].includes(b.el.tagName)
+                );
+            }
+            function capturePageOriginals() {
+                if (postTitleEl && !pageOriginals.has(postTitleEl)) {
+                    pageOriginals.set(postTitleEl, postTitleEl.textContent);
+                }
+                pageTranslatableBlocks().forEach(({ el, text }) => {
+                    if (!pageOriginals.has(el)) pageOriginals.set(el, text);
+                });
+            }
+            let pageTranslateRunId = 0;
+            async function translatePageContent(lang) {
+                const runId = ++pageTranslateRunId;
+                capturePageOriginals();
+                if (lang === 'en') {
+                    pageOriginals.forEach((text, el) => { el.textContent = text; });
+                    return;
+                }
+                if (!pageTransCache[lang]) pageTransCache[lang] = new Map();
+                const cache = pageTransCache[lang];
+                const targets = postTitleEl ? [{ el: postTitleEl }, ...pageTranslatableBlocks()] : pageTranslatableBlocks();
+                for (const { el } of targets) {
+                    if (runId !== pageTranslateRunId) return; // superseded by a newer language switch
+                    if (!cache.has(el)) {
+                        const original = pageOriginals.get(el);
+                        const result = await translateOne(original, lang);
+                        cache.set(el, result.text);
+                        await new Promise(r => setTimeout(r, 100)); // stay polite to the backend
+                    }
+                    if (runId !== pageTranslateRunId) return;
+                    el.textContent = cache.get(el);
+                }
             }
             function langLabel(code) {
                 if (!langSelect) return code;
@@ -2632,12 +2666,14 @@
                     if (lang === 'en') {
                         if (translateNote) translateNote.hidden = true;
                         applyVoiceForLang('en');
+                        translatePageContent('en');
                         return;
                     }
                     if (translateNote) {
                         translateNote.hidden = false;
                         translateNote.textContent = 'Translating…';
                     }
+                    translatePageContent(lang); // page text updates independently of narration
                     await translateAllChunks(lang);
                     if (lang !== currentLang) return; // superseded by a newer selection
                     const failRatio = translationCache[lang] ? translationCache[lang].failRatio : 0;
