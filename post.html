@@ -2636,14 +2636,27 @@
                             await tryPlay(piece, 'gtx', true);
                         } catch (e2) {
                             if (session !== playSession) return;
-                            reportVoiceIssue(`Couldn't reach the free online voice for ${langLabel(currentLang)} right now (${e2.message}). Try again in a moment, or install this language's voice pack on your device for offline playback.`);
-                            speakFrom(index + 1);
+                            reportVoiceIssue(`No online voice is available for ${langLabel(currentLang)} yet — reading with the closest available voice on this device instead. For accurate pronunciation, install this language's voice pack in your phone's text-to-speech settings.`);
+                            speakChunkLocally(index, session, rate, textForChunk(index), () => speakFrom(index + 1));
                             return;
                         }
                     }
                     if (session === playSession) playNext();
                 }
                 playNext();
+            }
+            // One-off fallback: speak a single chunk with whatever voice the
+            // device has (even if it doesn't match the target language),
+            // used only when the network voice has genuinely no audio for
+            // this language. Mispronounced speech beats no speech at all.
+            function speakChunkLocally(index, session, rate, speechText, onDone) {
+                const utter = new SpeechSynthesisUtterance(speechText);
+                utter.rate = rate;
+                if (preferredVoice) utter.voice = preferredVoice;
+                const finish = () => { if (session === playSession) onDone(); };
+                utter.onend = finish;
+                utter.onerror = finish;
+                speechSynthesis.speak(utter);
             }
             function stopNetworkAudio() {
                 networkAudio.onended = null;
