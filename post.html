@@ -2438,11 +2438,15 @@
                 try {
                     const t = await translateViaGoogle(text, lang);
                     if (!looksUnchanged(text, t)) return { text: t, ok: true };
-                } catch (e) { /* fall through to MyMemory */ }
+                    console.warn('[translate] Google returned an unchanged/echoed string for', lang);
+                } catch (e) {
+                    console.warn('[translate] Google failed for', lang, '-', e.message);
+                }
                 try {
                     const t = await translateViaMyMemory(text, lang);
                     return { text: t, ok: !looksUnchanged(text, t) };
                 } catch (e) {
+                    console.warn('[translate] MyMemory failed for', lang, '-', e.message);
                     return { text, ok: false }; // both services failed, or offline/blocked
                 }
             }
@@ -2517,25 +2521,81 @@
                 if (cur.trim()) pieces.push(cur.trim());
                 return pieces.length ? pieces : [text.slice(0, maxLen)];
             }
+            // client=tw-ob is the parameter set most free TTS tools (like
+            // gTTS) rely on; total/idx/textlen are included because some
+            // deployments of this endpoint 403 without them even though
+            // they go unused for a single-piece request.
+            function ttsUrl(text, lang, client) {
+                const params = new URLSearchParams({
+                    ie: 'UTF-8', q: text, tl: lang, total: '1', idx: '0',
+                    textlen: String(text.length), client: client
+                });
+                return `https://translate.google.com/translate_tts?${params.toString()}`;
+            }
+            function reportVoiceIssue(msg) {
+                if (translateNote) { translateNote.hidden = false; translateNote.textContent = msg; }
+                console.warn('[tts]', msg);
+            }
             function speakChunkViaNetwork(index, session, rate) {
                 const pieces = splitForTts(textForChunk(index), 190);
                 let i = 0;
                 networkAudio.onended = null;
                 networkAudio.onerror = null;
-                function playNext() {
+                function tryPlay(piece, client, isRetry) {
+                    return new Promise((resolve, reject) => {
+                        let settled = false;
+                        const stallTimer = setTimeout(() => {
+                            if (settled) return;
+                            settled = true;
+                            reject(new Error('stalled — no audio started'));
+                        }, 6000);
+                        networkAudio.onended = () => {
+                            if (settled) return;
+                            settled = true;
+                            clearTimeout(stallTimer);
+                            resolve();
+                        };
+                        networkAudio.onerror = () => {
+                            if (settled) return;
+                            settled = true;
+                            clearTimeout(stallTimer);
+                            reject(new Error('audio element error (blocked, 403, or unsupported)'));
+                        };
+                        networkAudio.src = ttsUrl(piece, currentLang, client);
+                        networkAudio.playbackRate = rate;
+                        const p = networkAudio.play();
+                        if (p && p.catch) {
+                            p.catch(err => {
+                                if (settled) return;
+                                settled = true;
+                                clearTimeout(stallTimer);
+                                reject(err);
+                            });
+                        }
+                    });
+                }
+                async function playNext() {
                     if (session !== playSession) return;
                     if (i >= pieces.length) { speakFrom(index + 1); return; }
                     const piece = pieces[i++];
-                    const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${encodeURIComponent(currentLang)}&q=${encodeURIComponent(piece)}`;
-                    networkAudio.src = url;
-                    networkAudio.playbackRate = rate;
-                    const playPromise = networkAudio.play();
-                    if (playPromise && playPromise.catch) {
-                        playPromise.catch(() => { if (session === playSession) speakFrom(index + 1); });
+                    try {
+                        await tryPlay(piece, 'tw-ob', false);
+                    } catch (e1) {
+                        if (session !== playSession) return;
+                        try {
+                            // Retry once with the alternate client param — in
+                            // practice one of the two usually works even
+                            // when the other is temporarily blocked.
+                            await tryPlay(piece, 'gtx', true);
+                        } catch (e2) {
+                            if (session !== playSession) return;
+                            reportVoiceIssue(`Couldn't reach the free online voice for ${langLabel(currentLang)} right now (${e2.message}). Try again in a moment, or install this language's voice pack on your device for offline playback.`);
+                            speakFrom(index + 1);
+                            return;
+                        }
                     }
+                    if (session === playSession) playNext();
                 }
-                networkAudio.onended = () => { if (session === playSession) playNext(); };
-                networkAudio.onerror = () => { if (session === playSession) speakFrom(index + 1); };
                 playNext();
             }
             function stopNetworkAudio() {
