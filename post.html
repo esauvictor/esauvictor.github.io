@@ -2418,21 +2418,28 @@
             // server-side (translate.php) sidesteps both: the browser only
             // ever talks to our own domain, and translate.php does the
             // Google-then-MyMemory fallback itself.
-            async function translateOne(text, lang) {
+            //
+            // Sent as ONE batched request (array of texts) rather than one
+            // request per sentence/paragraph — with translate.php doing a
+            // second server hop to the real provider, a request-per-chunk
+            // pattern meant dozens of sequential round trips and was the
+            // main cause of slow translation. Batching cuts that to one.
+            async function translateBatch(texts, lang) {
+                if (!texts.length) return [];
                 try {
                     const res = await fetch(`${API_BASE}/translate.php`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ text, target: lang }),
+                        body: JSON.stringify({ texts, target: lang }),
                     });
                     if (!res.ok) throw new Error('translate.php HTTP ' + res.status);
                     const data = await res.json();
-                    const t = data && data.translated;
-                    if (!t) throw new Error('translate.php returned no text');
-                    return { text: t, ok: !looksUnchanged(text, t) };
+                    const arr = data && data.translated;
+                    if (!Array.isArray(arr) || arr.length !== texts.length) throw new Error('translate.php returned a mismatched batch');
+                    return arr.map((t, i) => ({ text: t || texts[i], ok: !!t && !looksUnchanged(texts[i], t) }));
                 } catch (e) {
-                    console.warn('[translate] backend failed for', lang, '-', e.message);
-                    return { text, ok: false }; // offline, blocked, or backend not deployed yet
+                    console.warn('[translate] backend batch failed for', lang, '-', e.message);
+                    return texts.map(t => ({ text: t, ok: false })); // offline, blocked, or backend not deployed yet
                 }
             }
             let translateRunId = 0;
@@ -2440,19 +2447,21 @@
                 const runId = ++translateRunId;
                 if (!translationCache[lang]) translationCache[lang] = { texts: {}, failRatio: 0 };
                 const entry = translationCache[lang];
-                let attempted = 0, failed = 0;
+                const pending = [];
                 for (let i = 0; i < chunks.length; i++) {
-                    if (runId !== translateRunId) return; // language changed again mid-run
-                    if (entry.texts[i] !== undefined) continue;
-                    attempted++;
-                    const result = await translateOne(chunks[i].text, lang);
+                    if (entry.texts[i] === undefined) pending.push(i);
+                }
+                if (!pending.length) return;
+                if (translateNote) translateNote.textContent = `Translating… 0/${pending.length}`;
+                const results = await translateBatch(pending.map(i => chunks[i].text), lang);
+                if (runId !== translateRunId) return; // language changed again mid-run
+                let failed = 0;
+                results.forEach((result, k) => {
+                    const i = pending[k];
                     entry.texts[i] = result.text;
                     if (!result.ok) failed++;
-                    if (translateNote) translateNote.textContent = `Translating… ${i + 1}/${chunks.length}`;
-                    await new Promise(r => setTimeout(r, 150)); // stay polite to the free API
-                }
-                if (runId !== translateRunId) return;
-                if (attempted > 0) entry.failRatio = failed / attempted;
+                });
+                entry.failRatio = failed / results.length;
                 persistTranslationCache();
             }
             // ---- Whole-page translation ----
@@ -2492,17 +2501,14 @@
                 if (!pageTransCache[lang]) pageTransCache[lang] = new Map();
                 const cache = pageTransCache[lang];
                 const targets = postTitleEl ? [{ el: postTitleEl }, ...pageTranslatableBlocks()] : pageTranslatableBlocks();
-                for (const { el } of targets) {
+                const pending = targets.filter(({ el }) => !cache.has(el));
+                if (pending.length) {
+                    const results = await translateBatch(pending.map(({ el }) => pageOriginals.get(el)), lang);
                     if (runId !== pageTranslateRunId) return; // superseded by a newer language switch
-                    if (!cache.has(el)) {
-                        const original = pageOriginals.get(el);
-                        const result = await translateOne(original, lang);
-                        cache.set(el, result.text);
-                        await new Promise(r => setTimeout(r, 100)); // stay polite to the backend
-                    }
-                    if (runId !== pageTranslateRunId) return;
-                    el.textContent = cache.get(el);
+                    pending.forEach(({ el }, k) => cache.set(el, results[k].text));
                 }
+                if (runId !== pageTranslateRunId) return;
+                targets.forEach(({ el }) => { el.textContent = cache.get(el); });
             }
             function langLabel(code) {
                 if (!langSelect) return code;
@@ -2559,12 +2565,19 @@
             // gTTS) rely on; total/idx/textlen are included because some
             // deployments of this endpoint 403 without them even though
             // they go unused for a single-piece request.
+            //
+            // This now points at our own backend (tts.php), not
+            // translate.google.com directly. Same root cause as the text
+            // translation issue: Google's TTS endpoint checks the request's
+            // origin/referrer and commonly 403s or is blocked outright by
+            // ad blockers when hit from a browser on a different domain —
+            // which is exactly why African-language playback (no on-device
+            // voice, so it depends entirely on this network fallback) was
+            // producing no audio at all. tts.php fetches the audio
+            // server-side, where none of that applies, and streams it back.
             function ttsUrl(text, lang, client) {
-                const params = new URLSearchParams({
-                    ie: 'UTF-8', q: text, tl: lang, total: '1', idx: '0',
-                    textlen: String(text.length), client: client
-                });
-                return `https://translate.google.com/translate_tts?${params.toString()}`;
+                const params = new URLSearchParams({ q: text, tl: lang, client: client });
+                return `${API_BASE}/tts.php?${params.toString()}`;
             }
             function reportVoiceIssue(msg) {
                 if (translateNote) { translateNote.hidden = false; translateNote.textContent = msg; }
