@@ -2401,23 +2401,50 @@
                 try { localStorage.setItem(TRANSLATE_CACHE_KEY, JSON.stringify(translationCache)); }
                 catch (e) { /* storage full or unavailable — cache just won't persist */ }
             }
-            const LOW_RESOURCE_LANGS = { pcm: 1, yo: 1, ig: 1, ha: 1, sw: 1, am: 1, zu: 1 };
+            const LOW_RESOURCE_LANGS = { pcm: 1 }; // still worth flagging — see note below
             function normalizeForCompare(s) { return (s || '').trim().toLowerCase(); }
+            // A "translation" identical to the source (for anything longer
+            // than a couple of words) usually means the service doesn't
+            // actually support this language pair and is just echoing the
+            // input back — that's the silent-failure case, not a real one.
+            function looksUnchanged(source, translated) {
+                return source.length > 12 && normalizeForCompare(translated) === normalizeForCompare(source);
+            }
+            // Google's free "gtx" client endpoint — no API key, CORS-open,
+            // widely used by lightweight web translators. It has by far the
+            // best coverage of African languages of any free option: Yoruba,
+            // Igbo, Hausa, Nigerian Pidgin, Swahili, Amharic, and Zulu were
+            // all added as proper Google Translate languages in 2022–2024,
+            // whereas MyMemory's African-language pairs are hit-or-miss.
+            // Tried first; MyMemory is the fallback if this is unavailable.
+            async function translateViaGoogle(text, lang) {
+                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${encodeURIComponent(lang)}&dt=t&q=${encodeURIComponent(text)}`;
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('Google translate HTTP ' + res.status);
+                const data = await res.json();
+                const segments = data && data[0];
+                if (!Array.isArray(segments) || !segments.length) throw new Error('Empty Google translate response');
+                const t = segments.map(seg => seg[0]).join('');
+                if (!t) throw new Error('Empty Google translate text');
+                return t;
+            }
+            async function translateViaMyMemory(text, lang) {
+                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${lang}`);
+                const data = await res.json();
+                const t = data && data.responseData && data.responseData.translatedText;
+                if (!t || /^MYMEMORY WARNING/i.test(t)) throw new Error('MyMemory returned no usable translation');
+                return t;
+            }
             async function translateOne(text, lang) {
                 try {
-                    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${lang}`);
-                    const data = await res.json();
-                    const t = data && data.responseData && data.responseData.translatedText;
-                    if (!t || /^MYMEMORY WARNING/i.test(t)) return { text, ok: false };
-                    // A "translation" identical to the source (for anything
-                    // longer than a couple of words) usually means the
-                    // service doesn't actually support this language pair
-                    // and is just echoing the input back — that's the
-                    // silent-failure case, not a real translation.
-                    const unchanged = text.length > 12 && normalizeForCompare(t) === normalizeForCompare(text);
-                    return { text: t, ok: !unchanged };
+                    const t = await translateViaGoogle(text, lang);
+                    if (!looksUnchanged(text, t)) return { text: t, ok: true };
+                } catch (e) { /* fall through to MyMemory */ }
+                try {
+                    const t = await translateViaMyMemory(text, lang);
+                    return { text: t, ok: !looksUnchanged(text, t) };
                 } catch (e) {
-                    return { text, ok: false }; // offline or blocked
+                    return { text, ok: false }; // both services failed, or offline/blocked
                 }
             }
             let translateRunId = 0;
@@ -2496,7 +2523,7 @@
                     }
                     if (translateNote) {
                         translateNote.textContent = LOW_RESOURCE_LANGS[lang]
-                            ? 'Machine translation — quality varies for this language, and most browsers have no matching voice to speak it in, so it may still read in an English voice.'
+                            ? 'Machine translation — this language is newer to translation engines, and most browsers have no matching voice to speak it in, so it may still read in an English voice.'
                             : 'Machine translation — for anything important, double-check against the original.';
                     }
                     applyVoiceForLang(lang);
