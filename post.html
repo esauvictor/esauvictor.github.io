@@ -1392,8 +1392,8 @@
                 </div>
             </header>
 
-            <nav class="toc" id="postToc" aria-label="Table of contents" hidden>
-                <button type="button" class="toc-toggle" id="tocToggle" aria-expanded="true" aria-controls="tocList">
+            <nav class="toc" id="postToc" aria-label="Table of contents" data-collapsed="true" hidden>
+                <button type="button" class="toc-toggle" id="tocToggle" aria-expanded="false" aria-controls="tocList">
                     <i class="fas fa-list-ul"></i> Contents
                     <i class="fas fa-chevron-up toc-chevron"></i>
                 </button>
@@ -2296,16 +2296,47 @@
                 const english = voices.filter(v => /^en/i.test(v.lang));
                 return english.length ? english : voices;
             }
+            const REGION_LABELS = {
+                'en-us': 'US', 'en-gb': 'UK', 'en-au': 'Australian', 'en-in': 'Indian',
+                'en-ng': 'Nigerian', 'en-za': 'South African', 'en-ie': 'Irish',
+                'en-ca': 'Canadian', 'en-nz': 'New Zealand', 'en-gh': 'Ghanaian',
+                'en-ph': 'Filipino', 'en-sg': 'Singaporean', 'en-scotland': 'Scottish',
+            };
+            function regionLabel(langCode) {
+                return REGION_LABELS[(langCode || '').toLowerCase()] || (langCode || 'English');
+            }
+            function genderLabel(v) {
+                if (isLikelyMaleVoice(v)) return 'Male';
+                if (isLikelyFemaleVoice(v)) return 'Female';
+                return null;
+            }
             function populateVoiceSelect() {
                 if (!voiceSelect) return;
                 const voices = englishVoices(); // English-only page — no reason to ever list other languages
                 if (!voices.length) return;
                 const savedName = localStorage.getItem('tts-voice-name');
                 voiceSelect.innerHTML = '';
-                voices.forEach(v => {
+                // Build the display label first (language + gender, never
+                // the raw engine name — "Microsoft David" means nothing to
+                // most people, "English (US) — Male" does), then number
+                // only the ones that collide once duplicates are known.
+                const baseLabels = voices.map(v => {
+                    const gender = genderLabel(v);
+                    return gender ? `English (${regionLabel(v.lang)}) — ${gender}` : `English (${regionLabel(v.lang)})`;
+                });
+                const counts = {};
+                baseLabels.forEach(b => { counts[b] = (counts[b] || 0) + 1; });
+                const running = {};
+                voices.forEach((v, i) => {
+                    const base = baseLabels[i];
+                    let text = base;
+                    if (counts[base] > 1) {
+                        running[base] = (running[base] || 0) + 1;
+                        text = `${base} ${running[base]}`;
+                    }
                     const opt = document.createElement('option');
                     opt.value = v.name;
-                    opt.textContent = `${v.name} (${v.lang})`;
+                    opt.textContent = text;
                     voiceSelect.appendChild(opt);
                 });
                 // Ignore a saved preference that isn't actually in this
