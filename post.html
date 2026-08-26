@@ -2260,10 +2260,29 @@
             // prefer those instead. This is still synthetic speech — not a
             // human voice — just the least robotic option available for free.
             let preferredVoice = null;
+            // The Web Speech API has no real gender field, so this is
+            // name-pattern matching against how engines label voices —
+            // either explicitly ("Google UK English Male") or by using a
+            // recognizably male/female name (varies by platform/OS).
+            const MALE_VOICE_NAMES = ['david', 'mark', 'daniel', 'alex', 'fred', 'ryan', 'guy', 'eric', 'matthew', 'tom', 'james', 'george', 'aaron', 'oliver', 'arthur', 'nathan', 'brian', 'thomas', 'gordon', 'ravi'];
+            const FEMALE_VOICE_NAMES = ['samantha', 'karen', 'zira', 'susan', 'victoria', 'moira', 'tessa', 'fiona', 'ava', 'kate', 'emma', 'joanna', 'salli', 'ivy', 'kimberly', 'zoe', 'allison'];
+            function isLikelyMaleVoice(v) {
+                const n = v.name.toLowerCase();
+                if (/\bfemale\b/.test(n)) return false;
+                if (/\bmale\b/.test(n)) return true;
+                return MALE_VOICE_NAMES.some(name => n.includes(name));
+            }
+            function isLikelyFemaleVoice(v) {
+                const n = v.name.toLowerCase();
+                if (/\bfemale\b/.test(n)) return true;
+                return FEMALE_VOICE_NAMES.some(name => n.includes(name));
+            }
             function pickBestVoice(pool) {
                 if (!pool || !pool.length) return null;
                 const scored = pool.map(v => {
                     let score = 0;
+                    if (isLikelyMaleVoice(v)) score += 5;
+                    else if (isLikelyFemaleVoice(v)) score -= 5;
                     if (/natural|neural|enhanced|premium/i.test(v.name)) score += 3;
                     if (/google/i.test(v.name)) score += 2;
                     if (v.localService === false) score += 1; // cloud voices tend to sound better
