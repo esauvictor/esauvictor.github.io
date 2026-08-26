@@ -582,44 +582,47 @@
         .video-panel {
             width: 100%;
             max-width: 480px;
-            display: flex;
-            align-items: flex-start;
-            gap: 0.9rem;
+        }
+        .video-panel-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
             border-radius: 12px;
+            overflow: hidden;
             background: linear-gradient(160deg, #131A2B, #0B0F1C);
             border: 1px solid rgba(255,255,255,0.08);
-            padding: 0.85rem 1rem;
             box-shadow: var(--shadow-md);
+            transition: box-shadow 0.25s ease;
         }
-        .video-panel-presenter { flex-shrink: 0; }
         .presenter-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
             display: block;
-            box-shadow: 0 0 0 2px rgba(255,255,255,0.12);
-            transition: box-shadow 0.25s ease, opacity 0.25s ease;
+            transition: filter 0.25s ease, opacity 0.25s ease;
         }
-        .video-panel.is-talking .presenter-avatar {
-            box-shadow: 0 0 0 2px var(--signal), 0 0 14px 2px color-mix(in srgb, var(--signal) 55%, transparent);
-            animation: presenterPulse 1.6s ease-in-out infinite;
+        .video-panel.is-talking .video-panel-frame {
+            box-shadow: 0 0 0 2px var(--signal), 0 0 22px 4px color-mix(in srgb, var(--signal) 45%, transparent);
         }
-        .video-panel.is-paused .presenter-avatar { opacity: 0.55; box-shadow: 0 0 0 2px rgba(255,255,255,0.12); }
-        @keyframes presenterPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+        .video-panel.is-paused .presenter-avatar { opacity: 0.6; filter: grayscale(0.35); }
 
-        .video-panel-captions { flex: 1; min-width: 0; }
         .video-panel-badge {
+            position: absolute;
+            top: 0.6rem;
+            left: 0.7rem;
             display: inline-flex;
             align-items: center;
             gap: 0.4rem;
             font-family: var(--mono);
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             font-weight: 600;
             letter-spacing: 0.05em;
             text-transform: uppercase;
-            color: #AEB6C9;
-            margin-bottom: 0.4rem;
+            color: #fff;
+            background: rgba(0,0,0,0.45);
+            backdrop-filter: blur(4px);
+            padding: 0.3rem 0.6rem;
+            border-radius: 999px;
         }
         .video-dot {
             width: 7px; height: 7px;
@@ -630,6 +633,32 @@
         .video-panel.is-paused .video-dot { background: var(--muted); animation: none; }
         @keyframes videoDotPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
+        .video-fullscreen-btn {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.7rem;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.45);
+            backdrop-filter: blur(4px);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.2s ease;
+        }
+        .video-fullscreen-btn:hover, .video-fullscreen-btn:focus-visible { background: rgba(0,0,0,0.75); }
+
+        .video-panel-captions {
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            padding: 2.25rem 0.9rem 0.8rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.78), transparent);
+        }
         .video-panel-heading {
             font-family: var(--display);
             font-weight: 600;
@@ -640,11 +669,29 @@
         .video-panel-line {
             font-size: 0.85rem;
             line-height: 1.5;
-            color: #C7CCDA;
+            color: #E6E9F2;
+        }
+        /* Full screen: frame takes the whole screen, image scales to fit rather than crop */
+        .video-panel-frame:fullscreen,
+        .video-panel-frame:-webkit-full-screen {
+            width: 100vw;
+            height: 100vh;
+            aspect-ratio: unset;
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+        .video-panel-frame:fullscreen .presenter-avatar,
+        .video-panel-frame:-webkit-full-screen .presenter-avatar {
+            width: auto;
+            height: 100%;
+            max-width: 100%;
+            object-fit: contain;
         }
         @media(max-width:520px){
-            .video-panel { padding: 0.65rem 0.85rem; gap: 0.7rem; }
-            .presenter-avatar { width: 48px; height: 48px; }
+            .video-panel-captions { padding: 1.75rem 0.7rem 0.65rem; }
         }
 
         /* ---------- Karaoke-style read-along highlight ---------- */
@@ -1402,13 +1449,16 @@
 
             <div class="tts-avatar-wrap" id="ttsAvatarWrap" hidden>
                 <div class="video-panel">
-                    <div class="video-panel-presenter">
+                    <div class="video-panel-frame" id="videoPanelFrame">
                         <img class="presenter-avatar" id="presenterAvatar" src="https://raw.githubusercontent.com/esauvictor/esauvictor.github.io/main/Screenshot_20260826-071725_Gallery.jpg" alt="Narrator avatar">
-                    </div>
-                    <div class="video-panel-captions">
                         <div class="video-panel-badge"><span class="video-dot" aria-hidden="true"></span>Presenting</div>
-                        <div class="video-panel-heading" id="videoPanelHeading">Introduction</div>
-                        <div class="video-panel-line" id="videoPanelLine"></div>
+                        <button type="button" class="video-fullscreen-btn" id="videoFullscreenBtn" aria-label="Full screen">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <div class="video-panel-captions">
+                            <div class="video-panel-heading" id="videoPanelHeading">Introduction</div>
+                            <div class="video-panel-line" id="videoPanelLine"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2157,6 +2207,29 @@
         // plays a real recording with normal <audio> controls. No per-line
         // highlighting here since a plain recording carries no per-sentence
         // timing data, only playback rate/progress.
+        // Wires the fullscreen button on the presenting video frame. Shared
+        // by both playback engines (recorded-narration and synthetic),
+        // since either one can show this panel — called once per post load.
+        function setupVideoFullscreen() {
+            const btn = document.getElementById('videoFullscreenBtn');
+            const frame = document.getElementById('videoPanelFrame');
+            if (!btn || !frame || btn.dataset.wired) return;
+            btn.dataset.wired = 'true';
+            const requestFs = frame.requestFullscreen || frame.webkitRequestFullscreen;
+            const exitFs = document.exitFullscreen || document.webkitExitFullscreen;
+            btn.addEventListener('click', () => {
+                const isFull = document.fullscreenElement === frame || document.webkitFullscreenElement === frame;
+                if (!isFull && requestFs) requestFs.call(frame);
+                else if (isFull && exitFs) exitFs.call(document);
+            });
+            const syncIcon = () => {
+                const isFull = document.fullscreenElement === frame || document.webkitFullscreenElement === frame;
+                btn.innerHTML = isFull ? '<i class="fas fa-compress"></i>' : '<i class="fas fa-expand"></i>';
+                btn.setAttribute('aria-label', isFull ? 'Exit full screen' : 'Full screen');
+            };
+            document.addEventListener('fullscreenchange', syncIcon);
+            document.addEventListener('webkitfullscreenchange', syncIcon);
+        }
         function initRealVoicePlayback(url) {
             const bar = document.getElementById('ttsBar');
             const playBtn = document.getElementById('ttsPlayBtn');
@@ -2168,6 +2241,7 @@
             if (!bar) return;
             bar.hidden = false;
             if (avatarWrap) avatarWrap.hidden = false;
+            setupVideoFullscreen();
             label.textContent = 'Listen to this post';
 
             const audio = new Audio(url);
@@ -2246,6 +2320,7 @@
 
             bar.hidden = false;
             if (avatarWrap) avatarWrap.hidden = false;
+            setupVideoFullscreen();
             if (optionsRow) optionsRow.hidden = false;
 
             let chunkIndex = 0;
