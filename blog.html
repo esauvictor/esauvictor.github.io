@@ -548,6 +548,108 @@
     </div>
   </header>
 
+<style>
+  .site-tts-bar {
+    max-width: 640px; margin: 1.25rem auto 0; padding: 0.9rem 1.1rem;
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    display: flex; align-items: center; gap: 0.85rem;
+  }
+  .site-tts-play, .site-tts-stop {
+    flex-shrink: 0; width: 42px; height: 42px; border-radius: 50%;
+    border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 0.95rem; transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .site-tts-play { background: var(--signal); color: #fff; }
+  .site-tts-play:hover, .site-tts-play:focus-visible { transform: scale(1.06); }
+  .site-tts-stop { background: transparent; border: 1px solid var(--line); color: var(--muted); }
+  .site-tts-stop:hover, .site-tts-stop:focus-visible { color: var(--ink); border-color: var(--signal); }
+  .site-tts-info { flex: 1; min-width: 0; }
+  .site-tts-label { font-family: var(--mono); font-size: 0.82rem; color: var(--muted); margin-bottom: 0.35rem; }
+  .site-tts-progress { height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; }
+  .site-tts-fill { height: 100%; width: 0%; background: var(--signal); transition: width 0.2s linear; }
+  .site-tts-rate {
+    flex-shrink: 0; background: var(--paper); color: var(--ink); border: 1px solid var(--line);
+    border-radius: 6px; font-family: var(--mono); font-size: 0.78rem; padding: 0.35rem 0.4rem; cursor: pointer;
+  }
+
+  .site-tts-avatar-wrap { max-width: 640px; margin: 0.9rem auto 0; }
+  .site-tts-video-panel { width: 100%; }
+  .site-tts-video-frame {
+    position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden;
+    background: linear-gradient(160deg, #131A2B, #0B0F1C); border: 1px solid rgba(255,255,255,0.08);
+    transition: box-shadow 0.25s ease;
+  }
+  .site-tts-presenter { width: 100%; height: 100%; object-fit: cover; display: block; transition: filter 0.25s ease, opacity 0.25s ease; }
+  .site-tts-video-panel.is-talking .site-tts-video-frame {
+    box-shadow: 0 0 0 2px var(--signal), 0 0 22px 4px color-mix(in srgb, var(--signal) 45%, transparent);
+  }
+  .site-tts-video-panel.is-paused .site-tts-presenter { opacity: 0.6; filter: grayscale(0.35); }
+  .site-tts-badge {
+    position: absolute; top: 0.6rem; left: 0.7rem; display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: var(--mono); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+    color: #fff; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); padding: 0.3rem 0.6rem; border-radius: 999px;
+  }
+  .site-tts-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); }
+  .site-tts-video-panel.is-talking .site-tts-dot { animation: siteTtsDotPulse 1s ease-in-out infinite; }
+  .site-tts-video-panel.is-paused .site-tts-dot { background: var(--muted); animation: none; }
+  @keyframes siteTtsDotPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+  .site-tts-fullscreen-btn {
+    position: absolute; top: 0.6rem; right: 0.7rem; width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px); border: none; border-radius: 8px; color: #fff; cursor: pointer; font-size: 0.85rem;
+  }
+  .site-tts-fullscreen-btn:hover, .site-tts-fullscreen-btn:focus-visible { background: rgba(0,0,0,0.75); }
+  .site-tts-captions {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 2.1rem 0.9rem 0.75rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.78), transparent);
+  }
+  .site-tts-caption-line { font-family: var(--body); font-size: 0.85rem; line-height: 1.5; color: #E6E9F2; }
+  .site-tts-video-frame:fullscreen, .site-tts-video-frame:-webkit-full-screen {
+    width: 100vw; height: 100vh; aspect-ratio: unset; border-radius: 0;
+    display: flex; align-items: center; justify-content: center; background: #000;
+  }
+  .site-tts-video-frame:fullscreen .site-tts-presenter, .site-tts-video-frame:-webkit-full-screen .site-tts-presenter {
+    width: auto; height: 100%; max-width: 100%; object-fit: contain;
+  }
+  .site-tts-voice-select {
+    display: block; margin: 0.7rem auto 0; max-width: 640px; width: 100%;
+    background: var(--paper); color: var(--ink); border: 1px solid var(--line);
+    border-radius: 6px; font-family: var(--mono); font-size: 0.78rem; padding: 0.4rem 0.5rem; cursor: pointer;
+  }
+  @media(max-width:600px){
+    .site-tts-bar { padding: 0.7rem 0.85rem; gap: 0.6rem; margin-left: 1rem; margin-right: 1rem; }
+    .site-tts-play, .site-tts-stop { width: 36px; height: 36px; }
+  }
+</style>
+
+<div style="max-width:640px; margin: 0 auto; padding: 0 1.5rem;">
+  <div class="site-tts-bar">
+    <button type="button" id="siteTtsPlay" class="site-tts-play" aria-label="Listen to this page"><i class="fas fa-play"></i></button>
+    <div class="site-tts-info">
+      <div class="site-tts-label" id="siteTtsLabel">Listen to this page</div>
+      <div class="site-tts-progress"><div class="site-tts-fill" id="siteTtsFill"></div></div>
+    </div>
+    <button type="button" id="siteTtsStop" class="site-tts-stop" hidden aria-label="Stop"><i class="fas fa-stop"></i></button>
+    <select id="siteTtsRate" class="site-tts-rate" aria-label="Playback speed">
+      <option value="0.85">0.85x</option>
+      <option value="1" selected>1x</option>
+      <option value="1.25">1.25x</option>
+      <option value="1.5">1.5x</option>
+    </select>
+  </div>
+  <div class="site-tts-avatar-wrap" id="siteTtsAvatarWrap" hidden>
+    <div class="site-tts-video-panel" id="siteTtsVideoPanel">
+      <div class="site-tts-video-frame" id="siteTtsVideoFrame">
+        <img class="site-tts-presenter" src="https://raw.githubusercontent.com/esauvictor/esauvictor.github.io/main/Screenshot_20260826-071725_Gallery.jpg" alt="Narrator avatar">
+        <div class="site-tts-badge"><span class="site-tts-dot" aria-hidden="true"></span>Presenting</div>
+        <button type="button" class="site-tts-fullscreen-btn" id="siteTtsFullscreenBtn" aria-label="Full screen"><i class="fas fa-expand"></i></button>
+        <div class="site-tts-captions"><div class="site-tts-caption-line" id="siteTtsCaptionLine">Listen to this page read aloud.</div></div>
+      </div>
+    </div>
+    <select id="siteTtsVoiceSelect" class="site-tts-voice-select" aria-label="Narration voice"></select>
+  </div>
+</div>
+
   <section class="hero">
     <p class="prompt">esau@devlog:~$ ls posts/<span class="cursor" aria-hidden="true"></span></p>
     <h1 class="title">The Blog</h1>
@@ -963,5 +1065,273 @@
       });
   </script>
 
+<script>
+(function () {
+    // ---- Voice selection (English-only, prefers a male-sounding voice) ----
+    const MALE_VOICE_NAMES = ['david', 'mark', 'daniel', 'alex', 'fred', 'ryan', 'guy', 'eric', 'matthew', 'tom', 'james', 'george', 'aaron', 'oliver', 'arthur', 'nathan', 'brian', 'thomas', 'gordon', 'ravi'];
+    const FEMALE_VOICE_NAMES = ['samantha', 'karen', 'zira', 'susan', 'victoria', 'moira', 'tessa', 'fiona', 'ava', 'kate', 'emma', 'joanna', 'salli', 'ivy', 'kimberly', 'zoe', 'allison'];
+    function isLikelyMaleVoice(v) {
+        const n = v.name.toLowerCase();
+        if (/\bfemale\b/.test(n)) return false;
+        if (/\bmale\b/.test(n)) return true;
+        return MALE_VOICE_NAMES.some(name => n.includes(name));
+    }
+    function isLikelyFemaleVoice(v) {
+        const n = v.name.toLowerCase();
+        if (/\bfemale\b/.test(n)) return true;
+        return FEMALE_VOICE_NAMES.some(name => n.includes(name));
+    }
+    function englishVoices() {
+        const voices = speechSynthesis.getVoices();
+        const english = voices.filter(v => /^en([-_]|$)/i.test(v.lang));
+        return english.length ? english : voices;
+    }
+    function pickBestVoice(pool) {
+        if (!pool || !pool.length) return null;
+        const scored = pool.map(v => {
+            let score = 0;
+            if (isLikelyMaleVoice(v)) score += 5;
+            else if (isLikelyFemaleVoice(v)) score -= 5;
+            if (/natural|neural|enhanced|premium/i.test(v.name)) score += 3;
+            if (/google/i.test(v.name)) score += 2;
+            if (v.localService === false) score += 1;
+            return { v, score };
+        });
+        scored.sort((a, b) => b.score - a.score);
+        return scored[0].v;
+    }
+    let preferredVoice = null;
+    function refreshPreferredVoice() {
+        if (!localStorage.getItem('site-tts-voice-name')) preferredVoice = pickBestVoice(englishVoices());
+    }
+    refreshPreferredVoice();
+
+    const REGION_LABELS = {
+        'en-us': 'US', 'en-gb': 'UK', 'en-au': 'Australian', 'en-in': 'Indian',
+        'en-ng': 'Nigerian', 'en-za': 'South African', 'en-ie': 'Irish',
+        'en-ca': 'Canadian', 'en-nz': 'New Zealand', 'en-gh': 'Ghanaian',
+        'en-ph': 'Filipino', 'en-sg': 'Singaporean',
+    };
+    function regionLabel(langCode) { return REGION_LABELS[(langCode || '').toLowerCase()] || (langCode || 'English'); }
+    function genderLabel(v) {
+        if (isLikelyMaleVoice(v)) return 'Male';
+        if (isLikelyFemaleVoice(v)) return 'Female';
+        return null;
+    }
+    const voiceSelect = document.getElementById('siteTtsVoiceSelect');
+    function populateVoiceSelect() {
+        if (!voiceSelect) return;
+        const voices = englishVoices();
+        if (!voices.length) return;
+        const savedName = localStorage.getItem('site-tts-voice-name');
+        voiceSelect.innerHTML = '';
+        const baseLabels = voices.map(v => {
+            const gender = genderLabel(v);
+            return gender ? `English (${regionLabel(v.lang)}) — ${gender}` : `English (${regionLabel(v.lang)})`;
+        });
+        const counts = {};
+        baseLabels.forEach(b => { counts[b] = (counts[b] || 0) + 1; });
+        const running = {};
+        voices.forEach((v, i) => {
+            const base = baseLabels[i];
+            let text = base;
+            if (counts[base] > 1) { running[base] = (running[base] || 0) + 1; text = `${base} ${running[base]}`; }
+            const opt = document.createElement('option');
+            opt.value = v.name;
+            opt.textContent = text;
+            voiceSelect.appendChild(opt);
+        });
+        const fallback = preferredVoice ? preferredVoice.name : voices[0].name;
+        const toSelect = savedName && voices.some(v => v.name === savedName) ? savedName : fallback;
+        voiceSelect.value = toSelect;
+        const chosen = voices.find(v => v.name === toSelect);
+        if (chosen) preferredVoice = chosen;
+    }
+    populateVoiceSelect();
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.addEventListener('voiceschanged', () => { refreshPreferredVoice(); populateVoiceSelect(); });
+    }
+    if (voiceSelect) {
+        voiceSelect.addEventListener('change', () => {
+            localStorage.setItem('site-tts-voice-name', voiceSelect.value);
+            const chosen = englishVoices().find(v => v.name === voiceSelect.value);
+            if (chosen) preferredVoice = chosen;
+        });
+    }
+
+    // ---- Content scanning — built fresh every time Play is pressed, so it ----
+    // always matches whatever's actually on screen (dynamically-loaded
+    // sections, filtered/paginated lists, etc.) rather than a stale snapshot
+    // taken at page load.
+    const BLOCK_TAGS = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE'];
+    const SKIP_TAGS = ['SCRIPT', 'STYLE', 'FORM', 'BUTTON', 'A', 'NAV', 'SVG', 'IMG', 'IFRAME', 'INPUT', 'SELECT', 'TEXTAREA', 'LABEL'];
+    function hasBlockDescendant(el) {
+        return Array.from(el.children).some(c =>
+            BLOCK_TAGS.includes(c.tagName) || ['UL', 'OL'].includes(c.tagName) || hasBlockDescendant(c)
+        );
+    }
+    function collectPageTextBlocks(root) {
+        const blocks = [];
+        function walk(node) {
+            Array.from(node.children).forEach(el => {
+                const tag = el.tagName;
+                if (SKIP_TAGS.includes(tag)) return;
+                if (el.hidden || el.getAttribute('aria-hidden') === 'true') return;
+                if (getComputedStyle(el).display === 'none') return;
+                if (tag === 'UL' || tag === 'OL') { walk(el); return; }
+                if (BLOCK_TAGS.includes(tag)) {
+                    const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+                    if (text) blocks.push(text);
+                    return;
+                }
+                // Generic wrapper (div/span/etc.) — recurse only if it
+                // structurally contains real block-level content; otherwise
+                // treat its whole text as one block rather than fragmenting
+                // into individual inline spans (common in stylized layouts).
+                if (hasBlockDescendant(el)) walk(el);
+                else {
+                    const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+                    if (text) blocks.push(text);
+                }
+            });
+        }
+        walk(root);
+        return blocks;
+    }
+    function splitIntoSpeechChunks(text, maxLen) {
+        maxLen = maxLen || 220;
+        const sentences = text.match(/[^.!?]+[.!?]+(\s+|$)|[^.!?]+$/g) || [text];
+        const chunks = [];
+        let buffer = '';
+        sentences.forEach(sentence => {
+            if (buffer && (buffer.length + sentence.length) > maxLen) { chunks.push(buffer.trim()); buffer = sentence; }
+            else buffer += sentence;
+        });
+        if (buffer.trim()) chunks.push(buffer.trim());
+        return chunks;
+    }
+    function buildSpeechChunksFresh() {
+        const roots = (window.__siteTtsGetRoots ? window.__siteTtsGetRoots() : [document.querySelector('main')]).filter(Boolean);
+        const out = [];
+        roots.forEach(root => {
+            collectPageTextBlocks(root).forEach(text => splitIntoSpeechChunks(text).forEach(t => out.push(t)));
+        });
+        return out;
+    }
+
+    // ---- Playback engine ----
+    const playBtn = document.getElementById('siteTtsPlay');
+    const stopBtn = document.getElementById('siteTtsStop');
+    const rateSelect = document.getElementById('siteTtsRate');
+    const label = document.getElementById('siteTtsLabel');
+    const fill = document.getElementById('siteTtsFill');
+    const avatarWrap = document.getElementById('siteTtsAvatarWrap');
+    const captionLine = document.getElementById('siteTtsCaptionLine');
+    const videoFrame = document.getElementById('siteTtsVideoFrame');
+    const fullscreenBtn = document.getElementById('siteTtsFullscreenBtn');
+    const panel = document.getElementById('siteTtsVideoPanel');
+    if (!playBtn) return; // widget markup not present on this page
+
+    let chunks = [];
+    let chunkIndex = 0;
+    let speaking = false;
+    let paused = false;
+    let playSession = 0;
+
+    function setupFullscreen() {
+        if (!fullscreenBtn || !videoFrame || fullscreenBtn.dataset.wired) return;
+        fullscreenBtn.dataset.wired = 'true';
+        const requestFs = videoFrame.requestFullscreen || videoFrame.webkitRequestFullscreen;
+        const exitFs = document.exitFullscreen || document.webkitExitFullscreen;
+        fullscreenBtn.addEventListener('click', () => {
+            const isFull = document.fullscreenElement === videoFrame || document.webkitFullscreenElement === videoFrame;
+            if (!isFull && requestFs) requestFs.call(videoFrame);
+            else if (isFull && exitFs) exitFs.call(document);
+        });
+        const syncIcon = () => {
+            const isFull = document.fullscreenElement === videoFrame || document.webkitFullscreenElement === videoFrame;
+            fullscreenBtn.innerHTML = isFull ? '<i class="fas fa-compress"></i>' : '<i class="fas fa-expand"></i>';
+            fullscreenBtn.setAttribute('aria-label', isFull ? 'Exit full screen' : 'Full screen');
+        };
+        document.addEventListener('fullscreenchange', syncIcon);
+        document.addEventListener('webkitfullscreenchange', syncIcon);
+    }
+    function setTalking(on) { if (panel) panel.classList.toggle('is-talking', on); }
+    function setPausedVisual(on) { if (panel) panel.classList.toggle('is-paused', on); }
+
+    function resetToStart() {
+        speechSynthesis.cancel();
+        playSession++;
+        speaking = false; paused = false; chunkIndex = 0;
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        playBtn.setAttribute('aria-label', 'Listen to this page');
+        if (stopBtn) stopBtn.hidden = true;
+        label.textContent = 'Listen to this page';
+        if (fill) fill.style.width = '0%';
+        setTalking(false); setPausedVisual(false);
+        if (avatarWrap) avatarWrap.hidden = true;
+    }
+
+    function speakFrom(index) {
+        if (index >= chunks.length) { resetToStart(); return; }
+        chunkIndex = index;
+        const session = playSession;
+        const utter = new SpeechSynthesisUtterance(chunks[index]);
+        utter.rate = rateSelect ? (parseFloat(rateSelect.value) || 1) : 1;
+        if (preferredVoice) utter.voice = preferredVoice;
+        utter.onstart = () => {
+            if (session !== playSession) return;
+            if (captionLine) captionLine.textContent = chunks[index];
+            if (fill) fill.style.width = Math.round(((index + 1) / chunks.length) * 100) + '%';
+        };
+        utter.onend = () => { if (session === playSession) speakFrom(index + 1); };
+        utter.onerror = () => { if (session === playSession) speakFrom(index + 1); };
+        speechSynthesis.speak(utter);
+    }
+
+    playBtn.addEventListener('click', () => {
+        if (!speaking) {
+            chunks = buildSpeechChunksFresh();
+            if (!chunks.length) { label.textContent = "Nothing to read here yet — try again once the page has loaded."; return; }
+            speaking = true; paused = false;
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            playBtn.setAttribute('aria-label', 'Pause');
+            if (stopBtn) stopBtn.hidden = false;
+            label.textContent = 'Reading aloud…';
+            if (avatarWrap) { avatarWrap.hidden = false; setupFullscreen(); }
+            setTalking(true); setPausedVisual(false);
+            speakFrom(0);
+        } else if (!paused) {
+            speechSynthesis.pause();
+            paused = true;
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            playBtn.setAttribute('aria-label', 'Resume');
+            label.textContent = 'Paused';
+            setTalking(false); setPausedVisual(true);
+        } else {
+            speechSynthesis.resume();
+            paused = false;
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            playBtn.setAttribute('aria-label', 'Pause');
+            label.textContent = 'Reading aloud…';
+            setTalking(true); setPausedVisual(false);
+        }
+    });
+    if (stopBtn) stopBtn.addEventListener('click', resetToStart);
+    if (rateSelect) {
+        rateSelect.addEventListener('change', () => {
+            if (!speaking || paused) return;
+            playSession++;
+            speechSynthesis.cancel();
+            speakFrom(chunkIndex);
+        });
+    }
+    window.addEventListener('beforeunload', () => speechSynthesis.cancel());
+})();
+
+</script>
+<script>
+  window.__siteTtsGetRoots = () => [document.querySelector('.hero'), document.getElementById('blogGrid')];
+</script>
 </body>
 </html>
