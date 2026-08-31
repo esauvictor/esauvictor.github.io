@@ -3362,6 +3362,8 @@
                     statusEl.classList.add('success');
                     if (data.id && data.edit_token) {
                         saveCommentToken(data.id, data.edit_token);
+                        const watchKey = watchForCommentAppearance(statusEl);
+                        resolveWatchId(watchKey, data.id);
                     }
                     nameInput.value = '';
                     emailInput.value = '';
@@ -3495,8 +3497,14 @@
 
                             textEl.textContent = newBody;
                             c.body = newBody;
-                            editWrap.remove();
-                            contentEl.style.display = '';
+                            editStatusEl.textContent = 'Comment updated.';
+                            editStatusEl.className = 'reply-form-status success';
+                            saveBtn.disabled = true;
+                            setTimeout(() => {
+                                editWrap.remove();
+                                contentEl.style.display = '';
+                            }, 900);
+                            return;
                         } catch (err) {
                             editStatusEl.textContent = err.message || 'Could not save changes.';
                             editStatusEl.classList.add('error');
@@ -3519,6 +3527,7 @@
                         if (!res.ok) throw new Error(data.error || 'Could not delete comment.');
 
                         removeCommentToken(c.id);
+                        showCommentToast('Comment deleted.');
                         loadComments(slug); // resync — server cascade-deletes any replies too
                     } catch (err) {
                         editStatus.textContent = err.message || 'Could not delete comment.';
@@ -3561,6 +3570,60 @@
             return nodes.reduce((sum, n) => sum + 1 + countComments(n.children), 0);
         }
 
+        // ---- Watches pending "submitted, awaiting approval" status messages
+        // and clears them automatically once that comment actually shows up
+        // in the thread (checked every time loadComments refreshes). ----
+        const pendingCommentWatches = new Map(); // tempKey -> { el, id }
+        let tempWatchSeq = 0;
+
+        function watchForCommentAppearance(statusEl) {
+            const tempKey = 'temp_' + (++tempWatchSeq);
+            pendingCommentWatches.set(tempKey, { el: statusEl, id: null });
+            return tempKey;
+        }
+
+        function resolveWatchId(tempKey, id) {
+            const w = pendingCommentWatches.get(tempKey);
+            if (w) w.id = id;
+        }
+
+        function checkPendingCommentWatches(comments) {
+            if (!pendingCommentWatches.size) return;
+            const seenIds = new Set(comments.map(c => c.id));
+            for (const [key, w] of pendingCommentWatches) {
+                if (w.id !== null && seenIds.has(w.id)) {
+                    if (w.el && w.el.isConnected) {
+                        w.el.textContent = '';
+                        w.el.classList.remove('success', 'error');
+                    }
+                    pendingCommentWatches.delete(key);
+                }
+            }
+        }
+
+        // ---- Lightweight toast for actions where the usual inline status
+        // spot (e.g. a comment being deleted) won't exist anymore to show
+        // a message in. ----
+        function showCommentToast(message, isError) {
+            const listEl = document.getElementById('commentList');
+            if (!listEl || !listEl.parentNode) return;
+            let toast = document.getElementById('commentToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'commentToast';
+                toast.style.cssText = 'margin-bottom:0.75rem;padding:0.5rem 0.75rem;border-radius:6px;font-size:0.85rem;transition:opacity 0.3s ease;';
+                listEl.parentNode.insertBefore(toast, listEl);
+            }
+            toast.textContent = message;
+            toast.style.background = isError ? 'rgba(220,38,38,0.1)' : 'rgba(22,163,74,0.1)';
+            toast.style.color = isError ? '#dc2626' : '#16a34a';
+            toast.style.opacity = '1';
+            clearTimeout(toast._hideTimer);
+            toast._hideTimer = setTimeout(() => {
+                toast.style.opacity = '0';
+            }, 2500);
+        }
+
         async function loadComments(slug) {
             const listEl = document.getElementById('commentList');
             const countEl = document.getElementById('commentCount');
@@ -3569,6 +3632,7 @@
                 if (!res.ok) throw new Error('failed to load comments');
                 const data = await res.json();
                 const comments = data.comments || [];
+                checkPendingCommentWatches(comments);
 
                 const tree = buildCommentTree(comments);
                 countEl.textContent = countComments(tree);
@@ -3759,6 +3823,8 @@
                     statusEl.classList.add('success');
                     if (data.id && data.edit_token) {
                         saveCommentToken(data.id, data.edit_token);
+                        const watchKey = watchForCommentAppearance(statusEl);
+                        resolveWatchId(watchKey, data.id);
                     }
                     form.reset();
                 } catch (err) {
