@@ -3358,11 +3358,12 @@
                     const data = await res.json();
                     if (!res.ok) throw new Error(data.error || 'Something went wrong');
 
-                    statusEl.textContent = data.message || 'Reply submitted — it will appear once approved.';
+                    const baseMsg = data.message || 'Reply submitted — it will appear once approved.';
+                    statusEl.textContent = baseMsg;
                     statusEl.classList.add('success');
                     if (data.id && data.edit_token) {
                         saveCommentToken(data.id, data.edit_token);
-                        const watchKey = watchForCommentAppearance(statusEl);
+                        const watchKey = watchForCommentAppearance(statusEl, baseMsg);
                         resolveWatchId(watchKey, data.id);
                     }
                     nameInput.value = '';
@@ -3570,15 +3571,43 @@
             return nodes.reduce((sum, n) => sum + 1 + countComments(n.children), 0);
         }
 
-        // ---- Watches pending "submitted, awaiting approval" status messages
-        // and clears them automatically once that comment actually shows up
-        // in the thread (checked every time loadComments refreshes). ----
-        const pendingCommentWatches = new Map(); // tempKey -> { el, id }
+        // ---- Watches pending "submitted, awaiting approval" status messages,
+        // shows a live countdown matching the refresh cadence, and clears
+        // automatically once that comment actually shows up in the thread. ----
+        const pendingCommentWatches = new Map(); // tempKey -> { el, id, tickTimer }
         let tempWatchSeq = 0;
 
-        function watchForCommentAppearance(statusEl) {
+        function formatCountdown(ms) {
+            const secs = Math.max(0, Math.ceil(ms / 1000));
+            const m = Math.floor(secs / 60);
+            const s = secs % 60;
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function watchForCommentAppearance(statusEl, baseMessage) {
             const tempKey = 'temp_' + (++tempWatchSeq);
-            pendingCommentWatches.set(tempKey, { el: statusEl, id: null });
+            const deadline = Date.now() + COMMENT_REFRESH_MS;
+            const entry = { el: statusEl, id: null, tickTimer: null };
+
+            function render() {
+                if (!statusEl.isConnected) {
+                    clearInterval(entry.tickTimer);
+                    pendingCommentWatches.delete(tempKey);
+                    return;
+                }
+                const msLeft = deadline - Date.now();
+                if (msLeft <= 0) {
+                    statusEl.textContent = 'Still awaiting approval — check back soon.';
+                    statusEl.classList.remove('success');
+                    clearInterval(entry.tickTimer);
+                    return;
+                }
+                statusEl.textContent = `${baseMessage} (checking in ${formatCountdown(msLeft)})`;
+            }
+
+            render();
+            entry.tickTimer = setInterval(render, 1000);
+            pendingCommentWatches.set(tempKey, entry);
             return tempKey;
         }
 
@@ -3592,6 +3621,7 @@
             const seenIds = new Set(comments.map(c => c.id));
             for (const [key, w] of pendingCommentWatches) {
                 if (w.id !== null && seenIds.has(w.id)) {
+                    clearInterval(w.tickTimer);
                     if (w.el && w.el.isConnected) {
                         w.el.textContent = '';
                         w.el.classList.remove('success', 'error');
@@ -3672,8 +3702,11 @@
         // without disturbing anyone mid-comment. Skips a refresh entirely if
         // the visitor currently has a reply/edit form open or is typing in
         // the main comment box, so nothing they're writing ever gets wiped.
+        // Matches the moderation cron cadence — shared by the silent
+        // comment refresh and the "appearing soon" countdown message.
+        const COMMENT_REFRESH_MS = 120000; // 2 min
+
         function startCommentAutoRefresh(slug) {
-            const REFRESH_MS = 120000; // 2 min — matches the moderation cron cadence, no point checking faster
 
             function isVisitorMidComment() {
                 const openReplyForm = document.querySelector('.reply-form.open');
@@ -3701,7 +3734,7 @@
                 if (document.hidden) return; // tab not visible — no need to churn
                 if (isVisitorMidComment()) return; // don't disturb an in-progress reply/comment
                 loadComments(slug).catch(() => {});
-            }, REFRESH_MS);
+            }, COMMENT_REFRESH_MS);
         }
 
         const REACTION_EMOJI = ['👍', '🔥', '💡', '❤️'];
@@ -3819,11 +3852,12 @@
 
                     if (!res.ok) throw new Error(data.error || 'Something went wrong');
 
-                    statusEl.textContent = data.message || 'Comment submitted — it will appear once approved.';
+                    const baseMsg = data.message || 'Comment submitted — it will appear once approved.';
+                    statusEl.textContent = baseMsg;
                     statusEl.classList.add('success');
                     if (data.id && data.edit_token) {
                         saveCommentToken(data.id, data.edit_token);
-                        const watchKey = watchForCommentAppearance(statusEl);
+                        const watchKey = watchForCommentAppearance(statusEl, baseMsg);
                         resolveWatchId(watchKey, data.id);
                     }
                     form.reset();
