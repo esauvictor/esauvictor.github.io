@@ -3577,6 +3577,12 @@
         const pendingCommentWatches = new Map(); // tempKey -> { el, id, tickTimer }
         let tempWatchSeq = 0;
 
+        // The single source of truth for "when will we actually check again."
+        // Both the background refresh loop and every countdown message read
+        // this same value, so the displayed timer can never drift from what
+        // really happens — no separate guess of the cron schedule involved.
+        let nextCommentCheckAt = Date.now() + 30000; // sane placeholder until the real loop starts
+
         function formatCountdown(ms) {
             const secs = Math.max(0, Math.ceil(ms / 1000));
             const m = Math.floor(secs / 60);
@@ -3586,11 +3592,11 @@
 
         function watchForCommentAppearance(statusEl, baseMessage) {
             const tempKey = 'temp_' + (++tempWatchSeq);
-            // Target the actual next cron boundary, not a flat interval from
-            // submission time — plus a small buffer since cron-job.org runs
-            // have observed jitter/execution time of up to ~30s.
-            const CRON_JITTER_BUFFER_MS = 45000;
-            const deadline = nextCronRunTime().getTime() + CRON_JITTER_BUFFER_MS;
+            const createdAt = Date.now();
+            // If it's still unresolved after several real check cycles, it's
+            // most likely genuinely held for manual review — stop counting
+            // down rather than showing a countdown that never resolves.
+            const MAX_WAIT_MS = 10 * 60 * 1000; // 10 min
             const entry = { el: statusEl, id: null, tickTimer: null };
 
             function render() {
@@ -3599,13 +3605,13 @@
                     pendingCommentWatches.delete(tempKey);
                     return;
                 }
-                const msLeft = deadline - Date.now();
-                if (msLeft <= 0) {
+                if (Date.now() - createdAt >= MAX_WAIT_MS) {
                     statusEl.textContent = 'Still awaiting approval — check back soon.';
                     statusEl.classList.remove('success');
                     clearInterval(entry.tickTimer);
                     return;
                 }
+                const msLeft = Math.max(0, nextCommentCheckAt - Date.now());
                 statusEl.textContent = `${baseMessage} (checking in ${formatCountdown(msLeft)})`;
             }
 
@@ -3751,6 +3757,10 @@
             }
 
             function tick() {
+                // Predict the following check's time first, unconditionally —
+                // this keeps nextCommentCheckAt accurate even on a tick that
+                // ends up skipping its own fetch below.
+                nextCommentCheckAt = Date.now() + COMMENT_REFRESH_MS;
                 if (document.hidden) return; // tab not visible — no need to churn
                 if (isVisitorMidComment()) return; // don't disturb an in-progress reply/comment
                 loadComments(slug).catch(() => {});
@@ -3764,6 +3774,7 @@
                 5000,
                 nextCronRunTime().getTime() + CRON_JITTER_BUFFER_MS - Date.now()
             );
+            nextCommentCheckAt = Date.now() + msUntilFirstAlignedCheck;
             setTimeout(() => {
                 tick();
                 setInterval(tick, COMMENT_REFRESH_MS);
