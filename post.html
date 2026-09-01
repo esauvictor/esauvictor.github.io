@@ -3586,7 +3586,11 @@
 
         function watchForCommentAppearance(statusEl, baseMessage) {
             const tempKey = 'temp_' + (++tempWatchSeq);
-            const deadline = Date.now() + COMMENT_REFRESH_MS;
+            // Target the actual next cron boundary, not a flat interval from
+            // submission time — plus a small buffer since cron-job.org runs
+            // have observed jitter/execution time of up to ~30s.
+            const CRON_JITTER_BUFFER_MS = 45000;
+            const deadline = nextCronRunTime().getTime() + CRON_JITTER_BUFFER_MS;
             const entry = { el: statusEl, id: null, tickTimer: null };
 
             function render() {
@@ -3704,7 +3708,23 @@
         // the main comment box, so nothing they're writing ever gets wiped.
         // Matches the moderation cron cadence — shared by the silent
         // comment refresh and the "appearing soon" countdown message.
-        const COMMENT_REFRESH_MS = 120000; // 2 min
+        // Cron runs on real clock marks (:00, :02, :04, ...), not relative
+        // to whenever a comment happens to be submitted, so the countdown
+        // targets the actual next boundary instead of a flat interval.
+        const CRON_INTERVAL_MINUTES = 2; // must match the moderate_and_reply.php cron schedule (*/2 * * * *)
+        const COMMENT_REFRESH_MS = CRON_INTERVAL_MINUTES * 60000;
+
+        function nextCronRunTime(intervalMinutes = CRON_INTERVAL_MINUTES) {
+            const now = new Date();
+            const next = new Date(now);
+            next.setSeconds(0, 0);
+            const minutes = next.getMinutes();
+            const remainder = minutes % intervalMinutes;
+            if (remainder !== 0 || next.getTime() <= now.getTime()) {
+                next.setMinutes(minutes - remainder + intervalMinutes);
+            }
+            return next;
+        }
 
         function startCommentAutoRefresh(slug) {
 
@@ -3730,11 +3750,24 @@
                 return false;
             }
 
-            setInterval(() => {
+            function tick() {
                 if (document.hidden) return; // tab not visible — no need to churn
                 if (isVisitorMidComment()) return; // don't disturb an in-progress reply/comment
                 loadComments(slug).catch(() => {});
-            }, COMMENT_REFRESH_MS);
+            }
+
+            // First check lands shortly after the actual next cron boundary
+            // (not an arbitrary offset from page load), then settle into a
+            // steady interval from there.
+            const CRON_JITTER_BUFFER_MS = 15000;
+            const msUntilFirstAlignedCheck = Math.max(
+                5000,
+                nextCronRunTime().getTime() + CRON_JITTER_BUFFER_MS - Date.now()
+            );
+            setTimeout(() => {
+                tick();
+                setInterval(tick, COMMENT_REFRESH_MS);
+            }, msUntilFirstAlignedCheck);
         }
 
         const REACTION_EMOJI = ['👍', '🔥', '💡', '❤️'];
