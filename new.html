@@ -51,15 +51,11 @@
             background: #ffffff;
             color: var(--primary);
             border: none;
-            padding: 10px 18px;
-            font-size: 15px;
+            padding: 12px 20px;
+            font-size: 16px;
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
         }
 
         .speed-control {
@@ -163,9 +159,16 @@
     let currentIndex = 0;
     let isSpeaking = false;
     let utterance = null;
+    let audioCtx = null;
 
-    if (speechSynthesis.onvoiceschanged !== undefined) {
-        speechSynthesis.onvoiceschanged = () => synth.getVoices();
+    function unlockAudio() {
+        // Fix for iOS/Android silent failure by resuming AudioContext on user tap
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
     }
 
     function playCard(index) {
@@ -177,16 +180,14 @@
         cards.forEach(card => card.classList.remove('active'));
         cards[index].classList.add('active');
 
-        // Extract clean text without extra formatting symbols
-        let rawText = cards[index].innerText;
-        let cleanText = rawText.replace(/\/g, ''); 
+        // Cancel pending utterances to clear stuck queues on mobile
+        synth.cancel();
+
+        let cleanText = cards[index].innerText;
 
         utterance = new SpeechSynthesisUtterance(cleanText);
         utterance.rate = parseFloat(document.getElementById('speed').value);
-
-        let voices = synth.getVoices();
-        let englishVoice = voices.find(v => v.lang.includes('en'));
-        if (englishVoice) utterance.voice = englishVoice;
+        utterance.lang = 'en-US';
 
         utterance.onend = function () {
             if (isSpeaking) {
@@ -195,17 +196,24 @@
             }
         };
 
-        utterance.onerror = function () {
-            currentIndex++;
-            playCard(currentIndex);
+        utterance.onerror = function (e) {
+            console.error("SpeechSynthesis error:", e);
+            if (isSpeaking) {
+                currentIndex++;
+                playCard(currentIndex);
+            }
         };
 
-        synth.speak(utterance);
+        // Short timeout allows voice engine buffer to warm up
+        setTimeout(() => {
+            synth.speak(utterance);
+        }, 50);
     }
 
     function togglePlay() {
+        unlockAudio(); // Unlocks audio policy on tap
+
         if (!isSpeaking) {
-            synth.cancel();
             isSpeaking = true;
             document.getElementById('playBtn').innerText = "⏸ Pause";
             playCard(currentIndex);
@@ -230,7 +238,6 @@
 
     function updateSpeed() {
         if (isSpeaking) {
-            synth.cancel();
             playCard(currentIndex);
         }
     }
