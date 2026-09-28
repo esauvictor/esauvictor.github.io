@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Registration | Esau Victor</title>
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ----- GLOBAL STYLES (consistent with brand) ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #4a6fa5;
+            --accent-color: #3b82f6;
+            --text-color: #333;
+            --light-bg: #f8fafc;
+            --white: #ffffff;
+            --gray-border: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+            --radius: 16px;
+            --radius-sm: 8px;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(145deg, #f1f5f9 0%, #e9eef3 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        /* main card */
+        .registration-container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow), 0 20px 30px -10px rgba(30, 58, 138, 0.15);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(2px);
+            transition: transform 0.2s ease;
+        }
+
+        .registration-container:hover {
+            box-shadow: 0 25px 40px -12px rgba(30, 58, 138, 0.25);
+        }
+
+        /* header with logo / badge */
+        .reg-header {
+            background: var(--primary-color);
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            border-bottom: 3px solid var(--accent-color);
+        }
+
+        .reg-header img {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-text h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: white;
+            line-height: 1.2;
+        }
+
+        .header-text p {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        .header-text p i {
+            font-size: 0.9rem;
+        }
+
+        /* class highlight banner */
+        .class-highlight {
+            background: #eef2ff;
+            padding: 1.75rem 2rem;
+            border-bottom: 1px solid var(--gray-border);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .class-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .info-icon {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--gray-border);
+        }
+
+        .info-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .info-value {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            line-height: 1.3;
+        }
+
+        .price-tag {
+            background: var(--primary-color);
+            padding: 0.6rem 1.6rem;
+            border-radius: 40px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            box-shadow: 0 8px 14px -4px rgba(30, 58, 138, 0.3);
+        }
+
+        .price-tag span {
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        /* form area */
+        .form-section {
+            padding: 2rem 2rem 2.2rem;
+        }
+
+        .form-section h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            border-left: 5px solid var(--accent-color);
+            padding-left: 1rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .input-group.full-width {
+            grid-column: span 2;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .input-group label i {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            width: 18px;
+        }
+
+        .input-group input,
+        .input-group select {
+            padding: 0.85rem 1rem;
+            border: 1.5px solid var(--gray-border);
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-family: inherit;
+            background: #f9fbfd;
+            transition: all 0.2s ease;
+            color: #0f172a;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            background: white;
+        }
+
+        .input-group input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        /* payment note & total */
+        .payment-summary {
+            background: #f8fafc;
+            border-radius: var(--radius-sm);
+            padding: 1.25rem 1.5rem;
+            margin: 2rem 0 1.75rem;
+            border: 1px dashed var(--secondary-color);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .payment-note {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #334155;
+            font-size: 0.98rem;
+        }
+
+        .payment-note i {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+        }
+
+        .total-amount {
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: var(--primary-color);
+            letter-spacing: -0.02em;
+            background: white;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--gray-border);
+        }
+
+        .total-amount small {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #64748b;
+            margin-right: 0.3rem;
+        }
+
+        /* register button */
+        .register-btn {
+            width: 100%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1.2rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 10px 20px -8px rgba(30, 58, 138, 0.4);
+            border: 2px solid transparent;
+            letter-spacing: 0.3px;
+        }
+
+        .register-btn:hover {
+            background: #172e6e;
+            transform: translateY(-2px);
+            box-shadow: 0 18px 25px -10px rgba(30, 58, 138, 0.5);
+        }
+
+        .register-btn i {
+            font-size: 1.2rem;
+        }
+
+        .register-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 5px 12px -4px rgba(30, 58, 138, 0.6);
+        }
+
+        /* footer / small print */
+        .form-footer {
+            margin-top: 1.25rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #64748b;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .form-footer i {
+            color: var(--secondary-color);
+            font-size: 0.8rem;
+        }
+
+        /* responsive */
+        @media (max-width: 700px) {
+            body { padding: 0.8rem; }
+            .reg-header { padding: 1.2rem 1.5rem; }
+            .header-text h1 { font-size: 1.5rem; }
+            .class-highlight { padding: 1.5rem; flex-direction: column; align-items: flex-start; }
+            .class-info { gap: 1rem; width: 100%; }
+            .price-tag { align-self: flex-start; }
+            .form-section { padding: 1.5rem; }
+            .form-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+            .input-group.full-width { grid-column: span 1; }
+            .payment-summary { flex-direction: column; align-items: flex-start; }
+        }
+
+        @media (max-width: 420px) {
+            .info-item { width: 100%; }
+            .header-text h1 { font-size: 1.3rem; }
+            .price-tag { font-size: 1.3rem; }
+        }
+
+        /* success message (hidden by default) */
+        .success-message {
+            display: none;
+            background: #dcfce7;
+            color: #166534;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-sm);
+            border-left: 6px solid #22c55e;
+            margin-top: 1.5rem;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: 500;
+        }
+
+        .success-message i {
+            font-size: 1.3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-container">
+        <!-- Header -->
+        <div class="reg-header">
+            <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor">
+            <div class="header-text">
+                <h1>Esau Victor</h1>
+                <p><i class="fas fa-code"></i> Website Development · Second Class</p>
+            </div>
+        </div>
+
+        <!-- Highlight bar with class details -->
+        <div class="class-highlight">
+            <div class="class-info">
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="info-text">
+                        <span class="info-label">Date</span>
+                        <span class="info-value">1st October, 2026</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-clock"></i></div>
+                    <div class="info-text">
+                        <span class="info-label">Class</span>
+                        <span class="info-value">Second session</span>
+                    </div>
+                </div>
+            </div>
+            <div class="price-tag">
+                <span>₦</span>5,000 <span style="font-size:0.9rem; font-weight:400; margin-left:4px;">/ person</span>
+            </div>
+        </div>
+
+        <!-- Registration form -->
+        <div class="form-section">
+            <h2><i class="fas fa-pen-alt" style="color: var(--accent-color);"></i> Secure your spot</h2>
+
+            <form id="registrationForm" action="#" method="post">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label for="fullName"><i class="fas fa-user"></i> Full name</label>
+                        <input type="text" id="fullName" name="fullName" placeholder="e.g. John Doe" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="email"><i class="fas fa-envelope"></i> Email address</label>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="phone"><i class="fas fa-phone-alt"></i> Phone number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="080 1234 5678" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="experience"><i class="fas fa-laptop-code"></i> Experience level</label>
+                        <select id="experience" name="experience" required>
+                            <option value="" disabled selected>Select your level</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </div>
+                    <div class="input-group full-width">
+                        <label for="comments"><i class="fas fa-comment"></i> Questions / Special requests (optional)</label>
+                        <input type="text" id="comments" name="comments" placeholder="Anything we should know?">
+                    </div>
+                </div>
+
+                <!-- payment summary & total -->
+                <div class="payment-summary">
+                    <div class="payment-note">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure registration — pay after you submit</span>
+                    </div>
+                    <div class="total-amount">
+                        <small>Total</small> ₦5,000
+                    </div>
+                </div>
+
+                <!-- register button -->
+                <button type="submit" class="register-btn">
+                    <i class="fas fa-check-circle"></i> Register now
+                </button>
+
+                <!-- success message (hidden) -->
+                <div id="successMessage" class="success-message">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Registration successful! We’ll send payment details to your email.</span>
+                </div>
+            </form>
+
+            <div class="form-footer">
+                <i class="fas fa-lock"></i> Your information is safe. 
+                <i class="fas fa-user-graduate"></i> Limited seats available.
+            </div>
+        </div>
+    </div>
+
+    <!-- simple script to show success message and prevent actual submission -->
+    <script>
+        (function() {
+            const form = document.getElementById('registrationForm');
+            const successDiv = document.getElementById('successMessage');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();  // no actual submission
+
+                // basic validation (HTML5 already does, but we double-check)
+                const fullName = document.getElementById('fullName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const experience = document.getElementById('experience').value;
+
+                if (!fullName || !email || !phone || !experience) {
+                    alert('Please fill in all required fields.');
+                    return;
+                }
+
+                // Hide the register button? optional — we just show success message and reset form
+                // Show success message
+                successDiv.style.display = 'flex';
+
+                // Optionally reset the form after a short delay (but keep success visible)
+                // We'll reset the form fields but keep success message visible for user feedback.
+                form.reset();
+
+                // Scroll success into view (if needed)
+                successDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                // Optional: disable the submit button to prevent double-click, then re-enable
+                const submitBtn = form.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.7';
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+                // simulate a quick "processing" then revert button
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Register now';
+                    // Hide success message after 6 seconds? No, we keep it — but you can auto-hide:
+                    // but we want the user to see it, so we leave it.
+                }, 1500);
+
+                // Hide the success message after 8 seconds (optional)
+                setTimeout(() => {
+                    successDiv.style.display = 'none';
+                }, 8000);
+            });
+
+            // Reset success message when user starts typing again (optional, for better UX)
+            const inputs = form.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (successDiv.style.display === 'flex') {
+                        successDiv.style.display = 'none';
+                    }
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
