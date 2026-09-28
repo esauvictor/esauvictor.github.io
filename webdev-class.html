@@ -8,210 +8,654 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg:         #f1f5f9;
+    --card:       #ffffff;
+    --border:     #e2e8f0;
+    --text:       #0f172a;
+    --text-muted: #64748b;
+    --primary:    #1e3a8a;
+    --accent:     #3b82f6;
+    --accent-soft:#dbeafe;
+    --accent-bg:  #eff6ff;
+    --success:    #16a34a;
+    --success-bg: #dcfce7;
+    --warning:    #d97706;
+    --warning-bg: #fef3c7;
+    --green:      #25D366;
+    --green-dark: #1da851;
+    --shadow:     0 20px 40px -12px rgba(15,23,42,0.15), 0 8px 16px -6px rgba(15,23,42,0.06);
+  }
+
   body {
-    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    background: #0a0a0a;
-    color: #d4d4d4;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(160deg, #eff6ff 0%, #f1f5f9 50%, #f8fafc 100%);
+    color: var(--text);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem;
+    padding: 2rem 1rem;
+    -webkit-font-smoothing: antialiased;
   }
+
   .card {
-    max-width: 720px; width: 100%;
-    background: #131313;
-    border: 1px solid #262626;
-    border-radius: 8px;
+    max-width: 760px;
+    width: 100%;
+    background: var(--card);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.6);
+  }
+
+  /* ============ HEADER ============ */
+  .header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    padding: 2rem 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    position: relative;
     overflow: hidden;
   }
-  .header { padding: 1.5rem 2rem; border-bottom: 1px solid #262626; }
-  .header .brand {
-    font-family: 'Courier New', monospace;
-    font-size: 13px; color: #7ee787; letter-spacing: 1px;
-  }
-  .header h1 {
-    font-family: Georgia, serif;
-    font-size: 1.5rem; color: #f2f2f2; margin-top: 6px;
-  }
-  .header p { color: #a3a3a3; font-size: 0.9rem; margin-top: 4px; }
 
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .header img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    object-fit: cover;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-text { position: relative; z-index: 1; }
+
+  .header-text h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+  }
+
+  .header-text .tagline {
+    font-size: 0.9rem;
+    color: #dbeafe;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .header-text .class-label {
+    font-size: 1rem;
+    color: #ffffff;
+    margin-top: 8px;
+    opacity: 0.95;
+    font-weight: 600;
+  }
+
+  /* ============ CLASS DETAILS ============ */
   .details {
-    background: #0a0a0a;
-    padding: 1.5rem 2rem;
-    display: flex; flex-wrap: wrap; gap: 1.5rem;
+    background: var(--accent-bg);
+    padding: 1.75rem 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
     justify-content: space-between;
-    border-bottom: 1px solid #262626;
-  }
-  .detail-item { display: flex; align-items: center; gap: 0.7rem; }
-  .detail-item i {
-    font-size: 1.3rem; color: #7ee787;
-    background: #1a1a1a;
-    width: 42px; height: 42px; border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    border: 1px solid #262626;
-  }
-  .detail-item small {
-    display: block; color: #6b6b6b; font-size: 0.7rem;
-    text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  .detail-item strong { color: #f2f2f2; font-size: 1rem; }
-  .price {
-    background: #7ee787; color: #0a0a0a;
-    padding: 0.6rem 1.3rem; border-radius: 6px;
-    font-weight: 700; font-size: 1.2rem; align-self: center;
+    align-items: center;
+    border-bottom: 1px solid var(--accent-soft);
   }
 
+  .info-group { display: flex; flex-wrap: wrap; gap: 2rem; }
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .info-icon {
+    width: 48px;
+    height: 48px;
+    background: #ffffff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1.3rem;
+    box-shadow: 0 4px 10px rgba(30,58,138,0.1);
+    border: 1px solid var(--accent-soft);
+    flex-shrink: 0;
+  }
+
+  .info-text small {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+
+  .info-text strong {
+    font-size: 1rem;
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .price-badge {
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    color: #ffffff;
+    padding: 0.75rem 1.75rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    box-shadow: 0 8px 20px -6px rgba(30,58,138,0.4);
+    white-space: nowrap;
+  }
+
+  .price-badge .currency { font-size: 1rem; font-weight: 500; opacity: 0.9; }
+  .price-badge .per { font-size: 0.8rem; font-weight: 500; opacity: 0.85; margin-left: 4px; }
+
+  /* ============ PAYMENT BOX ============ */
   .payment {
-    background: #0a0a0a; padding: 1.5rem 2rem;
-    border-bottom: 1px solid #262626;
+    background: #ffffff;
+    padding: 1.75rem 2.5rem;
+    border-bottom: 1px solid var(--border);
   }
+
   .payment h3 {
-    color: #7ee787; font-size: 0.85rem;
-    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--primary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
     margin-bottom: 1rem;
-    font-family: 'Courier New', monospace;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
+
+  .payment h3 i { color: var(--accent); }
+
   .payment-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 0.75rem;
   }
-  .payment-grid div {
-    background: #131313;
-    border: 1px solid #262626;
-    padding: 0.7rem 1rem; border-radius: 6px;
-    border-left: 3px solid #7ee787;
-  }
-  .payment-grid small {
-    display: block; color: #6b6b6b; font-size: 0.7rem;
-    text-transform: uppercase; margin-bottom: 2px;
-  }
-  .payment-grid b { color: #f2f2f2; font-size: 0.95rem; }
 
-  form { padding: 2rem; }
-  form h2 {
-    color: #f2f2f2; font-family: Georgia, serif;
-    font-size: 1.2rem; margin-bottom: 1.5rem;
-    padding-left: 0.75rem; border-left: 3px solid #7ee787;
+  .pay-item {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    transition: all 0.2s ease;
   }
-  .row {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 1rem; margin-bottom: 1rem;
-  }
-  .field { display: flex; flex-direction: column; gap: 0.35rem; }
-  .field.full { grid-column: span 2; }
-  label { font-size: 0.82rem; color: #a3a3a3; font-weight: 600; }
-  input, select {
-    padding: 0.8rem 1rem; background: #0a0a0a;
-    border: 1px solid #262626; border-radius: 6px;
-    color: #f2f2f2; font-size: 0.95rem; font-family: inherit;
-  }
-  input:focus, select:focus {
-    outline: none; border-color: #7ee787;
-    box-shadow: 0 0 0 3px rgba(126,231,135,0.1);
-  }
-  input::placeholder { color: #4a4a4a; }
 
-  button {
-    width: 100%; background: #7ee787; color: #0a0a0a;
-    border: none; padding: 1.1rem; font-size: 1rem;
-    font-weight: 700; border-radius: 6px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    gap: 0.6rem; margin-top: 1rem; transition: all 0.2s;
+  .pay-item:hover {
+    background: var(--accent-bg);
+    border-left-color: var(--primary);
+    transform: translateY(-1px);
+  }
+
+  .pay-item small {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+
+  .pay-item b {
+    color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 700;
+    word-break: break-word;
+  }
+
+  .pay-item .copy-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .copy-btn {
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-soft);
+    color: var(--primary);
+    padding: 0.2rem 0.55rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 700;
+    transition: all 0.15s ease;
     font-family: inherit;
+    margin-left: auto;
   }
-  button:hover { background: #a5f3a8; transform: translateY(-1px); }
-  button:disabled { opacity: 0.6; cursor: wait; transform: none; }
 
+  .copy-btn:hover {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+  }
+
+  .copy-btn.copied {
+    background: var(--success);
+    color: #ffffff;
+    border-color: var(--success);
+  }
+
+  /* ============ FORM ============ */
+  form { padding: 2.5rem; }
+
+  form h2 {
+    color: var(--text);
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding-left: 1rem;
+    border-left: 4px solid var(--accent);
+    letter-spacing: -0.2px;
+  }
+
+  form h2 i { color: var(--accent); }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 0.4rem; }
+  .field.full { grid-column: span 2; }
+
+  label {
+    font-size: 0.82rem;
+    color: var(--text);
+    font-weight: 600;
+    letter-spacing: 0.1px;
+  }
+
+  label .required { color: #ef4444; margin-left: 2px; }
+
+  input, select {
+    padding: 0.85rem 1rem;
+    background: #f8fafc;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    width: 100%;
+  }
+
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
+  }
+
+  input::placeholder { color: #94a3b8; font-weight: 400; }
+
+  /* ============ SUMMARY ============ */
+  .summary {
+    background: var(--accent-bg);
+    border: 1.5px dashed var(--accent);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.75rem 0 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .summary-note {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text);
+    font-size: 0.92rem;
+    line-height: 1.4;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .summary-note i {
+    color: var(--accent);
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .summary-total {
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--primary);
+    background: #ffffff;
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    box-shadow: 0 2px 8px rgba(30,58,138,0.08);
+    border: 1px solid var(--accent-soft);
+    white-space: nowrap;
+  }
+
+  .summary-total small {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-right: 0.3rem;
+    font-weight: 600;
+  }
+
+  /* ============ SUBMIT BUTTON ============ */
+  .submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    color: #ffffff;
+    border: none;
+    padding: 1.15rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    margin-top: 0.5rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 10px 25px -8px rgba(30,58,138,0.4);
+    font-family: inherit;
+    letter-spacing: 0.2px;
+  }
+
+  .submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -8px rgba(30,58,138,0.5);
+    background: linear-gradient(135deg, #1e40af, #2563eb);
+  }
+
+  .submit-btn:active:not(:disabled) { transform: translateY(0); }
+
+  .submit-btn:disabled {
+    opacity: 0.7;
+    cursor: wait;
+    transform: none;
+  }
+
+  .submit-btn i { font-size: 1.1rem; }
+
+  /* ============ MESSAGES ============ */
   .msg {
-    display: none; padding: 1rem 1.2rem; border-radius: 6px;
-    margin-top: 1rem; font-size: 0.9rem;
-    align-items: flex-start; gap: 0.6rem;
-  }
-  .msg.success { background: #0f2a1a; color: #7ee787; border-left: 3px solid #7ee787; }
-  .msg.error   { background: #2a0f0f; color: #f87171; border-left: 3px solid #f87171; }
-
-  .footer-note {
-    text-align: center; font-size: 0.78rem; color: #6b6b6b;
-    margin-top: 1rem; font-family: 'Courier New', monospace;
+    display: none;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    margin-top: 1.25rem;
+    font-size: 0.92rem;
+    align-items: flex-start;
+    gap: 0.7rem;
+    line-height: 1.55;
   }
 
-  @media (max-width: 600px) {
-    .row { grid-template-columns: 1fr; }
+  .msg.success {
+    background: var(--success-bg);
+    color: #166534;
+    border-left: 4px solid var(--success);
+  }
+
+  .msg.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border-left: 4px solid #ef4444;
+  }
+
+  .msg i { font-size: 1.2rem; margin-top: 2px; flex-shrink: 0; }
+  .msg strong { color: inherit; }
+  .msg a { color: inherit; text-decoration: underline; font-weight: 700; }
+
+  /* ============ FOOTER NOTE ============ */
+  .form-footer {
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    line-height: 1.6;
+  }
+
+  .form-footer i { color: var(--accent); font-size: 0.85rem; }
+  .form-footer .dot { color: var(--border); }
+
+  /* ============ SIGNATURE BAR ============ */
+  .signature {
+    background: #f8fafc;
+    padding: 1.25rem 2.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .signature img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    object-fit: cover;
+  }
+
+  .signature-text {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .signature-text strong {
+    color: var(--text);
+    font-weight: 700;
+    font-size: 0.92rem;
+  }
+
+  .signature-text .tag {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  .signature-text a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .signature-text a:hover { color: var(--accent); }
+
+  .signature-links {
+    margin-top: 2px;
+    font-size: 0.8rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    align-items: center;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 640px) {
+    body { padding: 1rem 0.75rem; }
+    .header { padding: 1.5rem; gap: 1rem; }
+    .header img { width: 60px; height: 60px; }
+    .header-text h1 { font-size: 1.4rem; }
+    .details { padding: 1.25rem 1.5rem; gap: 1rem; }
+    .info-group { gap: 1.25rem; width: 100%; }
+    .price-badge { font-size: 1.2rem; padding: 0.6rem 1.4rem; }
+    .payment { padding: 1.5rem; }
+    .payment-grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    form { padding: 1.75rem 1.5rem; }
+    form h2 { font-size: 1.15rem; }
+    .row { grid-template-columns: 1fr; gap: 1rem; }
     .field.full { grid-column: span 1; }
+    .summary { flex-direction: column; align-items: flex-start; }
+    .summary-total { align-self: flex-start; }
+    .signature { padding: 1.25rem 1.5rem; }
+  }
+
+  @media (max-width: 400px) {
+    .payment-grid { grid-template-columns: 1fr; }
+    .price-badge { font-size: 1.05rem; }
   }
 </style>
 </head>
 <body>
   <div class="card">
+
+    <!-- HEADER -->
     <div class="header">
-      <div class="brand">~/esau-victor/class</div>
-      <h1>Website Development — Second Class</h1>
-      <p>Register below · 1st October, 2026</p>
+      <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor">
+      <div class="header-text">
+        <h1>Esau Victor</h1>
+        <div class="tagline">
+          <i class="fas fa-code"></i> Esau De Tech Genius
+        </div>
+        <div class="class-label">Website Development — Second Class</div>
+      </div>
     </div>
 
+    <!-- CLASS DETAILS -->
     <div class="details">
-      <div class="detail-item">
-        <i class="fas fa-calendar-alt"></i>
-        <div>
-          <small>Date</small>
-          <strong>1st October, 2026</strong>
+      <div class="info-group">
+        <div class="info-item">
+          <div class="info-icon"><i class="fas fa-calendar-alt"></i></div>
+          <div class="info-text">
+            <small>Date</small>
+            <strong>1st October, 2026</strong>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon"><i class="fas fa-laptop-code"></i></div>
+          <div class="info-text">
+            <small>Class</small>
+            <strong>Second session</strong>
+          </div>
         </div>
       </div>
-      <div class="detail-item">
-        <i class="fas fa-laptop-code"></i>
-        <div>
-          <small>Class</small>
-          <strong>Second session</strong>
-        </div>
+      <div class="price-badge">
+        <span class="currency">₦</span>5,000
+        <span class="per">/ person</span>
       </div>
-      <div class="price">₦5,000</div>
     </div>
 
+    <!-- PAYMENT DETAILS -->
     <div class="payment">
-      <h3>// Payment Details</h3>
+      <h3><i class="fas fa-credit-card"></i> Payment Details</h3>
       <div class="payment-grid">
-        <div><small>Account Number</small><b>7124777746</b></div>
-        <div><small>Bank</small><b>POCKETAPP</b></div>
-        <div><small>Account Name</small><b>Esau Victor</b></div>
-        <div><small>Proof of Payment</small><b>WhatsApp 08132084092</b></div>
+        <div class="pay-item">
+          <small>Account Number</small>
+          <div class="copy-row">
+            <b>7124777746</b>
+            <button type="button" class="copy-btn" onclick="copyText('7124777746', this)">Copy</button>
+          </div>
+        </div>
+        <div class="pay-item">
+          <small>Bank Name</small>
+          <b>POCKETAPP</b>
+        </div>
+        <div class="pay-item">
+          <small>Account Name</small>
+          <b>Esau Victor</b>
+        </div>
+        <div class="pay-item">
+          <small>Send Proof To (WhatsApp)</small>
+          <div class="copy-row">
+            <b><i class="fab fa-whatsapp" style="color:#25D366;margin-right:4px;"></i>08132084092</b>
+            <button type="button" class="copy-btn" onclick="copyText('08132084092', this)">Copy</button>
+          </div>
+        </div>
       </div>
     </div>
 
+    <!-- FORM -->
     <form id="form">
-      <h2>Register your spot</h2>
+      <h2><i class="fas fa-pen-alt"></i> Register your spot</h2>
 
       <div class="row">
         <div class="field">
-          <label>Full name *</label>
-          <input type="text" id="fullName" required placeholder="John Doe">
+          <label for="fullName">Full name <span class="required">*</span></label>
+          <input type="text" id="fullName" required placeholder="John Doe" autocomplete="name">
         </div>
         <div class="field">
-          <label>Email *</label>
-          <input type="email" id="email" required placeholder="you@example.com">
+          <label for="email">Email <span class="required">*</span></label>
+          <input type="email" id="email" required placeholder="you@example.com" autocomplete="email">
         </div>
         <div class="field">
-          <label>Phone number *</label>
-          <input type="tel" id="phone" required placeholder="08012345678">
+          <label for="phone">Phone number <span class="required">*</span></label>
+          <input type="tel" id="phone" required placeholder="08012345678" autocomplete="tel">
         </div>
         <div class="field">
-          <label>Experience level *</label>
+          <label for="experience">Experience level <span class="required">*</span></label>
           <select id="experience" required>
-            <option value="" disabled selected>Select level</option>
+            <option value="" disabled selected>Select your level</option>
             <option>Beginner</option>
             <option>Intermediate</option>
             <option>Advanced</option>
           </select>
         </div>
         <div class="field full">
-          <label>Questions / Special requests (optional)</label>
+          <label for="comments">Questions / Special requests <span style="color:var(--text-muted);font-weight:500;">(optional)</span></label>
           <input type="text" id="comments" placeholder="Anything we should know?">
         </div>
         <input type="text" id="botcheck" style="display:none" tabindex="-1" autocomplete="off">
       </div>
 
-      <button type="submit" id="submitBtn">
+      <div class="summary">
+        <div class="summary-note">
+          <i class="fas fa-info-circle"></i>
+          <span>Your details will be sent to Esau Victor on WhatsApp, plus a confirmation email to you.</span>
+        </div>
+        <div class="summary-total">
+          <small>Total</small> ₦5,000
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">
         <i class="fas fa-graduation-cap"></i>
         Register & Get Payment Details
       </button>
@@ -225,8 +669,27 @@
         <span id="errorText"></span>
       </div>
 
-      <p class="footer-note">// Confirmation sent to your email & WhatsApp</p>
+      <div class="form-footer">
+        <span><i class="fas fa-lock"></i> Your information is safe</span>
+        <span class="dot">•</span>
+        <span><i class="fas fa-user-graduate"></i> Limited seats available</span>
+      </div>
     </form>
+
+    <!-- SIGNATURE BAR -->
+    <div class="signature">
+      <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor">
+      <div class="signature-text">
+        <strong>Esau Victor</strong>
+        <span class="tag"> · Esau De Tech Genius</span>
+        <div class="signature-links">
+          <a href="mailto:www.esauvictor.name.ng@gmail.com"><i class="fas fa-envelope"></i> Email</a>
+          <a href="https://wa.me/2348132084092"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+          <a href="https://esauvictor.name.ng"><i class="fas fa-globe"></i> esauvictor.name.ng</a>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -234,6 +697,32 @@
     const submitBtn = document.getElementById('submitBtn');
     const successMsg = document.getElementById('successMsg');
     const errorMsg = document.getElementById('errorMsg');
+
+    function copyText(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 1400);
+      }).catch(() => {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 1400);
+      });
+    }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -252,6 +741,7 @@
       if (!payload.fullName || !payload.email || !payload.phone || !payload.experience) {
         document.getElementById('errorText').textContent = 'Please fill in all required fields.';
         errorMsg.style.display = 'flex';
+        errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         return;
       }
 
@@ -259,36 +749,40 @@
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
       try {
-        const res = await fetch('/register-class', {
+        const res = await fetch('https://api-proxy.skinblinz66.workers.dev/register-class', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
+
         const data = await res.json();
 
         if (data.success) {
           const ch = data.channels || {};
-          const status = [];
-          if (ch.ownerWhatsApp)   status.push('✓ WhatsApp sent to organizer');
-          if (ch.ownerEmail)      status.push('✓ Email sent to organizer');
-          if (ch.studentEmail)    status.push('✓ Email sent to you');
-          if (ch.studentWhatsApp) status.push('✓ WhatsApp confirmation sent to you');
+          const lines = [];
+          if (ch.ownerWhatsApp)   lines.push('✓ WhatsApp sent to organizer');
+          if (ch.ownerEmail)      lines.push('✓ Email sent to organizer');
+          if (ch.studentEmail)    lines.push('✓ Confirmation email sent to you');
+          if (ch.studentWhatsApp) lines.push('✓ WhatsApp confirmation sent to you');
 
           document.getElementById('successText').innerHTML =
             `<strong>Registration confirmed! Reg ID: #${data.regId}</strong><br>` +
-            status.join('<br>') +
-            `<br><br>Check your email <strong>${payload.email}</strong> and WhatsApp <strong>${payload.phone}</strong> for payment details.`;
+            (lines.length ? lines.join('<br>') + '<br><br>' : '') +
+            `Check your email <strong>${payload.email}</strong> and WhatsApp <strong>${payload.phone}</strong> for payment details.`;
 
           successMsg.style.display = 'flex';
           successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           form.reset();
         } else {
-          document.getElementById('errorText').textContent = data.error || 'Something went wrong.';
+          document.getElementById('errorText').textContent = data.error || 'Something went wrong. Please try again.';
           errorMsg.style.display = 'flex';
+          errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
       } catch (err) {
-        document.getElementById('errorText').textContent = 'Network error. Please try again.';
+        console.error(err);
+        document.getElementById('errorText').textContent = 'Network error. Please check your connection and try again.';
         errorMsg.style.display = 'flex';
+        errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<i class="fas fa-graduation-cap"></i> Register & Get Payment Details';
