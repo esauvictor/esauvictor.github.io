@@ -2,61 +2,72 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1e3a8a">
 <title>Class Registration | Esau Victor</title>
 <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --bg:         #f1f5f9;
-    --card:       #ffffff;
-    --border:     #e2e8f0;
-    --text:       #0f172a;
-    --text-muted: #64748b;
     --primary:    #1e3a8a;
+    --primary-lt: #3b82f6;
     --accent:     #3b82f6;
     --accent-soft:#dbeafe;
     --accent-bg:  #eff6ff;
+    --text:       #0f172a;
+    --text-muted: #64748b;
+    --border:     #e2e8f0;
+    --bg:         #f1f5f9;
+    --card:       #ffffff;
     --success:    #16a34a;
     --success-bg: #dcfce7;
-    --warning:    #d97706;
-    --warning-bg: #fef3c7;
-    --green:      #25D366;
-    --green-dark: #1da851;
-    --shadow:     0 20px 40px -12px rgba(15,23,42,0.15), 0 8px 16px -6px rgba(15,23,42,0.06);
+    --error:      #dc2626;
+    --error-bg:   #fee2e2;
+    --radius:     16px;
+    --radius-sm:  10px;
   }
+
+  html { -webkit-text-size-adjust: 100%; }
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background: linear-gradient(160deg, #eff6ff 0%, #f1f5f9 50%, #f8fafc 100%);
     color: var(--text);
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem 1rem;
+    padding: 1.5rem 1rem;
     -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
   }
 
   .card {
-    max-width: 760px;
     width: 100%;
+    max-width: 620px;
     background: var(--card);
-    border-radius: 20px;
-    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+    box-shadow: 0 20px 45px -15px rgba(15, 23, 42, 0.18), 0 8px 20px -8px rgba(15, 23, 42, 0.06);
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.6);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    animation: fadeUp 0.4s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
   /* ============ HEADER ============ */
   .header {
     background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-    padding: 2rem 2.5rem;
+    padding: 1.75rem 1.5rem;
     display: flex;
     align-items: center;
-    gap: 1.25rem;
+    gap: 1rem;
     position: relative;
     overflow: hidden;
   }
@@ -64,263 +75,214 @@
   .header::before {
     content: '';
     position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+    top: -40%;
+    right: -20%;
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(circle, rgba(255,255,255,0.14) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
   }
 
   .header img {
-    width: 72px;
-    height: 72px;
+    width: 58px;
+    height: 58px;
     border-radius: 50%;
     border: 3px solid #ffffff;
     object-fit: cover;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
     flex-shrink: 0;
     position: relative;
     z-index: 1;
   }
 
-  .header-text { position: relative; z-index: 1; }
+  .header-text {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+  }
 
   .header-text h1 {
-    font-size: 1.75rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: #ffffff;
-    line-height: 1.2;
     letter-spacing: -0.3px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .header-text .tagline {
-    font-size: 0.9rem;
+    font-size: 0.82rem;
     color: #dbeafe;
     font-weight: 500;
-    letter-spacing: 0.5px;
-    margin-top: 4px;
+    letter-spacing: 0.4px;
+    margin-top: 3px;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.35rem;
   }
 
   .header-text .class-label {
-    font-size: 1rem;
-    color: #ffffff;
-    margin-top: 8px;
-    opacity: 0.95;
-    font-weight: 600;
+    display: none;
   }
 
-  /* ============ CLASS DETAILS ============ */
-  .details {
+  /* ============ CLASS INFO BAR ============ */
+  .class-info {
     background: var(--accent-bg);
-    padding: 1.75rem 2.5rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    justify-content: space-between;
-    align-items: center;
+    padding: 1.25rem 1.5rem;
     border-bottom: 1px solid var(--accent-soft);
   }
 
-  .info-group { display: flex; flex-wrap: wrap; gap: 2rem; }
-
-  .info-item {
+  .class-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.9rem;
     display: flex;
-    align-items: center;
-    gap: 0.85rem;
+    align-items: flex-start;
+    gap: 0.55rem;
+    line-height: 1.35;
   }
 
-  .info-icon {
-    width: 48px;
-    height: 48px;
+  .class-title i {
+    color: var(--accent);
+    font-size: 1rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .info-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-width: 0;
+  }
+
+  .info-chip .icon-box {
+    width: 34px;
+    height: 34px;
     background: #ffffff;
-    border-radius: 12px;
+    border-radius: 9px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--primary);
-    font-size: 1.3rem;
-    box-shadow: 0 4px 10px rgba(30,58,138,0.1);
+    font-size: 0.9rem;
     border: 1px solid var(--accent-soft);
     flex-shrink: 0;
   }
 
-  .info-text small {
+  .info-chip .label {
     display: block;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 700;
-    color: var(--text-muted);
-    margin-bottom: 2px;
-  }
-
-  .info-text strong {
-    font-size: 1rem;
-    color: var(--text);
-    font-weight: 700;
-  }
-
-  .price-badge {
-    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-    color: #ffffff;
-    padding: 0.75rem 1.75rem;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 1.4rem;
-    display: flex;
-    align-items: baseline;
-    gap: 0.3rem;
-    box-shadow: 0 8px 20px -6px rgba(30,58,138,0.4);
-    white-space: nowrap;
-  }
-
-  .price-badge .currency { font-size: 1rem; font-weight: 500; opacity: 0.9; }
-  .price-badge .per { font-size: 0.8rem; font-weight: 500; opacity: 0.85; margin-left: 4px; }
-
-  /* ============ PAYMENT BOX ============ */
-  .payment {
-    background: #ffffff;
-    padding: 1.75rem 2.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .payment h3 {
-    color: var(--primary);
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .payment h3 i { color: var(--accent); }
-
-  .payment-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 0.75rem;
-  }
-
-  .pay-item {
-    background: #f8fafc;
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--accent);
-    border-radius: 10px;
-    padding: 0.85rem 1rem;
-    transition: all 0.2s ease;
-  }
-
-  .pay-item:hover {
-    background: var(--accent-bg);
-    border-left-color: var(--primary);
-    transform: translateY(-1px);
-  }
-
-  .pay-item small {
-    display: block;
-    color: var(--text-muted);
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     text-transform: uppercase;
     letter-spacing: 0.8px;
     font-weight: 700;
-    margin-bottom: 3px;
+    color: var(--text-muted);
+    margin-bottom: 1px;
+    line-height: 1;
   }
 
-  .pay-item b {
+  .info-chip .value {
+    font-size: 0.85rem;
+    font-weight: 700;
     color: var(--text);
-    font-size: 0.95rem;
-    font-weight: 700;
-    word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
   }
 
-  .pay-item .copy-row {
+  .price-chip {
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    color: #ffffff;
+    padding: 0.55rem 1rem;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 1rem;
     display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 3px;
+    box-shadow: 0 6px 14px -4px rgba(30,58,138,0.4);
+    white-space: nowrap;
+    justify-self: end;
   }
 
-  .copy-btn {
-    background: var(--accent-bg);
-    border: 1px solid var(--accent-soft);
-    color: var(--primary);
-    padding: 0.2rem 0.55rem;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.7rem;
-    font-weight: 700;
-    transition: all 0.15s ease;
-    font-family: inherit;
-    margin-left: auto;
-  }
-
-  .copy-btn:hover {
-    background: var(--accent);
-    color: #ffffff;
-    border-color: var(--accent);
-  }
-
-  .copy-btn.copied {
-    background: var(--success);
-    color: #ffffff;
-    border-color: var(--success);
-  }
+  .price-chip .currency { font-size: 0.8rem; font-weight: 500; opacity: 0.9; }
 
   /* ============ FORM ============ */
-  form { padding: 2.5rem; }
+  form { padding: 1.75rem 1.5rem; }
 
   form h2 {
     color: var(--text);
-    font-size: 1.35rem;
+    font-size: 1.15rem;
     font-weight: 700;
-    margin-bottom: 1.75rem;
+    margin-bottom: 1.25rem;
     display: flex;
     align-items: center;
-    gap: 0.7rem;
-    padding-left: 1rem;
+    gap: 0.6rem;
+    padding-left: 0.85rem;
     border-left: 4px solid var(--accent);
     letter-spacing: -0.2px;
   }
 
-  form h2 i { color: var(--accent); }
+  form h2 i { color: var(--accent); font-size: 1rem; }
 
   .row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.25rem;
-    margin-bottom: 1.25rem;
+    gap: 1rem;
+    margin-bottom: 1rem;
   }
 
-  .field { display: flex; flex-direction: column; gap: 0.4rem; }
-  .field.full { grid-column: span 2; }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  .field.full { grid-column: 1 / -1; }
 
   label {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     color: var(--text);
     font-weight: 600;
     letter-spacing: 0.1px;
   }
 
-  label .required { color: #ef4444; margin-left: 2px; }
+  label .required { color: var(--error); margin-left: 2px; }
+  label .optional { color: var(--text-muted); font-weight: 500; margin-left: 3px; font-size: 0.72rem; }
 
   input, select {
+    width: 100%;
     padding: 0.85rem 1rem;
     background: #f8fafc;
     border: 1.5px solid var(--border);
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     color: var(--text);
     font-size: 0.95rem;
     font-family: inherit;
-    transition: all 0.15s ease;
-    width: 100%;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem;
   }
 
   input:focus, select:focus {
@@ -332,105 +294,59 @@
 
   input::placeholder { color: #94a3b8; font-weight: 400; }
 
-  /* ============ SUMMARY ============ */
-  .summary {
-    background: var(--accent-bg);
-    border: 1.5px dashed var(--accent);
-    border-radius: 12px;
-    padding: 1.25rem 1.5rem;
-    margin: 1.75rem 0 1.5rem;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  .summary-note {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: var(--text);
-    font-size: 0.92rem;
-    line-height: 1.4;
-    flex: 1;
-    min-width: 200px;
-  }
-
-  .summary-note i {
-    color: var(--accent);
-    font-size: 1.3rem;
-    flex-shrink: 0;
-  }
-
-  .summary-total {
-    font-weight: 700;
-    font-size: 1.4rem;
-    color: var(--primary);
-    background: #ffffff;
-    padding: 0.5rem 1.25rem;
-    border-radius: 50px;
-    box-shadow: 0 2px 8px rgba(30,58,138,0.08);
-    border: 1px solid var(--accent-soft);
-    white-space: nowrap;
-  }
-
-  .summary-total small {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-right: 0.3rem;
-    font-weight: 600;
-  }
-
-  /* ============ SUBMIT BUTTON ============ */
+  /* ============ SUBMIT ============ */
   .submit-btn {
     width: 100%;
     background: linear-gradient(135deg, #1e3a8a, #3b82f6);
     color: #ffffff;
     border: none;
-    padding: 1.15rem;
-    font-size: 1.05rem;
+    padding: 1.05rem 1.25rem;
+    font-size: 1rem;
     font-weight: 700;
-    border-radius: 12px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.7rem;
-    margin-top: 0.5rem;
-    transition: all 0.2s ease;
-    box-shadow: 0 10px 25px -8px rgba(30,58,138,0.4);
+    gap: 0.6rem;
+    margin-top: 1.25rem;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 10px 22px -8px rgba(30,58,138,0.45);
     font-family: inherit;
     letter-spacing: 0.2px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   .submit-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 30px -8px rgba(30,58,138,0.5);
-    background: linear-gradient(135deg, #1e40af, #2563eb);
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px -8px rgba(30,58,138,0.55);
   }
 
   .submit-btn:active:not(:disabled) { transform: translateY(0); }
 
   .submit-btn:disabled {
-    opacity: 0.7;
+    opacity: 0.75;
     cursor: wait;
     transform: none;
   }
 
-  .submit-btn i { font-size: 1.1rem; }
+  .submit-btn i { font-size: 1.05rem; }
 
   /* ============ MESSAGES ============ */
   .msg {
     display: none;
-    padding: 1rem 1.25rem;
-    border-radius: 10px;
-    margin-top: 1.25rem;
-    font-size: 0.92rem;
+    padding: 0.9rem 1.1rem;
+    border-radius: var(--radius-sm);
+    margin-top: 1.1rem;
+    font-size: 0.88rem;
     align-items: flex-start;
-    gap: 0.7rem;
+    gap: 0.65rem;
     line-height: 1.55;
+    animation: fadeUp 0.25s ease;
   }
+
+  .msg.show { display: flex; }
 
   .msg.success {
     background: var(--success-bg);
@@ -439,113 +355,156 @@
   }
 
   .msg.error {
-    background: #fee2e2;
+    background: var(--error-bg);
     color: #991b1b;
-    border-left: 4px solid #ef4444;
+    border-left: 4px solid var(--error);
   }
 
-  .msg i { font-size: 1.2rem; margin-top: 2px; flex-shrink: 0; }
+  .msg i { font-size: 1.1rem; margin-top: 2px; flex-shrink: 0; }
   .msg strong { color: inherit; }
-  .msg a { color: inherit; text-decoration: underline; font-weight: 700; }
 
-  /* ============ FOOTER NOTE ============ */
-  .form-footer {
-    text-align: center;
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    margin-top: 1.5rem;
+  /* ============ NOTICE ============ */
+  .notice {
+    background: var(--accent-bg);
+    border: 1px dashed var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1rem;
+    margin-top: 1.15rem;
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    line-height: 1.6;
-  }
-
-  .form-footer i { color: var(--accent); font-size: 0.85rem; }
-  .form-footer .dot { color: var(--border); }
-
-  /* ============ SIGNATURE BAR ============ */
-  .signature {
-    background: #f8fafc;
-    padding: 1.25rem 2.5rem;
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .signature img {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: 2px solid var(--accent);
-    object-fit: cover;
-  }
-
-  .signature-text {
-    font-size: 0.85rem;
+    gap: 0.7rem;
+    align-items: flex-start;
+    font-size: 0.83rem;
+    color: #1e40af;
     line-height: 1.5;
   }
 
-  .signature-text strong {
+  .notice i {
+    color: var(--accent);
+    font-size: 1rem;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+
+  /* ============ FOOTER ============ */
+  .footer {
+    background: #f8fafc;
+    padding: 1.1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .footer img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .footer-text {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    min-width: 0;
+  }
+
+  .footer-text strong {
     color: var(--text);
     font-weight: 700;
-    font-size: 0.92rem;
+    font-size: 0.85rem;
   }
 
-  .signature-text .tag {
+  .footer-text .tag {
     color: var(--accent);
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: 0.72rem;
   }
 
-  .signature-text a {
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color 0.15s ease;
-  }
-
-  .signature-text a:hover { color: var(--accent); }
-
-  .signature-links {
-    margin-top: 2px;
-    font-size: 0.8rem;
+  .footer-links {
+    margin-top: 3px;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.85rem;
-    align-items: center;
+    gap: 0.7rem;
+    font-size: 0.72rem;
   }
+
+  .footer-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .footer-links a:hover { color: var(--accent); }
 
   /* ============ RESPONSIVE ============ */
-  @media (max-width: 640px) {
-    body { padding: 1rem 0.75rem; }
-    .header { padding: 1.5rem; gap: 1rem; }
-    .header img { width: 60px; height: 60px; }
-    .header-text h1 { font-size: 1.4rem; }
-    .details { padding: 1.25rem 1.5rem; gap: 1rem; }
-    .info-group { gap: 1.25rem; width: 100%; }
-    .price-badge { font-size: 1.2rem; padding: 0.6rem 1.4rem; }
-    .payment { padding: 1.5rem; }
-    .payment-grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
-    form { padding: 1.75rem 1.5rem; }
-    form h2 { font-size: 1.15rem; }
-    .row { grid-template-columns: 1fr; gap: 1rem; }
-    .field.full { grid-column: span 1; }
-    .summary { flex-direction: column; align-items: flex-start; }
-    .summary-total { align-self: flex-start; }
-    .signature { padding: 1.25rem 1.5rem; }
+  @media (max-width: 560px) {
+    body { padding: 0.75rem 0.6rem; align-items: flex-start; }
+
+    .card { border-radius: 14px; }
+
+    .header {
+      padding: 1.25rem 1.1rem;
+      gap: 0.85rem;
+    }
+
+    .header img { width: 48px; height: 48px; border-width: 2px; }
+
+    .header-text h1 { font-size: 1.1rem; }
+
+    .header-text .tagline { font-size: 0.75rem; }
+
+    .class-info { padding: 1.1rem; }
+
+    .class-title { font-size: 0.95rem; margin-bottom: 0.75rem; }
+
+    .info-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem 0.6rem;
+    }
+
+    .price-chip {
+      grid-column: 1 / -1;
+      justify-self: stretch;
+      justify-content: center;
+      font-size: 1.05rem;
+      padding: 0.65rem 1rem;
+    }
+
+    .info-chip .icon-box { width: 32px; height: 32px; font-size: 0.85rem; }
+
+    .info-chip .value { font-size: 0.8rem; }
+
+    form { padding: 1.5rem 1.1rem; }
+
+    form h2 { font-size: 1.05rem; margin-bottom: 1.1rem; }
+
+    .row { grid-template-columns: 1fr; gap: 0.85rem; margin-bottom: 0.85rem; }
+
+    .field.full { grid-column: 1; }
+
+    input, select { padding: 0.8rem 0.9rem; font-size: 0.92rem; }
+
+    .submit-btn { padding: 1rem; font-size: 0.95rem; }
+
+    .footer { padding: 1rem 1.1rem; }
+
+    .footer img { width: 34px; height: 34px; }
   }
 
-  @media (max-width: 400px) {
-    .payment-grid { grid-template-columns: 1fr; }
-    .price-badge { font-size: 1.05rem; }
+  @media (max-width: 360px) {
+    .info-grid { grid-template-columns: 1fr; }
+    .price-chip { font-size: 0.98rem; }
+    .header-text h1 { font-size: 1rem; }
   }
 </style>
 </head>
 <body>
-  <div class="card">
+  <main class="card" role="main">
 
     <!-- HEADER -->
     <div class="header">
@@ -555,83 +514,59 @@
         <div class="tagline">
           <i class="fas fa-code"></i> Esau De Tech Genius
         </div>
-        <div class="class-label">Website Development — Second Class</div>
       </div>
     </div>
 
-    <!-- CLASS DETAILS -->
-    <div class="details">
-      <div class="info-group">
-        <div class="info-item">
-          <div class="info-icon"><i class="fas fa-calendar-alt"></i></div>
-          <div class="info-text">
-            <small>Date</small>
-            <strong>1st October, 2026</strong>
-          </div>
-        </div>
-        <div class="info-item">
-          <div class="info-icon"><i class="fas fa-laptop-code"></i></div>
-          <div class="info-text">
-            <small>Class</small>
-            <strong>Second session</strong>
-          </div>
-        </div>
+    <!-- CLASS INFO -->
+    <div class="class-info">
+      <div class="class-title">
+        <i class="fas fa-graduation-cap"></i>
+        <span>Website Development — Second Class</span>
       </div>
-      <div class="price-badge">
-        <span class="currency">₦</span>5,000
-        <span class="per">/ person</span>
-      </div>
-    </div>
 
-    <!-- PAYMENT DETAILS -->
-    <div class="payment">
-      <h3><i class="fas fa-credit-card"></i> Payment Details</h3>
-      <div class="payment-grid">
-        <div class="pay-item">
-          <small>Account Number</small>
-          <div class="copy-row">
-            <b>7124777746</b>
-            <button type="button" class="copy-btn" onclick="copyText('7124777746', this)">Copy</button>
+      <div class="info-grid">
+        <div class="info-chip">
+          <div class="icon-box"><i class="fas fa-calendar-alt"></i></div>
+          <div>
+            <span class="label">Date</span>
+            <span class="value">1st Oct, 2026</span>
           </div>
         </div>
-        <div class="pay-item">
-          <small>Bank Name</small>
-          <b>POCKETAPP</b>
-        </div>
-        <div class="pay-item">
-          <small>Account Name</small>
-          <b>Esau Victor</b>
-        </div>
-        <div class="pay-item">
-          <small>Send Proof To (WhatsApp)</small>
-          <div class="copy-row">
-            <b><i class="fab fa-whatsapp" style="color:#25D366;margin-right:4px;"></i>08132084092</b>
-            <button type="button" class="copy-btn" onclick="copyText('08132084092', this)">Copy</button>
+
+        <div class="info-chip">
+          <div class="icon-box"><i class="fas fa-laptop-code"></i></div>
+          <div>
+            <span class="label">Session</span>
+            <span class="value">Second</span>
           </div>
+        </div>
+
+        <div class="price-chip">
+          <span class="currency">₦</span>5,000
         </div>
       </div>
     </div>
 
     <!-- FORM -->
-    <form id="form">
+    <form id="form" novalidate>
       <h2><i class="fas fa-pen-alt"></i> Register your spot</h2>
 
       <div class="row">
         <div class="field">
           <label for="fullName">Full name <span class="required">*</span></label>
-          <input type="text" id="fullName" required placeholder="John Doe" autocomplete="name">
+          <input type="text" id="fullName" name="fullName" required placeholder="John Doe" autocomplete="name">
         </div>
         <div class="field">
-          <label for="email">Email <span class="required">*</span></label>
-          <input type="email" id="email" required placeholder="you@example.com" autocomplete="email">
+          <label for="email">Email address <span class="required">*</span></label>
+          <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email" inputmode="email">
         </div>
         <div class="field">
           <label for="phone">Phone number <span class="required">*</span></label>
-          <input type="tel" id="phone" required placeholder="08012345678" autocomplete="tel">
+          <input type="tel" id="phone" name="phone" required placeholder="08012345678" autocomplete="tel" inputmode="tel">
         </div>
         <div class="field">
           <label for="experience">Experience level <span class="required">*</span></label>
-          <select id="experience" required>
+          <select id="experience" name="experience" required>
             <option value="" disabled selected>Select your level</option>
             <option>Beginner</option>
             <option>Intermediate</option>
@@ -639,155 +574,138 @@
           </select>
         </div>
         <div class="field full">
-          <label for="comments">Questions / Special requests <span style="color:var(--text-muted);font-weight:500;">(optional)</span></label>
-          <input type="text" id="comments" placeholder="Anything we should know?">
+          <label for="comments">Questions / Special requests <span class="optional">(optional)</span></label>
+          <input type="text" id="comments" name="comments" placeholder="Anything we should know?">
         </div>
-        <input type="text" id="botcheck" style="display:none" tabindex="-1" autocomplete="off">
-      </div>
 
-      <div class="summary">
-        <div class="summary-note">
-          <i class="fas fa-info-circle"></i>
-          <span>Your details will be sent to Esau Victor on WhatsApp, plus a confirmation email to you.</span>
-        </div>
-        <div class="summary-total">
-          <small>Total</small> ₦5,000
-        </div>
+        <!-- Honeypot (hidden from humans, catches bots) -->
+        <input type="text" id="botcheck" name="botcheck" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
       </div>
 
       <button type="submit" class="submit-btn" id="submitBtn">
-        <i class="fas fa-graduation-cap"></i>
-        Register & Get Payment Details
+        <i class="fas fa-check-circle"></i>
+        <span id="submitText">Register now</span>
       </button>
 
-      <div id="successMsg" class="msg success">
+      <div class="notice">
+        <i class="fas fa-info-circle"></i>
+        <span>
+          After you submit, we'll send the <strong>payment details</strong> to your email and WhatsApp so you can complete your registration.
+        </span>
+      </div>
+
+      <div id="successMsg" class="msg success" role="status" aria-live="polite">
         <i class="fas fa-check-circle"></i>
         <span id="successText"></span>
       </div>
-      <div id="errorMsg" class="msg error">
+
+      <div id="errorMsg" class="msg error" role="alert">
         <i class="fas fa-exclamation-circle"></i>
         <span id="errorText"></span>
       </div>
-
-      <div class="form-footer">
-        <span><i class="fas fa-lock"></i> Your information is safe</span>
-        <span class="dot">•</span>
-        <span><i class="fas fa-user-graduate"></i> Limited seats available</span>
-      </div>
     </form>
 
-    <!-- SIGNATURE BAR -->
-    <div class="signature">
+    <!-- FOOTER -->
+    <div class="footer">
       <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor">
-      <div class="signature-text">
+      <div class="footer-text">
         <strong>Esau Victor</strong>
         <span class="tag"> · Esau De Tech Genius</span>
-        <div class="signature-links">
+        <div class="footer-links">
           <a href="mailto:www.esauvictor.name.ng@gmail.com"><i class="fas fa-envelope"></i> Email</a>
-          <a href="https://wa.me/2348132084092"><i class="fab fa-whatsapp"></i> WhatsApp</a>
           <a href="https://esauvictor.name.ng"><i class="fas fa-globe"></i> esauvictor.name.ng</a>
         </div>
       </div>
     </div>
 
-  </div>
+  </main>
 
   <script>
-    const form = document.getElementById('form');
-    const submitBtn = document.getElementById('submitBtn');
-    const successMsg = document.getElementById('successMsg');
-    const errorMsg = document.getElementById('errorMsg');
+    (function () {
+      const form = document.getElementById('form');
+      const submitBtn = document.getElementById('submitBtn');
+      const submitText = document.getElementById('submitText');
+      const successMsg = document.getElementById('successMsg');
+      const errorMsg = document.getElementById('errorMsg');
+      const successText = document.getElementById('successText');
+      const errorText = document.getElementById('errorText');
 
-    function copyText(text, btn) {
-      navigator.clipboard.writeText(text).then(() => {
-        const original = btn.textContent;
-        btn.textContent = 'Copied!';
-        btn.classList.add('copied');
-        setTimeout(() => {
-          btn.textContent = original;
-          btn.classList.remove('copied');
-        }, 1400);
-      }).catch(() => {
-        // Fallback
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        btn.textContent = 'Copied!';
-        btn.classList.add('copied');
-        setTimeout(() => {
-          btn.textContent = 'Copy';
-          btn.classList.remove('copied');
-        }, 1400);
-      });
-    }
+      const API_URL = 'https://api-proxy.skinblinz66.workers.dev/register-class';
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      successMsg.style.display = 'none';
-      errorMsg.style.display = 'none';
-
-      const payload = {
-        fullName:   document.getElementById('fullName').value.trim(),
-        email:      document.getElementById('email').value.trim(),
-        phone:      document.getElementById('phone').value.trim(),
-        experience: document.getElementById('experience').value,
-        comments:   document.getElementById('comments').value.trim(),
-        botcheck:   document.getElementById('botcheck').value,
-      };
-
-      if (!payload.fullName || !payload.email || !payload.phone || !payload.experience) {
-        document.getElementById('errorText').textContent = 'Please fill in all required fields.';
-        errorMsg.style.display = 'flex';
+      function showError(message) {
+        errorText.textContent = message;
+        errorMsg.classList.add('show');
+        successMsg.classList.remove('show');
         errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        return;
       }
 
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+      function showSuccess(html) {
+        successText.innerHTML = html;
+        successMsg.classList.add('show');
+        errorMsg.classList.remove('show');
+        successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
 
-      try {
-        const res = await fetch('https://api-proxy.skinblinz66.workers.dev/register-class', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        successMsg.classList.remove('show');
+        errorMsg.classList.remove('show');
 
-        const data = await res.json();
+        const payload = {
+          fullName:   document.getElementById('fullName').value.trim(),
+          email:      document.getElementById('email').value.trim(),
+          phone:      document.getElementById('phone').value.trim(),
+          experience: document.getElementById('experience').value,
+          comments:   document.getElementById('comments').value.trim(),
+          botcheck:   document.getElementById('botcheck').value,
+        };
 
-        if (data.success) {
-          const ch = data.channels || {};
-          const lines = [];
-          if (ch.ownerWhatsApp)   lines.push('✓ WhatsApp sent to organizer');
-          if (ch.ownerEmail)      lines.push('✓ Email sent to organizer');
-          if (ch.studentEmail)    lines.push('✓ Confirmation email sent to you');
-          if (ch.studentWhatsApp) lines.push('✓ WhatsApp confirmation sent to you');
+        // Client validation
+        if (!payload.fullName) return showError('Please enter your full name.');
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) return showError('Please enter a valid email address.');
+        if (!/^[0-9+\s\-()]{7,20}$/.test(payload.phone)) return showError('Please enter a valid phone number.');
+        if (!payload.experience) return showError('Please select your experience level.');
 
-          document.getElementById('successText').innerHTML =
-            `<strong>Registration confirmed! Reg ID: #${data.regId}</strong><br>` +
-            (lines.length ? lines.join('<br>') + '<br><br>' : '') +
-            `Check your email <strong>${payload.email}</strong> and WhatsApp <strong>${payload.phone}</strong> for payment details.`;
+        submitBtn.disabled = true;
+        submitText.textContent = 'Sending...';
 
-          successMsg.style.display = 'flex';
-          successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          form.reset();
-        } else {
-          document.getElementById('errorText').textContent = data.error || 'Something went wrong. Please try again.';
-          errorMsg.style.display = 'flex';
-          errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        try {
+          const res = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+
+          const data = await res.json().catch(() => ({}));
+
+          if (data.success) {
+            showSuccess(
+              `<strong>Registration confirmed!</strong> Reg ID: #${data.regId}<br><br>` +
+              `We've sent the payment details to <strong>${payload.email}</strong> and your WhatsApp (<strong>${payload.phone}</strong>). ` +
+              `Please complete the payment to secure your spot.`
+            );
+            form.reset();
+          } else {
+            showError(data.error || 'Something went wrong. Please try again.');
+          }
+        } catch (err) {
+          console.error('Submit error:', err);
+          showError('Network error. Please check your connection and try again.');
+        } finally {
+          submitBtn.disabled = false;
+          submitText.textContent = 'Register now';
         }
-      } catch (err) {
-        console.error(err);
-        document.getElementById('errorText').textContent = 'Network error. Please check your connection and try again.';
-        errorMsg.style.display = 'flex';
-        errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-graduation-cap"></i> Register & Get Payment Details';
-      }
-    });
+      });
+
+      // Clear messages when user starts typing again
+      ['fullName', 'email', 'phone', 'experience', 'comments'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('input', () => {
+          if (errorMsg.classList.contains('show')) errorMsg.classList.remove('show');
+        });
+      });
+    })();
   </script>
 </body>
 </html>
