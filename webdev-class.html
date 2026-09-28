@@ -7,17 +7,13 @@
     <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ----- GLOBAL STYLES (consistent with brand) ----- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
             --primary-color: #1e3a8a;
             --secondary-color: #4a6fa5;
             --accent-color: #3b82f6;
+            --whatsapp-color: #25D366;
             --text-color: #333;
             --light-bg: #f8fafc;
             --white: #ffffff;
@@ -39,7 +35,6 @@
             padding: 1.5rem;
         }
 
-        /* main card */
         .registration-container {
             max-width: 900px;
             width: 100%;
@@ -48,15 +43,9 @@
             box-shadow: var(--shadow), 0 20px 30px -10px rgba(30, 58, 138, 0.15);
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(2px);
             transition: transform 0.2s ease;
         }
 
-        .registration-container:hover {
-            box-shadow: 0 25px 40px -12px rgba(30, 58, 138, 0.25);
-        }
-
-        /* header with logo / badge */
         .reg-header {
             background: var(--primary-color);
             padding: 1.5rem 2rem;
@@ -93,11 +82,6 @@
             margin-top: 0.25rem;
         }
 
-        .header-text p i {
-            font-size: 0.9rem;
-        }
-
-        /* class highlight banner */
         .class-highlight {
             background: #eef2ff;
             padding: 1.75rem 2rem;
@@ -135,11 +119,7 @@
             border: 1px solid var(--gray-border);
         }
 
-        .info-text {
-            display: flex;
-            flex-direction: column;
-        }
-
+        .info-text { display: flex; flex-direction: column; }
         .info-label {
             font-size: 0.8rem;
             text-transform: uppercase;
@@ -147,7 +127,6 @@
             font-weight: 600;
             color: #64748b;
         }
-
         .info-value {
             font-weight: 700;
             font-size: 1.2rem;
@@ -174,10 +153,85 @@
             opacity: 0.9;
         }
 
-        /* form area */
-        .form-section {
-            padding: 2rem 2rem 2.2rem;
+        /* PAYMENT DETAILS BOX */
+        .payment-box {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2d4fa8 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--gray-border);
         }
+
+        .payment-box h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.95;
+        }
+
+        .payment-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .pay-item {
+            background: rgba(255, 255, 255, 0.12);
+            padding: 0.9rem 1.1rem;
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--accent-color);
+            backdrop-filter: blur(4px);
+        }
+
+        .pay-item .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.85;
+            margin-bottom: 0.25rem;
+        }
+
+        .pay-item .value {
+            font-weight: 700;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            word-break: break-word;
+        }
+
+        .pay-item .value i {
+            color: #93c5fd;
+            font-size: 0.9rem;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.25rem 0.55rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            margin-left: 0.3rem;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        .copy-btn.copied {
+            background: #22c55e;
+        }
+
+        /* FORM */
+        .form-section { padding: 2rem 2rem 2.2rem; }
 
         .form-section h2 {
             font-size: 1.4rem;
@@ -203,9 +257,7 @@
             gap: 0.4rem;
         }
 
-        .input-group.full-width {
-            grid-column: span 2;
-        }
+        .input-group.full-width { grid-column: span 2; }
 
         .input-group label {
             font-weight: 600;
@@ -242,12 +294,8 @@
             background: white;
         }
 
-        .input-group input::placeholder {
-            color: #94a3b8;
-            font-weight: 400;
-        }
+        .input-group input::placeholder { color: #94a3b8; font-weight: 400; }
 
-        /* payment note & total */
         .payment-summary {
             background: #f8fafc;
             border-radius: var(--radius-sm);
@@ -269,10 +317,7 @@
             font-size: 0.98rem;
         }
 
-        .payment-note i {
-            font-size: 1.4rem;
-            color: var(--primary-color);
-        }
+        .payment-note i { font-size: 1.4rem; color: var(--primary-color); }
 
         .total-amount {
             font-weight: 700;
@@ -293,14 +338,13 @@
             margin-right: 0.3rem;
         }
 
-        /* register button */
         .register-btn {
             width: 100%;
-            background: var(--primary-color);
+            background: var(--whatsapp-color);
             color: white;
             border: none;
             padding: 1.2rem;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 700;
             border-radius: 60px;
             display: flex;
@@ -309,27 +353,21 @@
             gap: 0.75rem;
             cursor: pointer;
             transition: all 0.25s ease;
-            box-shadow: 0 10px 20px -8px rgba(30, 58, 138, 0.4);
+            box-shadow: 0 10px 20px -8px rgba(37, 211, 102, 0.5);
             border: 2px solid transparent;
             letter-spacing: 0.3px;
         }
 
         .register-btn:hover {
-            background: #172e6e;
+            background: #1da851;
             transform: translateY(-2px);
-            box-shadow: 0 18px 25px -10px rgba(30, 58, 138, 0.5);
+            box-shadow: 0 18px 25px -10px rgba(37, 211, 102, 0.6);
         }
 
-        .register-btn i {
-            font-size: 1.2rem;
-        }
+        .register-btn i { font-size: 1.3rem; }
 
-        .register-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 5px 12px -4px rgba(30, 58, 138, 0.6);
-        }
+        .register-btn:active { transform: translateY(2px); }
 
-        /* footer / small print */
         .form-footer {
             margin-top: 1.25rem;
             text-align: center;
@@ -342,32 +380,8 @@
             gap: 0.4rem;
         }
 
-        .form-footer i {
-            color: var(--secondary-color);
-            font-size: 0.8rem;
-        }
+        .form-footer i { color: var(--secondary-color); font-size: 0.8rem; }
 
-        /* responsive */
-        @media (max-width: 700px) {
-            body { padding: 0.8rem; }
-            .reg-header { padding: 1.2rem 1.5rem; }
-            .header-text h1 { font-size: 1.5rem; }
-            .class-highlight { padding: 1.5rem; flex-direction: column; align-items: flex-start; }
-            .class-info { gap: 1rem; width: 100%; }
-            .price-tag { align-self: flex-start; }
-            .form-section { padding: 1.5rem; }
-            .form-grid { grid-template-columns: 1fr; gap: 1.2rem; }
-            .input-group.full-width { grid-column: span 1; }
-            .payment-summary { flex-direction: column; align-items: flex-start; }
-        }
-
-        @media (max-width: 420px) {
-            .info-item { width: 100%; }
-            .header-text h1 { font-size: 1.3rem; }
-            .price-tag { font-size: 1.3rem; }
-        }
-
-        /* success message (hidden by default) */
         .success-message {
             display: none;
             background: #dcfce7;
@@ -381,8 +395,20 @@
             font-weight: 500;
         }
 
-        .success-message i {
-            font-size: 1.3rem;
+        .success-message i { font-size: 1.3rem; }
+
+        @media (max-width: 700px) {
+            body { padding: 0.8rem; }
+            .reg-header { padding: 1.2rem 1.5rem; }
+            .header-text h1 { font-size: 1.5rem; }
+            .class-highlight { padding: 1.5rem; flex-direction: column; align-items: flex-start; }
+            .class-info { gap: 1rem; width: 100%; }
+            .price-tag { align-self: flex-start; }
+            .payment-box { padding: 1.2rem 1.5rem; }
+            .form-section { padding: 1.5rem; }
+            .form-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+            .input-group.full-width { grid-column: span 1; }
+            .payment-summary { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
@@ -397,7 +423,7 @@
             </div>
         </div>
 
-        <!-- Highlight bar with class details -->
+        <!-- Class details -->
         <div class="class-highlight">
             <div class="class-info">
                 <div class="info-item">
@@ -420,11 +446,40 @@
             </div>
         </div>
 
+        <!-- PAYMENT DETAILS -->
+        <div class="payment-box">
+            <h3><i class="fas fa-credit-card"></i> Payment Details</h3>
+            <div class="payment-details">
+                <div class="pay-item">
+                    <div class="label">Account Number</div>
+                    <div class="value">
+                        7124777746
+                        <button class="copy-btn" onclick="copyText('7124777746', this)">Copy</button>
+                    </div>
+                </div>
+                <div class="pay-item">
+                    <div class="label">Bank Name</div>
+                    <div class="value">POCKETAPP</div>
+                </div>
+                <div class="pay-item">
+                    <div class="label">Account Name</div>
+                    <div class="value">Esau Victor</div>
+                </div>
+                <div class="pay-item">
+                    <div class="label">Send Proof To (WhatsApp)</div>
+                    <div class="value">
+                        <i class="fab fa-whatsapp"></i> 08132084092
+                        <button class="copy-btn" onclick="copyText('08132084092', this)">Copy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Registration form -->
         <div class="form-section">
-            <h2><i class="fas fa-pen-alt" style="color: var(--accent-color);"></i> Secure your spot</h2>
+            <h2><i class="fas fa-pen-alt" style="color: var(--accent-color);"></i> Register your spot</h2>
 
-            <form id="registrationForm" action="#" method="post">
+            <form id="registrationForm">
                 <div class="form-grid">
                     <div class="input-group">
                         <label for="fullName"><i class="fas fa-user"></i> Full name</label>
@@ -442,9 +497,9 @@
                         <label for="experience"><i class="fas fa-laptop-code"></i> Experience level</label>
                         <select id="experience" name="experience" required>
                             <option value="" disabled selected>Select your level</option>
-                            <option value="beginner">Beginner</option>
-                            <option value="intermediate">Intermediate</option>
-                            <option value="advanced">Advanced</option>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
                         </select>
                     </div>
                     <div class="input-group full-width">
@@ -453,26 +508,23 @@
                     </div>
                 </div>
 
-                <!-- payment summary & total -->
                 <div class="payment-summary">
                     <div class="payment-note">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>Secure registration — pay after you submit</span>
+                        <i class="fas fa-info-circle"></i>
+                        <span>After registering, you'll be redirected to WhatsApp to send your details & proof of payment.</span>
                     </div>
                     <div class="total-amount">
                         <small>Total</small> ₦5,000
                     </div>
                 </div>
 
-                <!-- register button -->
                 <button type="submit" class="register-btn">
-                    <i class="fas fa-check-circle"></i> Register now
+                    <i class="fab fa-whatsapp"></i> Register & Send to WhatsApp
                 </button>
 
-                <!-- success message (hidden) -->
                 <div id="successMessage" class="success-message">
                     <i class="fas fa-check-circle"></i>
-                    <span>Registration successful! We’ll send payment details to your email.</span>
+                    <span>WhatsApp opened! Send the pre-filled message to complete your registration.</span>
                 </div>
             </form>
 
@@ -483,68 +535,108 @@
         </div>
     </div>
 
-    <!-- simple script to show success message and prevent actual submission -->
     <script>
-        (function() {
-            const form = document.getElementById('registrationForm');
-            const successDiv = document.getElementById('successMessage');
+        // Your WhatsApp number (in international format without + for the API)
+        // Nigeria country code is +234, so 08132084092 becomes 2348132084092
+        const WHATSAPP_NUMBER = '2348132084092';
 
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();  // no actual submission
-
-                // basic validation (HTML5 already does, but we double-check)
-                const fullName = document.getElementById('fullName').value.trim();
-                const email = document.getElementById('email').value.trim();
-                const phone = document.getElementById('phone').value.trim();
-                const experience = document.getElementById('experience').value;
-
-                if (!fullName || !email || !phone || !experience) {
-                    alert('Please fill in all required fields.');
-                    return;
-                }
-
-                // Hide the register button? optional — we just show success message and reset form
-                // Show success message
-                successDiv.style.display = 'flex';
-
-                // Optionally reset the form after a short delay (but keep success visible)
-                // We'll reset the form fields but keep success message visible for user feedback.
-                form.reset();
-
-                // Scroll success into view (if needed)
-                successDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-                // Optional: disable the submit button to prevent double-click, then re-enable
-                const submitBtn = form.querySelector('button[type="submit"]');
-                submitBtn.disabled = true;
-                submitBtn.style.opacity = '0.7';
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-                // simulate a quick "processing" then revert button
+        // Copy helper
+        function copyText(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const original = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
                 setTimeout(() => {
-                    submitBtn.disabled = false;
-                    submitBtn.style.opacity = '1';
-                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Register now';
-                    // Hide success message after 6 seconds? No, we keep it — but you can auto-hide:
-                    // but we want the user to see it, so we leave it.
+                    btn.textContent = original;
+                    btn.classList.remove('copied');
                 }, 1500);
-
-                // Hide the success message after 8 seconds (optional)
+            }).catch(err => {
+                // Fallback for older browsers
+                const temp = document.createElement('textarea');
+                temp.value = text;
+                document.body.appendChild(temp);
+                temp.select();
+                document.execCommand('copy');
+                document.body.removeChild(temp);
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
                 setTimeout(() => {
-                    successDiv.style.display = 'none';
-                }, 8000);
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 1500);
             });
+        }
 
-            // Reset success message when user starts typing again (optional, for better UX)
-            const inputs = form.querySelectorAll('input, select');
-            inputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    if (successDiv.style.display === 'flex') {
-                        successDiv.style.display = 'none';
-                    }
-                });
+        // Form submit -> open WhatsApp with pre-filled message
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const fullName  = document.getElementById('fullName').value.trim();
+            const email     = document.getElementById('email').value.trim();
+            const phone     = document.getElementById('phone').value.trim();
+            const experience = document.getElementById('experience').value;
+            const comments  = document.getElementById('comments').value.trim() || 'None';
+
+            if (!fullName || !email || !phone || !experience) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            // Build the WhatsApp message (all records go to your number)
+            const message = 
+`*NEW CLASS REGISTRATION*
+
+*Class:* Website Development - Second Class
+*Date:* 1st October, 2026
+*Price:* ₦5,000
+
+*--- STUDENT DETAILS ---*
+*Full Name:* ${fullName}
+*Email:* ${email}
+*Phone:* ${phone}
+*Experience:* ${experience}
+*Comments:* ${comments}
+
+*--- PAYMENT INFO ---*
+Bank: POCKETAPP
+Account Number: 7124777746
+Account Name: Esau Victor
+Amount: ₦5,000
+
+_I have made payment and I'm sending my proof of payment below._ 👇`;
+
+            // Encode message for URL
+            const encodedMessage = encodeURIComponent(message);
+
+            // Build WhatsApp URL (works on both mobile and desktop)
+            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+
+            // Open in new tab
+            window.open(whatsappUrl, '_blank');
+
+            // Show success message
+            const successDiv = document.getElementById('successMessage');
+            successDiv.style.display = 'flex';
+            successDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            // Reset form fields (but keep success message)
+            this.reset();
+
+            // Hide success message after 10 seconds
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 10000);
+        });
+
+        // Hide success message when user starts typing again
+        document.querySelectorAll('#registrationForm input, #registrationForm select').forEach(input => {
+            input.addEventListener('input', function() {
+                const successDiv = document.getElementById('successMessage');
+                if (successDiv.style.display === 'flex') {
+                    successDiv.style.display = 'none';
+                }
             });
-        })();
+        });
     </script>
 </body>
 </html>
