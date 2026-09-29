@@ -27,6 +27,8 @@
     --error-bg:   #fee2e2;
     --radius:     16px;
     --radius-sm:  10px;
+    --whatsapp:   #25D366;
+    --whatsapp-d: #128C7E;
   }
 
   html { -webkit-text-size-adjust: 100%; }
@@ -122,10 +124,6 @@
     display: flex;
     align-items: center;
     gap: 0.35rem;
-  }
-
-  .header-text .class-label {
-    display: none;
   }
 
   /* ============ CLASS INFO BAR ============ */
@@ -385,6 +383,76 @@
     flex-shrink: 0;
   }
 
+  /* ============ WHATSAPP CHANNEL CTA ============ */
+  .channel-cta {
+    padding: 0 1.5rem 1.5rem;
+    margin-top: -0.25rem;
+  }
+
+  .channel-cta-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    background: linear-gradient(135deg, var(--whatsapp) 0%, var(--whatsapp-d) 100%);
+    border-radius: var(--radius-sm);
+    padding: 0.9rem 1rem;
+    box-shadow: 0 8px 20px -8px rgba(37,211,102,0.5);
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .channel-cta-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+  }
+
+  .channel-cta-text {
+    flex: 1;
+    min-width: 0;
+    line-height: 1.3;
+  }
+
+  .channel-cta-text strong {
+    display: block;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .channel-cta-text span {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.85);
+    margin-top: 2px;
+  }
+
+  .channel-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #ffffff;
+    color: #0a1628;
+    padding: 0.5rem 0.9rem;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: transform 0.15s;
+    letter-spacing: 0.2px;
+  }
+
+  .channel-cta-btn:hover { transform: translateX(2px); }
+
+  .channel-cta-btn i { font-size: 0.7rem; }
+
   /* ============ FOOTER ============ */
   .footer {
     background: #f8fafc;
@@ -444,29 +512,14 @@
   /* ============ RESPONSIVE ============ */
   @media (max-width: 560px) {
     body { padding: 0.75rem 0.6rem; align-items: flex-start; }
-
     .card { border-radius: 14px; }
-
-    .header {
-      padding: 1.25rem 1.1rem;
-      gap: 0.85rem;
-    }
-
+    .header { padding: 1.25rem 1.1rem; gap: 0.85rem; }
     .header img { width: 48px; height: 48px; border-width: 2px; }
-
     .header-text h1 { font-size: 1.1rem; }
-
     .header-text .tagline { font-size: 0.75rem; }
-
     .class-info { padding: 1.1rem; }
-
     .class-title { font-size: 0.95rem; margin-bottom: 0.75rem; }
-
-    .info-grid {
-      grid-template-columns: 1fr 1fr;
-      gap: 0.85rem 0.6rem;
-    }
-
+    .info-grid { grid-template-columns: 1fr 1fr; gap: 0.85rem 0.6rem; }
     .price-chip {
       grid-column: 1 / -1;
       justify-self: stretch;
@@ -474,32 +527,29 @@
       font-size: 1.05rem;
       padding: 0.65rem 1rem;
     }
-
     .info-chip .icon-box { width: 32px; height: 32px; font-size: 0.85rem; }
-
     .info-chip .value { font-size: 0.8rem; }
-
     form { padding: 1.5rem 1.1rem; }
-
     form h2 { font-size: 1.05rem; margin-bottom: 1.1rem; }
-
     .row { grid-template-columns: 1fr; gap: 0.85rem; margin-bottom: 0.85rem; }
-
     .field.full { grid-column: 1; }
-
     input, select { padding: 0.8rem 0.9rem; font-size: 0.92rem; }
-
     .submit-btn { padding: 1rem; font-size: 0.95rem; }
-
+    .channel-cta { padding: 0 1.1rem 1.25rem; }
+    .channel-cta-inner { padding: 0.85rem 0.9rem; gap: 0.7rem; }
+    .channel-cta-icon { width: 36px; height: 36px; font-size: 1rem; }
+    .channel-cta-text strong { font-size: 0.85rem; }
+    .channel-cta-text span { font-size: 0.7rem; }
+    .channel-cta-btn { padding: 0.45rem 0.8rem; font-size: 0.72rem; }
     .footer { padding: 1rem 1.1rem; }
-
     .footer img { width: 34px; height: 34px; }
   }
 
-  @media (max-width: 360px) {
+  @media (max-width: 380px) {
     .info-grid { grid-template-columns: 1fr; }
     .price-chip { font-size: 0.98rem; }
     .header-text h1 { font-size: 1rem; }
+    .channel-cta-text span { display: none; }
   }
 </style>
 </head>
@@ -578,7 +628,6 @@
           <input type="text" id="comments" name="comments" placeholder="Anything we should know?">
         </div>
 
-        <!-- Honeypot (hidden from humans, catches bots) -->
         <input type="text" id="botcheck" name="botcheck" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
       </div>
 
@@ -604,6 +653,25 @@
         <span id="errorText"></span>
       </div>
     </form>
+
+    <!-- WHATSAPP CHANNEL CTA -->
+    <div class="channel-cta">
+      <a href="https://whatsapp.com/channel/0029VbDnzZyDp2QGAgvz3S40"
+         target="_blank"
+         rel="noopener noreferrer"
+         class="channel-cta-inner">
+        <div class="channel-cta-icon">
+          <i class="fab fa-whatsapp"></i>
+        </div>
+        <div class="channel-cta-text">
+          <strong>Join the class channel</strong>
+          <span>Get updates, reminders &amp; materials</span>
+        </div>
+        <div class="channel-cta-btn">
+          Join <i class="fas fa-arrow-right"></i>
+        </div>
+      </a>
+    </div>
 
     <!-- FOOTER -->
     <div class="footer">
@@ -660,7 +728,6 @@
           botcheck:   document.getElementById('botcheck').value,
         };
 
-        // Client validation
         if (!payload.fullName) return showError('Please enter your full name.');
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) return showError('Please enter a valid email address.');
         if (!/^[0-9+\s\-()]{7,20}$/.test(payload.phone)) return showError('Please enter a valid phone number.');
@@ -697,7 +764,6 @@
         }
       });
 
-      // Clear messages when user starts typing again
       ['fullName', 'email', 'phone', 'experience', 'comments'].forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
