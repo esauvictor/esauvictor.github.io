@@ -982,7 +982,7 @@
           <div class="card-body">
             <div class="meta">${formatDate(p.published_at)}${p.view_count ? ` · <span class="view-count">${p.view_count} views</span>` : ''}</div>
             <h3 class="card-title">${p.is_locked ? '🔒 ' : ''}${p.title}</h3>
-            <p class="excerpt">${p.is_locked ? '🔒 Locked — enter the code to access it.' : (p.excerpt || '')}</p>
+            <p class="excerpt">${p.is_locked ? '🔒 Locked' : (p.excerpt || '')}</p>
             ${(p.tags && p.tags.length) ? `<div class="post-tags">${p.tags.map(t => `<span class="ptag">#${t}</span>`).join('')}</div>` : ''}
             <a href="post.html?slug=${encodeURIComponent(p.slug)}" class="read-more" onclick="event.stopPropagation()">${p.is_locked ? 'Unlock' : 'Read more'}</a>
           </div>
