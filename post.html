@@ -2974,6 +2974,105 @@
             return `<pre><code class="language-${lang}">${escapeHtmlForCodeBlock(html)}</code></pre>`;
         }
 
+        // ---- Locked posts ----
+        function getPostToken(slug) {
+            try { return sessionStorage.getItem('postToken:' + slug) || ''; } catch (e) { return ''; }
+        }
+        function postTokenQuery(slug) {
+            const t = getPostToken(slug);
+            return t ? `&token=${encodeURIComponent(t)}` : '';
+        }
+
+        // Replaces the post body with a "enter access code" form. Nothing about
+        // the post's content is ever sent to the browser until the code is right.
+        function renderLockedGate(post, slug) {
+            try { sessionStorage.removeItem('postToken:' + slug); } catch (e) {}   // stale or expired token
+
+            document.getElementById('post-title').textContent = post.title;
+            document.title = `${post.title} - Esau Victor`;
+            document.getElementById('post-date').querySelector('span').textContent = formatDate(post.published_at);
+
+            ['reading-time', 'view-count', 'reactionsRow', 'post-tags', 'relatedPosts'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+            ['.comments-section', '.share-row'].forEach(sel => {
+                const el = document.querySelector(sel);
+                if (el) el.style.display = 'none';
+            });
+
+            const box = document.getElementById('post-content');
+            box.innerHTML = '';
+
+            const gate = document.createElement('div');
+            gate.style.cssText = 'text-align:center; padding:2.5rem 1rem; max-width:420px; margin:0 auto;';
+
+            const icon = document.createElement('div');
+            icon.textContent = '🔒';
+            icon.style.cssText = 'font-size:2.5rem; margin-bottom:.75rem;';
+
+            const heading = document.createElement('h2');
+            heading.textContent = 'This post is locked';
+            heading.style.marginTop = '0';
+
+            const note = document.createElement('p');
+            note.textContent = 'Enter the access code you were given to read it.';
+            note.style.cssText = 'color:var(--light-text);';
+
+            const form = document.createElement('form');
+            form.style.cssText = 'display:flex; gap:.5rem; margin-top:1.25rem;';
+
+            const input = document.createElement('input');
+            input.type = 'password';
+            input.placeholder = 'Access code';
+            input.autocomplete = 'off';
+            input.required = true;
+            input.maxLength = 200;
+            input.setAttribute('aria-label', 'Access code');
+            input.style.cssText = 'flex:1; min-width:0; padding:.7rem .9rem; border:1px solid var(--border-color); border-radius:8px; background:var(--card-bg); color:var(--text-color); font-size:1rem;';
+
+            const btn = document.createElement('button');
+            btn.type = 'submit';
+            btn.textContent = 'Unlock';
+            btn.style.cssText = 'padding:.7rem 1.2rem; border:none; border-radius:8px; background:var(--primary-color); color:#fff; font-weight:600; cursor:pointer;';
+
+            const msg = document.createElement('p');
+            msg.setAttribute('role', 'alert');
+            msg.style.cssText = 'min-height:1.4em; margin-top:.75rem; font-size:.9rem; color:#dc2626;';
+
+            form.append(input, btn);
+            gate.append(icon, heading, note, form, msg);
+            box.appendChild(gate);
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const code = input.value.trim();
+                if (!code) return;
+                btn.disabled = true;
+                btn.textContent = 'Checking…';
+                msg.textContent = '';
+                try {
+                    const res = await fetch(`${API_BASE}/unlock_post.php`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ slug, code })
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    if (res.ok && data.ok && data.token) {
+                        try { sessionStorage.setItem('postToken:' + slug, data.token); } catch (err) {}
+                        window.location.reload();
+                        return;
+                    }
+                    msg.textContent = data.error || 'Incorrect code.';
+                } catch (err) {
+                    msg.textContent = "Couldn't reach the server. Try again.";
+                }
+                btn.disabled = false;
+                btn.textContent = 'Unlock';
+                input.select();
+            });
+        }
+
         async function loadBlogPost() {
             const slug = getURLParameter('slug');
             if (!slug) {
@@ -2985,7 +3084,7 @@
 
             try {
                 const [postRes, listRes] = await Promise.all([
-                    fetchWithRetry(`${API_BASE}/posts.php?slug=${encodeURIComponent(slug)}`),
+                    fetchWithRetry(`${API_BASE}/posts.php?slug=${encodeURIComponent(slug)}${postTokenQuery(slug)}`),
                     fetchWithRetry(`${API_BASE}/posts.php`)
                 ]);
 
@@ -2995,6 +3094,11 @@
 
                 const listData = await listRes.json();
                 const posts = listData.posts || [];
+
+                if (postData.locked) {
+                    renderLockedGate(post, slug);
+                    return;
+                }
 
                 document.getElementById('post-title').textContent = post.title;
                 document.getElementById('post-date').querySelector('span').textContent = formatDate(post.published_at);
@@ -3183,7 +3287,7 @@
                     const res = await fetch(`${API_BASE}/comments.php`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ slug, name, email, body, parent_id: parentId, website: '' }),
+                        body: JSON.stringify({ slug, name, email, body, parent_id: parentId, website: '', token: getPostToken(slug) }),
                     });
                     const data = await res.json();
                     if (!res.ok) throw new Error(data.error || 'Something went wrong');
@@ -3438,7 +3542,7 @@
             }
 
             function connect() {
-                const url = `${API_BASE}/comments_stream.php?slug=${encodeURIComponent(slug)}&since=${currentMaxId()}`;
+                const url = `${API_BASE}/comments_stream.php?slug=${encodeURIComponent(slug)}&since=${currentMaxId()}${postTokenQuery(slug)}`;
                 commentStream = new EventSource(url);
 
                 commentStream.addEventListener('open', () => {
@@ -3579,7 +3683,7 @@
             const listEl = document.getElementById('commentList');
             const countEl = document.getElementById('commentCount');
             try {
-                const res = await fetchWithRetry(`${API_BASE}/comments.php?slug=${encodeURIComponent(slug)}`);
+                const res = await fetchWithRetry(`${API_BASE}/comments.php?slug=${encodeURIComponent(slug)}${postTokenQuery(slug)}`);
                 if (!res.ok) throw new Error('failed to load comments');
                 const data = await res.json();
                 const comments = data.comments || [];
@@ -3706,6 +3810,7 @@
                     email: document.getElementById('commentEmail').value.trim(),
                     body: document.getElementById('commentBody').value.trim(),
                     website: document.getElementById('website').value,
+                    token: getPostToken(slug),
                 };
 
                 if (!payload.name || !payload.body) return;
