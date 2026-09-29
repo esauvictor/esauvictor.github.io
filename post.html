@@ -3365,6 +3365,8 @@
                         saveCommentToken(data.id, data.edit_token);
                         const watchKey = watchForCommentAppearance(statusEl, baseMsg);
                         resolveWatchId(watchKey, data.id);
+                        // CHANGED: fast-poll for ~30s so the AI reply appears almost instantly
+                        fastPollForComment(slug, data.id);
                     }
                     nameInput.value = '';
                     emailInput.value = '';
@@ -3714,10 +3716,16 @@
         // the main comment box, so nothing they're writing ever gets wiped.
         // Matches the moderation cron cadence — shared by the silent
         // comment refresh and the "appearing soon" countdown message.
-        // Cron runs on real clock marks (:00, :02, :04, ...), not relative
+        // Cron runs on real clock marks (:00, :20, :40, ...), not relative
         // to whenever a comment happens to be submitted, so the countdown
         // targets the actual next boundary instead of a flat interval.
-        const CRON_INTERVAL_MINUTES = 2; // must match the moderate_and_reply.php cron schedule (*/2 * * * *)
+        //
+        // CHANGED: interval updated from 2 to 20 minutes to match the new
+        // moderate_and_reply.php cron schedule (0,20,40 * * * *). The
+        // server-side trigger_automation() in api/comments.php makes real
+        // replies appear almost instantly via fastPollForComment() below,
+        // so this 20-minute loop is now just a safety net.
+        const CRON_INTERVAL_MINUTES = 20; // must match the moderate_and_reply.php cron schedule (0,20,40 * * * *)
         const COMMENT_REFRESH_MS = CRON_INTERVAL_MINUTES * 60000;
 
         function nextCronRunTime(intervalMinutes = CRON_INTERVAL_MINUTES) {
@@ -3730,6 +3738,42 @@
                 next.setMinutes(minutes - remainder + intervalMinutes);
             }
             return next;
+        }
+
+        // CHANGED: new helper. Polls a few times over ~30 seconds after a
+        // visitor submits a comment, because api/comments.php now fires an
+        // instant server-side trigger that usually gets the comment approved
+        // and replied within 2–5 seconds. Stops early once the comment is
+        // visible (loadComments -> checkPendingCommentWatches clears the
+        // pending watch), or gives up and lets the 20-minute cron handle it.
+        function fastPollForComment(slug, commentId, attempt = 0) {
+            const MAX_ATTEMPTS = 8;
+            const DELAY_MS = 4000; // 8 attempts × 4s ≈ 32 seconds total
+
+            if (attempt >= MAX_ATTEMPTS) return;
+
+            setTimeout(async () => {
+                // Don't disturb someone mid-typing (e.g. a reply on another comment)
+                const openReply = document.querySelector('.reply-form.open');
+                const openEdit = document.querySelector('.comment-edit-form:not([hidden])');
+                if (openReply || openEdit || document.hidden) {
+                    fastPollForComment(slug, commentId, attempt + 1);
+                    return;
+                }
+
+                try {
+                    await loadComments(slug);
+                    // loadComments() calls checkPendingCommentWatches()
+                    // internally, which clears the "checking in…" message as
+                    // soon as the comment is actually visible. If it's gone,
+                    // we're done.
+                    if (!pendingCommentWatches.size) return;
+                } catch (err) {
+                    // fall through — we'll retry on the next tick
+                }
+
+                fastPollForComment(slug, commentId, attempt + 1);
+            }, DELAY_MS);
         }
 
         function startCommentAutoRefresh(slug) {
@@ -3903,6 +3947,8 @@
                         saveCommentToken(data.id, data.edit_token);
                         const watchKey = watchForCommentAppearance(statusEl, baseMsg);
                         resolveWatchId(watchKey, data.id);
+                        // CHANGED: fast-poll for ~30s so the AI reply appears almost instantly
+                        fastPollForComment(slug, data.id);
                     }
                     form.reset();
                 } catch (err) {
