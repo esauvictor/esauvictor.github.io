@@ -2975,8 +2975,32 @@
         }
 
         // ---- Locked posts ----
+        // Kept in memory as well as sessionStorage: some in-app browsers block
+        // storage, and without this the unlock would silently "not stick".
+        const postTokenMemory = {};
         function getPostToken(slug) {
+            if (postTokenMemory[slug]) return postTokenMemory[slug];
             try { return sessionStorage.getItem('postToken:' + slug) || ''; } catch (e) { return ''; }
+        }
+        function setPostToken(slug, token) {
+            postTokenMemory[slug] = token;
+            try { sessionStorage.setItem('postToken:' + slug, token); } catch (e) {}
+        }
+        function clearPostToken(slug) {
+            delete postTokenMemory[slug];
+            try { sessionStorage.removeItem('postToken:' + slug); } catch (e) {}
+        }
+
+        // Hides / restores the parts of the page that make no sense on the lock screen.
+        function setGateHidden(hidden) {
+            ['reading-time', 'view-count', 'reactionsRow', 'post-tags', 'relatedPosts'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = hidden ? 'none' : '';
+            });
+            ['.comments-section', '.share-row'].forEach(sel => {
+                const el = document.querySelector(sel);
+                if (el) el.style.display = hidden ? 'none' : '';
+            });
         }
         function postTokenQuery(slug) {
             const t = getPostToken(slug);
@@ -2986,20 +3010,13 @@
         // Replaces the post body with a "enter access code" form. Nothing about
         // the post's content is ever sent to the browser until the code is right.
         function renderLockedGate(post, slug) {
-            try { sessionStorage.removeItem('postToken:' + slug); } catch (e) {}   // stale or expired token
+            clearPostToken(slug);   // stale or expired token
 
             document.getElementById('post-title').textContent = post.title;
             document.title = `${post.title} - Esau Victor`;
             document.getElementById('post-date').querySelector('span').textContent = formatDate(post.published_at);
 
-            ['reading-time', 'view-count', 'reactionsRow', 'post-tags', 'relatedPosts'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.style.display = 'none';
-            });
-            ['.comments-section', '.share-row'].forEach(sel => {
-                const el = document.querySelector(sel);
-                if (el) el.style.display = 'none';
-            });
+            setGateHidden(true);
 
             const box = document.getElementById('post-content');
             box.innerHTML = '';
@@ -3016,7 +3033,7 @@
             heading.style.marginTop = '0';
 
             const note = document.createElement('p');
-            note.textContent = 'Enter the access code you were given to read it.';
+            note.textContent = 'Enter the code you were given to access it.';
             note.style.cssText = 'color:var(--light-text);';
 
             const form = document.createElement('form');
@@ -3057,15 +3074,24 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ slug, code })
                     });
-                    const data = await res.json().catch(() => ({}));
-                    if (res.ok && data.ok && data.token) {
-                        try { sessionStorage.setItem('postToken:' + slug, data.token); } catch (err) {}
-                        window.location.reload();
+                    const data = await res.json().catch(() => null);
+                    if (res.ok && data && data.ok && data.token) {
+                        setPostToken(slug, data.token);
+                        setGateHidden(false);
+                        await loadBlogPost();   // re-fetch, this time with the token
                         return;
                     }
-                    msg.textContent = data.error || 'Incorrect code.';
+                    if (data && data.error) {
+                        msg.textContent = data.error;
+                    } else {
+                        // Not a JSON answer from unlock_post.php: the file is missing,
+                        // blocked, or crashed. Say so instead of "Incorrect code".
+                        console.error('unlock_post.php returned HTTP ' + res.status, data);
+                        msg.textContent = `The unlock service isn't responding correctly (HTTP ${res.status}). Please tell the site owner.`;
+                    }
                 } catch (err) {
-                    msg.textContent = "Couldn't reach the server. Try again.";
+                    console.error('unlock request failed', err);
+                    msg.textContent = "Couldn't reach the server. Check your connection and try again.";
                 }
                 btn.disabled = false;
                 btn.textContent = 'Unlock';
