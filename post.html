@@ -3029,11 +3029,11 @@
             icon.style.cssText = 'font-size:2.5rem; margin-bottom:.75rem;';
 
             const heading = document.createElement('h2');
-            heading.textContent = 'This post is locked';
+            heading.textContent = 'This resource is locked';
             heading.style.marginTop = '0';
 
             const note = document.createElement('p');
-            note.textContent = 'Enter the code you were given to access it.';
+            note.textContent = 'Enter the code you were given to  access it.';
             note.style.cssText = 'color:var(--light-text);';
 
             const form = document.createElement('form');
@@ -3061,6 +3061,42 @@
             gate.append(icon, heading, note, form, msg);
             box.appendChild(gate);
 
+            // Live countdown shown while the server has blocked this visitor.
+            // It is based on a fixed deadline (not on counting ticks), so it
+            // stays correct even if the browser throttles a background tab.
+            let lockTimer = null;
+            function startLockout(seconds) {
+                const until = Date.now() + seconds * 1000;
+                if (lockTimer) clearInterval(lockTimer);
+                input.value = '';
+                input.disabled = true;
+                btn.disabled = true;
+                btn.textContent = 'Locked';
+                msg.setAttribute('aria-live', 'off');   // don't read out every second
+
+                const tick = () => {
+                    if (!document.body.contains(msg)) { clearInterval(lockTimer); return; }
+                    const left = Math.max(0, Math.ceil((until - Date.now()) / 1000));
+                    if (left <= 0) {
+                        clearInterval(lockTimer);
+                        lockTimer = null;
+                        input.disabled = false;
+                        btn.disabled = false;
+                        btn.textContent = 'Unlock';
+                        msg.textContent = 'You can try again now.';
+                        msg.style.color = 'var(--light-text)';
+                        input.focus();
+                        return;
+                    }
+                    const m = Math.floor(left / 60);
+                    const s = String(left % 60).padStart(2, '0');
+                    msg.style.color = '#dc2626';
+                    msg.textContent = `Too many wrong codes. Try again in ${m}:${s}`;
+                };
+                tick();
+                lockTimer = setInterval(tick, 1000);
+            }
+
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const code = input.value.trim();
@@ -3068,6 +3104,8 @@
                 btn.disabled = true;
                 btn.textContent = 'Checking…';
                 msg.textContent = '';
+                msg.style.color = '#dc2626';
+                msg.setAttribute('aria-live', 'assertive');
                 try {
                     const res = await fetch(`${API_BASE}/unlock_post.php`, {
                         method: 'POST',
@@ -3075,6 +3113,10 @@
                         body: JSON.stringify({ slug, code })
                     });
                     const data = await res.json().catch(() => null);
+                    if (res.status === 429 && data && data.retry_after) {
+                        startLockout(parseInt(data.retry_after, 10) || 900);
+                        return;
+                    }
                     if (res.ok && data && data.ok && data.token) {
                         setPostToken(slug, data.token);
                         setGateHidden(false);
