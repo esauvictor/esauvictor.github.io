@@ -8,14 +8,14 @@
   <meta property="og:image" content="https://avatars.githubusercontent.com/u/94287719?v=4">
   <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
   <title>Full Stack Developer in Port Harcourt | Laravel & PHP Expert – Esau Victor</title>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,300;1,400&family=Oxanium:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,300;1,400&family=Oxanium:wght@300;400;500;600;700;800&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
     :root {
-      --mono: 'JetBrains Mono', monospace;
-      --display: 'Oxanium', sans-serif;
+      --mono: 'JetBrains Mono', 'Noto Sans', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --display: 'Oxanium', 'Noto Sans', system-ui, sans-serif;
       --bg: #0c0a08;
       --bg1: #131009;
       --bg2: #1a150e;
@@ -35,6 +35,15 @@
       --text2: #b8a898;
       --text3: #5c4e42;
       --line: rgba(255,255,255,0.04);
+    }
+
+    /* Naira sign: rendered with a font that has the glyph on every platform
+       (JetBrains Mono doesn't include ₦, which is why it disappeared on
+       many Android/iOS devices). */
+    .naira {
+      font-family: 'Noto Sans', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.02em;
     }
 
     ::-webkit-scrollbar { width:4px; }
@@ -1126,11 +1135,8 @@
   <div class="hero-glow"></div>
   <div class="container hero-grid">
     <div class="hero-content">
-      <!-- TONE CHANGE: badge from "AVAILABLE FOR HIRE" to something confident, not desperate -->
       <h1 class="hero-name">Full<br>Stack<br><span class="accent">Dev.</span></h1>
-      <!-- TONE CHANGE: role line stays, it's neutral -->
       <p class="hero-role">role = "Laravel &amp; PHP Engineer"</p>
-      <!-- TONE CHANGE: desc reframed — not "building solutions" pitch, just a statement of standards -->
       <p class="hero-desc">
         Scalable backend systems. High-performance APIs. Production-grade code.
         The work either meets the standard or it doesn't ship.
@@ -1138,7 +1144,6 @@
       </p>
       <div class="hero-buttons">
         <a href="#projects" class="btn btn-primary"><i class="fas fa-code-branch"></i> <span>view_projects()</span></a>
-        <!-- TONE CHANGE: "hire_me()" → "let's_talk()" — peer-to-peer, not supplicant -->
         <a href="#contact" class="btn btn-outline"><i class="fas fa-terminal"></i> <span>let's_talk()</span></a>
       </div>
     </div>
@@ -1174,12 +1179,10 @@
           <div style="padding-left:1.5rem"><span class="t-str">'role'</span>     =&gt; <span class="t-val" id="aboutRole">'Backend-focused Full Stack Developer'</span>,</div>
           <div style="padding-left:1.5rem"><span class="t-str">'location'</span> =&gt; <span class="t-val" id="aboutLocation">'Port Harcourt, Rivers State, NG'</span>,</div>
           <div style="padding-left:1.5rem"><span class="t-str">'focus'</span>    =&gt; [<span class="t-val" id="aboutFocus">'Laravel', 'PHP', 'MySQL', 'API Design'</span>],</div>
-          <!-- TONE CHANGE: status from 'open_to_work' (sounds unemployed) to 'selective_availability' -->
           <div style="padding-left:1.5rem"><span class="t-str">'status'</span>   =&gt; <span class="t-val" id="aboutStatus">'selective_availability'</span> <span class="t-comment" id="aboutStatusNote">// quality projects only</span></div>
           <div>];</div>
           <div style="margin-top:.8rem; color:var(--text2); font-size:.75rem;" id="aboutBio">
             <span class="t-comment">/*</span><br>
-            <!-- TONE CHANGE: comment block from capability pitch to standards statement -->
             <span class="t-comment">&nbsp;* Laravel, PHP, MySQL, API architecture — that's the craft.</span><br>
             <span class="t-comment">&nbsp;* Systems built to last: thousands of concurrent users,</span><br>
             <span class="t-comment">&nbsp;* zero-compromise reliability, no shortcuts.</span><br>
@@ -1280,7 +1283,11 @@
   .rs-card p{font-size:.8rem;line-height:1.6;color:var(--text2);flex:1}
   .rs-meta{font-family:var(--mono);font-size:.65rem;color:var(--text3)}
   .rs-card img{width:100%;height:150px;object-fit:cover;border:1px solid var(--border)}
-  .rs-empty{padding:2rem;background:var(--bg1);border:1px dashed var(--border2);font-family:var(--mono);font-size:.8rem;color:var(--text2)}
+  .rs-empty{
+    padding:2rem 1.25rem;background:var(--bg1);border:1px dashed var(--border2);
+    font-family:var(--mono);font-size:.82rem;line-height:1.6;color:var(--text2);
+    text-align:center;word-break:break-word;
+  }
   .rs-support{background:var(--bg1);border:1px solid var(--border2);padding:1.8rem;max-width:640px}
   .rs-support p{font-size:.85rem;color:var(--text2);line-height:1.7;margin-bottom:1.2rem}
   .rs-chips{display:flex;flex-wrap:wrap;gap:.6rem}
@@ -1301,6 +1308,12 @@
   .rs-go[disabled]{opacity:.55;cursor:wait}
   .rs-ok{text-align:center;padding:.5rem 0}
   .rs-ok .tick{font-size:2rem;color:var(--green)}
+  @media (max-width:560px){
+    .rs-card{padding:1.1rem}
+    .rs-card h3{font-size:1rem}
+    .rs-card p{font-size:.76rem}
+    .rs-chip{font-size:.74rem;padding:.5rem .85rem}
+  }
 </style>
 
 <section id="resources" class="section">
@@ -1325,10 +1338,10 @@
     <div class="rs-support">
       <p>If my projects, posts or free resources have saved you time, you can support the work with a one-off contribution. Payments are processed securely by Paystack (card, bank transfer, USSD).</p>
       <div class="rs-chips" id="rsChips">
-        <button class="rs-chip" data-amt="1000">₦1,000</button>
-        <button class="rs-chip" data-amt="2000">₦2,000</button>
-        <button class="rs-chip" data-amt="5000">₦5,000</button>
-        <button class="rs-chip" data-amt="10000">₦10,000</button>
+        <button class="rs-chip" data-amt="1000"><span class="naira">₦</span>1,000</button>
+        <button class="rs-chip" data-amt="2000"><span class="naira">₦</span>2,000</button>
+        <button class="rs-chip" data-amt="5000"><span class="naira">₦</span>5,000</button>
+        <button class="rs-chip" data-amt="10000"><span class="naira">₦</span>10,000</button>
         <button class="rs-chip" data-amt="0">custom…</button>
       </div>
     </div>
@@ -1366,7 +1379,6 @@
     <div class="contact-wrap" data-reveal>
 
       <div class="contact-left">
-        <!-- TONE CHANGE: from "available for..." supplication to "got a problem worth solving?" — frames the client as needing to qualify -->
         <p class="contact-tagline">
           Got a problem worth solving?<br>
           Serious projects. Serious people.<br>
@@ -1403,7 +1415,6 @@
       </div>
 
       <div class="contact-right">
-        <!-- TONE CHANGE: form head — less transactional, more conversational -->
         <div class="contact-form-head"><span>$</span> new Conversation().start()</div>
         <form id="contactForm" class="contact-form">
           <input type="checkbox" name="botcheck" style="display:none" tabindex="-1">
@@ -2229,10 +2240,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   const greetingClose = document.getElementById('chatGreetingClose');
   let greetingShown = false;
 
-  // Some mobile/in-app browsers (private mode, locked-down WebViews, some
-  // Samsung Internet configs) throw when sessionStorage is touched at all.
-  // Guard every access so a storage error never silently kills this script
-  // and the greeting still shows on every device/browser.
   function safeGet(key) {
     try { return sessionStorage.getItem(key); } catch (e) { return null; }
   }
@@ -2251,18 +2258,13 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     safeSet('chatGreetingDismissed', '1');
   }
 
-  // Primary trigger: 10s after load.
   setTimeout(maybeShowGreeting, 10000);
-  // Fallback: if the tab was backgrounded/throttled (common on mobile,
-  // where timers pause until the tab is foregrounded), show as soon as
-  // the page actually becomes visible.
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') maybeShowGreeting();
   });
 
   greetingClose.addEventListener('click', hideGreeting);
 
-  // ---- Cookie consent banner ----
   const cookieBanner = document.getElementById('cookieConsent');
   const cookieAccept = document.getElementById('cookieAccept');
   const cookieDecline = document.getElementById('cookieDecline');
@@ -2303,17 +2305,11 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     });
   }
 
-  // ---- Keep the widget from covering the footer ----
-  // As the footer scrolls into view, lift the toggle button, greeting
-  // bubble, chat panel, and back-to-top button up by however much the
-  // footer overlaps their normal spot, so the footer stays fully
-  // readable/clickable. The same lift also applies while the cookie
-  // banner is showing, so nothing ever sits underneath it either.
   const footer = document.getElementById('siteFooter');
   const toggleBtn = document.getElementById('chatToggle');
   const panelEl = document.getElementById('chatPanel');
   const backToTopBtn = document.getElementById('backToTop');
-  const GAP = 16; // breathing room above the footer/banner
+  const GAP = 16;
 
   function adjustForFooter() {
     if (!footer) return;
@@ -2344,9 +2340,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   window.addEventListener('resize', scheduleAdjust);
   adjustForFooter();
 
-  // ---- Back to top ----
-  // Only appears once the visitor has scrolled a screen or so down, so it
-  // never competes for attention with the hero or covers content up top.
   if (backToTopBtn) {
     const SHOW_AFTER = 480;
     function toggleBackToTop() {
@@ -2389,17 +2382,16 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     'How do I get in touch?'
   ];
 
-  let history = []; // { role: 'user'|'assistant', content: string }
-  let pendingFiles = []; // { name, mime_type, data (base64), size }
+  let history = [];
+  let pendingFiles = [];
 
   const MAX_FILES = 3;
-  const MAX_FILE_BYTES = 4 * 1024 * 1024; // 4MB
+  const MAX_FILE_BYTES = 4 * 1024 * 1024;
 
   function saveHistory() {
-    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(history)); } catch (e) { /* storage full/unavailable — conversation just won't persist */ }
+    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(history)); } catch (e) { /* ignore */ }
   }
 
-  // ---- Minimal markdown -> safe HTML (bold, italic, code, links, line breaks) ----
   function renderMarkdown(raw) {
     let s = raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
@@ -2496,14 +2488,13 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     messagesEl.scrollTop = messagesEl.scrollHeight;
   }
 
-  // ---- Restore any conversation from earlier on this visit ----
   try {
     const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]');
     if (Array.isArray(saved) && saved.length > 0) {
       history = saved;
       saved.forEach(m => addMessage(m.role, m.content, m.role === 'assistant' ? { allowCopy: true } : {}));
     }
-  } catch (e) { /* corrupted/unavailable storage — just start fresh */ }
+  } catch (e) { /* ignore */ }
 
   toggle.addEventListener('click', () => {
     panel.classList.toggle('open');
@@ -2528,7 +2519,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     showGreetingAndChips();
   });
 
-  // ---- File attachments ----
   attachBtn.addEventListener('click', () => fileInput.click());
 
   fileInput.addEventListener('change', () => {
@@ -2572,7 +2562,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     });
   }
 
-  // ---- Voice input (Web Speech API) ----
   const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognitionCtor) {
     micBtn.style.display = 'none';
@@ -2585,7 +2574,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 
     micBtn.addEventListener('click', () => {
       if (listening) { recognition.stop(); return; }
-      try { recognition.start(); } catch (e) { /* already started */ }
+      try { recognition.start(); } catch (e) { /* ignore */ }
     });
 
     recognition.onstart = () => { listening = true; micBtn.classList.add('listening'); };
@@ -2598,7 +2587,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     };
   }
 
-  // ---- Sending ----
   async function sendToBackend(attachmentsToSend) {
     sendBtn.disabled = true;
     const thinking = addTypingIndicator();
@@ -2649,7 +2637,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     sendToBackend(attachmentsToSend.map(f => ({ mime_type: f.mime_type, data: f.data })));
   });
 
-  // Enter to send, Shift+Enter for a new line
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -2657,7 +2644,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     }
   });
 
-  // Character counter — stays hidden until you're getting close to the limit
   const charCount = document.getElementById('chatCharCount');
   const CHAR_LIMIT = 1500;
   input.addEventListener('input', () => {
@@ -2676,7 +2662,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 </script>
 <script>
 (function () {
-    // ---- Voice selection (English-only, prefers a male-sounding voice) ----
     const MALE_VOICE_NAMES = ['david', 'mark', 'daniel', 'alex', 'fred', 'ryan', 'guy', 'eric', 'matthew', 'tom', 'james', 'george', 'aaron', 'oliver', 'arthur', 'nathan', 'brian', 'thomas', 'gordon', 'ravi'];
     const FEMALE_VOICE_NAMES = ['samantha', 'karen', 'zira', 'susan', 'victoria', 'moira', 'tessa', 'fiona', 'ava', 'kate', 'emma', 'joanna', 'salli', 'ivy', 'kimberly', 'zoe', 'allison'];
     function isLikelyMaleVoice(v) {
@@ -2768,10 +2753,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
         });
     }
 
-    // ---- Content scanning — built fresh every time Play is pressed, so it ----
-    // always matches whatever's actually on screen (dynamically-loaded
-    // sections, filtered/paginated lists, etc.) rather than a stale snapshot
-    // taken at page load.
     const BLOCK_TAGS = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE'];
     const SKIP_TAGS = ['SCRIPT', 'STYLE', 'FORM', 'BUTTON', 'A', 'NAV', 'SVG', 'IMG', 'IFRAME', 'INPUT', 'SELECT', 'TEXTAREA', 'LABEL'];
     function hasBlockDescendant(el) {
@@ -2793,10 +2774,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
                     if (text) blocks.push(text);
                     return;
                 }
-                // Generic wrapper (div/span/etc.) — recurse only if it
-                // structurally contains real block-level content; otherwise
-                // treat its whole text as one block rather than fragmenting
-                // into individual inline spans (common in stylized layouts).
                 if (hasBlockDescendant(el)) walk(el);
                 else {
                     const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
@@ -2828,7 +2805,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
         return out;
     }
 
-    // ---- Playback engine ----
     const playBtn = document.getElementById('siteTtsPlay');
     const stopBtn = document.getElementById('siteTtsStop');
     const rateSelect = document.getElementById('siteTtsRate');
@@ -2839,7 +2815,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     const videoFrame = document.getElementById('siteTtsVideoFrame');
     const fullscreenBtn = document.getElementById('siteTtsFullscreenBtn');
     const panel = document.getElementById('siteTtsVideoPanel');
-    if (!playBtn) return; // widget markup not present on this page
+    if (!playBtn) return;
 
     let chunks = [];
     let chunkIndex = 0;
@@ -2948,7 +2924,10 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   const API = (typeof API_BASE !== 'undefined') ? API_BASE : 'https://esauvictor.name.ng/api';
   const $ = id => document.getElementById(id);
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const naira = n => '₦' + Number(n).toLocaleString('en-NG');
+  // Naira symbol is wrapped in .naira so it renders with a font that has
+  // the glyph on every platform (Android/iOS included). This returns HTML,
+  // so it must be injected without esc() when used.
+  const naira = n => '<span class="naira">₦</span>' + Number(n).toLocaleString('en-NG');
   const LABEL = {source_code:'source code', ebook:'ebook', template:'template', other:'resource'};
   const size = b => !b ? '' : b > 1048576 ? (b/1048576).toFixed(1)+' MB' : Math.max(1,Math.round(b/1024))+' KB';
   let list = [];
@@ -2996,7 +2975,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     md.innerHTML = `<button class="rs-x" aria-label="Close">×</button>
       <h4>${don ? 'Support my work' : esc(c.r.title)}</h4>
       <div class="sub">${don ? 'one-off contribution' : (free ? 'free download' : naira(c.r.price_ngn))}</div>
-      ${don ? `<label>Amount (₦)</label><input id="rsAmt" type="number" min="500" step="100" value="${c.amount || ''}" placeholder="e.g. 3000">` : ''}
+      ${don ? `<label>Amount (<span class="naira">₦</span>)</label><input id="rsAmt" type="number" min="500" step="100" value="${c.amount || ''}" placeholder="e.g. 3000">` : ''}
       <label>Name (optional)</label><input id="rsName" autocomplete="name">
       <label>Email${free ? ' — your download link is sent here' : ' — your receipt goes here'}</label><input id="rsEmail" type="email" autocomplete="email" required>
       ${don ? `<label>Message (optional)</label><textarea id="rsNote" rows="2" maxlength="300"></textarea>` : ''}
