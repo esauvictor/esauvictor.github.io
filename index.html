@@ -1400,6 +1400,13 @@
           </div>
         </div>
         <div class="contact-detail">
+          <div class="contact-icon"><i class="fas fa-phone"></i></div>
+          <div class="contact-detail-info">
+            <div class="contact-detail-label">VOICE CALL</div>
+            <a href="#" id="callOpen">Call me live from your browser</a>
+          </div>
+        </div>
+        <div class="contact-detail">
           <div class="contact-icon"><i class="fab fa-github"></i></div>
           <div class="contact-detail-info">
             <div class="contact-detail-label">GITHUB</div>
@@ -3033,5 +3040,105 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   }
 })();
 </script>
+
+<!-- ===== Free browser voice call widget (PeerJS / WebRTC) ===== -->
+<style>
+#callModal{position:fixed;inset:0;z-index:10001;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.7);padding:16px}
+#callModal.open{display:flex}
+#callBox{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;max-width:360px;width:100%;padding:24px;font-family:var(--mono);color:var(--text);box-shadow:0 20px 60px rgba(0,0,0,.6)}
+#callBox h3{margin:0 0 6px;font-family:var(--display);color:var(--green)}
+#callBox p{margin:0 0 14px;color:var(--text2);font-size:.85rem;line-height:1.5}
+#callStatus{min-height:1.4em;margin:12px 0;font-size:.85rem;color:var(--amber)}
+#callBox button{font-family:var(--mono);border:0;border-radius:8px;padding:10px 16px;cursor:pointer;font-size:.9rem}
+#callStart{background:var(--green);color:#1a0f04}#callStart:disabled{opacity:.5;cursor:not-allowed}
+#callHang{background:var(--red);color:#fff}
+#callClose{background:transparent;color:var(--text2);border:1px solid var(--border2)!important}
+#callHear{background:var(--amber);color:#1a0f04}
+#callAlt{margin:10px 0;font-size:.82rem;line-height:1.7}#callAlt a{color:var(--green)}
+</style>
+<div id="callModal" role="dialog" aria-modal="true" aria-labelledby="callTitle">
+  <div id="callBox">
+    <h3 id="callTitle">Call Esau</h3>
+    <p>Talk to me live from your browser. Free, no app needed. I get an instant alert and call you back right here, so keep this window open. You'll be asked to allow your microphone.</p>
+    <div id="callStatus" role="status" aria-live="polite"></div>
+    <div id="callAlt" hidden>Prefer another way? <a href="https://wa.me/2348132084092" target="_blank" rel="noopener">WhatsApp</a> or <a href="mailto:www.esauvictor.name.ng@gmail.com">email</a>.</div>
+    <button id="callStart" type="button">Start call</button>
+    <button id="callHear" type="button" hidden>Tap to hear Esau</button>
+    <button id="callHang" type="button" hidden>Hang up</button>
+    <button id="callClose" type="button">Close</button>
+    <audio id="callAudio" autoplay playsinline></audio>
+  </div>
+</div>
+<script>
+(function(){
+  var API=(typeof API_BASE!=='undefined')?API_BASE:'https://esauvictor.name.ng/api';
+  var PEERJS='https://cdn.jsdelivr.net/npm/peerjs@1/dist/peerjs.min.js';
+  var FALLBACK_ICE=[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}];
+  var $=function(i){return document.getElementById(i)}, modal=$('callModal'), st=$('callStatus'), go=$('callStart'), hang=$('callHang'), hear=$('callHear'), alt=$('callAlt');
+  var peer=null, call=null, stream=null, timer=null, connected=false, alerted=false;
+  function say(t){st.textContent=t}
+  function load(src){return new Promise(function(a,b){var s=document.createElement('script');s.src=src;s.onload=a;s.onerror=b;document.head.appendChild(s)})}
+  function newId(){var a=new Uint8Array(16);crypto.getRandomValues(a);return 'v-'+Array.prototype.map.call(a,function(b){return ('0'+b.toString(16)).slice(-2)}).join('')}
+  function getIce(){
+    return fetch(API+'/call/ice.php').then(function(r){return r.json()})
+      .then(function(j){return j.iceServers&&j.iceServers.length?j.iceServers:FALLBACK_ICE})
+      .catch(function(){return FALLBACK_ICE});
+  }
+  function end(){
+    clearTimeout(timer);
+    if(call){try{call.close()}catch(e){}}
+    if(peer){try{peer.destroy()}catch(e){}}
+    if(stream){stream.getTracks().forEach(function(t){t.stop()})}
+    peer=call=stream=null; connected=alerted=false; go.disabled=false; hang.hidden=true; hear.hidden=true;
+  }
+  function fail(msg){say(msg);end();alt.hidden=false}
+  function close(){end();modal.classList.remove('open')}
+  $('callOpen').addEventListener('click',function(e){e.preventDefault();say('');alt.hidden=true;modal.classList.add('open')});
+  $('callClose').addEventListener('click',close);
+  modal.addEventListener('click',function(e){if(e.target===modal)close()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modal.classList.contains('open'))close()});
+  hang.addEventListener('click',function(){say('Call ended.');end()});
+  hear.addEventListener('click',function(){$('callAudio').play().then(function(){hear.hidden=true}).catch(function(){})});
+
+  go.addEventListener('click',async function(){
+    go.disabled=true; alt.hidden=true; say('Requesting microphone…');
+    try{stream=await navigator.mediaDevices.getUserMedia({audio:true})}
+    catch(e){say('Microphone permission is needed to place the call.');go.disabled=false;return}
+    try{
+      say('Connecting…');
+      var res=await Promise.all([getIce(),window.Peer?0:load(PEERJS)]);
+      var id=newId();
+      peer=new Peer(id,{config:{iceServers:res[0]}});
+      peer.on('disconnected',function(){try{peer&&peer.reconnect()}catch(e){}});
+      peer.on('error',function(e){if(e.type!=='peer-unavailable')fail('Connection problem ('+e.type+'). Please try again.')});
+      peer.on('open',async function(){
+        if(alerted)return; alerted=true;
+        say('Alerting Esau…');
+        try{
+          var r=await fetch(API+'/call/notify.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})});
+          var j=await r.json().catch(function(){return {}});
+          if(!r.ok||!j.ok){fail(r.status===429?'Too many call attempts. Please try later, or use WhatsApp.':'Could not reach Esau right now.');return}
+        }catch(e){fail('Network problem. Please check your connection and try again.');return}
+        say('Esau has been alerted and will call you back here shortly. Please keep this window open…');
+        hang.hidden=false;
+        timer=setTimeout(function(){fail('Esau could not pick up just now.')},90000);
+      });
+      peer.on('call',function(c){
+        if(call){c.close();return}
+        call=c; clearTimeout(timer); c.answer(stream); say('Connecting audio…');
+        timer=setTimeout(function(){fail('Could not connect the audio (network block). Please use WhatsApp.')},40000);
+        c.on('stream',function(rs){
+          connected=true; clearTimeout(timer);
+          var au=$('callAudio'); au.srcObject=rs;
+          au.play().catch(function(){hear.hidden=false});
+          say('Connected. You can talk now.');
+        });
+        c.on('close',function(){if(connected){say('Call ended. Thanks for calling!');end()}});
+      });
+    }catch(err){fail('Could not connect. Please try again.')}
+  });
+})();
+</script>
+<!-- ===== /Free browser voice call widget ===== -->
 </body>
 </html>
