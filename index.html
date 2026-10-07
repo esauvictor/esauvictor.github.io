@@ -3477,7 +3477,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       drop:'Your connection dropped. '
     }[why]||'';
     if(g==='poor')return lead+'Move '+w+' for a clearer call.';
-    return lead+'Move '+w+' now.'+(live?' If the audio does not come back, hang up and call again from a better spot.':' If it stays this weak, WhatsApp or email is more reliable.');
+    return lead+'Move '+w+' now.'+(live?' You will hear beeps while the call is at risk of cutting. If the audio does not come back, hang up and call again from a better spot.':' If it stays this weak, WhatsApp or email is more reliable.');
   }
   function setNet(g,why,stats,live){
     var tip=advice(g,why,live), s=stats||'';
@@ -3486,6 +3486,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     if(netLbl.textContent!==LABEL[g])netLbl.textContent=LABEL[g];
     if(netTip.textContent!==tip)netTip.textContent=tip;
     if(netStat.textContent!==s)netStat.textContent=s;
+    warnUpdate(g,live);
   }
   // Before the call connects: browser connection info + how fast the site answered.
   function netIdle(){
@@ -3560,10 +3561,44 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   function netLiveStop(){
     clearInterval(net.liveIv); net.liveIv=null;
     net.pc=null; net.on=false; net.prev=null; net.hist=[]; net.stall=0; net.disc=false;
+    warnStop();
   }
   window.addEventListener('offline',function(){if(net.on)netLive();else netIdle()});
   window.addEventListener('online',function(){if(net.on)netLive();else netIdle()});
   (function(){var c=conn();if(c&&c.addEventListener)c.addEventListener('change',function(){netIdle()})})();
+  // ---------- Warning beeps: when the line is so weak the call is about to cut ----------
+  // Two short pips every few seconds (and a buzz on phones) while the connection stays Very poor
+  // or drops. Played on this device only; it is never sent into the call. The audio context is
+  // unlocked by the tap that starts/answers the call, because browsers block sound otherwise.
+  var warn={ctx:null,iv:null,bad:0};
+  function warnCtx(){
+    try{
+      if(!warn.ctx){var AC=window.AudioContext||window.webkitAudioContext;if(AC)warn.ctx=new AC()}
+      if(warn.ctx&&warn.ctx.state==='suspended')warn.ctx.resume();
+    }catch(e){}
+  }
+  function pip(){
+    var c=warn.ctx;
+    try{navigator.vibrate&&navigator.vibrate([120,80,120])}catch(e){}
+    if(!c||c.state!=='running')return;
+    var t=c.currentTime;
+    [0,0.24].forEach(function(o){
+      var osc=c.createOscillator(),g=c.createGain();
+      osc.type='sine';osc.frequency.value=1000;
+      g.gain.setValueAtTime(0.0001,t+o);
+      g.gain.exponentialRampToValueAtTime(0.2,t+o+0.015);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+o+0.15);
+      osc.connect(g);g.connect(c.destination);
+      osc.start(t+o);osc.stop(t+o+0.17);
+    });
+  }
+  function warnStop(){clearInterval(warn.iv);warn.iv=null;warn.bad=0}
+  // Called on every status update. Needs 2 bad readings in a row (about 4 s) so one blip never beeps.
+  function warnUpdate(g,live){
+    if(live&&(g==='bad'||g==='offline'))warn.bad++;else warn.bad=0;
+    if(warn.bad>=2&&!warn.iv){pip();warn.iv=setInterval(pip,3500)}
+    else if(warn.bad<2&&warn.iv){clearInterval(warn.iv);warn.iv=null}
+  }
   // Extra line for connection-type failures, only when the network really looks weak.
   function hint(){
     if(net.grade==='offline')return 'You appear to be offline.';
@@ -3622,7 +3657,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   hear.addEventListener('click',tryPlay);
 
   go.addEventListener('click',async function(){
-    go.disabled=true; alt.hidden=true; say('Requesting microphone…');
+    go.disabled=true; alt.hidden=true; warnCtx(); say('Requesting microphone…');
     try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}
     catch(e){say('Microphone permission is needed to place the call.');go.disabled=false;return}
     try{
