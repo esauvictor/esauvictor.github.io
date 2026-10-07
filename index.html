@@ -3798,6 +3798,16 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   $('callDimBtn').addEventListener('click',function(){dimOn()});
   modal.addEventListener('pointerdown',function(){dimArm()});
   document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'&&connected)wakeOn()});
+  // Instantly ring Esau's "call desk" page (desk.html), if it is open. This is in addition to the WhatsApp alert.
+  // DESK_ID must match the one inside desk.html.
+  var DESK_ID='ra-desk-8127ab7dd9eeb7af';
+  function ringDesk(id){
+    try{
+      var c=peer.connect(DESK_ID,{reliable:true});
+      c.on('open',function(){try{c.send({type:'ring',id:id,t:Date.now()})}catch(e){}setTimeout(function(){try{c.close()}catch(e){}},1500)});
+      c.on('error',function(){});
+    }catch(e){}
+  }
   // Tell the other side "I hung up on purpose" so it ends at once instead of trying to reconnect.
   function bye(then){
     var sent=false;
@@ -3899,7 +3909,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
         if(connected||recov){try{peer.reconnect()}catch(x){}return}
         fail('Connection problem ('+e.type+'). Please try again.',1)
       });
-      peer.on('open',function(){clearTimeout(openT)});
+      peer.on('open',function(){clearTimeout(openT);ringDesk(id)});
       openT=setTimeout(function(){fail('Could not reach the call server. Please try again.',1)},15000);
       peer.on('call',function(c){
         if(call){ // Esau's page is ringing back after a drop: replace the dead call
