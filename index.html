@@ -5,7 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="Esau Victor is a Full Stack Developer in Port Harcourt, Nigeria specializing in Laravel, PHP, and scalable web applications. Available for freelance and remote projects.">
   <meta name="keywords" content="Full Stack Developer Port Harcourt, Laravel Developer Port Harcourt, PHP Developer Nigeria, Backend Developer Rivers State, Hire Web Developer Port Harcourt">
+  <link rel="canonical" href="https://esauvictor.name.ng/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Esau Victor">
+  <meta property="og:title" content="Full Stack Developer in Port Harcourt | Laravel & PHP Expert – Esau Victor">
+  <meta property="og:description" content="Esau Victor is a Full Stack Developer in Port Harcourt, Nigeria specializing in Laravel, PHP, and scalable web applications. Available for freelance and remote projects.">
+  <meta property="og:url" content="https://esauvictor.name.ng/">
   <meta property="og:image" content="https://avatars.githubusercontent.com/u/94287719?v=4">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Full Stack Developer in Port Harcourt | Laravel & PHP Expert – Esau Victor">
+  <meta name="twitter:description" content="Laravel & PHP developer in Port Harcourt, Nigeria. Available for freelance and remote projects.">
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/94287719?v=4">
   <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
   <title>Full Stack Developer in Port Harcourt | Laravel & PHP Expert – Esau Victor</title>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,300;1,400&family=Oxanium:wght@300;400;500;600;700;800&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -74,7 +84,9 @@
       z-index:9999;
     }
 
-    * { cursor: none !important; }
+    /* Normal system pointer: hide the custom dot/ring, use a hand on clickable items */
+    #cursor, #cursor-ring { display:none !important; }
+    a, button, [role="button"], select, label[for], summary { cursor:pointer; }
     #cursor {
       position:fixed;
       width:10px; height:10px;
@@ -989,15 +1001,16 @@
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Esau Victor",
-  "url": "https://esauvictor.name.ng",
-  "jobTitle": "Web Developer",
+  "url": "https://esauvictor.name.ng/",
+  "image": "https://avatars.githubusercontent.com/u/94287719?v=4",
+  "jobTitle": "Full Stack Developer",
   "sameAs": [
     "https://www.wikidata.org/wiki/Q141143585",
-    "https://github.com/esauvictor"
+    "https://github.com/esauvictor",
+    "https://linkedin.com/in/esau-victor"
   ]
 }
 </script>
-<base target="_blank">
 </head>
 <body>
 <div id="siteNotice" class="site-notice" style="display:none;">
@@ -1599,12 +1612,23 @@
 
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  document.addEventListener('contextmenu', e => e.preventDefault());
-  document.addEventListener('keydown', e => {
-    const b = ['c','u','a','s'];
-    if ((e.ctrlKey && b.includes(e.key.toLowerCase())) || e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i')) e.preventDefault();
+  // External http(s) links open in a new tab; in-page anchors and mailto stay put.
+  document.querySelectorAll('a[href^="http"]').forEach(a => {
+    try {
+      if (new URL(a.href).origin !== location.origin) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+    } catch (e) {}
   });
-  document.addEventListener('selectstart', e => { if (!['INPUT','TEXTAREA'].includes(e.target.tagName)) e.preventDefault(); });
+
+  // Light deterrent: text can still be selected and copied; right-click menu, view-source,
+  // save, DevTools shortcuts and image dragging are blocked.
+  document.addEventListener('contextmenu', e => {
+    if (window.getSelection && String(window.getSelection()).length) return; // allow right-click Copy on selected text
+    e.preventDefault();
+  });
+  document.addEventListener('keydown', e => {
+    const k = e.key.toLowerCase();
+    if (e.key === 'F12' || (e.ctrlKey && ['u','s'].includes(k)) || (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(k))) e.preventDefault();
+  });
   document.addEventListener('dragstart', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
   console.log('%cStop!', 'color:#ff7828;font-size:40px;font-weight:bold;');
   console.log('%cThis is a developer tool — do not paste code here.', 'font-size:16px;');
@@ -1612,23 +1636,13 @@
 
 
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Esau Victor",
-  "url": "https://esauvictor.github.io",
-  "image": "https://avatars.githubusercontent.com/u/94287719?v=4",
-  "jobTitle": "Full Stack Developer",
-  "sameAs": [
-    "https://github.com/esauvictor",
-    "https://linkedin.com/in/esau-victor"
-  ]
-}
-</script>
 
 <script>
 const API_BASE = 'https://esauvictor.name.ng/api';
+
+// Output escaping helpers (public input must never be injected as raw HTML).
+const escHtml = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeUrl = u => /^https?:\/\//i.test(String(u || '')) ? escHtml(u) : '';
 
 // Retries a GET request a couple of times with a short backoff before
 // giving up. This is specifically to smooth over the host's occasional
@@ -1690,14 +1704,21 @@ function fetchWithRetry(url, options = {}, retries = 4, delayMs = 1000) {
 
 // Fire-and-forget page view tracking. Wrapped so a tracking failure
 // (network hiccup, ad blocker, etc.) never affects the rest of the page.
-fetch(`${API_BASE}/track.php`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    page: window.location.pathname,
-    referrer: document.referrer || ''
-  })
-}).catch(() => {});
+// Runs only after the visitor has clicked "Accept all" on the cookie banner.
+let trackSent = false;
+window.__sendTrack = function () {
+  if (trackSent) return;
+  trackSent = true;
+  fetch(`${API_BASE}/track.php`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      page: window.location.pathname,
+      referrer: document.referrer || ''
+    })
+  }).catch(() => {});
+};
+try { if (localStorage.getItem('cookieConsentChoice') === 'accepted') window.__sendTrack(); } catch (e) {}
 
 fetchWithRetry(`${API_BASE}/about.php`)
   .then(res => res.json())
@@ -1883,20 +1904,20 @@ fetchWithRetry(`${API_BASE}/projects.php`)
     grid.innerHTML = data.projects.map((p, i) => `
       <div class="project-card" data-reveal>
         <div class="project-img-wrap">
-          <img class="project-screenshot" src="${p.image_url || 'portfolio.jpg'}" alt="${p.title}" loading="lazy">
+          <img class="project-screenshot" src="${safeUrl(p.image_url) || 'portfolio.jpg'}" alt="${escHtml(p.title)}" loading="lazy">
         </div>
         <div class="project-body">
           <div class="project-index">PROJECT_${String(i + 1).padStart(3, '0')}</div>
-          <h3 class="project-title">${p.title}</h3>
-          <div class="project-tags">${p.tech_stack.map(t => `<span class="project-tag">${t}</span>`).join('')}</div>
+          <h3 class="project-title">${escHtml(p.title)}</h3>
+          <div class="project-tags">${(p.tech_stack || []).map(t => `<span class="project-tag">${escHtml(t)}</span>`).join('')}</div>
           <div>
             ${p.problem ? `<div class="problem-item"><span class="problem-label">⚠ PROBLEM</span><div class="problem-text">${p.problem}</div></div>` : ''}
             ${p.solution ? `<div class="solution-item"><span class="solution-label">✓ SOLUTION</span><div class="solution-text">${p.solution}</div></div>` : ''}
             ${(!p.problem && !p.solution && p.summary) ? `<p>${p.summary}</p>` : ''}
           </div>
           <div class="project-links">
-            ${p.project_url ? `<a href="${p.project_url}" class="project-link" target="_blank">live</a>` : ''}
-            ${p.github_url ? `<a href="${p.github_url}" class="project-link" target="_blank">code</a>` : ''}
+            ${safeUrl(p.project_url) ? `<a href="${safeUrl(p.project_url)}" class="project-link" target="_blank" rel="noopener noreferrer">live</a>` : ''}
+            ${safeUrl(p.github_url) ? `<a href="${safeUrl(p.github_url)}" class="project-link" target="_blank" rel="noopener noreferrer">code</a>` : ''}
           </div>
         </div>
       </div>
@@ -1921,9 +1942,9 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 
     track.innerHTML = data.testimonials.map(t => `
       <div class="testimonial-card">
-        <div class="testimonial-text">"${t.quote}"</div>
-        <div class="testimonial-name">${t.author_name}</div>
-        <div class="testimonial-role">${t.author_role || ''}</div>
+        <div class="testimonial-text">"${escHtml(t.quote)}"</div>
+        <div class="testimonial-name">${escHtml(t.author_name)}</div>
+        <div class="testimonial-role">${escHtml(t.author_role || '')}</div>
       </div>
     `).join('');
 
@@ -2304,6 +2325,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   function recordChoice(choice) {
     safeLocalSet(COOKIE_KEY, choice);
     hideCookieBanner();
+    if (choice === 'accepted' && window.__sendTrack) window.__sendTrack();
   }
 
   if (cookieBanner) {
