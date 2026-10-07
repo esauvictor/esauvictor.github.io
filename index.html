@@ -2355,6 +2355,17 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   window.addEventListener('resize', scheduleAdjust);
   adjustForFooter();
 
+  // Hide the floating call button while the contact section is in view —
+  // that section already has the "Call me live" link, so the pill is redundant there.
+  if (callFabBtn) {
+    const contactSec = document.getElementById('contact');
+    if (contactSec) {
+      new IntersectionObserver((entries) => {
+        entries.forEach(en => callFabBtn.classList.toggle('fab-hidden', en.isIntersecting));
+      }, { threshold: 0.15 }).observe(contactSec);
+    }
+  }
+
   if (backToTopBtn) {
     const SHOW_AFTER = 480;
     function toggleBackToTop() {
@@ -3107,6 +3118,14 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 #callFab .callfab-label{font-weight:800;font-size:13px;letter-spacing:-.01em;white-space:nowrap}
 #callFab.seen .callfab-icon::before,#callFab.seen .callfab-icon::after,
 #callFab.seen .callfab-icon i{animation:none}
+/* auto-hide when the contact section (which has its own call link) is on screen */
+#callFab{transition:transform .2s ease,box-shadow .25s ease,filter .25s ease,opacity .25s ease,visibility .25s}
+#callFab.fab-hidden{opacity:0!important;visibility:hidden;pointer-events:none;animation:none}
+@media (max-width:560px){
+  #callFab{padding:6px;bottom:76px;left:14px}
+  #callFab .callfab-label{display:none}
+  #callFab .callfab-icon{width:38px;height:38px}
+}
 @media (prefers-reduced-motion:reduce){
   #callFab,#callFab .callfab-icon::before,#callFab .callfab-icon::after,#callFab .callfab-icon i{
     animation:none!important;
