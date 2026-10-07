@@ -2066,7 +2066,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   .chat-msg.user .chat-msg-text { background: var(--green-faint); border: 1px solid var(--border2); color: var(--text); }
   .chat-msg.assistant .chat-msg-text { background: var(--bg2); border: 1px solid var(--border); color: var(--text2); }
   .chat-msg.error .chat-msg-text { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); color: var(--red); }
-  .chat-msg-text a { color: var(--green); }
+  .chat-msg-text a { color: var(--green); text-decoration: underline; word-break: break-all; }
   .chat-msg-text code { background: var(--bg); border: 1px solid var(--border); border-radius: 3px; padding: 0 0.25rem; }
   .chat-msg-actions { display: flex; gap: 0.6rem; }
   .chat-action-btn { background: none; border: none; color: var(--text3); font-size: 0.68rem; cursor: pointer; padding: 0; font-family: var(--mono); }
@@ -2420,12 +2420,48 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 
   function renderMarkdown(raw) {
     let s = raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+
+    // Links are stashed as placeholders so later formatting can't break them or double-link them.
+    const stash = [];
+    const keep = (html) => '\u0000' + (stash.push(html) - 1) + '\u0000';
+    const a = (href, label) => '<a href="' + href + '" target="_blank" rel="noopener noreferrer">' + label + '</a>';
+
+    // 1) [label](https://url)
+    s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (m, label, url) => keep(a(url, label)));
+
+    // 2) email addresses (before URLs, so www.name@gmail.com isn't mistaken for a website)
+    s = s.replace(/\b([A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+)\b/g,
+      (m, email) => keep(a('mailto:' + email, email)));
+
+    // 3) bare URLs (https://... or www....); trailing punctuation stays outside the link
+    s = s.replace(/\b((?:https?:\/\/|www\.)[^\s<]+)/gi, (m, url) => {
+      let trail = '';
+      const t = url.match(/[.,!?;:)\]'"]+$/);
+      if (t) { trail = t[0]; url = url.slice(0, -trail.length); }
+      const href = /^www\./i.test(url) ? 'https://' + url : url;
+      return keep(a(href, url)) + trail;
+    });
+
+    // 3) bare site domain without protocol, e.g. esauvictor.name.ng/blog
+    s = s.replace(/(^|[\s(])(esauvictor\.name\.ng(?:\/[^\s<]*)?)/gi, (m, pre, url) => {
+      let trail = '';
+      const t = url.match(/[.,!?;:)\]'"]+$/);
+      if (t) { trail = t[0]; url = url.slice(0, -trail.length); }
+      return pre + keep(a('https://' + url, url)) + trail;
+    });
+
+    // 5) the WhatsApp number +234 813 208 4092 (any spacing) opens a WhatsApp chat
+    s = s.replace(/\+?234[\s-]?813[\s-]?208[\s-]?4092/g, (m) => keep(a('https://wa.me/2348132084092', m)));
+
+    // Basic formatting
     s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
     s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
     s = s.replace(/(^|\n)-\s+(.+)/g, '$1• $2');
     s = s.replace(/\n/g, '<br>');
+
+    // Put the links back
+    s = s.replace(/\u0000(\d+)\u0000/g, (m, i) => stash[+i]);
     return s;
   }
 
