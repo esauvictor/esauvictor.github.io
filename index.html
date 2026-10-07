@@ -2634,6 +2634,9 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       history.push({ role: 'assistant', content: data.reply });
       saveHistory();
       addMessage('assistant', data.reply, { allowCopy: true });
+      if (data.action === 'start_call' && typeof window.openEsauCall === 'function') {
+        setTimeout(() => window.openEsauCall(), 600);
+      }
     } catch (err) {
       thinking.remove();
       addMessage('assistant', "Couldn't reach the chat service. Please try again.", { isError: true, allowRetry: true });
@@ -3192,6 +3195,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     });
   }
   function openCallModal(){say('');alt.hidden=true;modal.classList.add('open');warm();try{sessionStorage.setItem('callFabSeen','1')}catch(e){}var fab=document.getElementById('callFab');if(fab)fab.classList.add('seen');}
+  window.openEsauCall=openCallModal; // lets the chat widget open the call window
   $('callOpen').addEventListener('click',function(e){e.preventDefault();openCallModal()});
   $('callFab').addEventListener('click',openCallModal);
   $('callClose').addEventListener('click',close);
