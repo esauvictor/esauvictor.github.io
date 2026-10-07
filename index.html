@@ -3324,6 +3324,13 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 #callHang{background:var(--red);color:#fff}
 #callClose{background:transparent;color:var(--text2);border:1px solid var(--border2)!important}
 #callHear{background:var(--amber);color:#1a0f04}
+#callMic{background:var(--amber);color:#1a0f04}
+#callDimBtn{background:transparent;color:var(--text2);border:1px solid var(--border2)!important}
+#callDim{position:fixed;inset:0;z-index:10003;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#000;color:#3d3d3d;font-family:var(--mono);text-align:center;padding:24px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#callDim.on{display:flex}
+#callDim b{font-size:1.7rem;font-weight:400;color:#4a4a4a}
+#callDim span{font-size:.8rem;line-height:1.5}
+#callTip{margin:0 0 12px;font-size:.78rem;line-height:1.5;color:var(--text2)}
 #callAlt{margin:10px 0;font-size:.82rem;line-height:1.7}#callAlt a{color:var(--green)}
 #callConfirm{position:fixed;inset:0;z-index:10002;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);padding:16px}
 #callConfirm.open{display:flex}
@@ -3430,14 +3437,18 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       </div>
     </div>
     <div id="callStatus" role="status" aria-live="polite"></div>
+    <div id="callTip" hidden>Tip: during the call the screen goes dark after a few seconds but stays on, so your microphone keeps working. Tap the screen to wake it. Pressing the power button turns the screen off and pauses your microphone.</div>
     <div id="callAlt" hidden>Prefer another way? <a href="https://wa.me/2348132084092" target="_blank" rel="noopener">WhatsApp</a> or <a href="mailto:www.esauvictor.name.ng@gmail.com">email</a>.</div>
     <button id="callStart" type="button">Start call</button>
     <button id="callHear" type="button" hidden>Tap to hear Esau</button>
+    <button id="callMic" type="button" hidden>Tap to turn my mic back on</button>
     <button id="callHang" type="button" hidden>Hang up</button>
+    <button id="callDimBtn" type="button" hidden>Dim screen</button>
     <button id="callClose" type="button">Close</button>
     <audio id="callAudio" autoplay playsinline></audio>
   </div>
 </div>
+<div id="callDim" role="button" tabindex="0" aria-label="Call in progress. Screen dimmed. Tap to wake."><b id="callDimTime">0:00</b><span>Call in progress. Screen dimmed to save battery.</span><span>Tap anywhere to wake.</span></div>
 <div id="callConfirm" role="alertdialog" aria-modal="true" aria-labelledby="callConfirmTitle" aria-describedby="callConfirmMsg">
   <div id="callConfirmBox">
     <h4 id="callConfirmTitle">End the call?</h4>
@@ -3455,6 +3466,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   var FALLBACK_ICE=[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}];
   var $=function(i){return document.getElementById(i)}, modal=$('callModal'), st=$('callStatus'), go=$('callStart'), hang=$('callHang'), hear=$('callHear'), alt=$('callAlt');
   var peer=null, call=null, stream=null, timer=null, openT=null, connected=false, icePromise=null, peerjsPromise=null;
+  var dc=null, recov=false, byeRx=false, closing=false, dT=null; // dc = tiny side-channel used only to say "bye"
 
   // ---------- Network quality: pre-call check + live stats during the call ----------
   var netEl=$('callNet'), netLbl=$('callNetLabel'), netTip=$('callNetTip'), netStat=$('callNetStats');
@@ -3663,15 +3675,15 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       if('mediaSession' in navigator){
         navigator.mediaSession.metadata=new MediaMetadata({title:'Live call with Esau',artist:'esauvictor.name.ng'});
         navigator.mediaSession.playbackState='playing';
-        try{navigator.mediaSession.setActionHandler('hangup',function(){say('Call ended.');end()})}catch(e){}
+        try{navigator.mediaSession.setActionHandler('hangup',function(){bye(function(){say('Call ended.');end()})})}catch(e){}
       }
     }catch(e){}
   }
-  function reviveMic(){
+  function reviveMic(force){
     try{
       if(!call||!call.peerConnection||!stream)return;
       var tr=stream.getAudioTracks()[0];
-      if(tr&&tr.readyState==='live')return;
+      if(!force&&tr&&tr.readyState==='live'&&!tr.muted)return;   // phones mute the mic while asleep
       navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}).then(function(ns){
         var snd=null;
         call.peerConnection.getSenders().forEach(function(x){if(x.track&&x.track.kind==='audio')snd=x});
@@ -3679,16 +3691,29 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
         return snd.replaceTrack(ns.getAudioTracks()[0]).then(function(){
           try{stream.getTracks().forEach(function(t){t.stop()})}catch(e){}
           stream=ns;
+          var mb=document.getElementById('callMic');if(mb)mb.hidden=true;
+          try{dc&&dc.open&&dc.send('back')}catch(e){}
         });
-      }).catch(function(){});
+      }).catch(function(){
+        // Browsers (iPhone especially) may only allow the mic to restart from a tap.
+        var mb=document.getElementById('callMic');
+        if(mb){mb.hidden=false;say('Your microphone paused while the phone slept. Tap the button below to turn it back on.')}
+      });
     }catch(e){}
   }
+  function showTip(){var t=document.getElementById('callTip');if(t&&window.matchMedia&&matchMedia('(pointer:coarse)').matches)t.hidden=false}
+  // Tell the other side when this page goes to sleep, so they know why they cannot hear you.
+  document.addEventListener('visibilitychange',function(){
+    if(document.visibilityState==='hidden'&&connected){try{dc&&dc.open&&dc.send('hidden')}catch(e){}}
+  });
   function releaseAwake(){
+    dimStop();
+    try{var mb=document.getElementById('callMic');if(mb)mb.hidden=true;var tp=document.getElementById('callTip');if(tp)tp.hidden=true}catch(e){}
     try{if('mediaSession' in navigator){navigator.mediaSession.playbackState='none';navigator.mediaSession.metadata=null}}catch(e){}
   }
   document.addEventListener('visibilitychange',function(){
     if(document.visibilityState!=='visible'||!(go.disabled||!!(peer||call||stream)))return;
-    keepAwake(); warnCtx(); reviveMic(); net.prev=null; net.stall=0; if(connected)tryPlay();try{if(peer&&peer.disconnected)peer.reconnect()}catch(e){};
+    keepAwake(); warnCtx(); try{dc&&dc.open&&dc.send('back')}catch(e){} try{var px=call&&call.peerConnection;if(connected&&px&&(px.iceConnectionState==='failed'||px.iceConnectionState==='closed'))recover()}catch(e){} reviveMic(); net.prev=null; net.stall=0; if(connected)tryPlay();try{if(peer&&peer.disconnected)peer.reconnect()}catch(e){};
   });
   function warnStop(){clearInterval(warn.iv);warn.iv=null;warn.bad=0}
   // Called on every status update. Needs 2 bad readings in a row (about 4 s) so one blip never beeps.
@@ -3718,31 +3743,112 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     if(!icePromise)icePromise=getIce();
   }
   function end(){
-    clearTimeout(timer);clearTimeout(openT);
+    closing=true;
+    clearTimeout(timer);clearTimeout(openT);clearTimeout(dT);
+    try{dc&&dc.close()}catch(e){}
     if(call){try{call.close()}catch(e){}}
     if(peer){try{peer.destroy()}catch(e){}}
     if(stream){stream.getTracks().forEach(function(t){t.stop()})}
-    peer=call=stream=null; connected=false; go.disabled=false; hang.hidden=true; hear.hidden=true;
-    ringStop(); hideConfirm(); releaseAwake();
+    peer=call=stream=dc=null; connected=false; recov=false; byeRx=false; go.disabled=false; hang.hidden=true; hear.hidden=true;
+    ringStop(); hideConfirm(); releaseAwake(); closing=false;
     netLiveStop(); netIdle();
   }
   function fail(msg,net_){var h=net_?hint():'';say(h?msg+' '+h:msg);end();alt.hidden=false}
   function close(){modal.classList.remove('open');end();netIdleStop()}
   function tryPlay(){$('callAudio').play().then(function(){hear.hidden=true}).catch(function(){hear.hidden=false})}
   // "Connected" only when audio can really flow (ICE up), not merely when the stream object appears.
+  // ---------- Dim mode: screen stays awake (so the mic keeps working) but shows black to save battery ----------
+  // A web page cannot change the phone's brightness, so a black cover is used instead. On OLED phones black
+  // pixels are switched off, so this uses very little power. Tapping anywhere wakes it.
+  var dim={t:null,iv:null,since:0,lock:null,idle:20000};
+  function wakeOn(){
+    try{
+      if(navigator.wakeLock&&document.visibilityState==='visible'&&!dim.lock){
+        navigator.wakeLock.request('screen').then(function(l){
+          dim.lock=l;l.addEventListener('release',function(){if(dim.lock===l)dim.lock=null});
+        }).catch(function(){});
+      }
+    }catch(e){}
+  }
+  function wakeOff(){try{dim.lock&&dim.lock.release()}catch(e){}dim.lock=null}
+  function dimTick(){
+    var n=Math.max(0,Math.floor((Date.now()-dim.since)/1000)),m=Math.floor(n/60),x=n%60;
+    $('callDimTime').textContent=m+':'+(x<10?'0':'')+x;
+  }
+  function dimOn(){
+    if(!connected)return;
+    if(cfm&&cfm.classList.contains('open')){dimArm();return}
+    $('callDim').classList.add('on');dimTick();clearInterval(dim.iv);dim.iv=setInterval(dimTick,1000);
+  }
+  function dimOff(){$('callDim').classList.remove('on');clearInterval(dim.iv);dim.iv=null}
+  function dimArm(){
+    clearTimeout(dim.t);
+    if(connected&&!$('callDim').classList.contains('on'))dim.t=setTimeout(dimOn,dim.idle);
+  }
+  function dimStart(){
+    if(!dim.since)dim.since=Date.now();
+    wakeOn();dimArm();$('callDimBtn').hidden=false;
+  }
+  function dimStop(){
+    clearTimeout(dim.t);dimOff();wakeOff();dim.since=0;
+    try{$('callDimBtn').hidden=true}catch(e){}
+  }
+  $('callDim').addEventListener('click',function(e){e.stopPropagation();dimOff();dimArm()});
+  $('callDim').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();dimOff();dimArm()}});
+  $('callDimBtn').addEventListener('click',function(){dimOn()});
+  modal.addEventListener('pointerdown',function(){dimArm()});
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'&&connected)wakeOn()});
+  // Tell the other side "I hung up on purpose" so it ends at once instead of trying to reconnect.
+  function bye(then){
+    var sent=false;
+    try{if(dc&&dc.open){dc.send('bye');sent=true}}catch(e){}
+    if(sent)setTimeout(then,250);else then();
+  }
+  // The line dropped (usually because a phone slept and its network paused). Do not end the call:
+  // wait for Esau's page to ring back automatically, and give up only after 75 s.
+  function recover(){
+    if(!connected||byeRx||recov||closing)return;
+    recov=true; connected=false; netLiveStop(); clearTimeout(dT);
+    var old=call; call=null;
+    if(old){try{old.close()}catch(e){}}
+    dimOff();clearTimeout(dim.t);say('Connection lost. Reconnecting… keep this window open.');
+    hang.hidden=false;
+    try{if(peer&&peer.disconnected)peer.reconnect()}catch(e){}
+    clearTimeout(timer);
+    timer=setTimeout(giveUp,75000);
+  }
+  function giveUp(){if(recov&&!connected){say('The call could not be restored. Please call again.');end();alt.hidden=false}}
+  // A ring-back attempt failed while recovering: drop it and keep waiting for the next one.
+  function recovWait(){
+    var o=call; call=null; try{o&&o.close()}catch(e){}
+    say('Reconnecting… keep this window open.');
+    clearTimeout(timer); timer=setTimeout(giveUp,45000);
+  }
+  // Re-open the microphone first if the phone cut it while asleep.
+  function withMic(cb){
+    var tr=stream&&stream.getAudioTracks()[0];
+    if(tr&&tr.readyState==='live'){cb();return}
+    navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})
+      .then(function(ns){stream=ns;cb()}).catch(function(){cb()});
+  }
   function watch(c){
     var pc=c.peerConnection;
     clearTimeout(timer);
-    timer=setTimeout(function(){if(!connected)fail('Audio could not connect. Your network may be blocking calls.',1)},30000);
+    timer=setTimeout(function(){if(!connected){if(recov)recovWait();else fail('Audio could not connect. Your network may be blocking calls.',1)}},30000);
     if(!pc)return;
     pc.addEventListener('iceconnectionstatechange',function(){
+      if(c!==call||closing)return;
       var s=pc.iceConnectionState;
       if(s==='connected'||s==='completed'){
-        net.disc=false;
-        if(!connected){connected=true;clearTimeout(timer);ringStop();connectCue();keepAwake();say('Connected. You can talk now.');tryPlay();netLiveStart(pc)}
+        net.disc=false; clearTimeout(dT);
+        if(!connected){connected=true;recov=false;clearTimeout(timer);ringStop();connectCue();keepAwake();showTip();dimStart();say('Connected. You can talk now.');tryPlay();netLiveStart(pc)}
       }else if(s==='failed'){
-        if(connected){say('The call dropped. If your signal is weak, move '+where()+' and call again.');end()}else fail('Audio could not connect. Your network may be blocking calls.',1);
-      }else if(s==='disconnected'&&connected){say('Connection unstable…');net.disc=true;netLive()}
+        if(connected)recover();else if(recov)recovWait();else fail('Audio could not connect. Your network may be blocking calls.',1);
+      }else if(s==='disconnected'&&connected){
+        say('Connection unstable…');net.disc=true;netLive();
+        clearTimeout(dT);
+        dT=setTimeout(function(){if(c===call&&connected&&pc.iceConnectionState!=='connected'&&pc.iceConnectionState!=='completed')recover()},12000);
+      }
     });
   }
   function openCallModal(){say('');alt.hidden=true;modal.classList.add('open');warm();netIdleStart();try{sessionStorage.setItem('callFabSeen','1')}catch(e){}var fab=document.getElementById('callFab');if(fab)fab.classList.add('seen');}
@@ -3765,14 +3871,15 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   modal.addEventListener('click',function(e){if(e.target===modal)requestClose()});
   $('callKeep').addEventListener('click',hideConfirm);
   cfm.addEventListener('click',function(e){if(e.target===cfm)hideConfirm()});
-  $('callEndYes').addEventListener('click',function(){hideConfirm();say('Call ended.');close()});
+  $('callEndYes').addEventListener('click',function(){hideConfirm();bye(function(){say('Call ended.');close()})});
   document.addEventListener('keydown',function(e){
     if(e.key!=='Escape')return;
     if(cfm.classList.contains('open')){hideConfirm();return}
     if(modal.classList.contains('open'))requestClose();
   });
-  hang.addEventListener('click',function(){say('Call ended.');end()});
+  hang.addEventListener('click',function(){bye(function(){say('Call ended.');end()})});
   hear.addEventListener('click',tryPlay);
+  $('callMic').addEventListener('click',function(){reviveMic(true)});
 
   go.addEventListener('click',async function(){
     go.disabled=true; alt.hidden=true; warnCtx(); keepAwake(); say('Requesting microphone…');
@@ -3787,14 +3894,32 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       var id=newId();
       peer=new Peer(id,{config:{iceServers:ice,iceCandidatePoolSize:4}});
       peer.on('disconnected',function(){try{peer&&peer.reconnect()}catch(e){}});
-      peer.on('error',function(e){if(e.type!=='peer-unavailable')fail('Connection problem ('+e.type+'). Please try again.',1)});
+      peer.on('error',function(e){
+        if(e.type==='peer-unavailable')return;
+        if(connected||recov){try{peer.reconnect()}catch(x){}return}
+        fail('Connection problem ('+e.type+'). Please try again.',1)
+      });
       peer.on('open',function(){clearTimeout(openT)});
       openT=setTimeout(function(){fail('Could not reach the call server. Please try again.',1)},15000);
       peer.on('call',function(c){
-        if(call){c.close();return}
-        call=c; clearTimeout(timer); ringStart(); c.answer(stream); say('Esau is calling you… connecting audio'); watch(c);
-        c.on('stream',function(rs){$('callAudio').srcObject=rs;tryPlay()});
-        c.on('close',function(){if(connected){say('Call ended. Thanks for calling!');end()}});
+        if(call){ // Esau's page is ringing back after a drop: replace the dead call
+          var oc=call; call=null; connected=false; recov=true; netLiveStop(); clearTimeout(dT);
+          try{oc.close()}catch(e){}
+        }
+        call=c; clearTimeout(timer);
+        if(!recov)ringStart();
+        say(recov?'Esau is reconnecting…':'Esau is calling you… connecting audio');
+        withMic(function(){
+          if(call!==c)return;
+          c.answer(stream); watch(c);
+          c.on('stream',function(rs){$('callAudio').srcObject=rs;tryPlay()});
+          c.on('close',function(){if(c!==call||closing||byeRx)return;if(connected)recover()});
+        });
+      });
+      peer.on('connection',function(c){
+        try{dc&&dc.close()}catch(e){}
+        dc=c;
+        c.on('data',function(d){if(d==='bye'&&!closing){byeRx=true;say('Call ended. Thanks for calling!');end()}});
       });
       // Alert Esau right away, in parallel with registering (saves seconds).
       say('Alerting Esau…');
