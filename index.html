@@ -3075,7 +3075,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   var PEERJS='https://cdn.jsdelivr.net/npm/peerjs@1/dist/peerjs.min.js';
   var FALLBACK_ICE=[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}];
   var $=function(i){return document.getElementById(i)}, modal=$('callModal'), st=$('callStatus'), go=$('callStart'), hang=$('callHang'), hear=$('callHear'), alt=$('callAlt');
-  var peer=null, call=null, stream=null, timer=null, connected=false, alerted=false;
+  var peer=null, call=null, stream=null, timer=null, openT=null, connected=false, icePromise=null, peerjsPromise=null;
   function say(t){st.textContent=t}
   function load(src){return new Promise(function(a,b){var s=document.createElement('script');s.src=src;s.onload=a;s.onerror=b;document.head.appendChild(s)})}
   function newId(){var a=new Uint8Array(16);crypto.getRandomValues(a);return 'v-'+Array.prototype.map.call(a,function(b){return ('0'+b.toString(16)).slice(-2)}).join('')}
@@ -3084,58 +3084,77 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       .then(function(j){return j.iceServers&&j.iceServers.length?j.iceServers:FALLBACK_ICE})
       .catch(function(){return FALLBACK_ICE});
   }
+  // Pre-load PeerJS and the relay list as soon as the window opens, so Start feels instant.
+  function warm(){
+    if(!window.Peer&&!peerjsPromise)peerjsPromise=load(PEERJS).catch(function(){peerjsPromise=null});
+    if(!icePromise)icePromise=getIce();
+  }
   function end(){
-    clearTimeout(timer);
+    clearTimeout(timer);clearTimeout(openT);
     if(call){try{call.close()}catch(e){}}
     if(peer){try{peer.destroy()}catch(e){}}
     if(stream){stream.getTracks().forEach(function(t){t.stop()})}
-    peer=call=stream=null; connected=alerted=false; go.disabled=false; hang.hidden=true; hear.hidden=true;
+    peer=call=stream=null; connected=false; go.disabled=false; hang.hidden=true; hear.hidden=true;
   }
   function fail(msg){say(msg);end();alt.hidden=false}
   function close(){end();modal.classList.remove('open')}
-  $('callOpen').addEventListener('click',function(e){e.preventDefault();say('');alt.hidden=true;modal.classList.add('open')});
+  function tryPlay(){$('callAudio').play().then(function(){hear.hidden=true}).catch(function(){hear.hidden=false})}
+  // "Connected" only when audio can really flow (ICE up), not merely when the stream object appears.
+  function watch(c){
+    var pc=c.peerConnection;
+    clearTimeout(timer);
+    timer=setTimeout(function(){if(!connected)fail('Audio could not connect. Your network may be blocking calls.')},30000);
+    if(!pc)return;
+    pc.addEventListener('iceconnectionstatechange',function(){
+      var s=pc.iceConnectionState;
+      if(s==='connected'||s==='completed'){
+        if(!connected){connected=true;clearTimeout(timer);say('Connected. You can talk now.');tryPlay()}
+      }else if(s==='failed'){
+        if(connected){say('The call dropped.');end()}else fail('Audio could not connect. Your network may be blocking calls.');
+      }else if(s==='disconnected'&&connected){say('Connection unstable…')}
+    });
+  }
+  $('callOpen').addEventListener('click',function(e){e.preventDefault();say('');alt.hidden=true;modal.classList.add('open');warm()});
   $('callClose').addEventListener('click',close);
   modal.addEventListener('click',function(e){if(e.target===modal)close()});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modal.classList.contains('open'))close()});
   hang.addEventListener('click',function(){say('Call ended.');end()});
-  hear.addEventListener('click',function(){$('callAudio').play().then(function(){hear.hidden=true}).catch(function(){})});
+  hear.addEventListener('click',tryPlay);
 
   go.addEventListener('click',async function(){
     go.disabled=true; alt.hidden=true; say('Requesting microphone…');
-    try{stream=await navigator.mediaDevices.getUserMedia({audio:true})}
+    try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}
     catch(e){say('Microphone permission is needed to place the call.');go.disabled=false;return}
     try{
       say('Connecting…');
-      var res=await Promise.all([getIce(),window.Peer?0:load(PEERJS)]);
+      warm();
+      var ice=await icePromise; icePromise=null;
+      if(!window.Peer)await peerjsPromise;
+      if(!window.Peer){fail('Could not load the call system. Please check your connection.');return}
       var id=newId();
-      peer=new Peer(id,{config:{iceServers:res[0]}});
+      peer=new Peer(id,{config:{iceServers:ice,iceCandidatePoolSize:4}});
       peer.on('disconnected',function(){try{peer&&peer.reconnect()}catch(e){}});
       peer.on('error',function(e){if(e.type!=='peer-unavailable')fail('Connection problem ('+e.type+'). Please try again.')});
-      peer.on('open',async function(){
-        if(alerted)return; alerted=true;
-        say('Alerting Esau…');
-        try{
-          var r=await fetch(API+'/call/notify.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})});
-          var j=await r.json().catch(function(){return {}});
-          if(!r.ok||!j.ok){fail(r.status===429?'Too many call attempts. Please try later, or use WhatsApp.':'Could not reach Esau right now.');return}
-        }catch(e){fail('Network problem. Please check your connection and try again.');return}
-        say('Esau has been alerted and will call you back here shortly. Please keep this window open…');
-        hang.hidden=false;
-        timer=setTimeout(function(){fail('Esau could not pick up just now.')},90000);
-      });
+      peer.on('open',function(){clearTimeout(openT)});
+      openT=setTimeout(function(){fail('Could not reach the call server. Please try again.')},15000);
       peer.on('call',function(c){
         if(call){c.close();return}
-        call=c; clearTimeout(timer); c.answer(stream); say('Connecting audio…');
-        timer=setTimeout(function(){fail('Could not connect the audio (network block). Please use WhatsApp.')},40000);
-        c.on('stream',function(rs){
-          connected=true; clearTimeout(timer);
-          var au=$('callAudio'); au.srcObject=rs;
-          au.play().catch(function(){hear.hidden=false});
-          say('Connected. You can talk now.');
-        });
+        call=c; clearTimeout(timer); c.answer(stream); say('Connecting audio…'); watch(c);
+        c.on('stream',function(rs){$('callAudio').srcObject=rs;tryPlay()});
         c.on('close',function(){if(connected){say('Call ended. Thanks for calling!');end()}});
       });
-    }catch(err){fail('Could not connect. Please try again.')}
+      // Alert Esau right away, in parallel with registering (saves seconds).
+      say('Alerting Esau…');
+      var r=await fetch(API+'/call/notify.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})});
+      var j=await r.json().catch(function(){return {}});
+      if(!r.ok||!j.ok){fail(r.status===429?'Too many call attempts. Please try later, or use WhatsApp.':'Could not reach Esau right now.');return}
+      if(!call){
+        say('Esau has been alerted and will call you back here shortly. Please keep this window open…');
+        hang.hidden=false;
+        clearTimeout(timer);
+        timer=setTimeout(function(){if(!call)fail('Esau could not pick up just now.')},90000);
+      }
+    }catch(err){fail('Could not connect. Please check your connection and try again.')}
   });
 })();
 </script>
