@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Call desk</title>
+<style>
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0c0a08;color:#f5ede4;font-family:ui-monospace,Menlo,Consolas,monospace}
+.box{background:#1a150e;border:1px solid rgba(255,120,40,.28);border-radius:14px;padding:28px;max-width:420px;width:92%;text-align:center}
+h1{color:#ff7828;font-size:1.3rem;margin:0 0 8px}
+#state{margin:14px 0 6px;padding:10px 12px;border-radius:10px;border:1px solid var(--c,#5c4e42);color:var(--c,#b8a898);line-height:1.5;font-size:.9rem}
+#state[data-s=on]{--c:#4ade80}#state[data-s=connecting],#state[data-s=dup]{--c:#fbbf24}#state[data-s=reconnecting],#state[data-s=off]{--c:#ef4444}
+#hint{margin:8px 0 14px;font-size:.8rem;line-height:1.6;color:#b8a898}
+button,.btn{font:inherit;border:0;border-radius:10px;padding:14px 22px;margin:6px;cursor:pointer;font-size:1rem;text-decoration:none;display:inline-block}
+#start{background:#22c55e;color:#04200d;font-weight:700}
+#test{background:transparent;color:#b8a898;border:1px solid rgba(255,120,40,.28);padding:8px 14px;font-size:.8rem}
+.call{margin:14px 0;padding:14px;border-radius:12px;border:2px solid #22c55e;background:#10240f;animation:pulse 1s ease-in-out infinite}
+.call.missed{border-color:#5c4e42;background:#131009;animation:none}
+.call .t{font-size:1.05rem;font-weight:700;margin-bottom:6px}
+.call .a{background:#22c55e;color:#04200d;font-weight:700}
+.call .d{background:transparent;color:#b8a898;border:1px solid rgba(255,120,40,.28);padding:10px 16px;font-size:.85rem}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.55)}50%{box-shadow:0 0 0 12px rgba(34,197,94,0)}}
+label{display:block;margin-top:12px;font-size:.78rem;color:#b8a898}
+@media (prefers-reduced-motion:reduce){.call{animation:none}}
+</style></head><body>
+<div class="box">
+<h1>Call desk</h1>
+<div id="state" data-s="off" role="status" aria-live="polite">Not listening</div>
+<p id="hint">Keep this page open on your laptop (plugged in). When a visitor starts a call, it rings loudly here and shows an Answer button.</p>
+<button id="start">Start listening</button>
+<div id="calls" aria-live="assertive"></div>
+<div><button id="test" type="button">Test the ring</button></div>
+<label><input type="checkbox" id="awake" checked> Keep this computer awake while listening</label>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1/dist/peerjs.min.js"></script>
+<script>
+// Must match DESK_ID in index.html. It is not secret (it is in the site's source), so anyone could ring this page;
+// that only plays a sound and shows an Answer button, and rings are limited to MAX_PER_MIN.
+var DESK_ID='ra-desk-8127ab7dd9eeb7af';
+var ANSWER_URL='answer.html';           // put desk.html in the same folder as answer.html, or change this to the full address
+var API='https://esauvictor.name.ng/api';
+var FALLBACK_ICE=[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}];
+var RING_MS=90000, MAX_PER_MIN=6;
+var $=function(i){return document.getElementById(i)};
+var peer=null, ctx=null, listening=false, calls={}, order=[], stamps=[], wl=null;
+var ring={g:null,nodes:[],end:0,vib:null,tIv:null}, title0=document.title;
+
+function setState(s){
+  var t={off:'Not listening. Tap Start listening.',connecting:'Connecting…',on:'Listening. You will hear a ring when a visitor calls.',
+    reconnecting:'Connection lost. Reconnecting… you will NOT be alerted until it is back.',dup:'Waiting for the previous desk session to close…'};
+  $('state').dataset.s=s;$('state').textContent=t[s];
+}
+function getIce(){
+  return fetch(API+'/call/ice.php').then(function(r){return r.json()})
+    .then(function(j){return j.iceServers&&j.iceServers.length?j.iceServers:FALLBACK_ICE}).catch(function(){return FALLBACK_ICE});
+}
+function audio(){
+  try{
+    if(!ctx){var AC=window.AudioContext||window.webkitAudioContext;if(AC)ctx=new AC()}
+    if(ctx&&ctx.state==='suspended')ctx.resume();
+  }catch(e){}
+  return ctx;
+}
+// ---------- Ring: scheduled ahead on the audio clock, so it keeps going even if this tab is in the background ----------
+function startRing(ms){
+  stopRing();
+  var c=audio(); if(!c)return;
+  ring.g=c.createGain();ring.g.gain.value=1;ring.g.connect(c.destination);
+  var t0=c.currentTime+0.05,total=(ms||RING_MS)/1000;
+  for(var b=0;b*2.4<total;b++){
+    [[0,988],[0.22,784],[0.5,988],[0.72,784]].forEach(function(n){
+      var o=c.createOscillator(),g=c.createGain(),at=t0+b*2.4+n[0];
+      o.type='triangle';o.frequency.value=n[1];
+      g.gain.setValueAtTime(0.0001,at);
+      g.gain.exponentialRampToValueAtTime(0.8,at+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,at+0.2);
+      o.connect(g);g.connect(ring.g);o.start(at);o.stop(at+0.23);ring.nodes.push(o);
+    });
+  }
+  ring.end=Date.now()+(ms||RING_MS);
+  var buzz=function(){try{navigator.vibrate&&navigator.vibrate([500,200,500])}catch(e){}};
+  buzz();ring.vib=setInterval(buzz,2400);
+  var on=false;ring.tIv=setInterval(function(){on=!on;document.title=on?'\u{1F4DE} CALL!':title0},700);
+}
+function stopRing(){
+  if(ring.g){try{ring.g.gain.value=0;ring.g.disconnect()}catch(e){}ring.g=null}
+  ring.nodes.forEach(function(o){try{o.stop()}catch(e){}});ring.nodes=[];
+  clearInterval(ring.vib);clearInterval(ring.tIv);ring.vib=ring.tIv=null;
+  try{navigator.vibrate&&navigator.vibrate(0)}catch(e){}
+  document.title=title0;ring.end=0;
+}
+// ---------- Incoming call list ----------
+function fmt(ms){var n=Math.max(0,Math.floor(ms/1000));return Math.floor(n/60)+':'+('0'+n%60).slice(-2)}
+function render(){
+  var h='';
+  order.slice().reverse().forEach(function(id){
+    var c=calls[id],live=c.state==='ringing',age=Date.now()-c.at;
+    var url=ANSWER_URL+'?c='+encodeURIComponent(id)+'&t='+Math.floor(c.at/1000);
+    h+='<div class="call'+(live?'':' missed')+'" data-id="'+id+'"><div class="t">'+(live?'\u{1F4DE} Visitor is calling · '+fmt(age):'Missed · '+new Date(c.at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}))+'</div>'
+      +'<a class="btn a" href="'+url+'" target="_blank" rel="noopener" data-act="answer">'+(live?'Answer':'Try anyway')+'</a>'
+      +'<button class="d" type="button" data-act="dismiss">Dismiss</button></div>';
+  });
+  $('calls').innerHTML=h;
+}
+function anyRinging(){return order.some(function(id){return calls[id].state==='ringing'})}
+function settle(){if(!anyRinging())stopRing()}
+$('calls').addEventListener('click',function(e){
+  var b=e.target.closest('[data-act]');if(!b)return;
+  var id=b.parentNode.getAttribute('data-id');if(!calls[id])return;
+  if(b.dataset.act==='answer'){calls[id].state='answered';setTimeout(function(){order=order.filter(function(x){return x!==id});delete calls[id];settle();render()},400)}
+  else{order=order.filter(function(x){return x!==id});delete calls[id];settle();render()}
+});
+setInterval(function(){
+  var now=Date.now(),ch=false;
+  order.forEach(function(id){var c=calls[id];if(c.state==='ringing'&&now-c.at>RING_MS){c.state='missed';ch=true}});
+  if(ch){settle();render();return}
+  // Only update the timers in place, so a click on Answer is never lost to a redraw.
+  order.forEach(function(id){
+    var c=calls[id];if(c.state!=='ringing')return;
+    var el=$('calls').querySelector('.call[data-id="'+id+'"] .t');
+    if(el)el.textContent='\u{1F4DE} Visitor is calling · '+fmt(now-c.at);
+  });
+},1000);
+function onRing(d){
+  if(!d||d.type!=='ring')return;
+  var id=String(d.id||'');
+  if(!/^v-[a-f0-9]{32}$/.test(id)||calls[id])return;
+  var now=Date.now();stamps=stamps.filter(function(x){return now-x<60000});
+  if(stamps.length>=MAX_PER_MIN)return;stamps.push(now);
+  calls[id]={at:now,state:'ringing'};order.push(id);
+  while(order.length>5){var old=order.shift();delete calls[old]}
+  render();startRing();
+  try{
+    if('Notification' in window&&Notification.permission==='granted'){
+      var n=new Notification('\u{1F4DE} Website call',{body:'A visitor is calling you now.',tag:'webcall',requireInteraction:true});
+      n.onclick=function(){window.focus();n.close()};
+    }
+  }catch(e){}
+}
+// ---------- Connection to the PeerJS signalling server ----------
+function connect(){
+  if(!listening)return;
+  setState('connecting');
+  getIce().then(function(ice){
+    if(!listening)return;
+    try{peer&&peer.destroy()}catch(e){}
+    peer=new Peer(DESK_ID,{config:{iceServers:ice,iceCandidatePoolSize:4}});
+    peer.on('open',function(){setState('on')});
+    peer.on('disconnected',function(){setState('reconnecting');try{peer.reconnect()}catch(e){}});
+    peer.on('close',function(){if(listening){setState('reconnecting');setTimeout(connect,3000)}});
+    peer.on('error',function(e){
+      if(e.type==='peer-unavailable')return;
+      if(e.type==='unavailable-id'){setState('dup');setTimeout(connect,6000);return}
+      setState('reconnecting');
+      setTimeout(function(){try{if(peer&&peer.disconnected)peer.reconnect()}catch(x){}},4000);
+    });
+    peer.on('connection',function(c){c.on('data',onRing)});
+  });
+}
+// Safety net: if the link silently dies, bring it back.
+setInterval(function(){
+  if(!listening)return;
+  if(!peer||peer.destroyed){connect();return}
+  if(peer.disconnected){try{peer.reconnect()}catch(e){}}
+},10000);
+window.addEventListener('online',function(){if(listening)connect()});
+// ---------- Keep the computer awake (optional) ----------
+function wake(){
+  try{
+    if($('awake').checked&&listening&&navigator.wakeLock&&document.visibilityState==='visible'&&!wl){
+      navigator.wakeLock.request('screen').then(function(l){wl=l;l.addEventListener('release',function(){if(wl===l)wl=null})}).catch(function(){});
+    }
+  }catch(e){}
+}
+$('awake').addEventListener('change',function(){if(this.checked)wake();else{try{wl&&wl.release()}catch(e){}wl=null}});
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')wake()});
+// ---------- Buttons ----------
+$('start').addEventListener('click',function(){
+  audio();
+  try{if('Notification' in window&&Notification.permission==='default')Notification.requestPermission()}catch(e){}
+  if(listening){
+    listening=false;$('start').textContent='Start listening';
+    try{peer&&peer.destroy()}catch(e){}peer=null;setState('off');
+    try{wl&&wl.release()}catch(e){}wl=null;return;
+  }
+  listening=true;$('start').textContent='Stop listening';wake();connect();
+});
+$('test').addEventListener('click',function(){audio();startRing(5000);setTimeout(function(){if(!anyRinging())stopRing()},5200)});
+setState('off');
+</script></body></html>
