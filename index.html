@@ -997,6 +997,7 @@
   ]
 }
 </script>
+<base target="_blank">
 </head>
 <body>
 <div id="siteNotice" class="site-notice" style="display:none;">
@@ -2185,6 +2186,11 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   }
 </style>
 
+<button id="callFab" aria-label="Call me live from your browser">
+  <span class="callfab-icon"><i class="fas fa-phone"></i></span>
+  <span class="callfab-label">call me live</span>
+</button>
+
 <button id="chatToggle" aria-label="Open chat">
   <span class="avatar-wrap">
     <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Chat">
@@ -2316,6 +2322,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   const toggleBtn = document.getElementById('chatToggle');
   const panelEl = document.getElementById('chatPanel');
   const backToTopBtn = document.getElementById('backToTop');
+  const callFabBtn = document.getElementById('callFab');
   const GAP = 16;
 
   function adjustForFooter() {
@@ -2332,6 +2339,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     greeting.style.transform = transform;
     panelEl.style.transform = transform;
     if (backToTopBtn) backToTopBtn.style.transform = transform;
+    if (callFabBtn) callFabBtn.style.transform = transform;
   }
 
   let footerRaf = null;
@@ -3055,6 +3063,56 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 #callClose{background:transparent;color:var(--text2);border:1px solid var(--border2)!important}
 #callHear{background:var(--amber);color:#1a0f04}
 #callAlt{margin:10px 0;font-size:.82rem;line-height:1.7}#callAlt a{color:var(--green)}
+#callFab{
+  position:fixed;bottom:80px;left:20px;z-index:9997;
+  display:flex;align-items:center;gap:9px;
+  background:linear-gradient(135deg,#2ee06a,#0ea752);
+  color:#04160b;border:none;border-radius:50px;
+  padding:9px 20px 9px 9px;cursor:pointer;
+  font-family:var(--mono);
+  box-shadow:0 8px 24px rgba(46,224,106,0.45),0 4px 14px rgba(0,0,0,.55);
+  transition:transform .2s ease,box-shadow .25s ease,filter .25s ease;
+  will-change:transform;
+  opacity:0;
+  animation:callFabIn .5s ease .6s forwards,callFabBreathe 3.2s ease-in-out 1.5s infinite;
+}
+@keyframes callFabIn{from{opacity:0}to{opacity:1}}
+@keyframes callFabBreathe{
+  0%,100%{box-shadow:0 8px 24px rgba(46,224,106,0.45),0 4px 14px rgba(0,0,0,.55)}
+  50%{box-shadow:0 8px 32px rgba(46,224,106,0.75),0 4px 16px rgba(0,0,0,.6)}
+}
+#callFab:hover{filter:brightness(1.08);transform:translateY(-2px)}
+#callFab:active{filter:brightness(.95)}
+#callFab .callfab-icon{
+  position:relative;flex-shrink:0;width:36px;height:36px;border-radius:50%;
+  background:rgba(4,22,11,.25);display:flex;align-items:center;justify-content:center;
+  font-size:.95rem;color:#04160b;
+}
+#callFab .callfab-icon::before,#callFab .callfab-icon::after{
+  content:'';position:absolute;inset:-2px;border-radius:50%;
+  border:2px solid rgba(46,224,106,.9);
+  animation:callFabPing 2.4s ease-out infinite;
+}
+#callFab .callfab-icon::after{animation-delay:1.2s}
+@keyframes callFabPing{
+  0%{transform:scale(1);opacity:.85}
+  100%{transform:scale(2.6);opacity:0}
+}
+#callFab .callfab-icon i{display:inline-block;animation:callFabRing 6s ease-in-out 3s infinite}
+@keyframes callFabRing{
+  0%,88%,100%{transform:rotate(0)}
+  90%{transform:rotate(-18deg)}92%{transform:rotate(14deg)}
+  94%{transform:rotate(-10deg)}96%{transform:rotate(8deg)}98%{transform:rotate(0)}
+}
+#callFab .callfab-label{font-weight:800;font-size:13px;letter-spacing:-.01em;white-space:nowrap}
+#callFab.seen .callfab-icon::before,#callFab.seen .callfab-icon::after,
+#callFab.seen .callfab-icon i{animation:none}
+@media (prefers-reduced-motion:reduce){
+  #callFab,#callFab .callfab-icon::before,#callFab .callfab-icon::after,#callFab .callfab-icon i{
+    animation:none!important;
+  }
+  #callFab{opacity:1!important}
+}
 </style>
 <div id="callModal" role="dialog" aria-modal="true" aria-labelledby="callTitle">
   <div id="callBox">
@@ -3114,7 +3172,9 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       }else if(s==='disconnected'&&connected){say('Connection unstable…')}
     });
   }
-  $('callOpen').addEventListener('click',function(e){e.preventDefault();say('');alt.hidden=true;modal.classList.add('open');warm()});
+  function openCallModal(){say('');alt.hidden=true;modal.classList.add('open');warm();try{sessionStorage.setItem('callFabSeen','1')}catch(e){}var fab=document.getElementById('callFab');if(fab)fab.classList.add('seen');}
+  $('callOpen').addEventListener('click',function(e){e.preventDefault();openCallModal()});
+  $('callFab').addEventListener('click',openCallModal);
   $('callClose').addEventListener('click',close);
   modal.addEventListener('click',function(e){if(e.target===modal)close()});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modal.classList.contains('open'))close()});
