@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leave a Review — Esau Victor</title>
+<meta name="description" content="Share your experience working with Esau Victor.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Oxanium:wght@400;600;700;800&family=Noto+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --mono: 'JetBrains Mono','Noto Sans',ui-monospace,Menlo,Consolas,monospace;
+    --display: 'Oxanium','Noto Sans',system-ui,sans-serif;
+    --bg:#0c0a08; --bg1:#131009; --bg2:#1a150e;
+    --border:rgba(255,120,40,.14); --border2:rgba(255,120,40,.35);
+    --accent:#ff7828; --glow:rgba(255,120,40,.18);
+    --text:#f5ede4; --text2:#b8a898; --text3:#7a6a5c; --red:#ef4444; --ok:#22c55e;
+  }
+  html,body { min-height:100%; }
+  body {
+    font-family:var(--mono); background:var(--bg); color:var(--text); line-height:1.6;
+    background-image: radial-gradient(900px 400px at 50% -10%, var(--glow), transparent 70%);
+    display:flex; align-items:flex-start; justify-content:center; padding:2rem 1rem 3rem;
+  }
+  .wrap { width:100%; max-width:560px; }
+  .brand { display:flex; align-items:center; gap:.8rem; margin-bottom:1.6rem; text-decoration:none; color:inherit; }
+  .brand img { width:44px; height:44px; border-radius:50%; border:2px solid var(--accent); }
+  .brand b { font-family:var(--display); font-size:1.05rem; letter-spacing:.02em; display:block; }
+  .brand span { font-size:.72rem; color:var(--text2); }
+  .card { background:var(--bg1); border:1px solid var(--border); border-radius:16px; padding:1.8rem 1.6rem; box-shadow:0 18px 50px -20px rgba(0,0,0,.7); }
+  h1 { font-family:var(--display); font-size:1.7rem; line-height:1.2; margin-bottom:.4rem; }
+  h1 em { color:var(--accent); font-style:normal; }
+  .lead { color:var(--text2); font-size:.85rem; margin-bottom:1.5rem; }
+  label { display:block; font-size:.75rem; letter-spacing:.06em; text-transform:uppercase; color:var(--text2); margin:1.1rem 0 .4rem; }
+  label small { text-transform:none; letter-spacing:0; color:var(--text3); }
+  input[type=text], textarea {
+    width:100%; background:var(--bg2); color:var(--text); border:1px solid var(--border); border-radius:10px;
+    padding:.8rem .9rem; font:inherit; font-size:.92rem; transition:border-color .15s, box-shadow .15s;
+  }
+  textarea { min-height:150px; resize:vertical; }
+  input:focus, textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--glow); }
+  .count { text-align:right; font-size:.7rem; color:var(--text3); margin-top:.3rem; }
+  .hp { position:absolute !important; left:-9999px; width:1px; height:1px; overflow:hidden; }
+  .consent { font-size:.72rem; color:var(--text3); margin-top:1.1rem; line-height:1.55; }
+  button.submit {
+    margin-top:1.3rem; width:100%; padding:.95rem 1rem; border:0; border-radius:10px; cursor:pointer;
+    background:linear-gradient(135deg,#ff7828,#ff9a4d); color:#1a0f04; font:inherit; font-weight:700; font-size:.95rem;
+    display:flex; align-items:center; justify-content:center; gap:.6rem; transition:transform .1s, opacity .15s;
+  }
+  button.submit:hover { opacity:.92; }
+  button.submit:active { transform:translateY(1px); }
+  button.submit[disabled] { opacity:.6; cursor:not-allowed; }
+  .spin { width:14px; height:14px; border:2px solid currentColor; border-right-color:transparent; border-radius:50%; animation:sp .7s linear infinite; display:none; }
+  .loading .spin { display:inline-block; }
+  @keyframes sp { to { transform:rotate(360deg); } }
+  .err { display:none; margin-top:1rem; padding:.75rem .9rem; border-radius:10px; background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.35); color:#fca5a5; font-size:.82rem; }
+  .err.show { display:block; }
+  .done { display:none; text-align:center; padding:1.2rem .4rem; }
+  .done.show { display:block; }
+  .tick { width:60px; height:60px; border-radius:50%; margin:0 auto 1rem; display:flex; align-items:center; justify-content:center; background:rgba(34,197,94,.12); border:2px solid var(--ok); color:var(--ok); font-size:1.7rem; }
+  .done h2 { font-family:var(--display); font-size:1.5rem; margin-bottom:.5rem; }
+  .done p { color:var(--text2); font-size:.88rem; }
+  .done a { display:inline-block; margin-top:1.3rem; color:var(--accent); text-decoration:none; font-size:.85rem; border-bottom:1px solid var(--border2); }
+  .foot { text-align:center; margin-top:1.4rem; font-size:.72rem; color:var(--text3); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="brand" href="https://esauvictor.name.ng">
+    <img src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor">
+    <div><b>Esau Victor</b><span>Esau De Tech Genius</span></div>
+  </a>
+
+  <div class="card">
+    <form id="form" novalidate>
+      <h1>Share your <em>experience</em></h1>
+      <p class="lead">Worked with me or used one of my services? A few honest words go a long way. It takes about a minute.</p>
+
+      <label for="name">Your name</label>
+      <input type="text" id="name" maxlength="80" autocomplete="name" placeholder="e.g. Adaeze Okafor" required>
+
+      <label for="role">Role / company <small>(optional)</small></label>
+      <input type="text" id="role" maxlength="100" autocomplete="organization-title" placeholder="e.g. Founder, BrightMart">
+
+      <label for="quote">Your review</label>
+      <textarea id="quote" maxlength="1000" placeholder="What was it like working with Esau? What did he build or teach you, and how did it help you?" required></textarea>
+      <div class="count"><span id="n">0</span>/1000</div>
+
+      <!-- honeypot: hidden from people, bots fill it -->
+      <div class="hp" aria-hidden="true">
+        <label>Website <input type="text" id="website" tabindex="-1" autocomplete="off"></label>
+      </div>
+
+      <p class="consent">By submitting, you agree that your name, role and review may be displayed publicly on esauvictor.name.ng. Reviews are checked before they go live.</p>
+
+      <div class="err" id="err" role="alert"></div>
+
+      <button type="submit" class="submit" id="btn"><span class="spin"></span><span id="btnLabel">Submit review</span></button>
+    </form>
+
+    <div class="done" id="done">
+      <div class="tick">&#10003;</div>
+      <h2>Thank you!</h2>
+      <p id="doneMsg">Your review has been received and will appear on the site once approved.</p>
+      <a href="https://esauvictor.name.ng/#testimonials">Visit the website &rarr;</a>
+    </div>
+  </div>
+
+  <p class="foot">&copy; <span id="yr"></span> Esau Victor</p>
+</div>
+
+<script>
+(function () {
+  var API = 'https://esauvictor.name.ng/api/testimonial_submit.php';
+  var $ = function (id) { return document.getElementById(id); };
+  var loadedAt = Date.now();
+  $('yr').textContent = new Date().getFullYear();
+
+  // Optional prefill from the shared link: /review?name=Ada&role=Founder
+  var qs = new URLSearchParams(location.search);
+  if (qs.get('name')) $('name').value = qs.get('name').slice(0, 80);
+  if (qs.get('role')) $('role').value = qs.get('role').slice(0, 100);
+
+  $('quote').addEventListener('input', function () { $('n').textContent = this.value.length; });
+
+  function showErr(msg) { var e = $('err'); e.textContent = msg; e.classList.add('show'); }
+
+  $('form').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    $('err').classList.remove('show');
+
+    var name = $('name').value.trim(), role = $('role').value.trim(), quote = $('quote').value.trim();
+    if (name.length < 2)   return showErr('Please enter your name.');
+    if (quote.length < 20) return showErr('Please write at least a couple of sentences about your experience.');
+
+    var btn = $('btn');
+    btn.disabled = true; btn.classList.add('loading'); $('btnLabel').textContent = 'Submitting\u2026';
+
+    fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: name, role: role, quote: quote,
+        website: $('website').value,
+        elapsed: Date.now() - loadedAt
+      })
+    })
+    .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, d: d }; }); })
+    .then(function (res) {
+      if (res.ok && res.d.success) {
+        if (res.d.message) $('doneMsg').textContent = res.d.message;
+        $('form').style.display = 'none';
+        $('done').classList.add('show');
+      } else {
+        showErr(res.d.error || 'Something went wrong. Please try again.');
+      }
+    })
+    .catch(function () { showErr('Network problem. Please check your connection and try again.'); })
+    .then(function () {
+      btn.disabled = false; btn.classList.remove('loading'); $('btnLabel').textContent = 'Submit review';
+    });
+  });
+})();
+</script>
+</body>
+</html>
