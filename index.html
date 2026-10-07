@@ -1102,6 +1102,14 @@
   .site-tts-video-frame:fullscreen .site-tts-presenter, .site-tts-video-frame:-webkit-full-screen .site-tts-presenter {
     width: auto; height: 100%; max-width: 100%; object-fit: contain;
   }
+  .site-tts-consent { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.55rem; }
+  .site-tts-consent[hidden] { display: none; }
+  .site-tts-consent button {
+    font-family: var(--mono); font-size: 0.75rem; padding: 0.4rem 0.85rem; border-radius: 6px; cursor: pointer;
+    background: transparent; color: var(--text2); border: 1px solid var(--border2);
+  }
+  .site-tts-consent button:hover, .site-tts-consent button:focus-visible { color: var(--text); border-color: var(--green); }
+  .site-tts-consent .site-tts-yes { background: var(--green); color: #1a0f04; border-color: var(--green); font-weight: 700; }
   .site-tts-voice-select {
     display: block; margin: 0.7rem auto 0; max-width: 640px; width: 100%;
     background: var(--bg1); color: var(--text); border: 1px solid var(--border);
@@ -1119,6 +1127,10 @@
     <div class="site-tts-info">
       <div class="site-tts-label" id="siteTtsLabel">Listen to this page</div>
       <div class="site-tts-progress"><div class="site-tts-fill" id="siteTtsFill"></div></div>
+      <div class="site-tts-consent" id="siteTtsConsent" hidden>
+        <button type="button" class="site-tts-yes" id="siteTtsYes">Yes, read it</button>
+        <button type="button" class="site-tts-no" id="siteTtsNo">Not now</button>
+      </div>
     </div>
     <button type="button" id="siteTtsStop" class="site-tts-stop" hidden aria-label="Stop"><i class="fas fa-stop"></i></button>
     <select id="siteTtsRate" class="site-tts-rate" aria-label="Playback speed">
@@ -2891,8 +2903,75 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
         });
     }
 
+    // ---- What gets read: words only. Code, symbols, icons and decorative bits are dropped or turned into words. ----
     const BLOCK_TAGS = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE'];
-    const SKIP_TAGS = ['SCRIPT', 'STYLE', 'FORM', 'BUTTON', 'A', 'NAV', 'SVG', 'IMG', 'IFRAME', 'INPUT', 'SELECT', 'TEXTAREA', 'LABEL'];
+    const SKIP_TAGS = ['SCRIPT', 'STYLE', 'NOSCRIPT', 'FORM', 'BUTTON', 'NAV', 'SVG', 'IMG', 'IFRAME', 'INPUT', 'SELECT', 'TEXTAREA', 'LABEL', 'I', 'CODE', 'PRE'];
+    const SKIP_CLASS = /\b(sec-num|sec-line|project-index|terminal-bar|t-prompt|t-cursor|contact-form-head|contact-icon|social-row|social-ico|hero-buttons|load-more|btn|project-link|slider-btn)\b/;
+    function isSkipped(el) {
+        if (SKIP_TAGS.includes(el.tagName.toUpperCase())) return true;
+        if (el.hidden || el.getAttribute('aria-hidden') === 'true') return true;
+        if (typeof el.className === 'string' && SKIP_CLASS.test(el.className)) return true;
+        return getComputedStyle(el).display === 'none';
+    }
+    // Visible text of an element, leaving out skipped parts (buttons, icons, code decoration) and keeping words apart.
+    function textOf(node) {
+        let out = '';
+        node.childNodes.forEach(n => {
+            if (n.nodeType === 3) { out += n.data; return; }
+            if (n.nodeType !== 1) return;
+            if (n.tagName === 'BR') { out += ' '; return; }
+            if (isSkipped(n)) return;
+            const cls = typeof n.className === 'string' ? n.className : '';
+            const isHead = /\bstack-cell-head\b/.test(cls), isLabel = /\bcontact-detail-label\b/.test(cls);
+            const sep = (/\b(stack-tag|project-tag)\b/.test(cls) || n.tagName === 'A') ? ', ' : (isHead || isLabel) ? '. ' : ' ';
+            out += (isHead ? '. ' : ' ') + textOf(n) + sep;
+        });
+        return out;
+    }
+    const KEEP_CAPS = ['CSRF', 'JSON', 'HTML', 'REST', 'OAUTH', 'YAML', 'CRUD', 'HTTP', 'HTTPS', 'AJAX', 'SAAS', 'USSD', 'SMTP', 'GRPC'];
+    // Turns on-screen text into something natural to say out loud.
+    function cleanForSpeech(raw) {
+        let t = String(raw == null ? '' : raw).replace(/\u00a0/g, ' ');
+        t = t.replace(/https?:\/\/\S+/gi, ' ');                                   // web addresses
+        t = t.replace(/\/\*+|\*+\//g, ' ').replace(/(^|\s)\/\/+\s*/g, ' ');        // comment markers
+        t = t.replace(/^\s*[A-Za-z_$][\w$]*\s*=\s*/, '');                         // leading "role = "
+        t = t.replace(/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g, m => m.replace('@', ' at ').replace(/\./g, ' dot '));
+        t = t.replace(/₦\s*([\d,]+(?:\.\d+)?)/g, '$1 naira').replace(/₦/g, ' naira ');
+        t = t.replace(/\+(?=\d)/g, 'plus ');
+        t = t.replace(/\b([A-Za-z0-9_-]+)\.js\b/gi, '$1 J S');
+        t = t.replace(/(\d)\.(\d)/g, '$1 point $2').replace(/(\d)\.x\b/gi, '$1 point x');
+        t = t.replace(/([A-Za-z0-9])\.(?=[A-Za-z0-9])/g, '$1 dot ');
+        t = t.replace(/&/g, ' and ').replace(/%/g, ' percent ');
+        t = t.replace(/([A-Za-z0-9)])\/(?=[A-Za-z0-9(])/g, '$1 and ');             // CI/CD, Git/GitHub
+        t = t.replace(/[\u2013\u2014]/g, ', ').replace(/[\u2022\u00b7|]/g, ', ').replace(/\u2026|\.{3,}/g, ' ');
+        t = t.replace(/[\u2190-\u21FF\u2300-\u27BF\u2B00-\u2BFF\u{1F000}-\u{1FAFF}\uFE0F\u200D]/gu, ' '); // arrows, icons, emoji
+        t = t.replace(/[()]/g, ', ').replace(/[\[\]{}<>]/g, ' ');
+        t = t.replace(/=>|->|[=~^`\\*#$@+\/]/g, ' ').replace(/_/g, ' ');
+        t = t.replace(/["\u201C\u201D\u00AB\u00BB]/g, ' ');
+        t = t.replace(/(^|[^\p{L}\p{N}])['\u2018\u2019]+|['\u2018\u2019]+(?![\p{L}\p{N}])/gu, '$1 '); // keep don't, drop 'quotes'
+        t = t.replace(/([a-z])([A-Z])/g, '$1 $2');                                // ClientVoices -> Client Voices
+        t = t.replace(/\b[A-Z]{4,}\b/g, w => KEEP_CAPS.includes(w) ? w : w.charAt(0) + w.slice(1).toLowerCase()); // BACKEND -> Backend; acronyms stay
+        t = t.replace(/\s+/g, ' ').replace(/\s+([,.;:!?])/g, '$1')
+             .replace(/,(\s*,)+/g, ',').replace(/,\s*([.!?])/g, '$1').replace(/^[\s,.;:!?-]+/, '').trim();
+        if (!/[\p{L}\p{N}]/u.test(t)) return '';
+        if (!/[.!?]$/.test(t)) t = t.replace(/[,;:\s]+$/, '') + '.';
+        return t;
+    }
+    // The "about" box is styled like code; say what it means instead of its syntax.
+    function terminalToSpeech(block) {
+        const parts = [];
+        block.querySelectorAll('#aboutOutput > div').forEach(row => {
+            const k = row.querySelector('.t-str'), v = row.querySelector('.t-val');
+            if (!k || !v) return;
+            parts.push(k.textContent + ': ' + v.textContent + '.');
+            const c = row.querySelector('.t-comment');
+            if (c) parts.push(c.textContent + '.');
+        });
+        const bio = block.querySelector('#aboutBio');
+        if (bio) parts.push(bio.textContent);
+        if (!parts.length) parts.push(textOf(block));
+        return parts;
+    }
     function hasBlockDescendant(el) {
         return Array.from(el.children).some(c =>
             BLOCK_TAGS.includes(c.tagName) || ['UL', 'OL'].includes(c.tagName) || hasBlockDescendant(c)
@@ -2900,23 +2979,16 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     }
     function collectPageTextBlocks(root) {
         const blocks = [];
+        const add = t => { const s = cleanForSpeech(t); if (s) blocks.push(s); };
         function walk(node) {
             Array.from(node.children).forEach(el => {
+                if (isSkipped(el)) return;
+                if (el.classList.contains('terminal-block')) { terminalToSpeech(el).forEach(add); return; }
                 const tag = el.tagName;
-                if (SKIP_TAGS.includes(tag)) return;
-                if (el.hidden || el.getAttribute('aria-hidden') === 'true') return;
-                if (getComputedStyle(el).display === 'none') return;
                 if (tag === 'UL' || tag === 'OL') { walk(el); return; }
-                if (BLOCK_TAGS.includes(tag)) {
-                    const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
-                    if (text) blocks.push(text);
-                    return;
-                }
+                if (BLOCK_TAGS.includes(tag)) { add(textOf(el)); return; }
                 if (hasBlockDescendant(el)) walk(el);
-                else {
-                    const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
-                    if (text) blocks.push(text);
-                }
+                else add(textOf(el));
             });
         }
         walk(root);
@@ -2924,7 +2996,18 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     }
     function splitIntoSpeechChunks(text, maxLen) {
         maxLen = maxLen || 220;
-        const sentences = text.match(/[^.!?]+[.!?]+(\s+|$)|[^.!?]+$/g) || [text];
+        let sentences = text.match(/[\s\S]+?(?:[.!?]+(?=\s|$)|$)/g) || [text];
+        // very long sentences are cut at commas so speech engines don't stall
+        sentences = sentences.reduce((acc, snt) => {
+            if (snt.length <= maxLen * 1.4) { acc.push(snt); return acc; }
+            let buf = '';
+            (snt.match(/[^,]+,?\s*/g) || [snt]).forEach(part => {
+                if (buf && (buf.length + part.length) > maxLen) { acc.push(buf + ' '); buf = part; }
+                else buf += part;
+            });
+            if (buf) acc.push(buf + ' ');
+            return acc;
+        }, []);
         const chunks = [];
         let buffer = '';
         sentences.forEach(sentence => {
@@ -2932,7 +3015,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
             else buffer += sentence;
         });
         if (buffer.trim()) chunks.push(buffer.trim());
-        return chunks;
+        return chunks.filter(c => /[\p{L}\p{N}]/u.test(c));
     }
     function buildSpeechChunksFresh() {
         const roots = (window.__siteTtsGetRoots ? window.__siteTtsGetRoots() : [document.querySelector('main')]).filter(Boolean);
@@ -2953,7 +3036,15 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     const videoFrame = document.getElementById('siteTtsVideoFrame');
     const fullscreenBtn = document.getElementById('siteTtsFullscreenBtn');
     const panel = document.getElementById('siteTtsVideoPanel');
+    const consentBox = document.getElementById('siteTtsConsent');
+    const yesBtn = document.getElementById('siteTtsYes');
+    const noBtn = document.getElementById('siteTtsNo');
     if (!playBtn) return;
+
+    // Nothing is ever spoken until the visitor says yes. Consent is per page load (not stored).
+    let consent = false;
+    // Clear any speech a browser may have left queued from an earlier visit or reload.
+    try { speechSynthesis.cancel(); } catch (e) {}
 
     let chunks = [];
     let chunkIndex = 0;
@@ -2989,6 +3080,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
         playBtn.innerHTML = '<i class="fas fa-play"></i>';
         playBtn.setAttribute('aria-label', 'Listen to this page');
         if (stopBtn) stopBtn.hidden = true;
+        if (consentBox) consentBox.hidden = true;
         label.textContent = 'Listen to this page';
         if (fill) fill.style.width = '0%';
         setTalking(false); setPausedVisual(false);
@@ -2996,6 +3088,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     }
 
     function speakFrom(index) {
+        if (!consent) { resetToStart(); return; }
         if (index >= chunks.length) { resetToStart(); return; }
         chunkIndex = index;
         const session = playSession;
@@ -3012,18 +3105,29 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
         speechSynthesis.speak(utter);
     }
 
+    function startReading() {
+        chunks = buildSpeechChunksFresh();
+        if (!chunks.length) { label.textContent = "Nothing to read here yet — try again once the page has loaded."; return; }
+        speaking = true; paused = false;
+        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        playBtn.setAttribute('aria-label', 'Pause');
+        if (stopBtn) stopBtn.hidden = false;
+        label.textContent = 'Reading aloud…';
+        if (avatarWrap) { avatarWrap.hidden = false; setupFullscreen(); }
+        setTalking(true); setPausedVisual(false);
+        speakFrom(0);
+    }
+    function askConsent() {
+        label.textContent = 'Read this page aloud?';
+        if (consentBox) consentBox.hidden = false;
+        if (yesBtn) yesBtn.focus();
+    }
+    if (yesBtn) yesBtn.addEventListener('click', () => { consent = true; if (consentBox) consentBox.hidden = true; startReading(); });
+    if (noBtn) noBtn.addEventListener('click', () => { if (consentBox) consentBox.hidden = true; label.textContent = 'Listen to this page'; playBtn.focus(); });
     playBtn.addEventListener('click', () => {
         if (!speaking) {
-            chunks = buildSpeechChunksFresh();
-            if (!chunks.length) { label.textContent = "Nothing to read here yet — try again once the page has loaded."; return; }
-            speaking = true; paused = false;
-            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            playBtn.setAttribute('aria-label', 'Pause');
-            if (stopBtn) stopBtn.hidden = false;
-            label.textContent = 'Reading aloud…';
-            if (avatarWrap) { avatarWrap.hidden = false; setupFullscreen(); }
-            setTalking(true); setPausedVisual(false);
-            speakFrom(0);
+            if (!consent) { askConsent(); return; }
+            startReading();
         } else if (!paused) {
             speechSynthesis.pause();
             paused = true;
@@ -3050,6 +3154,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
         });
     }
     window.addEventListener('beforeunload', () => speechSynthesis.cancel());
+    window.addEventListener('pagehide', () => speechSynthesis.cancel());
 })();
 
 </script>
@@ -3274,7 +3379,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 <div id="callModal" role="dialog" aria-modal="true" aria-labelledby="callTitle">
   <div id="callBox">
     <h3 id="callTitle">Call Esau</h3>
-    <p>Talk to me live from your browser. Free, no app needed. I get an instant alert and call you back right here, so keep this window open. You'll be asked to allow your microphone.</p>
+    <p>Talk to me live from your browser. Free, no app needed. I get an instant alert and call you back right here, so keep this window open. You will be prompted to allow the website to access your microphone.</p>
     <div id="callNet" data-q="checking">
       <span id="callNetBars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
       <div id="callNetText">
