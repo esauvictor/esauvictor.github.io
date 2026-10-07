@@ -444,6 +444,8 @@
       border-radius:4px;
       overflow:hidden;
       max-width:820px;
+      contain:layout style;      /* what happens inside never reflows the rest of the page */
+      overflow-anchor:none;      /* typing must not nudge the scroll position */
     }
     .terminal-bar {
       background:var(--bg2);
@@ -1349,7 +1351,7 @@
       <h2 class="sec-title">resources<span>()</span></h2>
       <div class="sec-line"></div>
     </div>
-    <p style="font-size:.85rem;color:var(--text2);max-width:620px;margin-bottom:1.6rem;line-height:1.7">Source code, ebooks and templates I've built. Some are free, some are paid — instant download either way, with a link sent to your email.</p>
+    <p style="font-size:.85rem;color:var(--text2);max-width:620px;margin-bottom:1.6rem;line-height:1.7">Source code, ebooks and templates I have built. Some are free, some are paid — instant download either way, with a link sent to your email.</p>
     <div class="rs-grid" id="rsGrid"><div class="rs-empty" style="grid-column:1/-1">loading resources…</div></div>
   </div>
 </section>
@@ -1832,9 +1834,37 @@ fetchWithRetry(`${API_BASE}/about.php`)
   let visible = false;
   let looping = false;
 
+  // The terminal is emptied and retyped on every loop, which would make it grow and shrink and
+  // push everything below it up and down. Measure how tall the finished terminal is (in a hidden
+  // copy) and hold that height, so typing only changes what is inside the box.
+  function lockHeight() {
+    const body = cmdText.closest('.terminal-body');
+    if (!body || !body.parentNode || !cmdTemplate || output.dataset.final == null) return;
+    const clone = body.cloneNode(true);
+    const cOut = clone.querySelector('#aboutOutput');
+    const cCmd = clone.querySelector('#aboutCmdText');
+    const cFinal = clone.querySelector('#aboutFinalPrompt');
+    clone.querySelectorAll('[id]').forEach(n => n.removeAttribute('id'));
+    cOut.innerHTML = output.dataset.final;
+    cOut.style.display = '';
+    cCmd.innerHTML = cmdTemplate.innerHTML;
+    cFinal.style.display = ''; cFinal.style.opacity = '1';
+    clone.style.cssText = 'position:absolute;left:0;top:0;visibility:hidden;pointer-events:none;min-height:0;height:auto;width:' + body.getBoundingClientRect().width + 'px';
+    body.parentNode.appendChild(clone);
+    const h = clone.getBoundingClientRect().height;
+    clone.remove();
+    if (h > 0) body.style.minHeight = Math.ceil(h) + 'px';
+  }
+  let lockT = null;
+  const relock = () => { clearTimeout(lockT); lockT = setTimeout(lockHeight, 150); };
+  window.addEventListener('resize', relock);
+  window.addEventListener('load', relock);
+
   function captureTemplates() {
     cmdTemplate = cloneTemplate(cmdText);
     lineTemplates = Array.from(output.children).map(el => ({ el, template: cloneTemplate(el) }));
+    output.dataset.final = output.innerHTML;   // the finished text, also used by read-aloud
+    lockHeight();
   }
 
   async function playOnce() {
@@ -2960,14 +2990,17 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     // The "about" box is styled like code; say what it means instead of its syntax.
     function terminalToSpeech(block) {
         const parts = [];
-        block.querySelectorAll('#aboutOutput > div').forEach(row => {
+        const live = block.querySelector('#aboutOutput');
+        let root = live;
+        if (live && live.dataset && live.dataset.final) { root = document.createElement('div'); root.innerHTML = live.dataset.final; }
+        Array.from(root ? root.children : []).forEach(row => {
             const k = row.querySelector('.t-str'), v = row.querySelector('.t-val');
             if (!k || !v) return;
             parts.push(k.textContent + ': ' + v.textContent + '.');
             const c = row.querySelector('.t-comment');
             if (c) parts.push(c.textContent + '.');
         });
-        const bio = block.querySelector('#aboutBio');
+        const bio = root && root.querySelector('#aboutBio');
         if (bio) parts.push(bio.textContent);
         if (!parts.length) parts.push(textOf(block));
         return parts;
