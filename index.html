@@ -2634,8 +2634,17 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       history.push({ role: 'assistant', content: data.reply });
       saveHistory();
       addMessage('assistant', data.reply, { allowCopy: true });
-      if (data.action === 'start_call' && typeof window.openEsauCall === 'function') {
-        setTimeout(() => window.openEsauCall(), 600);
+      const wantsCall = data.action === 'start_call' || /opening the live call window/i.test(data.reply);
+      if (wantsCall) {
+        // Visible fallback button (works even if the auto-open is blocked or fails)
+        const callBtn = document.createElement('button');
+        callBtn.type = 'button';
+        callBtn.textContent = '📞 Open live call';
+        callBtn.style.cssText = 'margin:6px 0 0 0;padding:9px 16px;border:0;border-radius:20px;background:var(--green);color:#1a0f04;font-family:var(--mono);font-weight:700;cursor:pointer;';
+        callBtn.addEventListener('click', () => { if (window.openEsauCall) window.openEsauCall(); });
+        messagesEl.appendChild(callBtn);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+        setTimeout(() => { try { window.openEsauCall && window.openEsauCall(); } catch (e) { console.error(e); } }, 400);
       }
     } catch (err) {
       thinking.remove();
