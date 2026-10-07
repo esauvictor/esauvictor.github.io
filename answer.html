@@ -20,14 +20,14 @@ var API='https://esauvictor.name.ng/api';
 var FALLBACK_ICE=[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}];
 var $=function(i){return document.getElementById(i)};
 var q=new URLSearchParams(location.search), target=q.get('c')||'', sent=+q.get('t')||0;
-var peer=null, call=null, stream=null, connT=null, tries=0, connected=false;
+var peer=null, call=null, stream=null, connT=null, tries=0, connected=false, ready=false, wantCall=false;
 function say(m){$('s').textContent=m}
 function cleanup(msg){
   clearTimeout(connT);
   if(call){try{call.close()}catch(e){}}
   if(peer){try{peer.destroy()}catch(e){}}
   if(stream){stream.getTracks().forEach(function(t){t.stop()})}
-  peer=call=stream=null; connected=false; $('end').hidden=true;
+  peer=call=stream=null; connected=ready=wantCall=false; $('end').hidden=true;
   if(msg)say(msg);
 }
 function getIce(){
@@ -35,42 +35,55 @@ function getIce(){
     .then(function(j){return j.iceServers&&j.iceServers.length?j.iceServers:FALLBACK_ICE})
     .catch(function(){return FALLBACK_ICE});
 }
+function tryPlay(){$('a').play().catch(function(){})}
 if(!/^v-[a-f0-9]{32}$/.test(target)){
-  say('This link is invalid or incomplete. Use the button in the Telegram alert.');
+  say('This link is invalid or incomplete. Use the link in the WhatsApp alert.');
 }else{
   var age=sent?Math.round((Date.now()/1000-sent)/60):0;
   say(age>=3?'This request is '+age+' min old, so the visitor may have left. You can still try.':'A visitor is waiting. Tap Answer.');
   $('yes').hidden=false;
+  // Connect to the signalling server NOW, while you read the page, so Answer is instant.
+  getIce().then(function(ice){
+    peer=new Peer({config:{iceServers:ice,iceCandidatePoolSize:4}});
+    peer.on('open',function(){ready=true;if(wantCall&&stream)dial()});
+    peer.on('disconnected',function(){try{peer&&peer.reconnect()}catch(e){}});
+    peer.on('error',function(e){
+      if(e.type==='peer-unavailable'){
+        if(tries<12){say('Visitor not ready yet… retrying ('+tries+'/12)');setTimeout(dial,1500)}
+        else cleanup('The visitor has already left.');
+      }else cleanup('Connection problem ('+e.type+'). Reload this page and try again.');
+    });
+  });
 }
 $('yes').onclick=async function(){
   $('yes').hidden=true; say('Allowing microphone…');
-  try{stream=await navigator.mediaDevices.getUserMedia({audio:true})}
+  try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}
   catch(e){say('Microphone blocked. Allow it in your browser settings, then reload this page.');$('yes').hidden=false;return}
-  say('Connecting…');
-  var ice=await getIce();
-  peer=new Peer({config:{iceServers:ice}});
-  peer.on('open',dial);
-  peer.on('disconnected',function(){try{peer.reconnect()}catch(e){}});
-  peer.on('error',function(e){
-    if(e.type==='peer-unavailable'){
-      if(tries<8){say('Visitor not ready yet… retrying ('+tries+'/8)');setTimeout(dial,2500)}
-      else cleanup('The visitor has already left.');
-    }else cleanup('Connection problem ('+e.type+'). Reload this page and try again.');
-  });
+  wantCall=true; say('Connecting…');
+  if(ready)dial();
 };
+function watch(c){
+  var pc=c.peerConnection;
+  clearTimeout(connT);
+  connT=setTimeout(function(){if(!connected)cleanup('Audio could not connect (network block). Ask the visitor to WhatsApp you.')},30000);
+  if(!pc)return;
+  pc.addEventListener('iceconnectionstatechange',function(){
+    var s=pc.iceConnectionState;
+    if(s==='connected'||s==='completed'){
+      if(!connected){connected=true;clearTimeout(connT);say('Connected. Talk now.');tryPlay()}
+    }else if(s==='failed'){
+      cleanup(connected?'The call dropped.':'Audio could not connect (network block). Ask the visitor to WhatsApp you.');
+    }else if(s==='disconnected'&&connected){say('Connection unstable…')}
+  });
+}
 function dial(){
-  if(!peer||peer.destroyed)return;
+  if(!peer||peer.destroyed||!stream)return;
   tries++;
   if(call){try{call.close()}catch(e){}}
   call=peer.call(target,stream);
   say('Calling visitor…'); $('end').hidden=false;
-  clearTimeout(connT);
-  connT=setTimeout(function(){cleanup('Could not connect (probably a network block). Ask the visitor to WhatsApp you.')},40000);
-  call.on('stream',function(rs){
-    connected=true; clearTimeout(connT);
-    $('a').srcObject=rs; $('a').play().catch(function(){});
-    say('Connected. Talk now.');
-  });
+  watch(call);
+  call.on('stream',function(rs){$('a').srcObject=rs;tryPlay();if(!connected)say('Connecting audio…')});
   call.on('close',function(){if(connected)cleanup('Call ended.')});
 }
 $('end').onclick=function(){cleanup('Call ended.')};
