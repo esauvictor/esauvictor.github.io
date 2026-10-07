@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Answer website call</title>
+<style>
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0c0a08;color:#f5ede4;font-family:ui-monospace,Menlo,Consolas,monospace}
+.box{background:#1a150e;border:1px solid rgba(255,120,40,.28);border-radius:14px;padding:28px;max-width:380px;width:92%;text-align:center}
+h1{color:#ff7828;font-size:1.3rem;margin:0 0 8px}#s{margin:14px 0;color:#ffb347;min-height:2.6em;line-height:1.5}
+button{font:inherit;border:0;border-radius:10px;padding:16px 26px;margin:6px;cursor:pointer;font-size:1.05rem}
+#yes{background:#22c55e;color:#04200d;font-weight:700}#end{background:#ef4444;color:#fff}
+</style></head><body><div class="box">
+<h1>Website call</h1>
+<div id="s">Checking link…</div>
+<button id="yes" hidden>📞 Answer</button>
+<button id="end" hidden>Hang up</button>
+<audio id="a" autoplay playsinline></audio>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1/dist/peerjs.min.js"></script>
+<script>
+var API='https://esauvictor.name.ng/api';
+var FALLBACK_ICE=[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}];
+var $=function(i){return document.getElementById(i)};
+var q=new URLSearchParams(location.search), target=q.get('c')||'', sent=+q.get('t')||0;
+var peer=null, call=null, stream=null, connT=null, tries=0, connected=false;
+function say(m){$('s').textContent=m}
+function cleanup(msg){
+  clearTimeout(connT);
+  if(call){try{call.close()}catch(e){}}
+  if(peer){try{peer.destroy()}catch(e){}}
+  if(stream){stream.getTracks().forEach(function(t){t.stop()})}
+  peer=call=stream=null; connected=false; $('end').hidden=true;
+  if(msg)say(msg);
+}
+function getIce(){
+  return fetch(API+'/call/ice.php').then(function(r){return r.json()})
+    .then(function(j){return j.iceServers&&j.iceServers.length?j.iceServers:FALLBACK_ICE})
+    .catch(function(){return FALLBACK_ICE});
+}
+if(!/^v-[a-f0-9]{32}$/.test(target)){
+  say('This link is invalid or incomplete. Use the button in the Telegram alert.');
+}else{
+  var age=sent?Math.round((Date.now()/1000-sent)/60):0;
+  say(age>=3?'This request is '+age+' min old, so the visitor may have left. You can still try.':'A visitor is waiting. Tap Answer.');
+  $('yes').hidden=false;
+}
+$('yes').onclick=async function(){
+  $('yes').hidden=true; say('Allowing microphone…');
+  try{stream=await navigator.mediaDevices.getUserMedia({audio:true})}
+  catch(e){say('Microphone blocked. Allow it in your browser settings, then reload this page.');$('yes').hidden=false;return}
+  say('Connecting…');
+  var ice=await getIce();
+  peer=new Peer({config:{iceServers:ice}});
+  peer.on('open',dial);
+  peer.on('disconnected',function(){try{peer.reconnect()}catch(e){}});
+  peer.on('error',function(e){
+    if(e.type==='peer-unavailable'){
+      if(tries<8){say('Visitor not ready yet… retrying ('+tries+'/8)');setTimeout(dial,2500)}
+      else cleanup('The visitor has already left.');
+    }else cleanup('Connection problem ('+e.type+'). Reload this page and try again.');
+  });
+};
+function dial(){
+  if(!peer||peer.destroyed)return;
+  tries++;
+  if(call){try{call.close()}catch(e){}}
+  call=peer.call(target,stream);
+  say('Calling visitor…'); $('end').hidden=false;
+  clearTimeout(connT);
+  connT=setTimeout(function(){cleanup('Could not connect (probably a network block). Ask the visitor to WhatsApp you.')},40000);
+  call.on('stream',function(rs){
+    connected=true; clearTimeout(connT);
+    $('a').srcObject=rs; $('a').play().catch(function(){});
+    say('Connected. Talk now.');
+  });
+  call.on('close',function(){if(connected)cleanup('Call ended.')});
+}
+$('end').onclick=function(){cleanup('Call ended.')};
+</script></body></html>
