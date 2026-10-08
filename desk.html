@@ -29,17 +29,18 @@ label{display:block;margin-top:12px;font-size:.78rem;color:#b8a898}
 <div><button id="test" type="button">Test the ring</button></div>
 <label><input type="checkbox" id="awake" checked> Keep this computer awake while listening</label>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/peerjs@1/dist/peerjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
 <script>
-// Must match DESK_ID in index.html. It is not secret (it is in the site's source), so anyone could ring this page;
-// that only plays a sound and shows an Answer button, and rings are limited to MAX_PER_MIN.
+// Must match DESK_ID in index.html. It is not secret (it is in the site's source), so anyone can SEND a ring here.
+// To stop strangers making this page ring, every ring is checked against api/call/verify.php, which only
+// confirms ids that notify.php really accepted in the last 2 minutes. Unverified rings are ignored.
 var DESK_ID='ra-desk-8127ab7dd9eeb7af';
 var ANSWER_URL='answer.html';           // put desk.html in the same folder as answer.html, or change this to the full address
 var API='https://esauvictor.name.ng/api';
 var FALLBACK_ICE=[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}];
-var RING_MS=90000, MAX_PER_MIN=6;
+var RING_MS=90000, MAX_PER_MIN=6, MAX_CHECKS_PER_MIN=20;
 var $=function(i){return document.getElementById(i)};
-var peer=null, ctx=null, listening=false, calls={}, order=[], stamps=[], wl=null;
+var peer=null, ctx=null, listening=false, calls={}, order=[], stamps=[], checks=[], pending={}, wl=null;
 var ring={g:null,nodes:[],end:0,vib:null,tIv:null}, title0=document.title;
 
 function setState(s){
@@ -118,21 +119,43 @@ setInterval(function(){
     if(el)el.textContent='\u{1F4DE} Visitor is calling · '+fmt(now-c.at);
   });
 },1000);
+// Asks the server whether notify.php really accepted this call id. The visitor's page sends the ring and the
+// alert request almost at the same moment, so the first answer may be "not yet": retry a few times.
+function verify(id,tries){
+  return fetch(API+'/call/verify.php?id='+encodeURIComponent(id),{cache:'no-store'})
+    .then(function(r){return r.json()})
+    .then(function(j){
+      if(j&&j.ok)return true;
+      if(tries<=1)return false;
+      return new Promise(function(r){setTimeout(r,1200)}).then(function(){return verify(id,tries-1)});
+    }).catch(function(){return false});
+}
 function onRing(d){
   if(!d||d.type!=='ring')return;
   var id=String(d.id||'');
-  if(!/^v-[a-f0-9]{32}$/.test(id)||calls[id])return;
-  var now=Date.now();stamps=stamps.filter(function(x){return now-x<60000});
-  if(stamps.length>=MAX_PER_MIN)return;stamps.push(now);
-  calls[id]={at:now,state:'ringing'};order.push(id);
-  while(order.length>5){var old=order.shift();delete calls[old]}
-  render();startRing();
-  try{
-    if('Notification' in window&&Notification.permission==='granted'){
-      var n=new Notification('\u{1F4DE} Website call',{body:'A visitor is calling you now.',tag:'webcall',requireInteraction:true});
-      n.onclick=function(){window.focus();n.close()};
-    }
-  }catch(e){}
+  if(!/^v-[a-f0-9]{32}$/.test(id)||calls[id]||pending[id])return;
+  var at=Date.now();
+  // Cap how many unverified rings we are willing to check, so junk cannot flood the verify endpoint
+  // (or use up the limit meant for real calls).
+  checks=checks.filter(function(x){return at-x<60000});
+  if(checks.length>=MAX_CHECKS_PER_MIN||Object.keys(pending).length>=5)return;
+  checks.push(at);
+  pending[id]=1;
+  verify(id,5).then(function(ok){
+    delete pending[id];
+    if(!ok||!listening||calls[id])return;
+    var now=Date.now();stamps=stamps.filter(function(x){return now-x<60000});
+    if(stamps.length>=MAX_PER_MIN)return;stamps.push(now);
+    calls[id]={at:at,state:'ringing'};order.push(id);
+    while(order.length>5){var old=order.shift();delete calls[old]}
+    render();startRing();
+    try{
+      if('Notification' in window&&Notification.permission==='granted'){
+        var n=new Notification('\u{1F4DE} Website call',{body:'A visitor is calling you now.',tag:'webcall',requireInteraction:true});
+        n.onclick=function(){window.focus();n.close()};
+      }
+    }catch(e){}
+  });
 }
 // ---------- Connection to the PeerJS signalling server ----------
 function connect(){
@@ -176,7 +199,7 @@ $('start').addEventListener('click',function(){
   audio();
   try{if('Notification' in window&&Notification.permission==='default')Notification.requestPermission()}catch(e){}
   if(listening){
-    listening=false;$('start').textContent='Start listening';
+    listening=false;$('start').textContent='Start listening';stopRing();
     try{peer&&peer.destroy()}catch(e){}peer=null;setState('off');
     try{wl&&wl.release()}catch(e){}wl=null;return;
   }
