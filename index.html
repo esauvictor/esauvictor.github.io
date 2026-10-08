@@ -1641,14 +1641,12 @@ function fetchWithRetry(url, options = {}, retries = 4, delayMs = 1000) {
           link.href = url;
           link.textContent = data.notice.linkText || url;
           link.rel = 'noopener noreferrer';
-          const isExternal = new URL(url, window.location.href).origin !== window.location.origin;
-          if (isExternal) {
-            link.target = '_blank';
-            const srNote = document.createElement('span');
-            srNote.className = 'sr-only';
-            srNote.textContent = ' (opens in new tab)';
-            link.appendChild(srNote);
-          }
+          // Always open notice links in a new tab
+          link.target = '_blank';
+          const srNote = document.createElement('span');
+          srNote.className = 'sr-only';
+          srNote.textContent = ' (opens in new tab)';
+          link.appendChild(srNote);
           text.appendChild(document.createTextNode(' '));
           text.appendChild(link);
         }
