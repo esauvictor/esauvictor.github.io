@@ -3064,7 +3064,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
         return blocks;
     }
     function splitIntoSpeechChunks(text, maxLen) {
-        maxLen = maxLen || 170;
+        maxLen = maxLen || 220;
         let sentences = text.match(/[\s\S]+?(?:[.!?]+(?=\s|$)|$)/g) || [text];
         // very long sentences are cut at commas so speech engines don't stall
         sentences = sentences.reduce((acc, snt) => {
@@ -3542,7 +3542,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     new IntersectionObserver(function (entries) {
       var r = entries[0].intersectionRatio;
       if (r >= 0.4) { inView = true; tryPlay(); }
-      else if (r < 0.15) { inView = false; tryPause(); userPaused = false; if (v.ended) v.currentTime = 0; }   // scrolling back later plays it again
+      else if (r < 0.15) { inView = false; tryPause(); }
     }, { threshold: [0, 0.15, 0.4, 0.7] }).observe(v);
   }
   if (window.matchMedia && window.matchMedia('(hover: hover)').matches) {
