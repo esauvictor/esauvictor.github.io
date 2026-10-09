@@ -3370,6 +3370,22 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   }
   #callFab{opacity:1!important}
 }
+#callDur{margin:0 0 10px;font-size:.82rem;color:var(--text2)}#callDur b{color:var(--text);font-variant-numeric:tabular-nums}
+.nrow{margin-top:6px;font-size:.72rem;line-height:1.45;color:var(--text2);display:flex;gap:7px;align-items:flex-start}
+.nrow::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;margin-top:4px;background:var(--c,var(--text3))}
+.nrow[data-q=good]{--c:#4ade80}.nrow[data-q=fair]{--c:var(--purple)}.nrow[data-q=poor]{--c:#f97316}.nrow[data-q=bad],.nrow[data-q=offline]{--c:var(--red)}
+.nrow[hidden]{display:none}
+#callChat{margin:0 0 12px}
+#callChatLog{max-height:140px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:8px;border:1px solid var(--border);border-radius:10px;background:var(--bg1);font-size:.8rem;line-height:1.45}
+#callChatLog:empty::before{content:"No messages yet.";color:var(--text3)}
+#callChatLog .m{display:flex}#callChatLog .m.me{justify-content:flex-end}
+#callChatLog .b{max-width:85%;padding:6px 10px;border-radius:10px;white-space:pre-wrap;overflow-wrap:anywhere}
+#callChatLog .me .b{background:var(--green);color:#1a0f04}#callChatLog .them .b{background:var(--bg2);color:var(--text);border:1px solid var(--border)}
+#callChatLog .sys .b{background:none;border:0;color:var(--text3);font-size:.72rem;padding:0;max-width:100%}
+#callChatRow{display:flex;gap:8px;margin-top:8px}
+#callChatIn{flex:1;min-width:0;font-family:var(--mono);font-size:16px;background:var(--bg1);color:var(--text);border:1px solid var(--border2);border-radius:8px;padding:10px}
+#callChatSend{margin:0;background:var(--green);color:#1a0f04}
+#callChatIn:disabled,#callChatSend:disabled{opacity:.5}
 </style>
 <div id="callModal" role="dialog" aria-modal="true" aria-labelledby="callTitle">
   <div id="callBox">
@@ -3380,9 +3396,16 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       <div id="callNetText">
         <div aria-live="polite"><div id="callNetLabel">Checking your network…</div><div id="callNetTip"></div></div>
         <div id="callNetStats"></div>
+        <div class="nrow" id="callNetPeer" data-q="checking" hidden></div>
+        <div class="nrow" id="callNetLink" data-q="checking" hidden></div>
       </div>
     </div>
     <div id="callStatus" role="status" aria-live="polite"></div>
+    <div id="callDur" hidden><span id="callDurL">Call time</span> <b id="callDurT">0:00</b></div>
+    <div id="callChat" hidden>
+      <div id="callChatLog" aria-live="polite"></div>
+      <div id="callChatRow"><input id="callChatIn" type="text" maxlength="500" placeholder="Chat is connecting…" autocomplete="off" enterkeyhint="send" disabled><button id="callChatSend" type="button" disabled>Send</button></div>
+    </div>
     <div id="callTip" hidden>Tip: during the call the screen goes dark after a few seconds but stays on, so your microphone keeps working. Tap the screen to wake it. Pressing the power button turns the screen off and pauses your microphone.</div>
     <div id="callAlt" hidden>Prefer another way? <a href="https://wa.me/2348132084092" target="_blank" rel="noopener">WhatsApp</a> or <a href="mailto:www.esauvictor.name.ng@gmail.com">email</a>.</div>
     <button id="callStart" type="button">Start call</button>
@@ -3414,24 +3437,32 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   var peer=null, call=null, stream=null, timer=null, openT=null, connected=false, icePromise=null, peerjsPromise=null;
   var dc=null, recov=false, byeRx=false, closing=false, dT=null; // dc = tiny side-channel used only to say "bye"
 
-  // ---------- Network quality: pre-call check + live stats during the call ----------
-  var netEl=$('callNet'), netLbl=$('callNetLabel'), netTip=$('callNetTip'), netStat=$('callNetStats');
-  var net={pc:null,on:false,liveIv:null,idleIv:null,prev:null,hist:[],stall:0,disc:false,probeMs:null,probeT0:0,probeFail:false,grade:'checking'};
-  var RANK={good:0,fair:1,poor:2,bad:3};
-  var LABEL={checking:'Checking your network…',good:'Good connection',fair:'Fair connection',poor:'Poor connection',bad:'Very poor connection',offline:'No internet connection'};
+  // ---------- Network quality: three separate readings, so one person's signal is never shown as the other's ----------
+  //  1) YOUR network: measured on this device only (browser connection info + a tiny timed request to the site).
+  //  2) THEIR network: the same measurement made on their device, sent to this page over the call's side-channel.
+  //  3) CALL AUDIO: packet loss, jitter and delay of the audio between you. Both of you share this one.
+  var netEl=$('callNet'), netLbl=$('callNetLabel'), netTip=$('callNetTip'), netStat=$('callNetStats'), rowPeer=$('callNetPeer'), rowLink=$('callNetLink');
+  var PEER={name:'Esau',poss:"Esau's"};
+  var net={pc:null,on:false,liveIv:null,probeIv:null,tick:0,prev:null,hist:[],stall:0,disc:false,grade:'checking',
+    p:[],pFirst:true,local:{g:'checking',why:'',parts:[],ping:''},peer:{g:null,txt:'',at:0},peerHidden:false,link:{g:null,why:'',txt:''}};
+  var RANK={good:0,fair:1,poor:2,bad:3,offline:3};
+  var WORD={good:'good',fair:'fair',poor:'poor',bad:'very poor',offline:'offline'};
+  var LABEL={checking:'Checking your network…',good:'Your network: good',fair:'Your network: fair',poor:'Your network: poor',bad:'Your network: very poor',offline:'No internet connection'};
   // Thresholds: [fair, poor, bad]. Tune here if the labels feel too strict or too lenient.
   var LIM={
-    loss:[3,8,20],          // % of audio packets lost
-    jit:[40,80,150],        // ms of jitter
-    rtt:[350,600,1000],     // ms round-trip to the other side
-    probe:[1200,2500,5000], // ms for a cold request to this site (includes TLS setup)
-    hrtt:[500,900,1500]     // ms, browser's own RTT estimate (navigator.connection)
+    loss:[3,8,20],          // % of audio packets lost (call audio)
+    jit:[40,80,150],        // ms of audio jitter (call audio)
+    rtt:[350,600,1000],     // ms audio round trip between the two of you (call audio)
+    hrtt:[500,900,1500],    // ms, browser's own RTT estimate (navigator.connection, this device only)
+    prtt:[500,1000,2000],   // ms, timed request from this device to the site (this device only)
+    pjit:[150,300,600]      // ms, how much that timed request varies (this device only)
   };
+  var PROBE_URL=API+'/call/ping.php';
   function conn(){return navigator.connection||navigator.mozConnection||navigator.webkitConnection||null}
   function level(v,l){return v>=l[2]?'bad':v>=l[1]?'poor':v>=l[0]?'fair':'good'}
   function worst(){var r={g:'good',why:''};r.up=function(x,w){if(RANK[x]>RANK[r.g]){r.g=x;r.why=w}};return r}
   function avg(k){var n=0,t=0;net.hist.forEach(function(h){if(h[k]!=null){n++;t+=h[k]}});return n?t/n:null}
-  // Where to move depends on how the visitor is connected (type is only exposed on Android Chrome).
+  // Where to move depends on how this person is connected (type is only exposed on Android Chrome).
   function where(){
     var c=conn(),t=c&&c.type;
     if(t==='wifi')return 'closer to your router, or switch to mobile data';
@@ -3441,21 +3472,24 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   function advice(g,why,live){
     if(g==='offline')return "You're offline. Check your Wi-Fi or mobile data. The call needs internet.";
     if(g==='checking')return '';
-    var w=where();
+    var w=where(), lk=net.link.g;
+    if(live&&lk&&RANK[lk]>=2&&RANK[g]<2){
+      var pe=net.peer, fresh=pe.g&&Date.now()-pe.at<20000;
+      return 'Your own connection is fine. '+(fresh&&RANK[pe.g]>=2?'The audio problem is on '+PEER.poss+' side.':'The audio is rough because of '+PEER.poss+' side or the route between you.');
+    }
     if(g==='good')return live?'Audio is clear. Stay where you are.':'Strong enough for a clear call. Stay where you are.';
     if(g==='fair')return 'A bit rough but workable. Stay put for now. If the audio starts breaking up, move '+w+'.';
     var lead={
-      stall:'Audio has stopped coming through, so your signal may have dropped. ',
-      loss:'Your signal is unstable and the audio is breaking up. ',
-      jit:'Your signal is unstable and the audio is breaking up. ',
+      unreachable:'Your connection keeps dropping out. ',
+      jit:'Your signal is unstable. ',
       lag:'Your connection is slow to respond, so there will be delays. ',
       slow:'Your connection is weak. ',
-      unreachable:"Couldn't reach the server, so your connection may be weak or blocked. ",
       drop:'Your connection dropped. '
     }[why]||'';
     if(g==='poor')return lead+'Move '+w+' for a clearer call.';
-    return lead+'Move '+w+' now.'+(live?' You will hear beeps while the call is at risk of cutting. If the audio does not come back, hang up and call again from a better spot.':' If it stays this weak, WhatsApp or email is more reliable.');
+    return lead+'Move '+w+' now.'+(live?' You will hear beeps while the call is at risk of cutting. If the audio does not come back, hang up and reopen the link from a better spot.':' If it stays this weak, replying on WhatsApp is more reliable.');
   }
+  // The big box always shows THIS device only.
   function setNet(g,why,stats,live){
     var tip=advice(g,why,live), s=stats||'';
     net.grade=g;
@@ -3463,37 +3497,104 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     if(netLbl.textContent!==LABEL[g])netLbl.textContent=LABEL[g];
     if(netTip.textContent!==tip)netTip.textContent=tip;
     if(netStat.textContent!==s)netStat.textContent=s;
-    warnUpdate(g,live);
   }
-  // Before the call connects: browser connection info + how fast the site answered.
-  function netIdle(){
-    if(net.on||!modal.classList.contains('open'))return;
-    if(navigator.onLine===false){setNet('offline','offline');return}
-    var c=conn(), r=worst(), parts=[];
+  function setRow(el,q,t){
+    if(el.getAttribute('data-q')!==q)el.setAttribute('data-q',q);
+    if(el.textContent!==t)el.textContent=t;
+  }
+  // The two smaller lines under it: the other person's network, and the audio between you.
+  function rows(){
+    if(!net.on){rowPeer.hidden=true;rowLink.hidden=true;return}
+    var pe=net.peer, fresh=!!(pe.g&&pe.at&&Date.now()-pe.at<20000);
+    rowPeer.hidden=false;
+    if(!fresh)setRow(rowPeer,'checking',PEER.name+"'s network: no recent reading");
+    else setRow(rowPeer,pe.g,PEER.name+"'s network: "+WORD[pe.g]+(pe.txt?' ('+pe.txt+')':'')+(RANK[pe.g]>=2?'. This is on their side, not yours.':''));
+    var L=net.link;
+    if(!L.g){rowLink.hidden=true;return}
+    rowLink.hidden=false;
+    var W={good:'clear',fair:'a bit rough',poor:'breaking up',bad:'cutting out'}, t='Call audio: '+(W[L.g]||'…');
+    if(L.txt)t+=' ('+L.txt+')';
+    if(RANK[L.g]>=2){
+      var mine=RANK[net.local.g]>=2, theirs=fresh&&RANK[pe.g]>=2;
+      t+=mine&&theirs?'. Both connections are weak.':mine?'. Your connection is the likely cause.':theirs?'. '+PEER.name+"'s connection is the likely cause.":'. Both connections look fine, so the route between you may be congested.';
+    }
+    setRow(rowLink,L.g,t);
+  }
+  function refresh(){
+    var L=net.local;
+    setNet(L.g,L.why,L.parts.join(' · '),net.on);
+    rows();
+  }
+  // ----- This device only: timed requests to the site -----
+  function probeOnce(){
+    if(navigator.onLine===false){pushProbe(null);return}
+    var t0=performance.now(), ctl=window.AbortController?new AbortController():null;
+    var to=setTimeout(function(){if(ctl)ctl.abort()},6000);
+    fetch(PROBE_URL+'?_='+Date.now(),{cache:'no-store',mode:'no-cors',signal:ctl?ctl.signal:undefined})
+      .then(function(){clearTimeout(to);pushProbe(performance.now()-t0)})
+      .catch(function(){clearTimeout(to);pushProbe(null)});
+  }
+  function pushProbe(ms){
+    if(ms!=null&&net.pFirst){net.pFirst=false;return}   // the first request pays for TLS setup, so it is not counted
+    net.p.push(ms); if(net.p.length>5)net.p.shift();
+    netIdle();
+  }
+  function pStats(){
+    var ok=net.p.filter(function(x){return x!=null}), n=net.p.length, med=null, jit=null;
+    if(ok.length){var s=ok.slice().sort(function(a,b){return a-b});med=s[Math.floor(s.length/2)]}
+    if(ok.length>1){var d=0;for(var i=1;i<ok.length;i++)d+=Math.abs(ok[i]-ok[i-1]);jit=d/(ok.length-1)}
+    return {n:n,f:n-ok.length,med:med,jit:jit};
+  }
+  function localCompute(){
+    if(navigator.onLine===false)return {g:'offline',why:'offline',parts:[],ping:''};
+    var c=conn(), r=worst(), parts=[], s=pStats(), known=false, ping='';
     if(c){
-      var t=c.effectiveType;
+      known=true; var t=c.effectiveType;
       if(t==='slow-2g'||t==='2g')r.up('bad','slow'); else if(t==='3g')r.up('fair','slow');
       if(c.rtt>0)r.up(level(c.rtt,LIM.hrtt),'lag');
       if(c.downlink>0&&c.downlink<0.1)r.up('poor','slow');
       if(t)parts.push(String(t).toUpperCase());
       if(c.downlink>0)parts.push('~'+c.downlink+' Mbps');
-      if(c.rtt>0)parts.push('~'+c.rtt+' ms ping');
     }
-    var pending=net.probeT0>0&&net.probeMs==null&&!net.probeFail;
-    if(net.probeFail)r.up('poor','unreachable');
-    else if(net.probeMs!=null){r.up(level(net.probeMs,LIM.probe),'slow');if(!c)parts.push('server response '+Math.round(net.probeMs)+' ms')}
-    else if(pending&&performance.now()-net.probeT0>4000)r.up('poor','slow');
-    var measured=!!c||net.probeMs!=null||net.probeFail||(pending&&performance.now()-net.probeT0>4000);
-    setNet(measured?r.g:'checking',r.why,parts.join(' · '),false);
+    if(s.n>0){
+      known=true;
+      if(s.f>0&&s.f===s.n)r.up(s.n>=2?'bad':'poor','unreachable');
+      else if(s.f>=3)r.up('bad','unreachable');
+      else if(s.f===2)r.up('poor','unreachable');
+      else if(s.f===1)r.up('fair','unreachable');
+      if(s.med!=null){r.up(level(s.med,LIM.prtt),'lag');ping='ping '+Math.round(s.med)+' ms';parts.push(ping)}
+      if(s.jit!=null)r.up(level(s.jit,LIM.pjit),'jit');
+    }
+    return {g:known?r.g:'checking',why:r.why,parts:parts,ping:ping};
   }
-  function netIdleStart(){netIdle();if(!net.idleIv)net.idleIv=setInterval(netIdle,3000)}
-  function netIdleStop(){clearInterval(net.idleIv);net.idleIv=null}
-  // During the call: real WebRTC stats (packet loss, jitter, round trip), sampled every 2s, averaged over 3 samples.
+  // Send this device's own reading to the other side so they can show it as THEIRS.
+  function sendNet(){
+    if(!net.on||net.local.g==='checking')return;
+    sendObj({t:'net',g:net.local.g,s:net.local.ping||''});
+  }
+  function onNetMsg(o){
+    if(!o||RANK[o.g]===undefined)return;
+    net.peer={g:o.g,txt:typeof o.s==='string'?o.s.slice(0,40):'',at:Date.now()};
+    refresh();
+  }
+  function netIdle(){net.local=localCompute();refresh();sendNet()}
+  // Idle: one request every ~6 s. During a call: every 3 s. Paused while the screen is off.
+  function netStart(){
+    if(net.probeIv)return;
+    net.p=[];net.pFirst=true;
+    probeOnce(); setTimeout(probeOnce,900);
+    net.probeIv=setInterval(function(){if(document.hidden)return;if(!net.on&&(++net.tick%2))return;probeOnce()},3000);
+    netIdle();
+  }
+  function netIdleStart(){netStart()}
+  function netIdleStop(){clearInterval(net.probeIv);net.probeIv=null}
+  function atRisk(){return (net.local.g==='bad'||net.local.g==='offline'||net.link.g==='bad')?'bad':'good'}
+  // ----- During the call: real WebRTC stats for the audio between you (loss, jitter, round trip), sampled every 2s, averaged over 3 samples -----
   function netLive(){
     var pc=net.pc; if(!pc)return;
     if(document.hidden)return;   // screen locked or tab hidden: skip sampling
-    if(navigator.onLine===false){setNet('offline','offline','',true);return}
-    if(net.disc){setNet('bad','drop','',true);return}
+    if(navigator.onLine===false){netIdle();warnUpdate('offline',true);return}
+    if(net.disc){net.link={g:'bad',why:'drop',txt:''};refresh();warnUpdate(atRisk(),true);return}
     if(!pc.getStats)return;
     pc.getStats().then(function(rep){
       if(net.pc!==pc||net.disc)return;
@@ -3522,27 +3623,30 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       }
       net.hist.push({rtt:rtt,jit:jit,loss:loss}); if(net.hist.length>3)net.hist.shift();
       var la=avg('loss'), ja=avg('jit'), ta=avg('rtt'), g=worst(), parts=[];
-      if(net.stall>=3)g.up('bad','stall');
+      // If the other phone is asleep its microphone is paused, so silence is expected and is not a fault.
+      if(net.stall>=3&&!net.peerHidden)g.up('bad','stall');
       if(la!=null)g.up(level(la,LIM.loss),'loss');
       if(ja!=null)g.up(level(ja,LIM.jit),'jit');
       if(ta!=null)g.up(level(ta,LIM.rtt),'lag');
-      if(ta!=null)parts.push('ping '+Math.round(ta)+' ms');
+      if(ta!=null)parts.push('delay '+Math.round(ta)+' ms');
       if(ja!=null)parts.push('jitter '+Math.round(ja)+' ms');
       if(la!=null)parts.push('loss '+(la<10?la.toFixed(1):Math.round(la))+'%');
-      setNet(g.g,g.why,parts.join(' · '),true);
+      net.link={g:g.g,why:g.why,txt:parts.join(' · ')};
+      refresh(); warnUpdate(atRisk(),true);
     }).catch(function(){});
   }
   function netLiveStart(pc){
     netLiveStop(); net.pc=pc; net.on=true;
-    netLive(); net.liveIv=setInterval(netLive,2000);
+    netIdle(); netLive(); net.liveIv=setInterval(netLive,2000);
   }
   function netLiveStop(){
     clearInterval(net.liveIv); net.liveIv=null;
     net.pc=null; net.on=false; net.prev=null; net.hist=[]; net.stall=0; net.disc=false;
-    warnStop();
+    net.link={g:null,why:'',txt:''}; net.peer={g:null,txt:'',at:0}; net.peerHidden=false;
+    warnStop(); rows();
   }
-  window.addEventListener('offline',function(){if(net.on)netLive();else netIdle()});
-  window.addEventListener('online',function(){if(net.on)netLive();else netIdle()});
+  window.addEventListener('offline',function(){netIdle();if(net.on)netLive()});
+  window.addEventListener('online',function(){netIdle();if(net.on)netLive()});
   (function(){var c=conn();if(c&&c.addEventListener)c.addEventListener('change',function(){netIdle()})})();
   // ---------- Warning beeps: when the line is so weak the call is about to cut ----------
   // Two short pips every few seconds (and a buzz on phones) while the connection stays Very poor
@@ -3674,15 +3778,73 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     if(net.grade==='poor'||net.grade==='bad')return 'Your connection looks weak. Move '+where()+' and try again.';
     return '';
   }
+  // ---------- Call timer ----------
+  var callT0=0, durIv=null;
+  function fmtDur(ms){var n=Math.max(0,Math.floor(ms/1000)),h=Math.floor(n/3600),m=Math.floor(n%3600/60),s=n%60;return (h?h+':'+(m<10?'0':''):'')+m+':'+(s<10?'0':'')+s}
+  function durTick(){var el=$('callDurT');if(el&&callT0)el.textContent=fmtDur(Date.now()-callT0)}
+  function durStart(){
+    if(!callT0)callT0=Date.now();   // kept across reconnects, so the timer does not restart
+    $('callDurL').textContent='Call time'; $('callDur').hidden=false; durTick();
+    if(!durIv)durIv=setInterval(durTick,1000);
+  }
+  function durNote(){return callT0?' Call lasted '+fmtDur(Date.now()-callT0)+'.':''}
+  function durStop(){
+    if(durIv){clearInterval(durIv);durIv=null}
+    if(callT0){durTick();$('callDurL').textContent='Call lasted'}   // the final time stays on screen
+    callT0=0;
+  }
+  // ---------- Text chat over the call's side-channel (nothing is stored anywhere) ----------
+  var chatBox=$('callChat'), chatLog=$('callChatLog'), chatIn=$('callChatIn'), chatBtn=$('callChatSend'), rxN=0, rxT=0, titleBak=null;
+  function sendObj(o){try{if(dc&&dc.open){dc.send(JSON.stringify(o));return true}}catch(e){}return false}
+  function chatLine(cls,text){
+    var row=document.createElement('div'), b=document.createElement('span');
+    row.className='m '+cls; b.className='b'; b.textContent=text; row.appendChild(b); chatLog.appendChild(row);
+    while(chatLog.children.length>60)chatLog.removeChild(chatLog.firstChild);
+    chatLog.scrollTop=chatLog.scrollHeight;
+  }
+  function chatEnable(open){chatIn.disabled=chatBtn.disabled=!open;chatIn.placeholder=open?'Message '+PEER.name+'…':'Chat is connecting…'}
+  function chatShow(on){chatBox.hidden=!on;if(!on){chatLog.textContent='';chatIn.value='';chatEnable(false)}else chatEnable(!!(dc&&dc.open))}
+  function chatSend(){
+    var t=chatIn.value.trim().slice(0,500); if(!t)return;
+    if(!sendObj({t:'msg',m:t})){chatLine('sys','Not sent. The chat link is not ready yet, try again in a moment.');return}
+    chatLine('me',t); chatIn.value=''; chatIn.focus();
+  }
+  chatBtn.addEventListener('click',chatSend);
+  chatIn.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.isComposing){e.preventDefault();chatSend()}});
+  function chatDing(){
+    try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}
+    var c=warn.ctx; if(!c||c.state!=='running')return;
+    var t=c.currentTime, o=c.createOscillator(), g=c.createGain();
+    o.type='sine'; o.frequency.value=880;
+    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.2,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+0.18);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t+0.2);
+  }
+  function onChatMsg(o){
+    var now=Date.now(); if(now-rxT>5000){rxT=now;rxN=0} if(++rxN>8)return;   // ignore floods
+    if(typeof o.m!=='string')return;
+    var m=o.m.slice(0,500).trim(); if(!m)return;
+    chatLine('them',m); chatDing(); chatWake();
+    if(document.hidden){if(titleBak===null)titleBak=document.title;document.title='\uD83D\uDCAC New message'}
+  }
+  document.addEventListener('visibilitychange',function(){if(!document.hidden&&titleBak!==null){document.title=titleBak;titleBak=null}});
+  function chatWake(){try{dimOff();dimArm()}catch(e){}}
+  chatIn.addEventListener('input',function(){try{dimArm()}catch(e){}});
+  // Messages and signals from Esau's page, sent over the call's side-channel.
+  function onData(d){
+    if(typeof d!=='string')return;
+    if(d==='bye'){if(!closing){byeRx=true;var dn=durNote();say('Call ended. Thanks for calling!'+dn);end()}}
+    else if(d==='hidden')net.peerHidden=true;
+    else if(d==='back')net.peerHidden=false;
+    else if(d.charAt(0)==='{'){var o;try{o=JSON.parse(d)}catch(e){return}if(!o||typeof o!=='object')return;if(o.t==='net')onNetMsg(o);else if(o.t==='msg')onChatMsg(o)}
+  }
   function say(t){st.textContent=t}
   function load(src){return new Promise(function(a,b){var s=document.createElement('script');s.src=src;s.onload=a;s.onerror=b;document.head.appendChild(s)})}
   function newId(){var a=new Uint8Array(16);crypto.getRandomValues(a);return 'v-'+Array.prototype.map.call(a,function(b){return ('0'+b.toString(16)).slice(-2)}).join('')}
   function getIce(){
-    var ok=false; net.probeT0=performance.now(); net.probeMs=null; net.probeFail=false;
-    return fetch(API+'/call/ice.php').then(function(r){ok=true;net.probeMs=performance.now()-net.probeT0;netIdle();return r.json()})
-      .then(function(j){return j.iceServers&&j.iceServers.length?j.iceServers:FALLBACK_ICE})
-      .catch(function(){if(!ok){net.probeFail=true;netIdle()}return FALLBACK_ICE});
-  }
+  return fetch(API+'/call/ice.php').then(function(r){return r.json()})
+    .then(function(j){return j.iceServers&&j.iceServers.length?j.iceServers:FALLBACK_ICE})
+    .catch(function(){return FALLBACK_ICE});
+}
   // Pre-load PeerJS and the relay list as soon as the window opens, so Start feels instant.
   function warm(){
     if(!window.Peer&&!peerjsPromise)peerjsPromise=load(PEERJS).catch(function(){peerjsPromise=null});
@@ -3697,7 +3859,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     if(stream){stream.getTracks().forEach(function(t){t.stop()})}
     peer=call=stream=dc=null; connected=false; recov=false; byeRx=false; go.disabled=false; hang.hidden=true; hear.hidden=true;
     ringStop(); hideConfirm(); releaseAwake(); closing=false;
-    netLiveStop(); netIdle();
+    netLiveStop(); netIdle(); durStop(); chatShow(false);
   }
   function fail(msg,net_){var h=net_?hint():'';say(h?msg+' '+h:msg);end();alt.hidden=false}
   function close(){modal.classList.remove('open');end();netIdleStop()}
@@ -3764,7 +3926,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   // wait for Esau's page to ring back automatically, and give up only after 75 s.
   function recover(){
     if(!connected||byeRx||recov||closing)return;
-    recov=true; connected=false; netLiveStop(); clearTimeout(dT);
+    recov=true; connected=false; netLiveStop(); chatEnable(false); clearTimeout(dT);
     var old=call; call=null;
     if(old){try{old.close()}catch(e){}}
     dimOff();clearTimeout(dim.t);say('Connection lost. Reconnecting… keep this window open.');
@@ -3797,7 +3959,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       var s=pc.iceConnectionState;
       if(s==='connected'||s==='completed'){
         net.disc=false; clearTimeout(dT);
-        if(!connected){connected=true;recov=false;clearTimeout(timer);ringStop();connectCue();keepAwake();showTip();dimStart();say('Connected. You can talk now.');tryPlay();netLiveStart(pc)}
+        if(!connected){connected=true;recov=false;clearTimeout(timer);ringStop();connectCue();keepAwake();showTip();dimStart();say('Connected. You can talk now.');tryPlay();durStart();chatShow(true);netLiveStart(pc)}
       }else if(s==='failed'){
         if(connected)recover();else if(recov)recovWait();else fail('Audio could not connect. Your network may be blocking calls.',1);
       }else if(s==='disconnected'&&connected){
@@ -3807,7 +3969,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       }
     });
   }
-  function openCallModal(){say('');alt.hidden=true;modal.classList.add('open');warm();netIdleStart();try{sessionStorage.setItem('callFabSeen','1')}catch(e){}var fab=document.getElementById('callFab');if(fab)fab.classList.add('seen');}
+  function openCallModal(){say('');$('callDur').hidden=true;alt.hidden=true;modal.classList.add('open');warm();netIdleStart();try{sessionStorage.setItem('callFabSeen','1')}catch(e){}var fab=document.getElementById('callFab');if(fab)fab.classList.add('seen');}
   window.openEsauCall=openCallModal; // lets the chat widget open the call window
   $('callOpen').addEventListener('click',function(e){e.preventDefault();openCallModal()});
   $('callFab').addEventListener('click',openCallModal);
@@ -3827,13 +3989,13 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   modal.addEventListener('click',function(e){if(e.target===modal)requestClose()});
   $('callKeep').addEventListener('click',hideConfirm);
   cfm.addEventListener('click',function(e){if(e.target===cfm)hideConfirm()});
-  $('callEndYes').addEventListener('click',function(){hideConfirm();bye(function(){say('Call ended.');close()})});
+  $('callEndYes').addEventListener('click',function(){hideConfirm();bye(function(){say('Call ended.'+durNote());close()})});
   document.addEventListener('keydown',function(e){
     if(e.key!=='Escape')return;
     if(cfm.classList.contains('open')){hideConfirm();return}
     if(modal.classList.contains('open'))requestClose();
   });
-  hang.addEventListener('click',function(){bye(function(){say('Call ended.');end()})});
+  hang.addEventListener('click',function(){bye(function(){say('Call ended.'+durNote());end()})});
   hear.addEventListener('click',tryPlay);
   $('callMic').addEventListener('click',function(){reviveMic(true)});
 
@@ -3859,7 +4021,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       openT=setTimeout(function(){fail('Could not reach the call server. Please try again.',1)},15000);
       peer.on('call',function(c){
         if(call){ // Esau's page is ringing back after a drop: replace the dead call
-          var oc=call; call=null; connected=false; recov=true; netLiveStop(); clearTimeout(dT);
+          var oc=call; call=null; connected=false; recov=true; netLiveStop(); chatEnable(false); clearTimeout(dT);
           try{oc.close()}catch(e){}
         }
         call=c; clearTimeout(timer);
@@ -3875,7 +4037,10 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       peer.on('connection',function(c){
         try{dc&&dc.close()}catch(e){}
         dc=c;
-        c.on('data',function(d){if(d==='bye'&&!closing){byeRx=true;say('Call ended. Thanks for calling!');end()}});
+        c.on('open',function(){if(c===dc){chatEnable(true);netIdle()}});
+        c.on('close',function(){if(c===dc)chatEnable(false)});
+        c.on('data',onData);
+        if(c.open){chatEnable(true);netIdle()}
       });
       // Alert Esau right away, in parallel with registering (saves seconds).
       say('Alerting Esau…');
