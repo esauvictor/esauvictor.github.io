@@ -3,7 +3,7 @@
 <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
 <meta name="robots" content="noindex,nofollow"><title>Answer website call</title>
 <style>
-body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0c0a08;color:#f5ede4;font-family:ui-monospace,Menlo,Consolas,monospace}
+body{margin:0;min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;background:#0c0a08;color:#f5ede4;font-family:ui-monospace,Menlo,Consolas,monospace}
 .box{background:#1a150e;border:1px solid rgba(255,120,40,.28);border-radius:14px;padding:28px;max-width:380px;width:92%;text-align:center}
 h1{color:#ff7828;font-size:1.3rem;margin:0 0 8px}#s{margin:14px 0;color:#ffb347;min-height:2.6em;line-height:1.5}
 button{font:inherit;border:0;border-radius:10px;padding:16px 26px;margin:6px;cursor:pointer;font-size:1.05rem}
@@ -39,6 +39,10 @@ button{font:inherit;border:0;border-radius:10px;padding:16px 26px;margin:6px;cur
 #callChatRow{display:flex;gap:8px;margin-top:8px}
 #callChatIn{flex:1;min-width:0;font:inherit;font-size:16px;background:#131009;color:#f5ede4;border:1px solid rgba(255,120,40,.28);border-radius:8px;padding:10px}
 #callChatSend{margin:0;padding:10px 16px;background:#ff7828;color:#1a0f04;font-weight:700}
+#callMuteBtn{background:#3a2f22;color:#f5ede4}
+#callTyping{min-height:1.2em;margin-top:4px;font-size:.72rem;color:#8a7a6a}
+@media (max-width:420px){body{align-items:flex-start}.box{padding:18px 14px;margin:10px 0}button{padding:14px 18px}#callChatLog{max-height:120px}}
+#callNetStats,#callNetTip,.nrow{overflow-wrap:anywhere}
 #callChatIn:disabled,#callChatSend:disabled{opacity:.5}
 </style></head><body><div class="box">
 <h1>Website call</h1>
@@ -55,10 +59,12 @@ button{font:inherit;border:0;border-radius:10px;padding:16px 26px;margin:6px;cur
 </div>
 <div id="callChat" hidden>
   <div id="callChatLog" aria-live="polite"></div>
+  <div id="callTyping" aria-live="polite"></div>
   <div id="callChatRow"><input id="callChatIn" type="text" maxlength="500" placeholder="Chat is connecting…" autocomplete="off" enterkeyhint="send" disabled><button id="callChatSend" type="button" disabled>Send</button></div>
 </div>
 <button id="yes" hidden>📞 Answer</button>
 <button id="end" hidden>Hang up</button>
+<button id="callMuteBtn" type="button" hidden>Mute mic</button>
 <audio id="a" autoplay playsinline></audio>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/peerjs@1/dist/peerjs.min.js"></script>
@@ -346,7 +352,7 @@ var dc=null, recov=false, byeRx=false, closing=false, dT=null, maxTries=12; // d
         if(!snd||!call){ns.getTracks().forEach(function(t){t.stop()});return}
         return snd.replaceTrack(ns.getAudioTracks()[0]).then(function(){
           try{stream.getTracks().forEach(function(t){t.stop()})}catch(e){}
-          stream=ns;
+          stream=ns;if(muted)ns.getAudioTracks().forEach(function(t){t.enabled=false});
           var mb=document.getElementById('callMic');if(mb)mb.hidden=true;
           try{dc&&dc.open&&dc.send('back')}catch(e){}
         });
@@ -409,7 +415,7 @@ var dc=null, recov=false, byeRx=false, closing=false, dT=null, maxTries=12; // d
     chatLog.scrollTop=chatLog.scrollHeight;
   }
   function chatEnable(open){chatIn.disabled=chatBtn.disabled=!open;chatIn.placeholder=open?'Message '+PEER.name+'…':'Chat is connecting…'}
-  function chatShow(on){chatBox.hidden=!on;if(!on){chatLog.textContent='';chatIn.value='';chatEnable(false)}else chatEnable(!!(dc&&dc.open))}
+  function chatShow(on){chatBox.hidden=!on;muteBtn.hidden=!on;if(!on){muted=false;muteBtn.textContent='Mute mic';typingClear()}if(!on){chatLog.textContent='';chatIn.value='';chatEnable(false)}else chatEnable(!!(dc&&dc.open))}
   function chatSend(){
     var t=chatIn.value.trim().slice(0,500); if(!t)return;
     if(!sendObj({t:'msg',m:t})){chatLine('sys','Not sent. The chat link is not ready yet, try again in a moment.');return}
@@ -429,18 +435,44 @@ var dc=null, recov=false, byeRx=false, closing=false, dT=null, maxTries=12; // d
     var now=Date.now(); if(now-rxT>5000){rxT=now;rxN=0} if(++rxN>8)return;   // ignore floods
     if(typeof o.m!=='string')return;
     var m=o.m.slice(0,500).trim(); if(!m)return;
-    chatLine('them',m); chatDing(); chatWake();
+    typingClear(); chatLine('them',m); chatDing(); chatWake();
     if(document.hidden){if(titleBak===null)titleBak=document.title;document.title='\uD83D\uDCAC New message'}
   }
   document.addEventListener('visibilitychange',function(){if(!document.hidden&&titleBak!==null){document.title=titleBak;titleBak=null}});
   function chatWake(){}
+  // ---------- End-of-call tune + mic mute ----------
+  var userEnd=false, muted=false, muteBtn=$('callMuteBtn');
+  function endTune(kind){   // 'end' = someone hung up (falling chime); 'drop' = the line was lost (lower, slower)
+    try{navigator.vibrate&&navigator.vibrate(kind==='end'?[200]:[300,120,300])}catch(e){}
+    warnCtx();
+    var c=warn.ctx; if(!c||c.state!=='running')return;
+    var t=c.currentTime, notes=kind==='end'?[[0,784],[0.16,659],[0.32,523]]:[[0,440],[0.22,349],[0.44,262]];
+    notes.forEach(function(n){
+      var o=c.createOscillator(),g=c.createGain();
+      o.type='sine';o.frequency.value=n[1];
+      g.gain.setValueAtTime(0.0001,t+n[0]);g.gain.exponentialRampToValueAtTime(0.28,t+n[0]+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t+n[0]+0.3);
+      o.connect(g);g.connect(c.destination);o.start(t+n[0]);o.stop(t+n[0]+0.33);
+    });
+  }
+  function muteSet(m){
+    muted=m;
+    try{stream&&stream.getAudioTracks().forEach(function(t){t.enabled=!m})}catch(e){}
+    muteBtn.textContent=m?'Unmute mic':'Mute mic';
+    sendObj({t:'mute',m:m});
+  }
+  muteBtn.addEventListener('click',function(){muteSet(!muted)});
+  // ---------- Typing indicator ----------
+  var typTx=0, typIv=null, typEl=$('callTyping');
+  function typingClear(){clearTimeout(typIv);typIv=null;typEl.textContent=''}
+  function onTyping(){typEl.textContent=PEER.name+' is typing…';clearTimeout(typIv);typIv=setTimeout(typingClear,3500)}
+  chatIn.addEventListener('input',function(){var n=Date.now();if(chatIn.value&&n-typTx>2000){typTx=n;sendObj({t:'typing'})}});
   // Messages and signals from the visitor, sent over the call's side-channel.
   function onData(d){
     if(typeof d!=='string')return;
     if(d==='bye'){if(!closing){byeRx=true;cleanup('Call ended.')}}
     else if(d==='hidden'){net.peerHidden=true;say("The visitor's phone screen is off, so their microphone is paused. They can still hear you. Wait for them to wake the phone.")}
     else if(d==='back'){net.peerHidden=false;say('The visitor is back. Talk now.')}
-    else if(d.charAt(0)==='{'){var o;try{o=JSON.parse(d)}catch(e){return}if(!o||typeof o!=='object')return;if(o.t==='net')onNetMsg(o);else if(o.t==='msg')onChatMsg(o)}
+    else if(d.charAt(0)==='{'){var o;try{o=JSON.parse(d)}catch(e){return}if(!o||typeof o!=='object')return;if(o.t==='net')onNetMsg(o);else if(o.t==='msg')onChatMsg(o);else if(o.t==='typing')onTyping();else if(o.t==='mute'){net.peerHidden=!!o.m;say(o.m?'The visitor muted their microphone.':'The visitor unmuted. Talk now.')}}
   }
 function say(m){$('s').textContent=m}
 function cleanup(msg,h){
@@ -452,7 +484,7 @@ function cleanup(msg,h){
   if(peer){try{peer.destroy()}catch(e){}}
   if(stream){stream.getTracks().forEach(function(t){t.stop()})}
   peer=call=stream=dc=null; connected=ready=wantCall=false; recov=false; byeRx=false; maxTries=12; $('end').hidden=true;
-  netLiveStop(); netIdle(); releaseAwake(); durStop(); chatShow(false); closing=false;
+  netLiveStop(); netIdle(); releaseAwake(); if(dn)endTune(/^Call ended/.test(msg||'')?'end':'drop'); durStop(); chatShow(false); closing=false;
   if(msg)say(msg+dn+(extra?' '+extra:''));
 }
 function getIce(){
