@@ -1096,27 +1096,81 @@
     .site-tts-bar { padding: 0.7rem 0.85rem; gap: 0.6rem; }
     .site-tts-play, .site-tts-stop { width: 36px; height: 36px; }
   }
+
+  /* ---- Listen to this page: accessibility + extra controls ---- */
+  .site-tts-bar button:focus-visible, .site-tts-bar select:focus-visible, .site-tts-nav button:focus-visible,
+  .site-tts-settings summary:focus-visible, .site-tts-settings select:focus-visible, .site-tts-settings input:focus-visible,
+  .site-tts-consent button:focus-visible, .site-tts-fullscreen-btn:focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+  .site-tts-bar button, .site-tts-nav button, .site-tts-consent button { min-height: 44px; }
+  .site-tts-consent button { min-width: 44px; padding: 0.5rem 0.9rem; }
+  .site-tts-consent .site-tts-resume { background: var(--green); color: #1a0f04; border-color: var(--green); font-weight: 700; }
+  .site-tts-rate { min-height: 44px; }
+  .site-tts-nav { max-width: 640px; margin: 0.6rem auto 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+  .site-tts-nav[hidden] { display: none; }
+  .site-tts-nav button {
+    background: var(--bg2); color: var(--text); border: 1px solid var(--border2); border-radius: 10px;
+    font-family: var(--mono); font-size: 0.78rem; line-height: 1.25; padding: 0.4rem 0.35rem; cursor: pointer;
+  }
+  .site-tts-nav button:hover { border-color: var(--green); }
+  .site-tts-settings { max-width: 640px; margin: 0.6rem auto 0; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; }
+  .site-tts-settings summary { cursor: pointer; padding: 0.8rem 1.1rem; min-height: 44px; font-family: var(--mono); font-size: 0.82rem; color: var(--text2); display: flex; align-items: center; }
+  .site-tts-settings-body { padding: 0.2rem 1.1rem 1rem; display: grid; gap: 0.75rem; }
+  .site-tts-row { display: grid; gap: 0.35rem; font-family: var(--mono); font-size: 0.8rem; color: var(--text2); }
+  .site-tts-settings .site-tts-voice-select { width: 100%; min-height: 44px; margin: 0; }
+  .site-tts-check { display: flex; align-items: center; gap: 0.7rem; min-height: 44px; font-size: 0.9rem; color: var(--text); cursor: pointer; }
+  .site-tts-check input { width: 22px; height: 22px; accent-color: var(--green); flex-shrink: 0; }
+  .site-tts-help { margin: 0; font-size: 0.8rem; line-height: 1.5; color: var(--text2); }
+  .site-tts-avatar-wrap.site-tts-bigcaps .site-tts-caption-line { font-size: 1.3rem; line-height: 1.55; color: #fff; font-weight: 600; }
+  .site-tts-avatar-wrap.site-tts-bigcaps .site-tts-captions { background: #000; }
+  .tts-now { outline: 3px solid var(--amber); outline-offset: 6px; background: rgba(255,179,71,0.10); border-radius: 6px; }
+  @media (max-width: 480px) { .site-tts-nav { grid-template-columns: repeat(2, 1fr); } }
+  .site-tts-play.needs-tap { outline: 3px solid var(--amber); outline-offset: 3px; animation: ttsNeedsTap 1.2s ease-in-out infinite; }
+  @keyframes ttsNeedsTap { 0%,100% { box-shadow: 0 0 0 0 rgba(255,179,71,.55); } 50% { box-shadow: 0 0 0 12px rgba(255,179,71,0); } }
+  @media (prefers-reduced-motion: reduce) { .site-tts-play.needs-tap { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .site-tts-dot { animation: none !important; } .site-tts-fill { transition: none; } .site-tts-play { transition: none; } }
 </style>
 
-<div style="max-width:640px; margin: 1.5rem auto 0; padding: 0 1.5rem;">
+<div style="max-width:640px; margin: 1.5rem auto 0; padding: 0 1.5rem;" role="region" aria-label="Listen to this page">
   <div class="site-tts-bar">
-    <button type="button" id="siteTtsPlay" class="site-tts-play" aria-label="Listen to this page"><i class="fas fa-play"></i></button>
+    <button type="button" id="siteTtsPlay" class="site-tts-play" aria-label="Listen to this page"><i class="fas fa-play" aria-hidden="true"></i></button>
     <div class="site-tts-info">
       <div class="site-tts-label" id="siteTtsLabel">Listen to this page</div>
-      <div class="site-tts-progress"><div class="site-tts-fill" id="siteTtsFill"></div></div>
+      <div class="site-tts-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="site-tts-fill" id="siteTtsFill"></div></div>
       <div class="site-tts-consent" id="siteTtsConsent" hidden>
+        <button type="button" class="site-tts-resume" id="siteTtsResume" hidden>Resume where I stopped</button>
         <button type="button" class="site-tts-yes" id="siteTtsYes">Yes, read it</button>
         <button type="button" class="site-tts-no" id="siteTtsNo">Not now</button>
       </div>
     </div>
-    <button type="button" id="siteTtsStop" class="site-tts-stop" hidden aria-label="Stop"><i class="fas fa-stop"></i></button>
+    <button type="button" id="siteTtsStop" class="site-tts-stop" hidden aria-label="Stop reading and clear my place"><i class="fas fa-stop" aria-hidden="true"></i></button>
     <select id="siteTtsRate" class="site-tts-rate" aria-label="Playback speed">
+      <option value="0.75">0.75x</option>
       <option value="0.85">0.85x</option>
       <option value="1" selected>1x</option>
       <option value="1.25">1.25x</option>
       <option value="1.5">1.5x</option>
+      <option value="1.75">1.75x</option>
+      <option value="2">2x</option>
     </select>
   </div>
+  <div class="site-tts-nav" id="siteTtsNav" hidden>
+    <button type="button" id="siteTtsPrevSec" aria-label="Previous section">&larr; Previous section</button>
+    <button type="button" id="siteTtsPrevSen" aria-label="Previous sentence">&larr; Sentence</button>
+    <button type="button" id="siteTtsNextSen" aria-label="Next sentence">Sentence &rarr;</button>
+    <button type="button" id="siteTtsNextSec" aria-label="Next section">Next section &rarr;</button>
+  </div>
+  <details class="site-tts-settings">
+    <summary>Listening settings</summary>
+    <div class="site-tts-settings-body">
+      <label class="site-tts-row" for="siteTtsVoiceSelect">Narration voice
+        <select id="siteTtsVoiceSelect" class="site-tts-voice-select" aria-label="Narration voice"></select>
+      </label>
+      <label class="site-tts-check"><input type="checkbox" id="siteTtsKeepAwake" checked> Keep the screen on while listening</label>
+      <label class="site-tts-check"><input type="checkbox" id="siteTtsFollow" checked> Highlight and scroll to the text being read</label>
+      <label class="site-tts-check"><input type="checkbox" id="siteTtsBigCaps"> Larger, high-contrast captions</label>
+      <p class="site-tts-help">If your screen locks or the page is interrupted, reading continues from where it stopped. Keyboard shortcuts: Alt+L plays or pauses, Alt+period goes to the next section, Alt+comma goes to the previous section.</p>
+    </div>
+  </details>
   <div class="site-tts-avatar-wrap" id="siteTtsAvatarWrap" hidden>
     <div class="site-tts-video-panel" id="siteTtsVideoPanel">
       <div class="site-tts-video-frame" id="siteTtsVideoFrame">
@@ -1126,9 +1180,9 @@
         <div class="site-tts-captions"><div class="site-tts-caption-line" id="siteTtsCaptionLine">Listen to this page read aloud.</div></div>
       </div>
     </div>
-    <select id="siteTtsVoiceSelect" class="site-tts-voice-select" aria-label="Narration voice"></select>
   </div>
-</div>
+  <div id="siteTtsStatus" class="sr-only" role="status" aria-live="polite"></div>
+
 
 <main>
 
@@ -1168,19 +1222,28 @@
 #welcome .wv-bar i{width:9px;height:9px;border-radius:50%;background:var(--text3);display:inline-block}
 #welcome .wv-bar span{margin-left:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #welcome video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000;max-height:80vh;object-fit:contain}
+#welcome .wv-stage{position:relative}
+#welcome .wv-sound{position:absolute;top:12px;right:12px;z-index:2;min-height:44px;padding:0.55rem 0.95rem;border-radius:999px;border:1px solid var(--border2);background:rgba(12,10,8,.82);color:var(--text);font-family:var(--mono);font-size:.78rem;cursor:pointer;backdrop-filter:blur(4px)}
+#welcome .wv-sound:hover{border-color:var(--green)}
+#welcome .wv-sound:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+#welcome .wv-sound[hidden]{display:none}
 #welcome .wv-note{margin:0;padding:10px 14px;font-family:var(--mono);font-size:.74rem;color:var(--text2);border-top:1px solid var(--border)}
 @media (max-width:560px){#welcome .wv-bar{padding:8px 10px}#welcome .wv-note{padding:8px 10px}}
 </style>
 <section id="welcome" class="section">
   <div class="container">
     <div class="wv-frame" data-reveal>
-      <div class="wv-bar"><i></i><i></i><i></i><span>~/welcome.mp4</span></div>
+      <div class="wv-bar" data-tts-skip><i></i><i></i><i></i><span>~/welcome.mp4</span></div>
       <!-- Upload your video to the same GitHub folder as index.html and name it welcome.mp4 (optional poster: welcome-poster.jpg) -->
-      <video controls playsinline preload="metadata" poster="welcome-poster.jpg">
-        <source src="welcome.mp4#t=0.1" type="video/mp4" onerror="document.getElementById('welcome').hidden=true">
-        Your browser can't play this video.
-      </video>
-      <p class="wv-note">A quick hello. Press play.</p>
+      <div class="wv-stage">
+        <video id="welcomeVideo" controls playsinline muted preload="metadata" poster="welcome-poster.jpg" aria-label="Guided video tour of this site, with spoken narration and captions" data-tts-skip>
+          <source src="welcome.mp4#t=0.1" type="video/mp4" onerror="document.getElementById('welcome').hidden=true">
+          <track kind="captions" src="welcome.vtt" srclang="en" label="English captions" default>
+          Your browser can't play this video.
+        </video>
+        <button type="button" id="welcomeSound" class="wv-sound" hidden aria-pressed="false"><i class="fas fa-volume-xmark" aria-hidden="true"></i> Sound off. Tap for sound</button>
+      </div>
+      <p class="wv-note">A 2½-minute guided tour of the site, with sound and captions. It starts by itself when you scroll to it or hover over it. Use the controls to pause.</p>
     </div>
   </div>
 </section>
@@ -2814,6 +2877,12 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 </script>
 <script>
 (function () {
+    if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
+        const b = document.getElementById('siteTtsPlay'), l = document.getElementById('siteTtsLabel');
+        if (b) { b.disabled = true; b.setAttribute('aria-disabled', 'true'); }
+        if (l) l.textContent = "Reading aloud isn't supported in this browser. Try Chrome, Edge or Safari.";
+        return;
+    }
     const MALE_VOICE_NAMES = ['david', 'mark', 'daniel', 'alex', 'fred', 'ryan', 'guy', 'eric', 'matthew', 'tom', 'james', 'george', 'aaron', 'oliver', 'arthur', 'nathan', 'brian', 'thomas', 'gordon', 'ravi'];
     const FEMALE_VOICE_NAMES = ['samantha', 'karen', 'zira', 'susan', 'victoria', 'moira', 'tessa', 'fiona', 'ava', 'kate', 'emma', 'joanna', 'salli', 'ivy', 'kimberly', 'zoe', 'allison'];
     function isLikelyMaleVoice(v) {
@@ -2839,8 +2908,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
             if (isLikelyMaleVoice(v)) score += 5;
             else if (isLikelyFemaleVoice(v)) score -= 5;
             if (/natural|neural|enhanced|premium/i.test(v.name)) score += 3;
-            if (/google/i.test(v.name)) score += 2;
-            if (v.localService === false) score += 1;
+            if (v.localService === true) score += 2;   // on-device voices survive weak signal and report word positions
             return { v, score };
         });
         scored.sort((a, b) => b.score - a.score);
@@ -2911,7 +2979,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     const SKIP_CLASS = /\b(sec-num|sec-line|project-index|terminal-bar|t-prompt|t-cursor|contact-form-head|contact-icon|social-row|social-ico|hero-buttons|load-more|btn|project-link|slider-btn)\b/;
     function isSkipped(el) {
         if (SKIP_TAGS.includes(el.tagName.toUpperCase())) return true;
-        if (el.hidden || el.getAttribute('aria-hidden') === 'true') return true;
+        if (el.hidden || el.getAttribute('aria-hidden') === 'true' || el.hasAttribute('data-tts-skip')) return true;
         if (typeof el.className === 'string' && SKIP_CLASS.test(el.className)) return true;
         return getComputedStyle(el).display === 'none';
     }
@@ -2984,23 +3052,23 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     }
     function collectPageTextBlocks(root) {
         const blocks = [];
-        const add = t => { const s = cleanForSpeech(t); if (s) blocks.push(s); };
+        const add = (t, srcEl) => { const s = cleanForSpeech(t); if (s) blocks.push({ t: s, el: srcEl || node }); };
         function walk(node) {
             Array.from(node.children).forEach(el => {
                 if (isSkipped(el)) return;
-                if (el.classList.contains('terminal-block')) { terminalToSpeech(el).forEach(add); return; }
+                if (el.classList.contains('terminal-block')) { terminalToSpeech(el).forEach(x => add(x, el)); return; }
                 const tag = el.tagName;
                 if (tag === 'UL' || tag === 'OL') { walk(el); return; }
-                if (BLOCK_TAGS.includes(tag)) { add(textOf(el)); return; }
+                if (BLOCK_TAGS.includes(tag)) { add(textOf(el), el); return; }
                 if (hasBlockDescendant(el)) walk(el);
-                else add(textOf(el));
+                else add(textOf(el), el);
             });
         }
         walk(root);
         return blocks;
     }
     function splitIntoSpeechChunks(text, maxLen) {
-        maxLen = maxLen || 220;
+        maxLen = maxLen || 170;
         let sentences = text.match(/[\s\S]+?(?:[.!?]+(?=\s|$)|$)/g) || [text];
         // very long sentences are cut at commas so speech engines don't stall
         sentences = sentences.reduce((acc, snt) => {
@@ -3022,40 +3090,131 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
         if (buffer.trim()) chunks.push(buffer.trim());
         return chunks.filter(c => /[\p{L}\p{N}]/u.test(c));
     }
+    const SECTION_NAMES = { home: 'Introduction', welcome: 'Welcome video', about: 'About', tech: 'Tech stack', projects: 'Projects',
+        resources: 'Resources', support: 'Support', testimonials: 'Client voices', blog: 'Blog', contact: 'Contact' };
+    function sectionInfo(el) {
+        const sec = el && el.closest ? el.closest('section[id]') : null;
+        if (!sec) return { id: 'page', name: 'Page' };
+        let name = SECTION_NAMES[sec.id];
+        if (!name) { const h = sec.querySelector('h2, h1'); name = h ? cleanForSpeech(h.textContent).replace(/\.$/, '') : sec.id; }
+        return { id: sec.id, name: name };
+    }
     function buildSpeechChunksFresh() {
         const roots = (window.__siteTtsGetRoots ? window.__siteTtsGetRoots() : [document.querySelector('main')]).filter(Boolean);
         const out = [];
         roots.forEach(root => {
-            collectPageTextBlocks(root).forEach(text => splitIntoSpeechChunks(text).forEach(t => out.push(t)));
+            collectPageTextBlocks(root).forEach(b => {
+                const info = sectionInfo(b.el);
+                splitIntoSpeechChunks(b.t).forEach(t => out.push({ text: t, el: b.el, sec: info.id, secName: info.name }));
+            });
         });
         return out;
     }
 
-    const playBtn = document.getElementById('siteTtsPlay');
-    const stopBtn = document.getElementById('siteTtsStop');
-    const rateSelect = document.getElementById('siteTtsRate');
-    const label = document.getElementById('siteTtsLabel');
-    const fill = document.getElementById('siteTtsFill');
-    const avatarWrap = document.getElementById('siteTtsAvatarWrap');
-    const captionLine = document.getElementById('siteTtsCaptionLine');
-    const videoFrame = document.getElementById('siteTtsVideoFrame');
-    const fullscreenBtn = document.getElementById('siteTtsFullscreenBtn');
-    const panel = document.getElementById('siteTtsVideoPanel');
-    const consentBox = document.getElementById('siteTtsConsent');
-    const yesBtn = document.getElementById('siteTtsYes');
-    const noBtn = document.getElementById('siteTtsNo');
+    const $ = id => document.getElementById(id);
+    const playBtn = $('siteTtsPlay'), stopBtn = $('siteTtsStop'), rateSelect = $('siteTtsRate'), label = $('siteTtsLabel'), fill = $('siteTtsFill');
+    const avatarWrap = $('siteTtsAvatarWrap'), captionLine = $('siteTtsCaptionLine'), videoFrame = $('siteTtsVideoFrame');
+    const fullscreenBtn = $('siteTtsFullscreenBtn'), panel = $('siteTtsVideoPanel'), consentBox = $('siteTtsConsent');
+    const yesBtn = $('siteTtsYes'), noBtn = $('siteTtsNo'), resumeBtn = $('siteTtsResume'), navRow = $('siteTtsNav');
+    const prevSecBtn = $('siteTtsPrevSec'), prevSenBtn = $('siteTtsPrevSen'), nextSenBtn = $('siteTtsNextSen'), nextSecBtn = $('siteTtsNextSec');
+    const statusEl = $('siteTtsStatus'), awakeChk = $('siteTtsKeepAwake'), followChk = $('siteTtsFollow'), bigChk = $('siteTtsBigCaps');
+    const progressEl = document.querySelector('.site-tts-progress');
     if (!playBtn) return;
+    const reduceMotion = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ---- remembered settings ----
+    function pref(key, def) { try { const v = localStorage.getItem(key); return v === null ? def : v; } catch (e) { return def; } }
+    function setPref(key, v) { try { localStorage.setItem(key, String(v)); } catch (e) {} }
+    if (rateSelect) { const r = pref('site-tts-rate', '1'); if ([...rateSelect.options].some(o => o.value === r)) rateSelect.value = r; }
+    if (awakeChk) awakeChk.checked = pref('site-tts-awake', 'true') === 'true';
+    if (followChk) followChk.checked = pref('site-tts-follow', 'true') === 'true';
+    if (bigChk) { bigChk.checked = pref('site-tts-bigcaps', 'false') === 'true'; avatarWrap.classList.toggle('site-tts-bigcaps', bigChk.checked); }
 
     // Nothing is ever spoken until the visitor says yes. Consent is per page load (not stored).
     let consent = false;
-    // Clear any speech a browser may have left queued from an earlier visit or reload.
     try { speechSynthesis.cancel(); } catch (e) {}
 
-    let chunks = [];
-    let chunkIndex = 0;
-    let speaking = false;
-    let paused = false;
-    let playSession = 0;
+    let chunks = [], idx = 0, lastChar = 0;
+    let playing = false;          // the visitor wants reading to be going on
+    let paused = false;           // the visitor (or the system) paused it
+    let session = 0;              // bumps on every (re)start so stale speech events are ignored
+    let lastActivity = 0, expectMs = 8000, tries = 0, lastSave = 0, lastReturn = 0, prevEl = null, prevSec = null;
+    let awaitingTap = false, hiddenAt = 0, queued = -1, gotBoundary = false;
+    const LOOKAHEAD = 5;          // sentences handed to the speech engine ahead of time, so it keeps talking even if the phone freezes the page
+    function buzz(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
+
+    function say(msg) { if (!statusEl) return; statusEl.textContent = ''; setTimeout(() => { statusEl.textContent = msg; }, 40); }
+
+    // ---- remember where we are, so a reload or a long interruption can pick up again ----
+    const POS_KEY = 'site-tts-pos';
+    const sig = () => (chunks[0] ? chunks[0].text.slice(0, 40) : '');
+    function savePos(force) {
+        const now = Date.now();
+        if (!force && now - lastSave < 1500) return;
+        lastSave = now;
+        try { localStorage.setItem(POS_KEY, JSON.stringify({ i: idx, c: lastChar, n: chunks.length, s: sig(), sn: chunks[idx] ? chunks[idx].secName : '', t: now })); } catch (e) {}
+    }
+    function clearPos() { try { localStorage.removeItem(POS_KEY); } catch (e) {} }
+    function readPos() {
+        try {
+            const p = JSON.parse(localStorage.getItem(POS_KEY) || 'null');
+            if (!p || Date.now() - p.t > 864e5) return null;
+            if (!chunks.length || p.s !== sig() || p.i < 2 || p.i >= chunks.length) return null;
+            return p;
+        } catch (e) { return null; }
+    }
+
+    // ---- keep the page alive while the screen is off: silent audio + lock-screen controls + wake lock ----
+    let keepAudio = null;
+    function silentWav() {
+        const rate = 8000, n = rate, buf = new Uint8Array(44 + n), dv = new DataView(buf.buffer);
+        const w = (o, t) => { for (let i = 0; i < t.length; i++) buf[o + i] = t.charCodeAt(i); };
+        w(0, 'RIFF'); dv.setUint32(4, 36 + n, true); w(8, 'WAVE'); w(12, 'fmt '); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true);
+        dv.setUint16(22, 1, true); dv.setUint32(24, rate, true); dv.setUint32(28, rate, true); dv.setUint16(32, 1, true); dv.setUint16(34, 8, true);
+        w(36, 'data'); dv.setUint32(40, n, true);
+        for (let i = 0; i < n; i++) buf[44 + i] = 128 + ((i * 7919) % 3 === 0 ? 1 : 0);   // inaudible, but not pure silence
+        let bin = ''; buf.forEach(b => { bin += String.fromCharCode(b); });
+        return 'data:audio/wav;base64,' + btoa(bin);
+    }
+    function keepStart() {
+        try {
+            if (!keepAudio) { keepAudio = new Audio(silentWav()); keepAudio.loop = true; keepAudio.setAttribute('aria-hidden', 'true'); }
+            const p = keepAudio.play(); if (p && p.catch) p.catch(() => {});
+        } catch (e) {}
+    }
+    function keepStop() { try { keepAudio && keepAudio.pause(); } catch (e) {} }
+
+    let wake = null;
+    async function acquireWake() {
+        if (!awakeChk || !awakeChk.checked || !('wakeLock' in navigator) || document.hidden || wake) return;
+        try { wake = await navigator.wakeLock.request('screen'); wake.addEventListener('release', () => { wake = null; }); } catch (e) { wake = null; }
+    }
+    function releaseWake() { try { wake && wake.release(); } catch (e) {} wake = null; }
+
+    function updateSession() {
+        if (!('mediaSession' in navigator) || typeof MediaMetadata === 'undefined') return;
+        try {
+            const c = chunks[idx];
+            const img = document.querySelector('.site-tts-presenter');
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: c ? c.secName : 'Listen to this page', artist: 'Esau Victor', album: 'esauvictor.name.ng',
+                artwork: img && img.src ? [{ src: img.src, sizes: '512x512', type: 'image/jpeg' }] : []
+            });
+            navigator.mediaSession.playbackState = playing ? (paused ? 'paused' : 'playing') : 'none';
+        } catch (e) {}
+    }
+    function bindSession() {
+        if (!('mediaSession' in navigator)) return;
+        const set = (name, fn) => { try { navigator.mediaSession.setActionHandler(name, fn); } catch (e) {} };
+        set('play', () => { if (playing) resumePlay(); });
+        set('pause', () => { if (playing) pausePlay(); });
+        set('stop', () => resetToStart(true));
+        set('previoustrack', () => prevSection());
+        set('nexttrack', () => nextSection());
+        set('seekbackward', () => jumpTo(idx - 1));
+        set('seekforward', () => jumpTo(idx + 1));
+    }
+    bindSession();
 
     function setupFullscreen() {
         if (!fullscreenBtn || !videoFrame || fullscreenBtn.dataset.wired) return;
@@ -3069,7 +3228,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
         });
         const syncIcon = () => {
             const isFull = document.fullscreenElement === videoFrame || document.webkitFullscreenElement === videoFrame;
-            fullscreenBtn.innerHTML = isFull ? '<i class="fas fa-compress"></i>' : '<i class="fas fa-expand"></i>';
+            fullscreenBtn.innerHTML = isFull ? '<i class="fas fa-compress" aria-hidden="true"></i>' : '<i class="fas fa-expand" aria-hidden="true"></i>';
             fullscreenBtn.setAttribute('aria-label', isFull ? 'Exit full screen' : 'Full screen');
         };
         document.addEventListener('fullscreenchange', syncIcon);
@@ -3078,90 +3237,339 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     function setTalking(on) { if (panel) panel.classList.toggle('is-talking', on); }
     function setPausedVisual(on) { if (panel) panel.classList.toggle('is-paused', on); }
 
-    function resetToStart() {
-        speechSynthesis.cancel();
-        playSession++;
-        speaking = false; paused = false; chunkIndex = 0;
-        playBtn.innerHTML = '<i class="fas fa-play"></i>';
-        playBtn.setAttribute('aria-label', 'Listen to this page');
-        if (stopBtn) stopBtn.hidden = true;
-        if (consentBox) consentBox.hidden = true;
-        label.textContent = 'Listen to this page';
-        if (fill) fill.style.width = '0%';
-        setTalking(false); setPausedVisual(false);
-        if (avatarWrap) avatarWrap.hidden = true;
+    function renderState() {
+        const c = chunks[idx];
+        playBtn.innerHTML = '<i class="fas fa-' + (playing && !paused ? 'pause' : 'play') + '" aria-hidden="true"></i>';
+        playBtn.setAttribute('aria-label', !playing ? 'Listen to this page' : (paused ? 'Resume reading' : 'Pause reading'));
+        if (stopBtn) stopBtn.hidden = !playing;
+        if (navRow) navRow.hidden = !playing;
+        if (avatarWrap) avatarWrap.hidden = !playing;
+        const pct = playing && chunks.length ? Math.round((idx / chunks.length) * 100) : 0;
+        if (fill) fill.style.width = pct + '%';
+        if (progressEl) progressEl.setAttribute('aria-valuenow', String(pct));
+        label.textContent = !playing ? 'Listen to this page'
+            : awaitingTap ? 'Tap play to continue from ' + (c ? c.secName : 'where you stopped')
+            : (paused ? 'Paused. ' : 'Reading. ') + (c ? c.secName : '') + ' (' + (idx + 1) + ' of ' + chunks.length + ')';
+        playBtn.classList.toggle('needs-tap', !!(playing && awaitingTap));
+        setTalking(playing && !paused); setPausedVisual(playing && paused);
+        updateSession();
     }
 
-    function speakFrom(index) {
-        if (!consent) { resetToStart(); return; }
-        if (index >= chunks.length) { resetToStart(); return; }
-        chunkIndex = index;
-        const session = playSession;
-        const utter = new SpeechSynthesisUtterance(chunks[index]);
-        utter.rate = rateSelect ? (parseFloat(rateSelect.value) || 1) : 1;
-        if (preferredVoice) utter.voice = preferredVoice;
-        utter.onstart = () => {
-            if (session !== playSession) return;
-            if (captionLine) captionLine.textContent = chunks[index];
-            if (fill) fill.style.width = Math.round(((index + 1) / chunks.length) * 100) + '%';
+    function clearHighlight() { if (prevEl) { prevEl.classList.remove('tts-now'); prevEl = null; } }
+    function showChunk(c) {
+        if (captionLine) captionLine.textContent = c.text;
+        if (c.el !== prevEl) {
+            clearHighlight();
+            if (followChk && followChk.checked && c.el && c.el.classList) {
+                c.el.classList.add('tts-now'); prevEl = c.el;
+                if (!document.hidden) { try { c.el.scrollIntoView({ block: 'center', behavior: reduceMotion() ? 'auto' : 'smooth' }); } catch (e) {} }
+            }
+        }
+        if (c.sec !== prevSec) { prevSec = c.sec; updateSession(); }
+        renderState();
+    }
+
+    const rate = () => (rateSelect ? (parseFloat(rateSelect.value) || 1) : 1);
+    function touch() { lastActivity = Date.now(); }
+
+    function makeUtterance(k, off, my) {
+        const c = chunks[k];
+        const base = off || 0;
+        const text = c.text.slice(base) || c.text;
+        const u = new SpeechSynthesisUtterance(text);
+        u.rate = rate();
+        if (preferredVoice) { u.voice = preferredVoice; u.lang = preferredVoice.lang || 'en'; }
+        u.onstart = () => {
+            if (my !== session) return;
+            touch(); tries = 0; idx = k; lastChar = base; gotBoundary = false;
+            expectMs = Math.max(7000, (text.length / (13 * u.rate)) * 1000 * 2 + 4000);
+            showChunk(c); savePos(true); topUp(my);
         };
-        utter.onend = () => { if (session === playSession) speakFrom(index + 1); };
-        utter.onerror = () => { if (session === playSession) speakFrom(index + 1); };
-        speechSynthesis.speak(utter);
+        u.onboundary = e => { if (my !== session) return; touch(); gotBoundary = true; if (typeof e.charIndex === 'number') lastChar = base + e.charIndex; savePos(false); };
+        u.onend = () => {
+            if (my !== session) return;
+            touch(); lastChar = 0;
+            if (k >= chunks.length - 1) { finish(); return; }
+            idx = k + 1; savePos(false);          // if the engine dies between sentences we restart at the next one
+        };
+        u.onerror = e => {
+            if (my !== session) return;
+            const err = e && e.error;
+            if (err === 'interrupted' || err === 'canceled') return;
+            if (err === 'not-allowed') { needsTap(); return; }
+            tries++; if (tries > 3) { needsTap(); return; }
+            speakFrom(k + 1, 0);
+        };
+        return u;
+    }
+    function topUp(my) {
+        if (my !== session || !playing || paused) return;
+        while (queued < Math.min(chunks.length - 1, idx + LOOKAHEAD)) {
+            queued++;
+            try { speechSynthesis.speak(makeUtterance(queued, 0, my)); } catch (er) { queued--; break; }
+        }
+    }
+    function speakFrom(i, off) {
+        if (!consent || !playing || paused) return;
+        if (i >= chunks.length) { finish(); return; }
+        idx = i; lastChar = off || 0;
+        const my = ++session;
+        try { speechSynthesis.cancel(); } catch (e) {}
+        const startChar = lastChar;
+        expectMs = Math.max(7000, (chunks[i].text.length / (13 * rate())) * 1000 * 2 + 4000);
+        touch();
+        // a short gap after cancel() keeps Chrome from dropping the new utterance
+        setTimeout(() => {
+            if (my !== session || !playing || paused) return;
+            try { queued = i; speechSynthesis.speak(makeUtterance(i, startChar, my)); topUp(my); } catch (er) { needsTap(); }
+        }, 60);
     }
 
-    function startReading() {
-        chunks = buildSpeechChunksFresh();
-        if (!chunks.length) { label.textContent = "Nothing to read here yet — try again once the page has loaded."; return; }
-        speaking = true; paused = false;
-        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-        playBtn.setAttribute('aria-label', 'Pause');
-        if (stopBtn) stopBtn.hidden = false;
-        label.textContent = 'Reading aloud…';
-        if (avatarWrap) { avatarWrap.hidden = false; setupFullscreen(); }
-        setTalking(true); setPausedVisual(false);
-        speakFrom(0);
+    // The browser would not (or could not) continue by itself: show a clear "tap to continue" instead of going silent.
+    function needsTap() {
+        if (!playing) return;
+        paused = true; awaitingTap = true; session++; try { speechSynthesis.cancel(); } catch (e) {}
+        savePos(true); renderState(); buzz([80, 60, 80]);
+        say('Reading stopped. Tap play to continue from where you stopped.');
+        if (!document.hidden) { try { playBtn.focus({ preventScroll: true }); } catch (e) {} }
     }
+
+    function announceStart() { try { window.dispatchEvent(new CustomEvent('site-tts-start')); } catch (e) {} }
+
+    function startReading(fromIdx, fromChar) {
+        if (!chunks.length) chunks = buildSpeechChunksFresh();
+        if (!chunks.length) { label.textContent = 'Nothing to read here yet. Try again once the page has loaded.'; return; }
+        playing = true; paused = false; awaitingTap = false; tries = 0;
+        idx = Math.min(Math.max(0, fromIdx || 0), chunks.length - 1); lastChar = fromChar || 0;
+        buzz(40); keepStart(); acquireWake(); announceStart();
+        if (avatarWrap) { avatarWrap.hidden = false; setupFullscreen(); }
+        renderState();
+        say((fromIdx ? 'Resuming ' : 'Reading ') + 'this page, starting at ' + chunks[idx].secName + '. Press Alt L to pause.');
+        speakFrom(idx, lastChar);
+    }
+    function pausePlay() {
+        if (!playing || paused) return;
+        paused = true; session++;
+        try { speechSynthesis.cancel(); } catch (e) {}    // cancel + remember the spot is more reliable than pause() on phones
+        savePos(true); keepStop(); releaseWake(); renderState(); buzz(25); say('Paused.');
+    }
+    function resumePlay() {
+        if (!playing) return;
+        paused = false; awaitingTap = false; tries = 0;
+        buzz(40); keepStart(); acquireWake(); announceStart(); renderState(); say('Resuming.');
+        speakFrom(idx, lastChar);
+    }
+    function finish() { say('Finished reading this page.'); resetToStart(true); }
+    function resetToStart(clear) {
+        session++; playing = false; paused = false; awaitingTap = false;
+        try { speechSynthesis.cancel(); } catch (e) {}
+        keepStop(); releaseWake(); clearHighlight();
+        if (clear) clearPos();
+        chunks = []; idx = 0; lastChar = 0; prevSec = null;
+        if (consentBox) consentBox.hidden = true;
+        renderState();
+        if (clear) say('Stopped.');
+    }
+
+    function jumpTo(j) {
+        if (!playing || !chunks.length) return;
+        idx = Math.max(0, Math.min(chunks.length - 1, j)); lastChar = 0; savePos(true);
+        if (paused) showChunk(chunks[idx]); else speakFrom(idx, 0);
+    }
+    function nextSection() {
+        if (!playing) return;
+        const sec = chunks[idx].sec; let j = idx + 1;
+        while (j < chunks.length && chunks[j].sec === sec) j++;
+        if (j >= chunks.length) { say('This is the last section.'); return; }
+        say(chunks[j].secName); jumpTo(j);
+    }
+    function prevSection() {
+        if (!playing) return;
+        const sec = chunks[idx].sec; let start = idx;
+        while (start > 0 && chunks[start - 1].sec === sec) start--;
+        let target = start;
+        if (idx - start <= 1 && start > 0) {
+            target = start - 1; const ps = chunks[target].sec;
+            while (target > 0 && chunks[target - 1].sec === ps) target--;
+        }
+        say(chunks[target].secName); jumpTo(target);
+    }
+
+    // ---- asking first ----
     function askConsent() {
+        chunks = buildSpeechChunksFresh();
+        const saved = readPos();
         label.textContent = 'Read this page aloud?';
         if (consentBox) consentBox.hidden = false;
-        if (yesBtn) yesBtn.focus();
-    }
-    if (yesBtn) yesBtn.addEventListener('click', () => { consent = true; if (consentBox) consentBox.hidden = true; startReading(); });
-    if (noBtn) noBtn.addEventListener('click', () => { if (consentBox) consentBox.hidden = true; label.textContent = 'Listen to this page'; playBtn.focus(); });
-    playBtn.addEventListener('click', () => {
-        if (!speaking) {
-            if (!consent) { askConsent(); return; }
-            startReading();
-        } else if (!paused) {
-            speechSynthesis.pause();
-            paused = true;
-            playBtn.innerHTML = '<i class="fas fa-play"></i>';
-            playBtn.setAttribute('aria-label', 'Resume');
-            label.textContent = 'Paused';
-            setTalking(false); setPausedVisual(true);
-        } else {
-            speechSynthesis.resume();
-            paused = false;
-            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            playBtn.setAttribute('aria-label', 'Pause');
-            label.textContent = 'Reading aloud…';
-            setTalking(true); setPausedVisual(false);
+        if (resumeBtn) {
+            resumeBtn.hidden = !saved;
+            if (saved) resumeBtn.textContent = 'Resume where I stopped (' + chunks[saved.i].secName + ')';
         }
-    });
-    if (stopBtn) stopBtn.addEventListener('click', resetToStart);
-    if (rateSelect) {
-        rateSelect.addEventListener('change', () => {
-            if (!speaking || paused) return;
-            playSession++;
-            speechSynthesis.cancel();
-            speakFrom(chunkIndex);
-        });
+        if (yesBtn) yesBtn.textContent = saved ? 'Start from the top' : 'Yes, read it';
+        say(saved ? 'Read this page aloud? Choose resume where you stopped, start from the top, or not now.' : 'Read this page aloud? Choose yes or not now.');
+        const first = (resumeBtn && !resumeBtn.hidden) ? resumeBtn : yesBtn;
+        if (first) first.focus();
     }
-    window.addEventListener('beforeunload', () => speechSynthesis.cancel());
-    window.addEventListener('pagehide', () => speechSynthesis.cancel());
+    if (yesBtn) yesBtn.addEventListener('click', () => { consent = true; consentBox.hidden = true; clearPos(); startReading(0, 0); });
+    if (resumeBtn) resumeBtn.addEventListener('click', () => {
+        if (!chunks.length) chunks = buildSpeechChunksFresh();
+        const p = readPos(); consent = true; consentBox.hidden = true;
+        startReading(p ? p.i : 0, p ? p.c : 0);
+    });
+    if (noBtn) noBtn.addEventListener('click', () => { consentBox.hidden = true; chunks = []; label.textContent = 'Listen to this page'; say('Okay, not now.'); playBtn.focus(); });
+
+    playBtn.addEventListener('click', () => {
+        if (!playing) { if (!consent) { askConsent(); return; } chunks = []; startReading(0, 0); }
+        else if (!paused) pausePlay();
+        else resumePlay();
+    });
+    if (stopBtn) stopBtn.addEventListener('click', () => { resetToStart(true); playBtn.focus(); });
+    if (prevSecBtn) prevSecBtn.addEventListener('click', prevSection);
+    if (nextSecBtn) nextSecBtn.addEventListener('click', nextSection);
+    if (prevSenBtn) prevSenBtn.addEventListener('click', () => jumpTo(idx - 1));
+    if (nextSenBtn) nextSenBtn.addEventListener('click', () => jumpTo(idx + 1));
+
+    function restartHere() { if (playing && !paused) speakFrom(idx, lastChar); }
+    if (rateSelect) rateSelect.addEventListener('change', () => { setPref('site-tts-rate', rateSelect.value); restartHere(); });
+    if (awakeChk) awakeChk.addEventListener('change', () => { setPref('site-tts-awake', awakeChk.checked); if (awakeChk.checked) { if (playing && !paused) acquireWake(); } else releaseWake(); });
+    if (followChk) followChk.addEventListener('change', () => { setPref('site-tts-follow', followChk.checked); if (!followChk.checked) clearHighlight(); else if (playing && chunks[idx]) { prevEl = null; showChunk(chunks[idx]); } });
+    if (bigChk) bigChk.addEventListener('change', () => { setPref('site-tts-bigcaps', bigChk.checked); avatarWrap.classList.toggle('site-tts-bigcaps', bigChk.checked); });
+    const vs = $('siteTtsVoiceSelect');
+    if (vs) vs.addEventListener('change', () => setTimeout(restartHere, 0));
+
+    // ---- keyboard: Alt+L play/pause, Alt+. next section, Alt+, previous section ----
+    document.addEventListener('keydown', e => {
+        if (!e.altKey || e.ctrlKey || e.metaKey) return;
+        const t = e.target, tag = t && t.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || (t && t.isContentEditable)) return;
+        if (e.code === 'KeyL') { e.preventDefault(); playBtn.click(); }
+        else if (e.code === 'Period') { e.preventDefault(); nextSection(); }
+        else if (e.code === 'Comma') { e.preventDefault(); prevSection(); }
+    });
+
+    // ---- the important part: screens that sleep, lock, or interrupt the speech ----
+    // 1) a watchdog notices when the speech engine has quietly died or stalled and restarts it at the exact word it stopped on
+    setInterval(() => {
+        if (!playing || paused) return;
+        let eng; try { eng = speechSynthesis; } catch (e) { return; }
+        if (eng.paused) { try { eng.resume(); } catch (e) {} }
+        const idle = Date.now() - lastActivity;
+        const dead = !eng.speaking && !eng.pending && idle > 2200;
+        if (dead || idle > expectMs) {
+            if (document.hidden && tries >= 2) return;      // wait until the visitor is back instead of retrying in the dark
+            tries++;
+            if (tries > 6) { needsTap(); return; }
+            speakFrom(idx, lastChar);
+        }
+    }, 1000);
+    // 2) when the page comes back (screen unlocked, tab revisited, app switched back) carry on from the exact word it stopped on.
+    //    Phones often leave the speech engine in a half-alive state after a lock, so we check it shortly after returning and restart if it is not really talking.
+    function onReturn() {
+        if (document.hidden) return;
+        const now = Date.now();
+        if (now - lastReturn < 800) return;
+        lastReturn = now;
+        if (!playing) return;
+        acquireWake();
+        if (paused) return;
+        keepStart();
+        const away = hiddenAt ? now - hiddenAt : 0; hiddenAt = 0;
+        setTimeout(() => {
+            if (!playing || paused || document.hidden) return;
+            let sp = false; try { sp = speechSynthesis.speaking && !speechSynthesis.paused; } catch (e) {}
+            const idle = Date.now() - lastActivity;
+            const stalled = !sp || (gotBoundary && idle > 1800) || idle > expectMs || (away > 4000 && lastActivity < now);
+            if (stalled) {
+                tries = 0; speakFrom(idx, lastChar);
+                say('Resuming from ' + (chunks[idx] ? chunks[idx].secName : 'where it stopped') + '.');
+            }
+        }, 700);
+    }
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { hiddenAt = Date.now(); if (playing) savePos(true); } else onReturn(); });
+    window.addEventListener('pageshow', onReturn);
+    window.addEventListener('focus', onReturn);
+    document.addEventListener('resume', onReturn);
+    document.addEventListener('freeze', () => { if (playing) savePos(true); });
+    window.addEventListener('pagehide', e => { if (playing) savePos(true); if (!e.persisted) { try { speechSynthesis.cancel(); } catch (er) {} } });
+    window.addEventListener('beforeunload', () => { if (playing) savePos(true); try { speechSynthesis.cancel(); } catch (e) {} });
+
+    // 3) if the browser was closed or the phone killed the page, offer to carry on from the saved spot as soon as the page opens
+    function offerResumeOnLoad() {
+        if (playing || consent) return;
+        let p = null; try { p = JSON.parse(localStorage.getItem(POS_KEY) || 'null'); } catch (e) {}
+        if (!p || !p.sn || p.i < 2 || Date.now() - p.t > 864e5) return;
+        label.textContent = 'You stopped at ' + p.sn + '. Continue listening?';
+        if (resumeBtn) { resumeBtn.hidden = false; resumeBtn.textContent = 'Resume where I stopped (' + p.sn + ')'; }
+        if (yesBtn) yesBtn.textContent = 'Start from the top';
+        if (consentBox) consentBox.hidden = false;
+        say('You stopped listening at ' + p.sn + '. Choose resume where I stopped, start from the top, or not now.');
+    }
+    window.addEventListener('load', () => setTimeout(offerResumeOnLoad, 800));
+
+    window.__siteTts = { isActive: () => playing && !paused, pause: pausePlay };
+    renderState();
 })();
 
+</script>
+<script>
+/* Welcome video: starts by itself when you scroll to it, hover over it or focus it with the keyboard (silently at first, because
+   browsers only allow sound after you have interacted with the page), pauses when you scroll away, and carries on from where it stopped. */
+(function () {
+  var v = document.getElementById('welcomeVideo'), sec = document.getElementById('welcome'), snd = document.getElementById('welcomeSound');
+  if (!v || !sec) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var saveData = !!(navigator.connection && navigator.connection.saveData);
+  var canAuto = !(reduce || saveData);
+  var interacted = false, userPaused = false, ours = 0, inView = false;
+  v.muted = true; v.defaultMuted = true; v.setAttribute('playsinline', '');
+  ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) { window.addEventListener(ev, function () { interacted = true; }, { once: true, passive: true }); });
+  function ttsBusy() { return !!(window.__siteTts && window.__siteTts.isActive()); }
+  function syncSound() {
+    if (!snd) return;
+    snd.hidden = !(!v.paused && v.muted && !v.ended);
+    snd.setAttribute('aria-pressed', String(!v.muted));
+  }
+  function release() { setTimeout(function () { ours = Math.max(0, ours - 1); }, 250); }
+  function tryPlay() {
+    if (!canAuto || userPaused || document.hidden || ttsBusy() || !v.paused) return;
+    if (interacted) v.muted = false;
+    ours++;
+    var done = function () { release(); syncSound(); };
+    var p = v.play();
+    if (p && p.then) {
+      p.then(done).catch(function () {
+        // sound was refused: start silently instead, with a button to turn the sound on
+        if (!v.muted) { v.muted = true; var q = v.play(); if (q && q.then) q.then(done).catch(done); else done(); } else done();
+      });
+    } else done();
+  }
+  function tryPause() { if (!v.paused) { ours++; v.pause(); release(); } }
+  v.addEventListener('pause', function () { if (!ours && !v.ended && inView && !document.hidden) userPaused = true; syncSound(); });
+  v.addEventListener('play', function () {
+    if (!ours) userPaused = false;                        // the visitor pressed play themselves
+    if (!ours && ttsBusy() && window.__siteTts) window.__siteTts.pause();
+    syncSound();
+  });
+  v.addEventListener('volumechange', syncSound);
+  v.addEventListener('ended', syncSound);
+  v.addEventListener('canplay', function () { if (inView) tryPlay(); });   // metadata may still have been loading when it scrolled into view
+  if (snd) snd.addEventListener('click', function () { v.muted = false; v.volume = 1; syncSound(); if (v.focus) v.focus({ preventScroll: true }); });
+  if ('IntersectionObserver' in window) {
+    // start loading a little before it is visible so it begins instantly
+    if (!saveData) new IntersectionObserver(function (e, o) { if (e[0].isIntersecting) { v.preload = 'auto'; o.disconnect(); } }, { rootMargin: '800px 0px' }).observe(sec);
+    new IntersectionObserver(function (entries) {
+      var r = entries[0].intersectionRatio;
+      if (r >= 0.4) { inView = true; tryPlay(); }
+      else if (r < 0.15) { inView = false; tryPause(); userPaused = false; if (v.ended) v.currentTime = 0; }   // scrolling back later plays it again
+    }, { threshold: [0, 0.15, 0.4, 0.7] }).observe(v);
+  }
+  if (window.matchMedia && window.matchMedia('(hover: hover)').matches) {
+    sec.addEventListener('mouseenter', function () { if (userPaused) return; if (v.ended) v.currentTime = 0; tryPlay(); });
+  }
+  sec.addEventListener('focusin', function () { if (!userPaused) tryPlay(); });   // keyboard and switch-access users
+  document.addEventListener('visibilitychange', function () { if (document.hidden) tryPause(); else if (inView) tryPlay(); });
+  window.addEventListener('site-tts-start', function () { tryPause(); });
+})();
 </script>
 <script>
   window.__siteTtsGetRoots = () => [document.querySelector('main')];
