@@ -1238,12 +1238,11 @@
       <div class="wv-stage">
         <video id="welcomeVideo" controls playsinline muted preload="metadata" poster="welcome-poster.jpg" aria-label="Guided video tour of this site, with spoken narration and captions" data-tts-skip>
           <source src="welcome.mp4#t=0.1" type="video/mp4" onerror="document.getElementById('welcome').hidden=true">
-          <track kind="captions" src="welcome.vtt" srclang="en" label="English captions" default>
           Your browser can't play this video.
         </video>
         <button type="button" id="welcomeSound" class="wv-sound" hidden aria-pressed="false"><i class="fas fa-volume-xmark" aria-hidden="true"></i> Sound off. Tap for sound</button>
       </div>
-      <p class="wv-note">A 2½-minute guided tour of the site, with sound and captions. It starts by itself when you scroll to it or hover over it. Use the controls to pause.</p>
+      <p class="wv-note">A 2½-minute guided tour of the site, with sound and captions. Press play.</p>
     </div>
   </div>
 </section>
@@ -3492,19 +3491,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     document.addEventListener('freeze', () => { if (playing) savePos(true); });
     window.addEventListener('pagehide', e => { if (playing) savePos(true); if (!e.persisted) { try { speechSynthesis.cancel(); } catch (er) {} } });
     window.addEventListener('beforeunload', () => { if (playing) savePos(true); try { speechSynthesis.cancel(); } catch (e) {} });
-
-    // 3) if the browser was closed or the phone killed the page, offer to carry on from the saved spot as soon as the page opens
-    function offerResumeOnLoad() {
-        if (playing || consent) return;
-        let p = null; try { p = JSON.parse(localStorage.getItem(POS_KEY) || 'null'); } catch (e) {}
-        if (!p || !p.sn || p.i < 2 || Date.now() - p.t > 864e5) return;
-        label.textContent = 'You stopped at ' + p.sn + '. Continue listening?';
-        if (resumeBtn) { resumeBtn.hidden = false; resumeBtn.textContent = 'Resume where I stopped (' + p.sn + ')'; }
-        if (yesBtn) yesBtn.textContent = 'Start from the top';
-        if (consentBox) consentBox.hidden = false;
-        say('You stopped listening at ' + p.sn + '. Choose resume where I stopped, start from the top, or not now.');
-    }
-    window.addEventListener('load', () => setTimeout(offerResumeOnLoad, 800));
 
     window.__siteTts = { isActive: () => playing && !paused, pause: pausePlay };
     renderState();
