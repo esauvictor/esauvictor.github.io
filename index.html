@@ -1167,7 +1167,7 @@
 #welcome .wv-bar{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:.72rem;color:var(--text2)}
 #welcome .wv-bar i{width:9px;height:9px;border-radius:50%;background:var(--text3);display:inline-block}
 #welcome .wv-bar span{margin-left:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#welcome video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000;max-height:80vh}
+#welcome video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000;max-height:80vh;object-fit:contain}
 #welcome .wv-note{margin:0;padding:10px 14px;font-family:var(--mono);font-size:.74rem;color:var(--text2);border-top:1px solid var(--border)}
 @media (max-width:560px){#welcome .wv-bar{padding:8px 10px}#welcome .wv-note{padding:8px 10px}}
 </style>
@@ -1180,7 +1180,7 @@
         <source src="welcome.mp4#t=0.1" type="video/mp4" onerror="document.getElementById('welcome').hidden=true">
         Your browser can't play this video.
       </video>
-      <p class="wv-note">A quick hello from me. Press play, sound is off until you start it.</p>
+      <p class="wv-note">A quick hello. Press play.</p>
     </div>
   </div>
 </section>
