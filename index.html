@@ -1124,9 +1124,6 @@
   .site-tts-avatar-wrap.site-tts-bigcaps .site-tts-captions { background: #000; }
   .tts-now { outline: 3px solid var(--amber); outline-offset: 6px; background: rgba(255,179,71,0.10); border-radius: 6px; }
   @media (max-width: 480px) { .site-tts-nav { grid-template-columns: repeat(2, 1fr); } }
-  .site-tts-play.needs-tap { outline: 3px solid var(--amber); outline-offset: 3px; animation: ttsNeedsTap 1.2s ease-in-out infinite; }
-  @keyframes ttsNeedsTap { 0%,100% { box-shadow: 0 0 0 0 rgba(255,179,71,.55); } 50% { box-shadow: 0 0 0 12px rgba(255,179,71,0); } }
-  @media (prefers-reduced-motion: reduce) { .site-tts-play.needs-tap { animation: none; } }
   @media (prefers-reduced-motion: reduce) { .site-tts-dot { animation: none !important; } .site-tts-fill { transition: none; } .site-tts-play { transition: none; } }
 </style>
 
@@ -3249,7 +3246,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
         label.textContent = !playing ? 'Listen to this page'
             : awaitingTap ? 'Tap play to continue from ' + (c ? c.secName : 'where you stopped')
             : (paused ? 'Paused. ' : 'Reading. ') + (c ? c.secName : '') + ' (' + (idx + 1) + ' of ' + chunks.length + ')';
-        playBtn.classList.toggle('needs-tap', !!(playing && awaitingTap));
         setTalking(playing && !paused); setPausedVisual(playing && paused);
         updateSession();
     }
