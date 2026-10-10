@@ -1012,7 +1012,8 @@
       <li><a href="#support" data-index="05">support</a></li>
       <li><a href="https://esauvictor.name.ng/blog" data-index="06">blog</a></li>
       <li><a href="#testimonials" data-index="07">ClientVoices</a></li>
-      <li><a href="#contact" data-index="08">contact</a></li>
+      <li><a href="#quote" data-index="08">quote</a></li>
+      <li><a href="#contact" data-index="09">contact</a></li>
         </ul>
     <button class="hamburger" id="hamburger"><i class="fas fa-bars"></i></button>
   </div>
@@ -1178,7 +1179,7 @@
     <div class="wv-frame" data-reveal>
       <div class="wv-bar"><i></i><i></i><i></i><span>~/welcome.mp4</span></div>
       <!-- Upload your video to the same GitHub folder as index.html and name it welcome.mp4 (optional poster: welcome-poster.jpg) -->
-      <video controls playsinline preload="metadata" poster="welcome-poster.jpg">
+      <video controls playsinline loop preload="metadata" poster="welcome-poster.jpg">
         <source src="https://esauvictor.name.ng/api/welcome.mp4#t=0.1" type="video/mp4" onerror="document.getElementById('welcome').hidden=true">
       </video>
       <p class="wv-note"></p>
@@ -1398,11 +1399,113 @@
   </div>
 </section>
 
+<style>
+/* ===== QUOTE CALCULATOR ===== */
+#quote .qc-intro{font-size:.85rem;color:var(--text2);max-width:640px;margin:-1.4rem 0 2rem;line-height:1.7}
+#quote .qc-wrap{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:2rem;align-items:start}
+#quote .qc-group{border:1px solid var(--border);background:var(--bg1);border-radius:4px;padding:1.2rem 1.2rem 1.3rem;margin-bottom:1.2rem;transition:opacity .2s}
+#quote .qc-group.qc-off{opacity:.45;pointer-events:none}
+#quote .qc-gh{display:flex;align-items:baseline;gap:.7rem;margin-bottom:.9rem;flex-wrap:wrap}
+#quote .qc-gh b{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;color:var(--green)}
+#quote .qc-gh span{font-family:var(--mono);font-size:.68rem;color:var(--text3)}
+#quote .qc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.7rem}
+#quote .qc-opt{position:relative;display:flex;gap:.75rem;align-items:flex-start;padding:.8rem .9rem;border:1px solid var(--border);border-radius:3px;background:var(--bg);cursor:pointer;transition:border-color .2s,background .2s,box-shadow .2s;min-height:56px}
+#quote .qc-opt:hover{border-color:var(--border2)}
+#quote .qc-opt input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+#quote .qc-opt:has(input:checked){border-color:var(--green);background:var(--green-faint);box-shadow:0 0 0 1px var(--green-glow)}
+#quote .qc-opt:has(input:focus-visible){outline:2px solid var(--amber);outline-offset:2px}
+#quote .qc-opt:has(input:disabled){cursor:default}
+#quote .qc-opt i{color:var(--green);font-size:.95rem;margin-top:.15rem;width:1.1rem;text-align:center;flex:none}
+#quote .qc-ot{display:flex;flex-direction:column;gap:.2rem;min-width:0}
+#quote .qc-ot strong{font-family:var(--mono);font-size:.74rem;font-weight:600;color:var(--text);letter-spacing:.02em}
+#quote .qc-ot small{font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.5}
+#quote .qc-ot em{font-style:normal;font-family:var(--mono);font-size:.65rem;color:var(--amber)}
+#quote .qc-tag{position:absolute;top:6px;right:8px;font-family:var(--mono);font-size:.55rem;letter-spacing:.08em;color:var(--green);border:1px solid var(--border2);border-radius:2px;padding:1px 5px}
+#quote .qc-sum{position:sticky;top:84px;border:1px solid var(--border2);background:var(--bg1);border-radius:4px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+#quote .qc-sh{display:flex;justify-content:space-between;align-items:center;padding:.7rem 1rem;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:.68rem;color:var(--text2)}
+#quote .qc-cur{display:inline-flex;border:1px solid var(--border2);border-radius:2px;overflow:hidden}
+#quote .qc-cur button{background:transparent;border:0;color:var(--text2);font-family:var(--mono);font-size:.65rem;padding:.3rem .6rem;cursor:pointer;min-height:28px}
+#quote .qc-cur button[aria-pressed=true]{background:var(--green);color:var(--bg);font-weight:700}
+#quote .qc-total{padding:1.1rem 1rem .6rem}
+#quote .qc-total small{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;color:var(--text3);margin-bottom:.4rem}
+#quote .qc-range{font-family:var(--display);font-weight:700;font-size:1.5rem;color:var(--text);line-height:1.3}
+#quote .qc-nw{white-space:nowrap}
+#quote .qc-range .naira{color:var(--green)}
+#quote .qc-range i{font-style:normal;color:var(--text3);margin:0 .35rem;font-weight:400}
+#quote .qc-meta{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;padding:0 1rem 1rem;font-family:var(--mono);font-size:.68rem;color:var(--text2)}
+#quote .qc-meta b{color:var(--amber);font-weight:600}
+#quote .qc-lines{list-style:none;margin:0;padding:.8rem 1rem;border-top:1px dashed var(--border);max-height:260px;overflow:auto}
+#quote .qc-lines li{display:flex;justify-content:space-between;gap:1rem;font-family:var(--mono);font-size:.68rem;color:var(--text2);padding:.28rem 0;line-height:1.5}
+#quote .qc-lines li span:last-child{white-space:nowrap;color:var(--text)}
+#quote .qc-note{padding:.7rem 1rem;border-top:1px solid var(--border);font-family:var(--mono);font-size:.62rem;line-height:1.6;color:var(--text3)}
+#quote .qc-act{display:flex;flex-direction:column;gap:.6rem;padding:0 1rem 1rem}
+#quote .qc-act .btn{justify-content:center;width:100%;cursor:pointer;border-radius:2px;min-height:44px}
+#quote .qc-act .btn-outline{background:transparent}
+#quote .qc-form{display:none;padding:0 1rem 1rem;flex-direction:column;gap:.7rem}
+#quote .qc-form.open{display:flex}
+#quote .qc-mini{display:none}
+#quote .qc-ok{font-family:var(--mono);font-size:.72rem;line-height:1.7;color:var(--text);border:1px solid var(--green);background:var(--green-faint);padding:.9rem 1rem;border-radius:3px}
+@media (max-width:960px){
+  #quote .qc-wrap{grid-template-columns:1fr}
+  #quote .qc-sum{position:static}
+  #quote .qc-mini{display:flex;position:sticky;top:64px;z-index:5;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem;padding:.6rem .9rem;border:1px solid var(--border2);border-radius:3px;background:rgba(19,16,9,.95);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);font-family:var(--mono);font-size:.68rem;color:var(--text2)}
+  #quote .qc-mini b{font-family:var(--display);font-size:1rem;color:var(--text);text-align:right}
+  #quote .qc-mini b .naira{color:var(--green)}
+}
+@media (max-width:560px){#quote .qc-grid{grid-template-columns:1fr}#quote .qc-range{font-size:1.3rem}}
+</style>
+<!-- QUOTE CALCULATOR -->
+<section id="quote" class="section">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-num">// 08</span>
+      <h2 class="sec-title">quote<span>()</span></h2>
+      <div class="sec-line"></div>
+    </div>
+    <p class="qc-intro">Pick what you want built and get an instant ballpark price and timeline. It is an estimate, not a contract. I confirm the exact figure after a short scoping chat.</p>
+    <div class="qc-wrap">
+      <div class="qc-main">
+        <div class="qc-mini" aria-live="polite"><span>estimate</span><b id="qcMini"></b></div>
+        <div class="qc-group"><div class="qc-gh"><b>01 · WHAT ARE YOU BUILDING?</b></div><div class="qc-grid" id="qcTypes" role="radiogroup" aria-label="Project type"></div></div>
+        <div class="qc-group"><div class="qc-gh"><b>02 · SIZE</b><span>pages, screens and modules</span></div><div class="qc-grid" id="qcSizes" role="radiogroup" aria-label="Project size"></div></div>
+        <div class="qc-group" id="qcDesignG"><div class="qc-gh"><b>03 · DESIGN</b><span id="qcDesignNote"></span></div><div class="qc-grid" id="qcDesigns" role="radiogroup" aria-label="Design level"></div></div>
+        <div class="qc-group"><div class="qc-gh"><b>04 · FEATURES</b><span>pick any</span></div><div class="qc-grid" id="qcFeats"></div></div>
+        <div class="qc-group"><div class="qc-gh"><b>05 · EXTRAS</b><span>one-off</span></div><div class="qc-grid" id="qcExtras"></div></div>
+        <div class="qc-group"><div class="qc-gh"><b>06 · TIMELINE &amp; CARE</b></div>
+          <div class="qc-grid" id="qcTime" role="radiogroup" aria-label="Timeline" style="margin-bottom:.7rem"></div>
+          <div class="qc-grid" id="qcMaint" role="radiogroup" aria-label="Monthly maintenance"></div>
+        </div>
+      </div>
+      <aside class="qc-sum" id="qcSum" aria-live="polite">
+        <div class="qc-sh"><span>your_estimate</span><div class="qc-cur" role="group" aria-label="Currency"><button type="button" data-cur="NGN" aria-pressed="true">NGN</button><button type="button" data-cur="USD" aria-pressed="false">USD</button></div></div>
+        <div class="qc-total"><small>ESTIMATED RANGE</small><div class="qc-range" id="qcRange"></div></div>
+        <div class="qc-meta"><span>timeline <b id="qcWeeks"></b></span><span id="qcMaintMeta"></span></div>
+        <ul class="qc-lines" id="qcLines"></ul>
+        <div class="qc-note">Indicative pricing only. Scope, integrations and revisions can move the final figure. Maintenance is billed monthly and is not part of the project total.</div>
+        <div class="qc-act" id="qcAct">
+          <button type="button" class="btn btn-primary" id="qcOpen"><i class="fas fa-file-invoice"></i> <span>request_this_quote()</span></button>
+          <a class="btn btn-outline" id="qcWa" href="https://wa.me/2348132084092" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> <span>discuss_on_whatsapp()</span></a>
+        </div>
+        <form class="qc-form" id="qcForm" novalidate>
+          <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+          <div class="form-group"><label for="qcName">your_name</label><input id="qcName" name="name" class="form-input" placeholder="$your_name" required autocomplete="name"></div>
+          <div class="form-group"><label for="qcEmail">your_email</label><input id="qcEmail" name="email" type="email" class="form-input" placeholder="$your_email" required autocomplete="email"></div>
+          <div class="form-group"><label for="qcPhone">whatsapp / phone (optional)</label><input id="qcPhone" name="phone" type="tel" class="form-input" placeholder="+234…" autocomplete="tel"></div>
+          <div class="form-group"><label for="qcNote">anything_else (optional)</label><textarea id="qcNote" name="note" class="form-input" rows="3" placeholder="// deadline, reference sites, special needs..."></textarea></div>
+          <button type="submit" class="submit-btn" id="qcSend"><i class="fas fa-paper-plane"></i> <span>send_quote_request()</span></button>
+          <div class="form-status" id="qcStatus"></div>
+        </form>
+        <div class="qc-ok" id="qcDone" hidden></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
 <!-- CONTACT -->
 <section id="contact" class="section">
   <div class="container">
     <div class="sec-head">
-      <span class="sec-num">// 08</span>
+      <span class="sec-num">// 09</span>
       <h2 class="sec-title">contact<span>()</span></h2>
       <div class="sec-line"></div>
     </div>
@@ -1507,6 +1610,7 @@
           <li><a href="#projects">Projects</a></li>
           <li><a href="https://esauvictor.name.ng/blog">Blog</a></li>
           <li><a href="#testimonials">ClientVoices</a></li>
+          <li><a href="#quote">Get a Quote</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
@@ -4498,5 +4602,283 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 })();
 </script>
 <!-- ===== /Free browser voice call widget ===== -->
+<script>
+/* Quote calculator.
+   >>> EDIT PRICES HERE. All amounts are in Nigerian Naira (NGN). They are placeholders, set your own rates. <<<
+   The visitor sees a range (low .. high), not a single fixed number. */
+(function () {
+  'use strict';
+  var sec = document.getElementById('quote');
+  if (!sec) return;
+
+  var CFG = {
+    usdRate: 1500,            // NGN per 1 USD, used only for the USD toggle. Update it when the rate moves a lot.
+    rangeLow: 0.90,           // low end of the range  = estimate x 0.90
+    rangeHigh: 1.15,          // high end of the range = estimate x 1.15
+    rushFee: 0.25,            // fast-track adds 25% to the project total
+    rushWeeks: 0.7,           // and cuts the timeline to 70%
+    submitUrl: 'https://esauvictor.name.ng/admin/submissions.php?form=contact',
+    whatsapp: '2348132084092'
+  };
+
+  var TYPES = [
+    { id: 'landing',   name: 'Landing page',          icon: 'fa-bullseye',        desc: 'One focused page that converts',        base: 150000,  weeks: 1.5, inc: [] },
+    { id: 'business',  name: 'Business website',      icon: 'fa-building',        desc: 'Multi-page company site',               base: 300000,  weeks: 3,   inc: [] },
+    { id: 'portfolio', name: 'Portfolio / blog',      icon: 'fa-pen-nib',         desc: 'Personal brand or publication',         base: 200000,  weeks: 2,   inc: ['admin'] },
+    { id: 'church',    name: 'Church / NGO website',  icon: 'fa-hands-holding-heart', desc: 'Events, sermons, giving, forms',    base: 400000,  weeks: 4,   inc: ['admin'] },
+    { id: 'store',     name: 'Online store',          icon: 'fa-cart-shopping',   desc: 'Catalogue, cart and checkout',          base: 700000,  weeks: 6,   inc: ['admin', 'payments', 'auth'] },
+    { id: 'webapp',    name: 'Custom web app / SaaS', icon: 'fa-laptop-code',     desc: 'Laravel / PHP platform built to spec',  base: 1200000, weeks: 10,  inc: ['auth', 'admin'] },
+    { id: 'system',    name: 'Management system',     icon: 'fa-sitemap',         desc: 'School, church, HR, payroll, cells',    base: 1500000, weeks: 12,  inc: ['auth', 'admin'] },
+    { id: 'api',       name: 'API / backend only',    icon: 'fa-server',          desc: 'REST API for your own front end',       base: 600000,  weeks: 5,   inc: [], noDesign: true }
+  ];
+  var SIZES = [
+    { id: 's', name: 'Compact',   hint: 'about 5 pages or a few screens', mult: 1.0,  wk: 1.0 },
+    { id: 'm', name: 'Standard',  hint: 'about 6 to 15 pages or screens', mult: 1.35, wk: 1.3 },
+    { id: 'l', name: 'Extensive', hint: '15+ pages or many modules',      mult: 1.8,  wk: 1.7 }
+  ];
+  var DESIGNS = [
+    { id: 't', name: 'Template-based', hint: 'Polished starting template, tailored',  mult: 0.85 },
+    { id: 'c', name: 'Custom design',  hint: 'Designed around your brand',            mult: 1.0 },
+    { id: 'p', name: 'Premium custom', hint: 'Extra polish, motion, brand system',    mult: 1.25 }
+  ];
+  var FEATS = [
+    { id: 'auth',     name: 'User accounts & login',          icon: 'fa-user-lock',    price: 120000, wk: 1 },
+    { id: 'admin',    name: 'Admin dashboard / CMS',          icon: 'fa-gauge-high',   price: 180000, wk: 1.5 },
+    { id: 'payments', name: 'Paystack / Flutterwave payments', icon: 'fa-credit-card', price: 100000, wk: 1 },
+    { id: 'blog',     name: 'Blog / news section',            icon: 'fa-newspaper',    price: 60000,  wk: 0.5 },
+    { id: 'booking',  name: 'Booking / appointments',         icon: 'fa-calendar-check', price: 120000, wk: 1 },
+    { id: 'media',    name: 'Video / audio media library',    icon: 'fa-photo-film',   price: 200000, wk: 2 },
+    { id: 'reports',  name: 'Reports & PDF export',           icon: 'fa-file-pdf',     price: 80000,  wk: 1 },
+    { id: 'email',    name: 'Email notifications & newsletter', icon: 'fa-envelope-open-text', price: 50000, wk: 0.5 },
+    { id: 'thirdapi', name: 'Third-party API integration',    icon: 'fa-plug',         price: 90000,  wk: 1 },
+    { id: 'multi',    name: 'Multi-language',                 icon: 'fa-language',     price: 80000,  wk: 1 },
+    { id: 'pwa',      name: 'Installable mobile app (PWA)',   icon: 'fa-mobile-screen', price: 120000, wk: 1.5 },
+    { id: 'seo',      name: 'SEO & analytics setup',          icon: 'fa-chart-line',   price: 50000,  wk: 0.5 }
+  ];
+  var EXTRAS = [
+    { id: 'host',     name: 'Domain, hosting & SSL setup', icon: 'fa-globe',             price: 40000 },
+    { id: 'content',  name: 'Content entry / data migration', icon: 'fa-database',       price: 60000 },
+    { id: 'training', name: 'Admin training session',      icon: 'fa-chalkboard-user',   price: 30000 }
+  ];
+  var TIMES = [
+    { id: 'std',  name: 'Standard timeline', hint: 'Normal scheduling',         rush: false },
+    { id: 'fast', name: 'Fast-track',        hint: '+25%, shorter timeline',    rush: true }
+  ];
+  var MAINT = [
+    { id: 'none',  name: 'No maintenance',  hint: 'I will handle updates',               price: 0 },
+    { id: 'basic', name: 'Basic care',      hint: 'Backups, updates, uptime checks',     price: 30000 },
+    { id: 'plus',  name: 'Care + changes',  hint: 'Basic plus small monthly edits',      price: 60000 }
+  ];
+
+  var S = { type: 'business', size: 'm', design: 'c', feats: {}, extras: {}, time: 'std', maint: 'none', cur: 'NGN' };
+
+  function $(id) { return document.getElementById(id); }
+  function by(list, id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return list[0]; }
+  function r5(n) { return Math.round(n / 5000) * 5000; }
+  function num(n) { return Math.round(n).toLocaleString('en-US'); }
+  function ngnText(n) { return 'NGN ' + num(n); }
+  function money(ngn, range) {
+    if (S.cur === 'USD') {
+      var u = ngn / CFG.usdRate;
+      return '$' + num(range ? Math.round(u / 10) * 10 : u);
+    }
+    return '<span class="naira">\u20A6</span>' + num(ngn);
+  }
+  function moneyText(ngn) {
+    return S.cur === 'USD' ? '$' + num(Math.round(ngn / CFG.usdRate / 10) * 10) : ngnText(ngn);
+  }
+
+  /* ---- build the option cards (static config only, so innerHTML is safe here) ---- */
+  function radio(name, o, extra) {
+    return '<label class="qc-opt"><input type="radio" name="' + name + '" value="' + o.id + '">' +
+      (o.icon ? '<i class="fas ' + o.icon + '" aria-hidden="true"></i>' : '') +
+      '<span class="qc-ot"><strong>' + o.name + '</strong>' + (o.desc || o.hint ? '<small>' + (o.desc || o.hint) + '</small>' : '') + (extra || '') + '</span></label>';
+  }
+  function check(name, o) {
+    return '<label class="qc-opt" data-id="' + o.id + '"><input type="checkbox" name="' + name + '" value="' + o.id + '">' +
+      '<i class="fas ' + o.icon + '" aria-hidden="true"></i>' +
+      '<span class="qc-ot"><strong>' + o.name + '</strong><em class="qc-p"></em></span></label>';
+  }
+  $('qcTypes').innerHTML   = TYPES.map(function (o) { return radio('qcType', o); }).join('');
+  $('qcSizes').innerHTML   = SIZES.map(function (o) { return radio('qcSize', o); }).join('');
+  $('qcDesigns').innerHTML = DESIGNS.map(function (o) { return radio('qcDesign', o); }).join('');
+  $('qcFeats').innerHTML   = FEATS.map(function (o) { return check('qcFeat', o); }).join('');
+  $('qcExtras').innerHTML  = EXTRAS.map(function (o) { return check('qcExtra', o); }).join('');
+  $('qcTime').innerHTML    = TIMES.map(function (o) { return radio('qcTime', o); }).join('');
+  $('qcMaint').innerHTML   = MAINT.map(function (o) { return radio('qcMaint', o, '<em class="qc-p"></em>'); }).join('');
+
+  function setRadio(name, val) {
+    var el = sec.querySelector('input[name="' + name + '"][value="' + val + '"]');
+    if (el) el.checked = true;
+  }
+  setRadio('qcType', S.type); setRadio('qcSize', S.size); setRadio('qcDesign', S.design);
+  setRadio('qcTime', S.time); setRadio('qcMaint', S.maint);
+
+  sec.addEventListener('change', function (e) {
+    var t = e.target;
+    if (!t || !t.name) return;
+    if (t.name === 'qcType') S.type = t.value;
+    else if (t.name === 'qcSize') S.size = t.value;
+    else if (t.name === 'qcDesign') S.design = t.value;
+    else if (t.name === 'qcTime') S.time = t.value;
+    else if (t.name === 'qcMaint') S.maint = t.value;
+    else if (t.name === 'qcFeat') S.feats[t.value] = t.checked;
+    else if (t.name === 'qcExtra') S.extras[t.value] = t.checked;
+    else return;
+    update();
+  });
+  Array.prototype.forEach.call(sec.querySelectorAll('.qc-cur button'), function (b) {
+    b.addEventListener('click', function () {
+      S.cur = b.getAttribute('data-cur');
+      Array.prototype.forEach.call(sec.querySelectorAll('.qc-cur button'), function (x) {
+        x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+      });
+      update();
+    });
+  });
+
+  /* ---- the maths ---- */
+  var last = null;
+  function calc() {
+    var type = by(TYPES, S.type), size = by(SIZES, S.size), design = by(DESIGNS, S.design);
+    var dm = type.noDesign ? 1 : design.mult;
+    var lines = [], sub = 0, weeks = type.weeks * size.wk, i, o, amt;
+
+    amt = type.base * size.mult * dm;
+    sub += amt;
+    lines.push([type.name + ' \u00B7 ' + size.name + (type.noDesign ? '' : ' \u00B7 ' + design.name), amt]);
+
+    var featNames = [], incNames = [];
+    for (i = 0; i < FEATS.length; i++) {
+      o = FEATS[i];
+      if (type.inc.indexOf(o.id) > -1) { incNames.push(o.name); continue; }
+      if (S.feats[o.id]) { sub += o.price; weeks += o.wk; lines.push([o.name, o.price]); featNames.push(o.name); }
+    }
+    var extraNames = [];
+    for (i = 0; i < EXTRAS.length; i++) {
+      o = EXTRAS[i];
+      if (S.extras[o.id]) { sub += o.price; lines.push([o.name, o.price]); extraNames.push(o.name); }
+    }
+    var time = by(TIMES, S.time), total = sub;
+    if (time.rush) {
+      amt = sub * CFG.rushFee; total += amt; weeks *= CFG.rushWeeks;
+      lines.push(['Fast-track surcharge', amt]);
+    }
+    var maint = by(MAINT, S.maint);
+    return {
+      type: type, size: size, design: design, time: time, maint: maint,
+      lines: lines, total: total,
+      low: r5(total * CFG.rangeLow), high: r5(total * CFG.rangeHigh),
+      wLow: Math.max(1, Math.ceil(weeks * 0.9)), wHigh: Math.max(2, Math.ceil(weeks * 1.2)),
+      featNames: featNames, incNames: incNames, extraNames: extraNames
+    };
+  }
+
+  function update() {
+    var c = last = calc(), i, el, t;
+    /* included features: tick + lock + label */
+    Array.prototype.forEach.call($('qcFeats').children, function (lab, idx) {
+      var f = FEATS[idx], inp = lab.querySelector('input'), p = lab.querySelector('.qc-p');
+      var inc = c.type.inc.indexOf(f.id) > -1;
+      var old = lab.querySelector('.qc-tag');
+      if (inc) {
+        inp.checked = true; inp.disabled = true;
+        if (!old) { var tg = document.createElement('span'); tg.className = 'qc-tag'; tg.textContent = 'INCLUDED'; lab.appendChild(tg); }
+        p.textContent = '';
+      } else {
+        inp.disabled = false; inp.checked = !!S.feats[f.id];
+        if (old) old.remove();
+        p.innerHTML = '+' + money(f.price, false);
+      }
+    });
+    Array.prototype.forEach.call($('qcExtras').children, function (lab, idx) {
+      lab.querySelector('.qc-p').innerHTML = '+' + money(EXTRAS[idx].price, false);
+    });
+    Array.prototype.forEach.call($('qcMaint').children, function (lab, idx) {
+      var p = MAINT[idx].price;
+      lab.querySelector('.qc-p').innerHTML = p ? money(p, false) + ' / month' : 'free';
+    });
+    /* design group is not relevant for API-only work */
+    $('qcDesignG').classList.toggle('qc-off', !!c.type.noDesign);
+    $('qcDesignNote').textContent = c.type.noDesign ? 'not needed for API-only work' : '';
+
+    var rng = '<span class="qc-nw">' + money(c.low, true) + '</span><i>to</i><span class="qc-nw">' + money(c.high, true) + '</span>';
+    $('qcRange').innerHTML = rng;
+    $('qcMini').innerHTML = money(c.low, true) + ' \u2013 ' + money(c.high, true);
+    $('qcWeeks').textContent = c.wLow + '\u2013' + c.wHigh + ' weeks';
+    $('qcMaintMeta').innerHTML = c.maint.price ? 'care <b>' + money(c.maint.price, false) + '/mo</b>' : '';
+
+    var ul = $('qcLines'); ul.textContent = '';
+    for (i = 0; i < c.lines.length; i++) {
+      var li = document.createElement('li'), a = document.createElement('span'), b = document.createElement('span');
+      a.textContent = c.lines[i][0]; b.innerHTML = money(c.lines[i][1], false);
+      li.appendChild(a); li.appendChild(b); ul.appendChild(li);
+    }
+    if (c.incNames.length) {
+      var li2 = document.createElement('li'), a2 = document.createElement('span'), b2 = document.createElement('span');
+      a2.textContent = 'Included: ' + c.incNames.join(', '); b2.textContent = '\u2713';
+      li2.appendChild(a2); li2.appendChild(b2); ul.appendChild(li2);
+    }
+
+    var wa = 'Hi Esau, I used the quote calculator on your site.\n' + plainSummary(c) + '\nCan we talk about it?';
+    $('qcWa').href = 'https://wa.me/' + CFG.whatsapp + '?text=' + encodeURIComponent(wa);
+  }
+
+  function plainSummary(c) {
+    var s = 'Project: ' + c.type.name + '\nSize: ' + c.size.name + ' (' + c.size.hint + ')\n';
+    if (!c.type.noDesign) s += 'Design: ' + c.design.name + '\n';
+    s += 'Features: ' + (c.featNames.length ? c.featNames.join(', ') : 'none extra') + '\n';
+    if (c.incNames.length) s += 'Included with this type: ' + c.incNames.join(', ') + '\n';
+    s += 'Extras: ' + (c.extraNames.length ? c.extraNames.join(', ') : 'none') + '\n';
+    s += 'Timeline: ' + c.time.name + ' (' + c.wLow + '-' + c.wHigh + ' weeks)\n';
+    s += 'Maintenance: ' + c.maint.name + (c.maint.price ? ' (' + ngnText(c.maint.price) + '/month)' : '') + '\n';
+    s += 'Estimate: ' + ngnText(c.low) + ' to ' + ngnText(c.high);
+    return s;
+  }
+
+  /* ---- request the quote ---- */
+  var form = $('qcForm'), openBtn = $('qcOpen'), status = $('qcStatus'), send = $('qcSend');
+  openBtn.addEventListener('click', function () {
+    form.classList.add('open');
+    openBtn.style.display = 'none';
+    var n = $('qcName'); if (n) n.focus({ preventScroll: false });
+  });
+  function sendLabel() { send.innerHTML = '<i class="fas fa-paper-plane"></i> <span>send_quote_request()</span>'; }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    var c = last || calc(), fd = new FormData(form);
+    if (fd.get('botcheck')) return;
+    var name = String(fd.get('name') || '').trim(), email = String(fd.get('email') || '').trim();
+    var phone = String(fd.get('phone') || '').trim(), note = String(fd.get('note') || '').trim();
+    var msg = 'QUOTE REQUEST (website calculator)\n\n' + plainSummary(c) + '\n\n' +
+      (phone ? 'WhatsApp/phone: ' + phone + '\n' : '') + (note ? 'Notes: ' + note + '\n' : '');
+    send.disabled = true;
+    send.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> <span>sending...</span>';
+    status.className = 'form-status';
+    fetch(CFG.submitUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ name: name, email: email, subject: 'Quote request: ' + c.type.name + ' (' + ngnText(c.low) + ' to ' + ngnText(c.high) + ')', message: msg, botcheck: '' })
+    }).then(function (r) { return r.json(); }).then(function (d) {
+      if (d && d.success) {
+        form.classList.remove('open');
+        var done = $('qcDone');
+        done.hidden = false;
+        done.textContent = 'Request sent. Thanks ' + name.split(' ')[0] + '. I will review your selection and reply to ' + email + ' with a confirmed quote.';
+      } else {
+        throw new Error((d && d.message) || 'failed');
+      }
+    }).catch(function () {
+      status.textContent = '\u2717 could not send. Check your connection and retry, or use WhatsApp above.';
+      status.className = 'form-status error';
+      send.disabled = false; sendLabel();
+    });
+  });
+
+  update();
+})();
+</script>
+
 </body>
 </html>
