@@ -929,7 +929,8 @@
       border-top:1px solid var(--border);
       padding:1.25rem 0;
       display:flex;
-      justify-content:space-between;
+      justify-content:center;
+      text-align:center;
       align-items:center;
       flex-wrap:wrap;
       gap:.8rem;
@@ -3372,7 +3373,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   /* ---- environment --------------------------------------------------------- */
   var reduce    = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var saveData  = !!(navigator.connection && navigator.connection.saveData);
-  var canAuto   = !(reduce || saveData);
+  var canAuto   = true;   // muted autoplay is wanted on every phone, so reduce-motion / data-saver no longer switch it off (data-saver still skips the early preload)
   var hoverable = !!(window.matchMedia && window.matchMedia('(hover: hover)').matches);
 
   /* iPadOS 13+ reports "Macintosh" in the UA, so the touch-points check is
@@ -3380,6 +3381,9 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   var ua = navigator.userAgent || '';
   var isIOS = /iPad|iPhone|iPod/.test(ua) ||
               (navigator.platform === 'MacIntel' && (navigator.maxTouchPoints || 0) > 1);
+
+  /* Phones and tablets (touch-only devices) behave like iOS here: autoplay muted, then a visible unmute button. */
+  var isPhone = isIOS || !!(window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches);
 
   var hasUserActivation = !!(navigator.userActivation && 'hasBeenActive' in navigator.userActivation);
   var activationFlag = false; // fallback when navigator.userActivation is missing
@@ -3454,7 +3458,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   }
 
   function unmuteFromActivation() { // page already activated (not iOS)
-    if (userUnmuted || finished || userPaused || isIOS) return;
+    if (userUnmuted || finished || userPaused || isPhone) return;
     if (!setUnmuted()) return; // blocked — will retry on the next gesture
     if (v.paused && inView && !document.hidden && !ttsBusy()) playOurs();
     markUnmuted();
@@ -3464,7 +3468,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
      navigator.userActivation, e.g. older Safari desktop) -------------------- */
   var unlockEl = null;
   function audioUnlock() {
-    if (isIOS || activationFlag) return activationFlag; // iOS ignores cross-element unlocks
+    if (isPhone || activationFlag) return activationFlag; // iOS ignores cross-element unlocks
     if (!unlockEl) {
       unlockEl = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=');
       unlockEl.setAttribute('aria-hidden', 'true');
@@ -3487,7 +3491,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
      gesture and is deliberately not listened to. */
   var GESTURES = ['pointerdown', 'touchstart', 'click', 'keydown'];
   function onGesture(e) {
-    if (isIOS || userUnmuted || finished) return; // iOS: the on-video hint handles it
+    if (isPhone || userUnmuted || finished) return; // iOS: the on-video hint handles it
     if (e && e.type === 'keydown') {
       var k = e.key;
       if (k === 'Shift' || k === 'Control' || k === 'Alt' || k === 'Meta' || k === 'CapsLock') return;
@@ -3522,23 +3526,27 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   var hintEl = null, hintBound = false;
 
   function buildIosHint() {
-    if (!isIOS || hintEl || !sec) return;
+    if (!isPhone || hintEl || !sec) return;
     hintEl = document.createElement('button');
     hintEl.type = 'button';
-    hintEl.id = 'wvIosSoundHint';
-    hintEl.setAttribute('aria-label', 'Tap to turn the sound on');
-    hintEl.innerHTML = '<i class="fas fa-volume-high" aria-hidden="true"></i>' +
-                       '<span>Tap for sound</span>';
+    hintEl.id = 'wvSoundBtn';
+    hintEl.setAttribute('aria-label', 'Turn the sound on');
+    hintEl.innerHTML =
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"></polygon>' +
+      '<line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>' +
+      '<span id="wvSoundTxt">Tap to unmute</span>';
     hintEl.style.cssText = [
-      'position:absolute', 'left:50%', 'top:50%', 'transform:translate(-50%,-50%)',
+      'position:absolute', 'left:10px', 'top:10px',
       'display:inline-flex', 'align-items:center', 'gap:.5rem',
-      'padding:.65rem 1.1rem', 'border-radius:999px',
-      'background:rgba(12,10,8,.78)', 'color:#ff7828',
-      'border:1px solid rgba(255,120,40,.55)', 'backdrop-filter:blur(6px)',
+      'min-height:44px', 'padding:.5rem .95rem .5rem .8rem', 'border-radius:999px',
+      'background:rgba(12,10,8,.82)', 'color:#ff7828',
+      'border:1px solid rgba(255,120,40,.6)',
+      '-webkit-backdrop-filter:blur(6px)', 'backdrop-filter:blur(6px)',
       'font-family:var(--mono,system-ui)', 'font-size:.8rem', 'font-weight:600',
-      'letter-spacing:.04em', 'cursor:pointer', 'z-index:5',
-      'box-shadow:0 8px 24px rgba(0,0,0,.5)',
-      '-webkit-tap-highlight-color:transparent'
+      'letter-spacing:.03em', 'cursor:pointer', 'z-index:5',
+      'box-shadow:0 6px 20px rgba(0,0,0,.55)',
+      '-webkit-tap-highlight-color:transparent', 'touch-action:manipulation'
     ].join(';');
     var frame = v.parentElement; // anchor to the frame, not the unpositioned container
     if (frame) {
@@ -3556,11 +3564,26 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       hintEl.addEventListener('pointerup', fire, { passive: false });
       hintEl.addEventListener('touchend', fire, { passive: false });
       hintEl.addEventListener('click', fire, { passive: false });
+      window.addEventListener('resize', placeHint);
+      window.addEventListener('orientationchange', placeHint);
     }
+  }
+  /* sit on the top-left corner of the picture itself (below the little title bar, clear of the native controls at the bottom) */
+  function placeHint() {
+    if (!hintEl) return;
+    hintEl.style.top = ((v.offsetTop || 0) + 10) + 'px';
+  }
+  function updateHint() {
+    if (!hintEl) return;
+    var t = hintEl.querySelector('#wvSoundTxt');
+    var txt = v.paused ? 'Tap to play with sound' : 'Tap to unmute';
+    if (t && t.textContent !== txt) t.textContent = txt;
+    hintEl.setAttribute('aria-label', v.paused ? 'Play the video with sound' : 'Turn the sound on');
   }
 
   function unmuteFromIosTap() {
     if (userUnmuted || finished) return;
+    userPaused = false;
     if (setUnmuted()) {
       var p = v.play(); // iOS pauses on the muted flip — resume, still in the tap
       if (p && p.catch) p.catch(function () {});
@@ -3572,9 +3595,9 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   }
 
   function showIosHint() {
-    if (!isIOS || userUnmuted || finished || !inView) return;
+    if (!isPhone || userUnmuted || finished || !inView) return;
     buildIosHint();
-    if (hintEl) hintEl.style.display = 'inline-flex';
+    if (hintEl) { placeHint(); updateHint(); hintEl.style.display = 'inline-flex'; }
   }
   function hideIosHint() {
     if (hintEl) hintEl.style.display = 'none';
@@ -3589,7 +3612,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 
       // Page already activated (and not iOS)? Try unmuted directly.
       var triedUnmuted = false;
-      if (!userUnmuted && !isIOS && pageActivated()) {
+      if (!userUnmuted && !isPhone && pageActivated()) {
         triedUnmuted = setUnmuted();
         if (triedUnmuted) { playOurs(); markUnmuted(); return; }
       }
@@ -3618,8 +3641,10 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   /* ---- native control state ------------------------------------------------------ */
   v.addEventListener('pause', function () {
     if (!ours && !v.ended && inView && !document.hidden) userPaused = true;
+    updateHint();
   });
   v.addEventListener('play', function () {
+    updateHint();
     if (!ours) {
       userPaused = false;
       if (!v.muted) markUnmuted();
@@ -3629,7 +3654,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   v.addEventListener('volumechange', function () {
     if (muting) return;
     if (!v.muted) markUnmuted();
-    else userUnmuted = false; // user re-muted via native controls
+    else { userUnmuted = false; if (isPhone) showIosHint(); } // user re-muted via native controls
   });
   v.addEventListener('ended', function () {
     finished = true;
@@ -3638,6 +3663,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   v.addEventListener('canplay', function () {
     if (inView && !finished) attemptAutoplay();
   });
+  v.addEventListener('loadedmetadata', placeHint);
 
   v.setAttribute('playsinline', '');
   v.setAttribute('webkit-playsinline', '');
@@ -3656,7 +3682,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       if (r >= 0.4) {
         inView = true;
         if (!finished) attemptAutoplay();
-        if (isIOS) showIosHint(); // only while visible & still muted
+        if (isPhone) showIosHint(); // only while visible & still muted
       } else if (r < 0.15) {
         inView = false;
         tryPause();
@@ -3681,7 +3707,7 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       tryPause();
     } else if (inView && !finished) {
       attemptAutoplay();
-      if (isIOS) showIosHint();
+      if (isPhone) showIosHint();
     }
   });
 
