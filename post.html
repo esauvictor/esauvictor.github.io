@@ -1390,6 +1390,120 @@
         @media (min-width: 1024px) {
             .single-blog-container { max-width: 840px; }
         }
+        /* ---------- Affiliate links & disclosure ---------- */
+.affiliate-disclosure {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  padding: 0.85rem 1rem;
+  margin: 0 0 1.5rem;
+  border-radius: 10px;
+  background: var(--amber-dim);
+  border: 1px solid color-mix(in srgb, var(--amber) 35%, transparent);
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.affiliate-disclosure i {
+  color: var(--amber);
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+.affiliate-disclosure strong { color: var(--amber); }
+
+.affiliate-link {
+  color: var(--signal);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+  transition: color .15s ease;
+}
+.affiliate-link:hover { color: var(--primary-dark); }
+.affiliate-link::after {
+  content: " ↗";
+  font-size: 0.75em;
+  opacity: 0.7;
+}
+
+.affiliate-link.affiliate-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--signal);
+  color: #fff;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0.4rem 0;
+  transition: transform .15s ease, background .15s ease;
+}
+.affiliate-link.affiliate-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+.affiliate-link.affiliate-button::after { content: none; }
+
+/* Affiliate resource card (optional block) */
+.affiliate-card {
+  margin: 1.75rem 0;
+  padding: 1.25rem 1.4rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--signal);
+  border-radius: 10px;
+  box-shadow: var(--shadow-sm);
+}
+.affiliate-card .ac-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+.affiliate-card .ac-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--signal);
+  background: var(--signal-dim);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+.affiliate-card .ac-name {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+.affiliate-card .ac-desc {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--muted);
+  margin: 0 0 0.9rem;
+}
+.affiliate-card .ac-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.1rem;
+  background: var(--signal);
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-decoration: none;
+}
+.affiliate-card .ac-cta:hover { background: var(--primary-dark); }
+.affiliate-card .ac-note {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin: 0.7rem 0 0;
+}
     </style>
 </head>
 <body>
