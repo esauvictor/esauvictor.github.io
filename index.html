@@ -3334,16 +3334,17 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 
 </script>
 <script>
-/* Welcome video — mobile-hardened autoplay-with-sound.
-   Strategy:
-     1. Try unmuted play() first (works on desktop and repeat visits).
-     2. If blocked, play muted so the video is visibly moving.
-     3. On the FIRST real user gesture (tap / click / key — NOT scroll), unmute and resume
-        synchronously inside the handler. Serialize everything through one queue so Chrome
-        never sees overlapping play()/muted-toggle calls.
-   iOS Safari needs playsinline + a fresh play() right after unmuting.
-   Chrome-for-Android needs muted to stay put until the play() promise settles, and
-   needs the unmute to happen without another await/promise in between. */
+/* Welcome video — unlock-on-scroll edition (Chrome/Android/Firefox + iOS Safari).
+   -----------------------------------------------------------------------------
+   Desktop & Android: the first pointerdown/touchstart/click/keydown unlocks a shared
+   silent <audio> element (the thing the autoplay policy actually checks), then the
+   video is unmuted. On touch devices that first pointerdown is the finger that starts
+   a scroll, so scrolling "does the work".
+   iOS Safari: Apple blocks cross-element unlock — the only way to get sound is a
+   direct tap on the video element itself (or on an element that plays it). So on
+   iOS we (a) autoplay muted as usual, and (b) show a small "Tap for sound" hint
+   overlaid on the video that unmutes and resumes it synchronously inside the tap.
+   ----------------------------------------------------------------------------- */
 (function () {
   var sec = document.getElementById('welcome'), v = sec && sec.querySelector('video');
   if (!v) return;
@@ -3352,56 +3353,114 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   var saveData = !!(navigator.connection && navigator.connection.saveData);
   var canAuto  = !(reduce || saveData);
 
-  // --- state ---
-  var userPaused    = false;  // user explicitly paused it via native controls
-  var userUnmuted   = false;  // user has sound on (ours or native)
-  var ours          = 0;      // count of our own play/pause calls, so we don't mistake them for user actions
+  /* ---- iOS detection ----------------------------------------------------------------
+     iPadOS 13+ reports itself as "Macintosh" in the UA, so the touch-points check is
+     required to catch iPads pretending to be Macs. Both branches must be true. */
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  /* ---- 1. Shared audio-unlock element ---------------------------------------------- */
+  var UNLOCK_SRC = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=';
+  var unlockEl = new Audio(UNLOCK_SRC);
+  unlockEl.setAttribute('aria-hidden', 'true');
+  unlockEl.loop = true;
+  unlockEl.volume = 0.001;
+  var pageActivated = false;
+
+  function tryUnlockFromGesture() {
+    // iOS will not honour a cross-element unlock, so skip it entirely there.
+    if (isIOS) return false;
+    if (pageActivated) return true;
+    try {
+      var p = unlockEl.play();
+      if (p && p.then) {
+        p.then(function () { pageActivated = true; applyVideoMuteState(); })
+         .catch(function () {});
+      } else {
+        pageActivated = true;
+        applyVideoMuteState();
+      }
+    } catch (e) {}
+    return pageActivated;
+  }
+
+  /* ---- 2. Video state --------------------------------------------------------------- */
+  var userPaused    = false;
+  var userUnmuted   = false;
+  var ours          = 0;
   var inView        = false;
   var finished      = false;
-  var muting        = false;  // guard so our own mute flips don't look like user actions
-  var pendingUnmute = false;  // we're currently muted but want sound on next gesture
-  var busy          = false;  // serialize play/pause/unmute transitions
-  var queued        = null;   // the next transition waiting for `busy` to clear
+  var muting        = false;
+  var pendingUnmute = true;
+  var busy          = false;
+  var queued        = null;
 
   function ttsBusy() { return !!(window.__siteTts && window.__siteTts.isActive()); }
   function release() { setTimeout(function () { ours = Math.max(0, ours - 1); }, 300); }
 
-  // Run one transition at a time. If a new one comes in while busy, replace the queued one
-  // (last-wins) instead of stacking promises — Chrome-on-Android gets confused otherwise.
   function run(fn) {
     if (busy) { queued = fn; return; }
     busy = true;
-    Promise.resolve()
-      .then(fn)
-      .catch(function () {})
-      .then(function () {
-        busy = false;
-        if (queued) { var q = queued; queued = null; run(q); }
-      });
+    Promise.resolve().then(fn).catch(function () {}).then(function () {
+      busy = false;
+      if (queued) { var q = queued; queued = null; run(q); }
+    });
   }
 
-  // Try to autoplay. Unmuted first; if that's rejected, muted.
+  function applyVideoMuteState() {
+    if (!pageActivated || userUnmuted || finished) return;
+    run(function () {
+      if (!pageActivated || userUnmuted) return;
+      try {
+        muting = true;
+        if (v.volume < 0.5) v.volume = 1;
+        v.muted = false;
+        if (v.muted === true) {
+          try { Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'muted').set.call(v, false); } catch (e) {}
+        }
+        muting = false;
+        if (v.paused && inView && !userPaused) {
+          ours++;
+          var p = v.play();
+          if (p && p.then) p.then(release, release); else release();
+        }
+        setTimeout(function () {
+          if (v.muted) return; // will retry on next gesture
+          pendingUnmute = false;
+          userUnmuted = true;
+          hideIosHint();
+          detachAll();
+        }, 0);
+      } catch (e) { muting = false; }
+    });
+  }
+
   function attemptAutoplay() {
     if (!canAuto || userPaused || document.hidden || ttsBusy() || finished) return;
-    if (!v.paused) return; // already playing
-
+    if (!v.paused) return;
     run(function () {
       if (!canAuto || userPaused || document.hidden || ttsBusy() || finished) return;
       if (!v.paused) return;
 
-      // Reset to muted only if we're not in the middle of a user unmute.
-      if (pendingUnmute && !userUnmuted) {
+      // If the page is already activated (and not iOS), try unmuted directly.
+      if (pageActivated && !userUnmuted && !isIOS) {
+        try {
+          muting = true;
+          v.muted = false;
+          if (v.volume < 0.5) v.volume = 1;
+          muting = false;
+        } catch (e) { muting = false; }
+      } else if (!v.muted) {
         muting = true; v.muted = true; muting = false;
       }
 
       ours++;
       var p = v.play();
       var settle = function () { release(); };
-
       if (!p || !p.then) { settle(); return; }
 
       return p.then(settle, function () {
-        // Unmuted rejected — fall back to muted and remember to unmute later.
         settle();
         if (v.muted) return;
         muting = true; v.muted = true; muting = false;
@@ -3414,66 +3473,6 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     });
   }
 
-  // Synchronous unmute — must run inside a genuine user-gesture handler.
-  function unmuteNow() {
-    if (userUnmuted || !pendingUnmute || finished) return;
-
-    // Synchronous, no awaits before flipping muted.
-    try {
-      muting = true;
-      if (v.volume < 0.5) v.volume = 1;
-      v.muted = false;
-      muting = false;
-
-      // Some Androids still report muted right after assignment until the media task runs.
-      // Force it through the property descriptor as a backup.
-      if (v.muted === true) {
-        try { Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'muted').set.call(v, false); } catch (e) {}
-      }
-
-      // iOS and Chrome-for-Android both pause the element when muted flips; resume now.
-      if (v.paused) {
-        var p = v.play();
-        if (p && p.catch) p.catch(function () {});
-      }
-
-      // Verify on the next tick; if it silently re-muted, keep the listener armed.
-      setTimeout(function () {
-        if (v.muted) { muting = false; return; } // stay armed, try again on next gesture
-        pendingUnmute = false;
-        userUnmuted = true;
-        detachGestures();
-      }, 0);
-    } catch (e) {
-      muting = false;
-    }
-  }
-
-  // Real gestures only — scroll/wheel do not count for the autoplay policy on mobile.
-  var GESTURES = ['pointerdown', 'touchend', 'click', 'keydown'];
-  function onGesture(e) {
-    // Ignore pointerdown when a click is about to fire — but if it's the only signal we get (iOS),
-    // we still want to try. Calling unmuteNow twice is harmless because of the userUnmuted flag.
-    if (e && e.type === 'pointerdown' && e.pointerType === 'mouse') return; // mouse handled by click
-    unmuteNow();
-  }
-  function attachGestures() {
-    GESTURES.forEach(function (ev) {
-      // pointerdown/touchend need passive to avoid blocking scroll; click/keydown default is fine.
-      var opts = (ev === 'pointerdown' || ev === 'touchend')
-        ? { capture: true, passive: true }
-        : true;
-      window.addEventListener(ev, onGesture, opts);
-    });
-  }
-  function detachGestures() {
-    GESTURES.forEach(function (ev) {
-      window.removeEventListener(ev, onGesture, true);
-      // also try the passive form in case the browser recorded it differently
-      try { window.removeEventListener(ev, onGesture, { capture: true, passive: true }); } catch (e) {}
-    });
-  }
-
   function tryPause() {
     if (v.paused) return;
     ours++;
@@ -3481,34 +3480,144 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
     release();
   }
 
-  // --- native-control driven state ---
+  /* ---- 3. Gesture listeners --------------------------------------------------------
+     pointerdown/touchstart fire the instant a finger lands on the screen to begin a
+     scroll, so on Android they unlock the page "for free" while the user scrolls.
+     click/keydown cover desktop and keyboard users. Scroll itself is not a qualifying
+     gesture so it is deliberately not listened to. */
+  var GESTURES = ['pointerdown', 'touchstart', 'click', 'keydown'];
+  function onGesture() {
+    tryUnlockFromGesture();
+    if (pageActivated && pendingUnmute) applyVideoMuteState();
+    // On iOS the unlock path is different — the hint button handles it — so nothing here.
+  }
+  function attachAll() {
+    GESTURES.forEach(function (ev) {
+      var opts = (ev === 'pointerdown' || ev === 'touchstart')
+        ? { capture: true, passive: true }
+        : true;
+      window.addEventListener(ev, onGesture, opts);
+    });
+  }
+  function detachAll() {
+    GESTURES.forEach(function (ev) {
+      window.removeEventListener(ev, onGesture, true);
+      try { window.removeEventListener(ev, onGesture, { capture: true, passive: true }); } catch (e) {}
+    });
+    try { unlockEl.pause(); } catch (e) {}
+  }
+
+  /* ---- 4. iOS "Tap for sound" hint -------------------------------------------------
+     Sits over the video, only on iOS, only while the video is still muted. A tap on it
+     runs unmute + play synchronously inside the gesture, which is the one thing iOS
+     will accept. Uses pointerup for the most reliable touch response on iOS, plus
+     click as a fallback for older WebKit. */
+  var hintEl = null, hintBound = false;
+
+  function buildIosHint() {
+    if (!isIOS || hintEl || !sec) return;
+    hintEl = document.createElement('button');
+    hintEl.type = 'button';
+    hintEl.id = 'wvIosSoundHint';
+    hintEl.setAttribute('aria-label', 'Tap to turn the sound on');
+    hintEl.innerHTML = '<i class="fas fa-volume-high" aria-hidden="true"></i>'
+                     + '<span>Tap for sound</span>';
+    hintEl.style.cssText = [
+      'position:absolute', 'left:50%', 'top:50%', 'transform:translate(-50%,-50%)',
+      'display:inline-flex', 'align-items:center', 'gap:.5rem',
+      'padding:.65rem 1.1rem', 'border-radius:999px',
+      'background:rgba(12,10,8,.78)', 'color:#ff7828',
+      'border:1px solid rgba(255,120,40,.55)', 'backdrop-filter:blur(6px)',
+      'font-family:var(--mono,system-ui)', 'font-size:.8rem', 'font-weight:600',
+      'letter-spacing:.04em', 'cursor:pointer', 'z-index:5',
+      'box-shadow:0 8px 24px rgba(0,0,0,.5)',
+      '-webkit-tap-highlight-color:transparent'
+    ].join(';');
+    // The video's own container is not positioned, so anchor the hint to the frame.
+    var frame = v.parentElement;
+    if (frame) {
+      var pos = getComputedStyle(frame).position;
+      if (pos === 'static') frame.style.position = 'relative';
+      frame.appendChild(hintEl);
+    } else {
+      sec.appendChild(hintEl);
+    }
+    if (!hintBound) {
+      hintBound = true;
+      var fire = function (ev) {
+        if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+        unmuteFromIosTap();
+      };
+      hintEl.addEventListener('pointerup', fire, { passive: false });
+      hintEl.addEventListener('touchend', fire, { passive: false });
+      hintEl.addEventListener('click', fire, { passive: false });
+    }
+  }
+
+  function unmuteFromIosTap() {
+    // Synchronous — no awaits, no promises before the muted flip. This is what iOS checks.
+    try {
+      muting = true;
+      if (v.volume < 0.5) v.volume = 1;
+      v.muted = false;
+      if (v.muted === true) {
+        try { Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'muted').set.call(v, false); } catch (e) {}
+      }
+      muting = false;
+    } catch (e) { muting = false; }
+
+    // iOS pauses the element whenever muted flips. Resume immediately, still in the tap.
+    var p = v.play();
+    if (p && p.catch) p.catch(function () {});
+
+    // Confirm it stuck; if it didn't, leave the hint on screen for another tap.
+    setTimeout(function () {
+      if (!v.muted) {
+        userUnmuted = true;
+        pendingUnmute = false;
+        hideIosHint();
+        detachAll();
+      } else {
+        muting = false;
+      }
+    }, 0);
+  }
+
+  function showIosHint() {
+    if (!isIOS || userUnmuted || finished) return;
+    buildIosHint();
+    if (hintEl) hintEl.style.display = 'inline-flex';
+  }
+  function hideIosHint() {
+    if (hintEl) hintEl.style.display = 'none';
+  }
+
+  /* ---- 5. Native-control state ------------------------------------------------------ */
   v.addEventListener('pause', function () {
     if (!ours && !v.ended && inView && !document.hidden) userPaused = true;
   });
   v.addEventListener('play', function () {
     if (!ours) {
       userPaused = false;
-      if (!v.muted) { userUnmuted = true; pendingUnmute = false; detachGestures(); }
+      if (!v.muted) { userUnmuted = true; pendingUnmute = false; hideIosHint(); detachAll(); }
     }
     if (!ours && ttsBusy() && window.__siteTts) window.__siteTts.pause();
   });
   v.addEventListener('volumechange', function () {
     if (muting) return;
-    if (!v.muted) { userUnmuted = true; pendingUnmute = false; detachGestures(); }
+    if (!v.muted) { userUnmuted = true; pendingUnmute = false; hideIosHint(); detachAll(); }
     else if (!pendingUnmute) { userUnmuted = false; }
   });
-  v.addEventListener('ended', function () { finished = true; });
+  v.addEventListener('ended', function () { finished = true; hideIosHint(); });
   v.addEventListener('canplay', function () { if (inView && !finished) attemptAutoplay(); });
 
-  // iOS inline autoplay preconditions
   v.setAttribute('playsinline', '');
   v.setAttribute('webkit-playsinline', '');
-  v.setAttribute('muted', '');       // start muted in markup so the first play() is not rejected outright
+  v.setAttribute('muted', '');
   v.muted = true;
   v.autoplay = true;
-  pendingUnmute = true;              // we intend to unmute at the first gesture
 
-  // --- visibility / intersection ---
+  /* ---- 6. Visibility / viewport ----------------------------------------------------- */
   if ('IntersectionObserver' in window) {
     if (!saveData) new IntersectionObserver(function (e, o) {
       if (e[0].isIntersecting) { v.preload = 'auto'; o.disconnect(); }
@@ -3519,6 +3628,8 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
       if (r >= 0.4) {
         inView = true;
         if (!finished) attemptAutoplay();
+        // On iOS, surface the tap-to-unmute hint as soon as the video is meaningfully visible.
+        if (isIOS && !userUnmuted) showIosHint();
       } else if (r < 0.15) {
         inView = false;
         tryPause();
@@ -3536,14 +3647,18 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
   sec.addEventListener('focusin', function () { if (!userPaused && !finished) attemptAutoplay(); });
 
   document.addEventListener('visibilitychange', function () {
-    if (document.hidden) { tryPause(); }
-    else if (inView && !finished) { attemptAutoplay(); if (pendingUnmute) unmuteNow(); }
+    if (document.hidden) {
+      tryPause();
+    } else if (inView && !finished) {
+      attemptAutoplay();
+      if (pageActivated && pendingUnmute) applyVideoMuteState();
+      if (isIOS && !userUnmuted) showIosHint();
+    }
   });
 
   window.addEventListener('site-tts-start', function () { tryPause(); });
 
-  // Arm the gesture listeners up front so the very first tap anywhere unlocks sound.
-  attachGestures();
+  attachAll();
 })();
 </script>
 <script>
