@@ -1180,7 +1180,7 @@
         <source src="https://esauvictor.name.ng/api/welcome.mp4#t=0.1" type="video/mp4" onerror="document.getElementById('welcome').hidden=true">
         Your browser can't play this video.
       </video>
-      <p class="wv-note">A quick hello from me. Press play, sound is off until you start it.</p>
+      <p class="wv-note"></p>
     </div>
   </div>
 </section>
@@ -3334,56 +3334,119 @@ fetchWithRetry(`${API_BASE}/testimonials.php`)
 
 </script>
 <script>
-/* Welcome video: starts by itself when you scroll to it, hover over it or focus it with the keyboard (silently, because browsers only
-   allow sound after a tap on the video itself), pauses when you scroll away, and carries on when you come back. */
+/* Welcome video: starts by itself when you scroll to it, hover over it or focus it with the keyboard.
+   It tries to play WITH SOUND. If the browser blocks unmuted autoplay, it starts muted and then
+   unmutes itself the moment any user gesture happens (scroll, tap, click, key press).
+   Pauses when you scroll away, and carries on when you come back. */
 (function () {
   var sec = document.getElementById('welcome'), v = sec && sec.querySelector('video');
   if (!v) return;
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var saveData = !!(navigator.connection && navigator.connection.saveData);
   var canAuto = !(reduce || saveData);
-  var userPaused = false, ours = 0, inView = false, finished = false, userUnmuted = false, muting = false;
+  var userPaused = false, ours = 0, inView = false, finished = false;
+  var userUnmuted = false, muting = false, pendingUnmute = false;
+
   function ttsBusy() { return !!(window.__siteTts && window.__siteTts.isActive()); }
   function release() { setTimeout(function () { ours = Math.max(0, ours - 1); }, 250); }
+
+  // Try to play with sound. If that is rejected, fall back to muted and remember to unmute later.
   function tryPlay() {
     if (!canAuto || userPaused || document.hidden || ttsBusy() || !v.paused) return;
-    if (!userUnmuted) { muting = true; v.muted = true; muting = false; }
     ours++;
     var done = function () { release(); };
     var p = v.play();
     if (p && p.then) {
       p.then(done).catch(function () {
-        if (!v.muted) { v.muted = true; var q = v.play(); if (q && q.then) q.then(done).catch(done); else done(); } else done();
+        // Unmuted autoplay blocked — start muted, then unmute at the first gesture.
+        if (!v.muted) {
+          pendingUnmute = true;
+          muting = true; v.muted = true; muting = false;
+          var q = v.play();
+          if (q && q.then) q.then(done).catch(done); else done();
+        } else done();
       });
     } else done();
   }
+
+  // Try to unmute the welcome video. Called on the first user gesture.
+  function tryUnmute() {
+    if (!pendingUnmute || userUnmuted) return;
+    if (v.paused || v.ended || v.currentTime === 0) return;
+    muting = true;
+    v.muted = false;
+    muting = false;
+    // Confirm it actually stuck (some browsers silently re-mute).
+    if (v.muted === false) {
+      pendingUnmute = false;
+      userUnmuted = true;
+      // Bump volume to a sensible level if it was left low.
+      if (v.volume < 0.5) v.volume = 1;
+    }
+  }
+
+  // First real user gesture anywhere on the page → try to unmute.
+  var gestureEvents = ['pointerdown', 'touchstart', 'keydown', 'scroll', 'wheel'];
+  function onFirstGesture() {
+    tryUnmute();
+    // Keep listening until we succeed (or the user has clearly taken over).
+    if (!pendingUnmute || userUnmuted) {
+      gestureEvents.forEach(function (ev) {
+        window.removeEventListener(ev, onFirstGesture, true);
+      });
+    }
+  }
+  gestureEvents.forEach(function (ev) {
+    window.addEventListener(ev, onFirstGesture, true);
+  });
+
   function tryPause() { if (!v.paused) { ours++; v.pause(); release(); } }
-  v.addEventListener('pause', function () { if (!ours && !v.ended && inView && !document.hidden) userPaused = true; });
+
+  v.addEventListener('pause', function () {
+    if (!ours && !v.ended && inView && !document.hidden) userPaused = true;
+  });
   v.addEventListener('play', function () {
-    if (!ours) userPaused = false;                        // the visitor pressed play themselves
+    if (!ours) userPaused = false; // the visitor pressed play themselves
+    // If the visitor unmuted via the native controls, respect that.
+    if (!ours && !v.muted) { userUnmuted = true; pendingUnmute = false; }
     if (!ours && ttsBusy() && window.__siteTts) window.__siteTts.pause();
   });
-  v.addEventListener('volumechange', function () { if (!muting && !v.muted) userUnmuted = true; });   // visitor turned the sound on: keep it on
+  v.addEventListener('volumechange', function () {
+    if (muting) return;
+    if (!v.muted) { userUnmuted = true; pendingUnmute = false; }
+    else if (!pendingUnmute) { userUnmuted = false; } // user manually muted
+  });
   v.addEventListener('ended', function () { finished = true; });
   v.addEventListener('canplay', function () { if (inView && !finished) tryPlay(); });
+
   if ('IntersectionObserver' in window) {
-    if (!saveData) new IntersectionObserver(function (e, o) { if (e[0].isIntersecting) { v.preload = 'auto'; o.disconnect(); } }, { rootMargin: '800px 0px' }).observe(sec);
+    if (!saveData) new IntersectionObserver(function (e, o) {
+      if (e[0].isIntersecting) { v.preload = 'auto'; o.disconnect(); }
+    }, { rootMargin: '800px 0px' }).observe(sec);
+
     new IntersectionObserver(function (entries) {
       var r = entries[0].intersectionRatio;
       if (r >= 0.4) { inView = true; if (!finished) tryPlay(); }
       else if (r < 0.15) { inView = false; tryPause(); }
     }, { threshold: [0, 0.15, 0.4, 0.7] }).observe(v);
   }
+
   if (window.matchMedia && window.matchMedia('(hover: hover)').matches) {
-    sec.addEventListener('mouseenter', function () { if (userPaused) return; if (v.ended) { v.currentTime = 0; finished = false; } tryPlay(); });
+    sec.addEventListener('mouseenter', function () {
+      if (userPaused) return;
+      if (v.ended) { v.currentTime = 0; finished = false; }
+      tryPlay();
+    });
   }
-  sec.addEventListener('focusin', function () { if (!userPaused && !finished) tryPlay(); });   // keyboard and switch-access users
-  document.addEventListener('visibilitychange', function () { if (document.hidden) tryPause(); else if (inView && !finished) tryPlay(); });
+  sec.addEventListener('focusin', function () { if (!userPaused && !finished) tryPlay(); });
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) tryPause();
+    else if (inView && !finished) { tryPlay(); tryUnmute(); }
+  });
+
   window.addEventListener('site-tts-start', function () { tryPause(); });
 })();
-</script>
-<script>
-  window.__siteTtsGetRoots = () => [document.querySelector('main')];
 </script>
 <script>
 /* ===== Resources + Support (Paystack) ===== */
