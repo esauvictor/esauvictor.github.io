@@ -666,6 +666,15 @@
     .testimonial-name { font-family:var(--display); font-size:.85rem; color:var(--green); font-weight:600; }
     .testimonial-role { font-size:.6rem; color:var(--text3); letter-spacing:.06em; margin-top:.2rem; }
     .slider-controls { display:flex; justify-content:center; gap:1rem; margin-top:1.5rem; }
+    .testimonial-stars { color:var(--amber); font-size:.85rem; letter-spacing:.12em; margin-bottom:.7rem; }
+    .testimonial-stars span { color:var(--text3); }
+    .tm-empty { text-align:center; padding:2rem 1rem; border:1px dashed var(--border2); border-radius:4px; font-size:.82rem; color:var(--text2); margin-bottom:1rem; }
+    .tm-empty[hidden] { display:none; }
+    .rv-stars { display:flex; gap:.25rem; margin:.2rem 0 0; }
+    .rv-stars button { background:none; border:none; padding:.1rem; font-size:1.7rem; line-height:1; color:var(--text3); cursor:pointer; transition:color .12s, transform .12s; }
+    .rv-stars button.on { color:var(--amber); }
+    .rv-stars button:hover { transform:scale(1.12); }
+    .rv-stars button:focus-visible { outline:2px solid var(--amber); outline-offset:2px; border-radius:4px; }
     .slider-btn {
       background:var(--bg1);
       border:1px solid var(--border);
@@ -1389,12 +1398,18 @@
       <h2 class="sec-title">ClientVoices<span>()</span></h2>
       <div class="sec-line"></div>
     </div>
+    <div class="tm-empty" id="tmEmpty" hidden>
+      <p>No reviews yet. Worked with me? Be the first to share your experience.</p>
+    </div>
     <div class="slider-container">
       <div class="testimonials-track" id="testimonialsTrack"></div>
     </div>
     <div class="slider-controls">
       <button class="slider-btn" id="prevBtn"><i class="fas fa-chevron-left"></i> prev</button>
       <button class="slider-btn" id="nextBtn">next <i class="fas fa-chevron-right"></i></button>
+    </div>
+    <div style="text-align:center;margin-top:1.5rem">
+      <button class="btn btn-outline" id="reviewOpen" type="button"><i class="fas fa-pen"></i> <span>leave_a_review()</span></button>
     </div>
   </div>
 </section>
@@ -1620,6 +1635,7 @@
           <li><a href="privacy.html"><i class="fas fa-shield-halved"></i> Privacy &amp; Cookie Policy</a></li>
           <li><a href="mailto:esauvictor@icloud.com"><i class="fas fa-envelope"></i> esauvictor@icloud.com</a></li>
           <li><a href="mailto:www.esauvictor.name.ng@gmail.com"><i class="fas fa-envelope"></i> www.esauvictor.name.ng@gmail.com</a></li>
+          <li><a href="#" id="footerReview"><i class="fas fa-pen"></i> Leave a Review</a></li>
           <li><a href="#" id="cookiePrefsLink"><i class="fas fa-sliders"></i> Cookie Preferences</a></li>
         </ul>
       </div>
@@ -1662,25 +1678,28 @@
 
   function initTestimonialsCarousel() {
     const track = document.getElementById('testimonialsTrack');
-    if (!track) return;
-    const slides = Array.from(track.children);
-    if (!slides.length) return;
+    if (!track || track.dataset.ready) return;
+    const slides = () => Array.from(track.children);
+    if (!slides().length) return;
+    track.dataset.ready = '1';
     let idx = 0;
     let auto;
     const spv = () => window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1;
+    const max = () => Math.max(0, slides().length - spv());
     const update = () => {
-      const w = slides[0]?.getBoundingClientRect().width + 1;
+      const w = slides()[0]?.getBoundingClientRect().width + 1;
       if (w) track.style.transform = `translateX(-${idx * w}px)`;
     };
-    const next = () => { const max = Math.max(0, slides.length - spv()); idx = idx >= max ? 0 : idx + 1; update(); };
-    const prev = () => { const max = Math.max(0, slides.length - spv()); idx = idx <= 0 ? max : idx - 1; update(); };
-    const startAuto = () => { if (auto) clearInterval(auto); auto = setInterval(next, 5000); };
-    const stopAuto = () => { if (auto) clearInterval(auto); };
+    const next = () => { idx = idx >= max() ? 0 : idx + 1; update(); };
+    const prev = () => { idx = idx <= 0 ? max() : idx - 1; update(); };
+    const startAuto = () => { clearInterval(auto); auto = setInterval(next, 5000); };
+    const stopAuto = () => clearInterval(auto);
     document.getElementById('nextBtn')?.addEventListener('click', () => { stopAuto(); next(); startAuto(); });
     document.getElementById('prevBtn')?.addEventListener('click', () => { stopAuto(); prev(); startAuto(); });
-    window.addEventListener('resize', () => { stopAuto(); setTimeout(() => { const max = Math.max(0, slides.length - spv()); if (idx > max) idx = max; update(); startAuto(); }, 100); });
+    window.addEventListener('resize', () => { if (idx > max()) idx = max(); update(); });
     track.addEventListener('mouseenter', stopAuto);
     track.addEventListener('mouseleave', startAuto);
+    window.__tmGoTo = i => { idx = Math.min(i, max()); update(); startAuto(); };
     setTimeout(() => { update(); startAuto(); }, 100);
   }
   initTestimonialsCarousel();
@@ -2099,26 +2118,132 @@ fetchWithRetry(`${API_BASE}/projects.php`)
 </script>
 
 <script>
-fetchWithRetry(`${API_BASE}/testimonials.php`)
-  .then(res => res.json())
-  .then(data => {
-    const track = document.getElementById('testimonialsTrack');
-    if (!track || !data.testimonials || !data.testimonials.length) return;
+const tmStars = n => {
+  n = Math.round(Number(n));
+  return n >= 1 && n <= 5
+    ? `<div class="testimonial-stars" role="img" aria-label="${n} out of 5 stars">${'★'.repeat(n)}<span>${'★'.repeat(5 - n)}</span></div>`
+    : '';
+};
+const tmCard = t => `
+  <div class="testimonial-card">
+    ${tmStars(t.rating)}
+    <div class="testimonial-text">"${escHtml(t.quote)}"</div>
+    <div class="testimonial-name">${escHtml(t.author_name)}</div>
+    <div class="testimonial-role">${escHtml(t.author_role || '')}</div>
+  </div>`;
 
-    track.innerHTML = data.testimonials.map(t => `
-      <div class="testimonial-card">
-        <div class="testimonial-text">"${escHtml(t.quote)}"</div>
-        <div class="testimonial-name">${escHtml(t.author_name)}</div>
-        <div class="testimonial-role">${escHtml(t.author_role || '')}</div>
+function tmShowEmpty(on) {
+  const el = document.getElementById('tmEmpty');
+  if (el) el.hidden = !on;
+}
+
+function loadTestimonials() {
+  return fetchWithRetry(`${API_BASE}/testimonials.php?_=${Date.now()}`)
+    .then(res => res.json())
+    .then(data => {
+      const track = document.getElementById('testimonialsTrack');
+      if (!track) return;
+      const list = (data && data.testimonials) || [];
+      if (!list.length) { tmShowEmpty(true); return; }
+      tmShowEmpty(false);
+      track.innerHTML = list.map(tmCard).join('');
+      initTestimonialsCarousel();          // binds once; later calls are no-ops
+      window.__tmGoTo && window.__tmGoTo(0);
+    })
+    .catch(() => { /* fail silently — keep whatever fallback markup exists */ });
+}
+window.reloadTestimonials = loadTestimonials;
+loadTestimonials();
+
+// Show the new review straight away (no wait for the server), always as the first card.
+window.addTestimonialLocal = function (t) {
+  const track = document.getElementById('testimonialsTrack');
+  if (!track) return;
+  tmShowEmpty(false);
+  track.insertAdjacentHTML('afterbegin', tmCard(t));
+  initTestimonialsCarousel();
+  window.__tmGoTo && window.__tmGoTo(0);
+};
+</script>
+
+<script>
+/* ===== Leave a review (modal) — reuses the #rsOv / #rsModal overlay ===== */
+(function () {
+  const ov = document.getElementById('rsOv'), md = document.getElementById('rsModal');
+  if (!ov || !md) return;
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const $ = id => document.getElementById(id);
+  let openedAt = 0, rating = 0;
+
+  function paintStars(n) {
+    document.querySelectorAll('#rvStars button').forEach(b => {
+      const on = +b.dataset.v <= n;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-checked', String(+b.dataset.v === rating));
+    });
+  }
+
+  function openReview() {
+    openedAt = Date.now(); rating = 0;
+    md.innerHTML = `<button class="rs-x" aria-label="Close">×</button>
+      <h4>Leave a review</h4><div class="sub">takes about a minute</div>
+      <label>Rating</label>
+      <div class="rv-stars" id="rvStars" role="radiogroup" aria-label="Rating out of 5">
+        ${[1,2,3,4,5].map(i => `<button type="button" data-v="${i}" role="radio" aria-checked="false" aria-label="${i} star${i > 1 ? 's' : ''}">★</button>`).join('')}
       </div>
-    `).join('');
+      <label>Your name</label><input id="rvName" maxlength="80" autocomplete="name">
+      <label>Role / company (optional)</label><input id="rvRole" maxlength="100" autocomplete="organization-title">
+      <label>Your review</label><textarea id="rvQuote" rows="5" maxlength="1000"></textarea>
+      <div style="position:absolute;left:-9999px" aria-hidden="true"><input id="rvWeb" tabindex="-1" autocomplete="off"></div>
+      <p style="font-family:var(--mono);font-size:.66rem;color:var(--text3);margin-top:.8rem;line-height:1.5">By submitting, you agree that your name, role and review may be shown publicly on this site.</p>
+      <button class="btn btn-primary rs-go" id="rvGo">submit review</button>
+      <div class="rs-msg" id="rvMsg"></div>`;
+    ov.classList.add('open');
+    const stars = $('rvStars');
+    stars.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { rating = +b.dataset.v; paintStars(rating); } });
+    stars.addEventListener('mouseover', e => { const b = e.target.closest('button'); if (b) paintStars(+b.dataset.v); });
+    stars.addEventListener('mouseleave', () => paintStars(rating));
+    setTimeout(() => $('rvName').focus(), 50);
+    $('rvGo').onclick = submit;
+  }
 
-    // re-init the carousel now that real slides exist
-    if (typeof initTestimonialsCarousel === 'function') {
-      initTestimonialsCarousel();
+  async function submit() {
+    const msg = $('rvMsg'), btn = $('rvGo');
+    const name = $('rvName').value.trim(), role = $('rvRole').value.trim(), quote = $('rvQuote').value.trim();
+    const err = t => { msg.textContent = t; msg.className = 'rs-msg err'; };
+    if (!rating) return err('Please choose a star rating.');
+    if (name.length < 2) return err('Please enter your name.');
+    if (quote.length < 20) return err('Please write at least a couple of sentences.');
+    btn.disabled = true; msg.className = 'rs-msg'; msg.textContent = 'Sending…';
+    try {
+      const r = await fetch(`${API_BASE}/testimonial_submit.php`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, role, quote, rating, website: $('rvWeb').value, elapsed: Date.now() - openedAt })
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.success) { btn.disabled = false; return err(d.error || 'Something went wrong.'); }
+      md.innerHTML = `<button class="rs-x" aria-label="Close">×</button>
+        <div class="rs-ok"><div class="tick">✓</div><h4>Thank you!</h4>
+        <p style="font-size:.82rem;color:var(--text2);margin-top:.6rem">${esc(d.message || 'Your review is now live.')}</p></div>`;
+      if (d.queued !== false) window.addTestimonialLocal && window.addTestimonialLocal({ quote, author_name: name, author_role: role, rating });
+      const sec = document.getElementById('testimonials');
+      if (sec) window.scrollTo({ top: sec.offsetTop - 70, behavior: 'smooth' });
+    } catch (e) { btn.disabled = false; err('Network problem, please try again.'); }
+  }
+
+  document.getElementById('reviewOpen')?.addEventListener('click', openReview);
+  document.getElementById('footerReview')?.addEventListener('click', e => { e.preventDefault(); openReview(); });
+
+  // Coming back from /review with ?reviewed=1 → jump to the slider
+  try {
+    if (new URLSearchParams(location.search).get('reviewed') === '1') {
+      window.addEventListener('load', () => setTimeout(() => {
+        const sec = document.getElementById('testimonials');
+        if (sec) window.scrollTo({ top: sec.offsetTop - 70, behavior: 'smooth' });
+      }, 600));
     }
-  })
-  .catch(() => { /* fail silently — keep whatever fallback markup exists */ });
+  } catch (e) {}
+})();
 </script>
 
 <!-- Live chat widget -->
