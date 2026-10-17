@@ -1184,6 +1184,8 @@
         }
 
         .comment-form h3 { margin-bottom: 0.85rem; font-size: 1.05rem; }
+        .as-note { font-size: 0.85rem; margin-bottom: 0.7rem; opacity: 0.85; }
+        .as-note button { background: none; border: 0; padding: 0; margin-left: 0.5rem; font: inherit; color: var(--primary-color); text-decoration: underline; cursor: pointer; }
 
         .comment-form-status { margin-top: 0.75rem; font-size: 0.85rem; }
         .comment-form-status.success { color: #16a34a; }
@@ -3459,6 +3461,49 @@
             return roots;
         }
 
+        // Remember who the visitor is on this device, so they are never asked for their details twice.
+        const COMMENTER_KEY = 'commenterInfo';
+        const identityRefreshers = [];
+        function getCommenter() {
+            try { const v = JSON.parse(localStorage.getItem(COMMENTER_KEY) || 'null'); return v && v.name ? v : null; } catch (e) { return null; }
+        }
+        function saveCommenter(name, email) {
+            try { if (name) localStorage.setItem(COMMENTER_KEY, JSON.stringify({ name: String(name).slice(0, 100), email: String(email || '').slice(0, 190) })); } catch (e) {}
+            identityRefreshers.forEach((f) => f());
+        }
+        function forgetCommenter() {
+            try { localStorage.removeItem(COMMENTER_KEY); } catch (e) {}
+            identityRefreshers.forEach((f) => f(true));
+        }
+        // Hides the name/email boxes for a returning commenter and shows "Commenting as <name> · Not you?".
+        function rememberIdentity(root, nameInput, emailInput, verb) {
+            const row = root.querySelector('.form-row');
+            if (!row) return;
+            const note = document.createElement('div');
+            note.className = 'as-note';
+            row.parentNode.insertBefore(note, row);
+            const refresh = (cleared) => {
+                const c = getCommenter();
+                note.textContent = '';
+                if (c) {
+                    nameInput.value = c.name; emailInput.value = c.email || '';
+                    row.style.display = 'none';
+                    note.style.display = '';
+                    note.append(verb + ' as ');
+                    const b = document.createElement('b'); b.textContent = c.name; note.append(b);
+                    const btn = document.createElement('button'); btn.type = 'button'; btn.textContent = 'Not you?';
+                    btn.addEventListener('click', forgetCommenter);
+                    note.append(btn);
+                } else {
+                    if (cleared) { nameInput.value = ''; emailInput.value = ''; }
+                    row.style.display = '';
+                    note.style.display = 'none';
+                }
+            };
+            identityRefreshers.push(refresh);
+            refresh();
+        }
+
         function buildReplyForm(slug, parentId) {
             const wrap = document.createElement('div');
             wrap.className = 'reply-form';
@@ -3482,6 +3527,7 @@
             const nameInput = wrap.querySelector('.reply-name');
             const emailInput = wrap.querySelector('.reply-email');
             const bodyInput = wrap.querySelector('.reply-body');
+            rememberIdentity(wrap, nameInput, emailInput, 'Replying');
 
             cancelBtn.addEventListener('click', () => {
                 wrap.classList.remove('open');
@@ -3521,8 +3567,7 @@
                         saveCommentToken(data.id, data.edit_token);
                     }
                     statusEl.textContent = '';
-                    nameInput.value = '';
-                    emailInput.value = '';
+                    saveCommenter(name, email);
                     bodyInput.value = '';
                     wrap.classList.remove('open');
                 } catch (err) {
@@ -4019,6 +4064,7 @@
             currentPostSlug = slug;
             const form = document.getElementById('commentForm');
             const statusEl = document.getElementById('commentStatus');
+            rememberIdentity(form, document.getElementById('commentName'), document.getElementById('commentEmail'), 'Commenting');
 
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -4058,6 +4104,7 @@
                     }
                     statusEl.textContent = '';
                     form.reset();
+                    saveCommenter(payload.name, payload.email);
                 } catch (err) {
                     statusEl.textContent = err.message || 'Could not submit comment — please try again.';
                     statusEl.classList.add('error');
