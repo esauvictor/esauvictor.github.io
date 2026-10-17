@@ -2512,7 +2512,7 @@ window.addTestimonialLocal = function (t) {
 
 <div id="chatGreeting">
   <div class="greeting-bubble">
-    <span>👋 Need help? I'm happy to answer questions about Esau while you look around.</span>
+    <span>Need help? I'm happy to answer questions about Esau while you look around.</span>
     <button id="chatGreetingClose" aria-label="Dismiss">✕</button>
   </div>
 </div>
@@ -2987,7 +2987,7 @@ window.addTestimonialLocal = function (t) {
         // Visible fallback button (works even if the auto-open is blocked or fails)
         const callBtn = document.createElement('button');
         callBtn.type = 'button';
-        callBtn.textContent = '📞 Open live call';
+        callBtn.innerHTML = '<i class="fas fa-phone" aria-hidden="true"></i> Open live call';
         callBtn.style.cssText = 'margin:6px 0 0 0;padding:9px 16px;border:0;border-radius:20px;background:var(--green);color:#1a0f04;font-family:var(--mono);font-weight:700;cursor:pointer;';
         callBtn.addEventListener('click', () => { if (window.openEsauCall) window.openEsauCall(); });
         messagesEl.appendChild(callBtn);
@@ -3015,7 +3015,7 @@ window.addTestimonialLocal = function (t) {
     pendingFiles = [];
     renderAttachmentChips();
 
-    const userBubbleText = text || (attachmentsToSend.length === 1 ? `📎 ${attachmentsToSend[0].name}` : `📎 ${attachmentsToSend.length} files`);
+    const userBubbleText = text || (attachmentsToSend.length === 1 ? `Attached: ${attachmentsToSend[0].name}` : `Attached: ${attachmentsToSend.length} files`);
     addMessage('user', userBubbleText);
     history.push({ role: 'user', content: text || `[Attached: ${attachmentsToSend.map(f => f.name).join(', ')}]` });
     saveHistory();

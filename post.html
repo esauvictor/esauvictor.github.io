@@ -3144,8 +3144,8 @@
             gate.style.cssText = 'text-align:center; padding:2.5rem 1rem; max-width:420px; margin:0 auto;';
 
             const icon = document.createElement('div');
-            icon.textContent = '🔒';
-            icon.style.cssText = 'font-size:2.5rem; margin-bottom:.75rem;';
+            icon.innerHTML = '<i class="fas fa-lock"></i>';
+            icon.style.cssText = 'font-size:2.2rem; margin-bottom:.75rem; color:var(--green,#ff7828);';
 
             const heading = document.createElement('h2');
             heading.textContent = cls ? 'This lesson is for registered students' : 'This resource is locked';

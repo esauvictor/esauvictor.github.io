@@ -35,6 +35,7 @@ button.go:disabled{opacity:.5}.ghost{background:transparent!important;color:var(
 .lesson i{width:1.2rem;text-align:center;color:var(--text3)}.lesson.open i{color:#22c55e}.lesson span.n{color:var(--text3);width:1.5rem}.lesson em{margin-left:auto;font-style:normal;font-size:.68rem;color:var(--green)}
 .lesson:hover{color:var(--green)}.pay{white-space:pre-line;background:var(--bg2);border-left:3px solid var(--green);border-radius:6px;padding:.9rem;font-size:.85rem;margin:.8rem 0}
 footer{border-top:1px solid var(--border);margin-top:3rem;padding:1.6rem 0 2.2rem;text-align:center;font-size:.74rem;color:var(--text2)}
+.ic{width:1.1em;height:1.1em;flex:none;vertical-align:-.2em;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.fact .ic{color:var(--green);margin-right:.2rem}.card>b .ic{width:1.25em;height:1.25em;color:var(--green);margin-right:.25rem}#cd .ic{color:var(--green)}
 </style>
 </head>
 <body>
@@ -44,6 +45,8 @@ footer{border-top:1px solid var(--border);margin-top:3rem;padding:1.6rem 0 2.2re
 const API='https://esauvictor.name.ng/api';
 const slug=new URLSearchParams(location.search).get('c')||'';
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+const IC={cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',pin:'<path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0116 0z"/><circle cx="12" cy="10" r="3"/>',hour:'<path d="M5 22h14M5 2h14M17 22v-4.17a2 2 0 00-.59-1.42L12 12l-4.41 4.41A2 2 0 007 17.83V22M7 2v4.17a2 2 0 00.59 1.42L12 12l4.41-4.41A2 2 0 0017 6.17V2"/>',live:'<circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 010 8.49M7.76 16.24a6 6 0 010-8.49M19.07 4.93a10 10 0 010 14.14M4.93 19.07a10 10 0 010-14.14"/>',ok:'<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>',spark:'<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 3v4M21 5h-4"/>'};
+function ic(n){return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">'+IC[n]+'</svg>'}
 function fmt(t){const f=window.SiteFmt;return f?f(t):'<p>'+esc(t)+'</p>'}
 function when(i){try{return new Date(i).toLocaleString('en-NG',{timeZone:'Africa/Lagos',weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit'})+' (Lagos)'}catch(e){return ''}}
 function span(ms){const s=Math.max(0,Math.floor(ms/1000)),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);return d?d+'d '+h+'h '+m+'m':h+'h '+m+'m'}
@@ -59,9 +62,9 @@ function render(){
   const tag=c.full?'full':c.status,label=c.full?'Full':{open:'Registration open',closed:'Registration closed',completed:'Completed'}[c.status];
   document.title=c.title+' — Esau Victor';
   const facts=['<span class="fact"><b>'+esc(c.price_label)+'</b></span>'];
-  if(c.starts_at)facts.push('<span class="fact">📅 '+esc(when(c.starts_at))+'</span>');
-  if(c.duration_min)facts.push('<span class="fact">⏱ '+c.duration_min+' min</span>');
-  if(c.venue)facts.push('<span class="fact">📍 '+esc(c.venue)+'</span>');
+  if(c.starts_at)facts.push('<span class="fact">'+ic('cal')+' '+esc(when(c.starts_at))+'</span>');
+  if(c.duration_min)facts.push('<span class="fact">'+ic('clock')+' '+c.duration_min+' min</span>');
+  if(c.venue)facts.push('<span class="fact">'+ic('pin')+' '+esc(c.venue)+'</span>');
   if(c.spots_left!=null)facts.push('<span class="fact"><b>'+c.spots_left+'</b> spots left</span>');
   let h='<section class="hero">'+(c.cover_image_url?'<div class="cover" style="background-image:url(\''+esc(c.cover_image_url)+'\')"></div>':'')+'<span class="tag '+tag+'">'+label+'</span><h1>'+esc(c.title)+'</h1><p class="sub">'+esc(c.summary)+'</p>'
     +'<div class="facts">'+facts.join('')+'<span class="fact" id="cd" hidden></span></div></section>';
@@ -70,7 +73,7 @@ function render(){
   if(c.has_code)h+='<div class="card"><b>Already registered?</b><p class="sub">Enter the class code from your confirmation email to unlock every lesson.</p><form id="uf" style="display:flex;gap:.6rem;margin-top:.7rem"><input id="uc" placeholder="Class code" autocomplete="off" autocapitalize="characters" required><button class="go" style="margin:0">Unlock</button></form><div class="msg" id="um"></div></div>';
   if(canReg)h+='<h2>Register</h2><form class="card" id="rf"><input type="checkbox" name="botcheck" style="display:none" tabindex="-1"><div class="row2"><div><label>Full name</label><input name="fullName" required autocomplete="name"></div><div><label>Email</label><input name="email" type="email" required autocomplete="email"></div></div><div class="row2"><div><label>Phone / WhatsApp</label><input name="phone" type="tel" required autocomplete="tel" placeholder="0803…"></div><div><label>Experience</label><select name="experience" required><option value="">Choose…</option><option>Complete beginner</option><option>Some experience</option><option>Intermediate</option><option>Advanced</option></select></div></div><label>Anything else? (optional)</label><textarea name="comments" rows="3"></textarea><button class="go" id="rb">Register'+(c.price_kobo?' — '+esc(c.price_label):'')+'</button><div class="msg" id="rm"></div></form><div id="done"></div>';
   document.getElementById('main').innerHTML=h;
-  if(c.starts_at){const e=document.getElementById('cd');const t=()=>{const l=new Date(c.starts_at)-Date.now();e.hidden=false;e.innerHTML=l>0?'⏳ starts in <b>'+span(l)+'</b>':'🔴 <b>started</b>'};t();setInterval(t,30000)}
+  if(c.starts_at){const e=document.getElementById('cd');const t=()=>{const l=new Date(c.starts_at)-Date.now();e.hidden=false;e.innerHTML=l>0?ic('hour')+' starts in <b>'+span(l)+'</b>':ic('live')+' <b>started</b>'};t();setInterval(t,30000)}
   wire();
   if(code()&&c.has_code)unlock(code(),true);
 }
@@ -84,7 +87,7 @@ async function unlock(cd,silent){
 }
 function showCode(cd,regId){
   const dn=document.getElementById('done');
-  dn.innerHTML='<div class="card"><b>🎉 You are in! (Reg #'+regId+')</b>'+(cd?'<p class="sub">Your class code:</p><p style="font:700 1.8rem var(--mono);letter-spacing:.25em;color:var(--green);margin:.4rem 0">'+esc(cd)+'</p><p class="sub">It is also in your email. The lessons are unlocked on this device now.</p>':'<p class="sub">Check your email for the details.</p>')+'</div>';
+  dn.innerHTML='<div class="card"><b>'+ic('spark')+' You are in! (Reg #'+regId+')</b>'+(cd?'<p class="sub">Your class code:</p><p style="font:700 1.8rem var(--mono);letter-spacing:.25em;color:var(--green);margin:.4rem 0">'+esc(cd)+'</p><p class="sub">It is also in your email. The lessons are unlocked on this device now.</p>':'<p class="sub">Check your email for the details.</p>')+'</div>';
   if(cd){try{sessionStorage.setItem('classcode:'+slug,cd)}catch(e){}unlock(cd,true)}
 }
 function loadPaystack(){return new Promise((ok,no)=>{if(window.PaystackPop)return ok();const s=document.createElement('script');s.src='https://js.paystack.co/v2/inline.js';s.onload=ok;s.onerror=()=>no(new Error('x'));document.head.appendChild(s)})}
@@ -111,10 +114,10 @@ function wire(){
       if(d.free){showCode(d.access_code,d.regId);return}
       if(d.paystack){
         const pay=()=>payNow(d.paystack,d.regId);
-        dn.innerHTML='<div class="card"><b>✅ Registered (Reg #'+d.regId+')</b><p class="sub">One last step: pay '+esc(p.price_label)+' securely with Paystack (card, bank transfer or USSD). Your class code appears here and in your email as soon as the payment goes through.</p><button class="go" id="pn">Pay '+esc(p.price_label)+' now</button><div class="msg" id="pm"></div>'+bank+'</div>';
+        dn.innerHTML='<div class="card"><b>'+ic('ok')+' Registered (Reg #'+d.regId+')</b><p class="sub">One last step: pay '+esc(p.price_label)+' securely with Paystack (card, bank transfer or USSD). Your class code appears here and in your email as soon as the payment goes through.</p><button class="go" id="pn">Pay '+esc(p.price_label)+' now</button><div class="msg" id="pm"></div>'+bank+'</div>';
         document.getElementById('pn').onclick=pay;pay();return;
       }
-      dn.innerHTML='<div class="card"><b>✅ You are registered (Reg #'+d.regId+')</b><p class="sub">We sent the details to your email.</p>'+(p.account_no?'<div class="pay">Bank: '+esc(p.bank_name)+'\nAccount number: '+esc(p.account_no)+'\nAccount name: '+esc(p.account_name)+'\nAmount: '+esc(p.price_label)+'</div>':'')+'<p class="sub">'+esc(p.note||'')+'</p><a class="go" target="_blank" rel="noopener" href="https://wa.me/'+esc(p.whatsapp)+'?text='+encodeURIComponent('Hello, proof of payment for '+D.class.title+' (Reg #'+d.regId+')')+'">Send proof on WhatsApp</a></div>';
+      dn.innerHTML='<div class="card"><b>'+ic('ok')+' You are registered (Reg #'+d.regId+')</b><p class="sub">We sent the details to your email.</p>'+(p.account_no?'<div class="pay">Bank: '+esc(p.bank_name)+'\nAccount number: '+esc(p.account_no)+'\nAccount name: '+esc(p.account_name)+'\nAmount: '+esc(p.price_label)+'</div>':'')+'<p class="sub">'+esc(p.note||'')+'</p><a class="go" target="_blank" rel="noopener" href="https://wa.me/'+esc(p.whatsapp)+'?text='+encodeURIComponent('Hello, proof of payment for '+D.class.title+' (Reg #'+d.regId+')')+'">Send proof on WhatsApp</a></div>';
     }catch(err){m.className='msg err';m.textContent='Could not reach the server.';b.disabled=false}};
 }
 fetch(API+'/classes.php?slug='+encodeURIComponent(slug)).then(r=>r.ok?r.json():Promise.reject()).then(d=>{D=d;render()}).catch(()=>{document.getElementById('main').innerHTML='<p class="sub" style="padding:2rem 0">This class could not be found. <a href="classes.html">See all classes</a></p>'});
