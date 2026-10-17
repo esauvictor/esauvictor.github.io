@@ -6,11 +6,11 @@
 <title>Class — Esau Victor</title>
 <meta name="description" content="Live and recorded web development classes by Esau Victor.">
 <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Oxanium:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Oxanium:wght@400;600;700&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--mono:'JetBrains Mono',ui-monospace,monospace;--display:'Oxanium',system-ui,sans-serif;--bg:#0c0a08;--bg1:#131009;--bg2:#1a150e;--border:rgba(255,120,40,.14);--border2:rgba(255,120,40,.28);--green:#ff7828;--text:#f5ede4;--text2:#b8a898;--text3:#5c4e42}
+:root{--mono:'JetBrains Mono','Noto Sans','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;--display:'Oxanium','Noto Sans',system-ui,sans-serif;--bg:#0c0a08;--bg1:#131009;--bg2:#1a150e;--border:rgba(255,120,40,.14);--border2:rgba(255,120,40,.28);--green:#ff7828;--text:#f5ede4;--text2:#b8a898;--text3:#5c4e42}
 html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:1.6;min-height:100vh}
 a{color:var(--green)}.wrap{max-width:980px;margin:0 auto;padding:0 1.2rem}
 .nav{position:sticky;top:0;z-index:200;background:rgba(12,10,8,.93);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
@@ -82,6 +82,22 @@ async function unlock(cd,silent){
     if(m&&!silent){m.className='msg err';m.textContent=d.error||'Could not check the code.'}
   }catch(e){if(m&&!silent){m.className='msg err';m.textContent='Could not reach the server.'}}
 }
+function showCode(cd,regId){
+  const dn=document.getElementById('done');
+  dn.innerHTML='<div class="card"><b>🎉 You are in! (Reg #'+regId+')</b>'+(cd?'<p class="sub">Your class code:</p><p style="font:700 1.8rem var(--mono);letter-spacing:.25em;color:var(--green);margin:.4rem 0">'+esc(cd)+'</p><p class="sub">It is also in your email. The lessons are unlocked on this device now.</p>':'<p class="sub">Check your email for the details.</p>')+'</div>';
+  if(cd){try{sessionStorage.setItem('classcode:'+slug,cd)}catch(e){}unlock(cd,true)}
+}
+function loadPaystack(){return new Promise((ok,no)=>{if(window.PaystackPop)return ok();const s=document.createElement('script');s.src='https://js.paystack.co/v2/inline.js';s.onload=ok;s.onerror=()=>no(new Error('x'));document.head.appendChild(s)})}
+async function payNow(ps,regId){
+  const m=document.getElementById('pm');
+  try{await loadPaystack()}catch(e){if(m){m.className='msg err';m.textContent='Could not load the payment window. Check your connection and tap Pay again.'}return}
+  new PaystackPop().resumeTransaction(ps.access_code,{
+    onSuccess:async()=>{if(m){m.className='msg';m.textContent='Confirming your payment…'}
+      for(let i=0;i<4;i++){try{const r=await fetch(API+'/class_verify.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reference:ps.reference})});const d=await r.json().catch(()=>({}));if(r.ok&&d.ok){showCode(d.access_code,regId);return}}catch(e){}await new Promise(r=>setTimeout(r,2500))}
+      if(m){m.className='msg err';m.textContent='Payment received but not confirmed yet. Your code will be emailed shortly.'}},
+    onCancel:()=>{if(m){m.className='msg err';m.textContent='Payment not completed. Tap Pay to try again.'}}
+  });
+}
 function wire(){
   const uf=document.getElementById('uf');if(uf)uf.onsubmit=e=>{e.preventDefault();unlock(document.getElementById('uc').value.trim())};
   const rf=document.getElementById('rf');if(!rf)return;
@@ -90,7 +106,15 @@ function wire(){
     try{const r=await fetch(API+'/class_register.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json().catch(()=>({}));
       if(!r.ok||!d.success){m.className='msg err';m.textContent=d.error||'Something went wrong. Please try again.';b.disabled=false;return}
       const p=d.pay||{};rf.hidden=true;
-      document.getElementById('done').innerHTML='<div class="card"><b>✅ You are registered (Reg #'+d.regId+')</b><p class="sub">We sent the details to your email.</p>'+(p.account_no?'<div class="pay">Bank: '+esc(p.bank_name)+'\nAccount number: '+esc(p.account_no)+'\nAccount name: '+esc(p.account_name)+'\nAmount: '+esc(p.price_label)+'</div>':'')+'<p class="sub">'+esc(p.note||'')+'</p><a class="go" target="_blank" rel="noopener" href="https://wa.me/'+esc(p.whatsapp)+'?text='+encodeURIComponent('Hello, proof of payment for '+D.class.title+' (Reg #'+d.regId+')')+'">Send proof on WhatsApp</a></div>';
+      const bank=p.account_no?'<p class="sub" style="margin-top:1rem">Prefer a bank transfer?</p><div class="pay">Bank: '+esc(p.bank_name)+'\nAccount number: '+esc(p.account_no)+'\nAccount name: '+esc(p.account_name)+'\nAmount: '+esc(p.price_label)+'</div><a class="go ghost" target="_blank" rel="noopener" href="https://wa.me/'+esc(p.whatsapp)+'?text='+encodeURIComponent('Hello, proof of payment for '+D.class.title+' (Reg #'+d.regId+')')+'">Send proof on WhatsApp</a>':'';
+      const dn=document.getElementById('done');
+      if(d.free){showCode(d.access_code,d.regId);return}
+      if(d.paystack){
+        const pay=()=>payNow(d.paystack,d.regId);
+        dn.innerHTML='<div class="card"><b>✅ Registered (Reg #'+d.regId+')</b><p class="sub">One last step: pay '+esc(p.price_label)+' securely with Paystack (card, bank transfer or USSD). Your class code appears here and in your email as soon as the payment goes through.</p><button class="go" id="pn">Pay '+esc(p.price_label)+' now</button><div class="msg" id="pm"></div>'+bank+'</div>';
+        document.getElementById('pn').onclick=pay;pay();return;
+      }
+      dn.innerHTML='<div class="card"><b>✅ You are registered (Reg #'+d.regId+')</b><p class="sub">We sent the details to your email.</p>'+(p.account_no?'<div class="pay">Bank: '+esc(p.bank_name)+'\nAccount number: '+esc(p.account_no)+'\nAccount name: '+esc(p.account_name)+'\nAmount: '+esc(p.price_label)+'</div>':'')+'<p class="sub">'+esc(p.note||'')+'</p><a class="go" target="_blank" rel="noopener" href="https://wa.me/'+esc(p.whatsapp)+'?text='+encodeURIComponent('Hello, proof of payment for '+D.class.title+' (Reg #'+d.regId+')')+'">Send proof on WhatsApp</a></div>';
     }catch(err){m.className='msg err';m.textContent='Could not reach the server.';b.disabled=false}};
 }
 fetch(API+'/classes.php?slug='+encodeURIComponent(slug)).then(r=>r.ok?r.json():Promise.reject()).then(d=>{D=d;render()}).catch(()=>{document.getElementById('main').innerHTML='<p class="sub" style="padding:2rem 0">This class could not be found. <a href="classes.html">See all classes</a></p>'});
