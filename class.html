@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Class — Esau Victor</title>
+<meta name="description" content="Live and recorded web development classes by Esau Victor.">
+<link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Oxanium:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--mono:'JetBrains Mono',ui-monospace,monospace;--display:'Oxanium',system-ui,sans-serif;--bg:#0c0a08;--bg1:#131009;--bg2:#1a150e;--border:rgba(255,120,40,.14);--border2:rgba(255,120,40,.28);--green:#ff7828;--text:#f5ede4;--text2:#b8a898;--text3:#5c4e42}
+html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:1.6;min-height:100vh}
+a{color:var(--green)}.wrap{max-width:980px;margin:0 auto;padding:0 1.2rem}
+.nav{position:sticky;top:0;z-index:200;background:rgba(12,10,8,.93);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.2rem;gap:1rem}
+.logo{font:700 1.1rem var(--display);color:var(--text);text-decoration:none}.logo em{color:var(--green);font-style:normal}
+.nav ul{display:flex;gap:1.2rem;list-style:none;font-size:.78rem}.nav ul a{color:var(--text2);text-decoration:none}.nav ul a:hover,.nav ul a.on{color:var(--green)}
+h1{font:700 clamp(1.7rem,6vw,2.6rem)/1.15 var(--display)}h2{font:700 1.2rem var(--display);margin:2rem 0 .8rem}
+.hero{padding:2.2rem 0 1rem}.cover{aspect-ratio:16/7;border-radius:14px;background:linear-gradient(135deg,#2a1d10,#4a2a12) center/cover;border:1px solid var(--border);margin-bottom:1.3rem}
+.sub{color:var(--text2);margin-top:.6rem;max-width:680px;font-size:.92rem}
+.facts{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.1rem}.fact{border:1px solid var(--border2);background:var(--bg1);border-radius:999px;padding:.38rem .85rem;font-size:.76rem}.fact b{color:var(--green)}
+.tag{display:inline-block;font-size:.66rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.2rem .6rem;border-radius:999px;background:#22c55e;color:#052e16;margin-bottom:.7rem}.tag.closed,.tag.completed{background:#6b5b4d;color:#fff}.tag.full{background:#ef4444;color:#fff}
+.desc p{margin:0 0 .9rem;color:var(--text2);font-size:.9rem}.desc ul{margin:0 0 .9rem 1.3rem;color:var(--text2);font-size:.9rem}.desc strong{color:var(--text)}
+.card{background:var(--bg1);border:1px solid var(--border);border-radius:14px;padding:1.2rem;margin:1rem 0}
+label{display:block;font-size:.74rem;color:var(--text2);margin:.9rem 0 .3rem}
+input,select,textarea{width:100%;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.75rem;font:inherit;font-size:.88rem}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--green);outline-offset:1px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}@media(max-width:560px){.row2{grid-template-columns:1fr}.nav ul{gap:.8rem}}
+button.go,a.go{display:inline-block;margin-top:1.1rem;background:var(--green);color:#1a0f04;border:0;border-radius:8px;padding:.8rem 1.4rem;font:700 .85rem var(--mono);cursor:pointer;text-decoration:none}
+button.go:disabled{opacity:.5}.ghost{background:transparent!important;color:var(--text)!important;border:1px solid var(--border2)!important}
+.msg{margin-top:.8rem;font-size:.84rem;min-height:1.3em}.msg.err{color:#f87171}.msg.ok{color:#4ade80}
+.lesson{display:flex;align-items:center;gap:.8rem;padding:.8rem .2rem;border-top:1px solid var(--border);color:var(--text);text-decoration:none;font-size:.88rem}.lesson:first-child{border:0}
+.lesson i{width:1.2rem;text-align:center;color:var(--text3)}.lesson.open i{color:#22c55e}.lesson span.n{color:var(--text3);width:1.5rem}.lesson em{margin-left:auto;font-style:normal;font-size:.68rem;color:var(--green)}
+.lesson:hover{color:var(--green)}.pay{white-space:pre-line;background:var(--bg2);border-left:3px solid var(--green);border-radius:6px;padding:.9rem;font-size:.85rem;margin:.8rem 0}
+footer{border-top:1px solid var(--border);margin-top:3rem;padding:1.6rem 0 2.2rem;text-align:center;font-size:.74rem;color:var(--text2)}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap"><a class="logo" href="/">esau<em>.</em>victor<em>()</em></a><ul><li><a href="/">Home</a></li><li><a href="blog.html">Blog</a></li><li><a href="classes.html" class="on">Classes</a></li><li><a href="/#contact">Contact</a></li></ul></div></nav>
+<main class="wrap" id="main"><p class="sub" style="padding:2rem 0">Loading…</p></main>
+<script>
+const API='https://esauvictor.name.ng/api';
+const slug=new URLSearchParams(location.search).get('c')||'';
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function fmt(t){const f=window.SiteFmt;return f?f(t):'<p>'+esc(t)+'</p>'}
+function when(i){try{return new Date(i).toLocaleString('en-NG',{timeZone:'Africa/Lagos',weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit'})+' (Lagos)'}catch(e){return ''}}
+function span(ms){const s=Math.max(0,Math.floor(ms/1000)),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);return d?d+'d '+h+'h '+m+'m':h+'h '+m+'m'}
+let D=null;
+function code(){try{return sessionStorage.getItem('classcode:'+slug)||''}catch(e){return ''}}
+function lessons(unlocked){
+  const L=D.class.lessons;
+  if(!L.length)return '<p class="sub">Lessons will appear here.</p>';
+  return L.map((l,i)=>{const open=!l.locked||unlocked;return '<a class="lesson '+(open?'open':'')+'" target="_self" href="post.html?slug='+encodeURIComponent(l.slug)+'"><span class="n">'+(i+1)+'</span><i class="fas '+(open?'fa-play-circle':'fa-lock')+'"></i><span>'+esc(l.title)+'</span>'+(l.free_preview?'<em>FREE PREVIEW</em>':'')+'</a>'}).join('');
+}
+function render(){
+  const c=D.class,p=D.pay,canReg=c.status==='open'&&!c.full;
+  const tag=c.full?'full':c.status,label=c.full?'Full':{open:'Registration open',closed:'Registration closed',completed:'Completed'}[c.status];
+  document.title=c.title+' — Esau Victor';
+  const facts=['<span class="fact"><b>'+esc(c.price_label)+'</b></span>'];
+  if(c.starts_at)facts.push('<span class="fact">📅 '+esc(when(c.starts_at))+'</span>');
+  if(c.duration_min)facts.push('<span class="fact">⏱ '+c.duration_min+' min</span>');
+  if(c.venue)facts.push('<span class="fact">📍 '+esc(c.venue)+'</span>');
+  if(c.spots_left!=null)facts.push('<span class="fact"><b>'+c.spots_left+'</b> spots left</span>');
+  let h='<section class="hero">'+(c.cover_image_url?'<div class="cover" style="background-image:url(\''+esc(c.cover_image_url)+'\')"></div>':'')+'<span class="tag '+tag+'">'+label+'</span><h1>'+esc(c.title)+'</h1><p class="sub">'+esc(c.summary)+'</p>'
+    +'<div class="facts">'+facts.join('')+'<span class="fact" id="cd" hidden></span></div></section>';
+  if(c.description)h+='<div class="desc">'+fmt(c.description)+'</div>';
+  h+='<h2>Lessons</h2><div class="card" id="ls">'+lessons(false)+'</div>';
+  if(c.has_code)h+='<div class="card"><b>Already registered?</b><p class="sub">Enter the class code from your confirmation email to unlock every lesson.</p><form id="uf" style="display:flex;gap:.6rem;margin-top:.7rem"><input id="uc" placeholder="Class code" autocomplete="off" autocapitalize="characters" required><button class="go" style="margin:0">Unlock</button></form><div class="msg" id="um"></div></div>';
+  if(canReg)h+='<h2>Register</h2><form class="card" id="rf"><input type="checkbox" name="botcheck" style="display:none" tabindex="-1"><div class="row2"><div><label>Full name</label><input name="fullName" required autocomplete="name"></div><div><label>Email</label><input name="email" type="email" required autocomplete="email"></div></div><div class="row2"><div><label>Phone / WhatsApp</label><input name="phone" type="tel" required autocomplete="tel" placeholder="0803…"></div><div><label>Experience</label><select name="experience" required><option value="">Choose…</option><option>Complete beginner</option><option>Some experience</option><option>Intermediate</option><option>Advanced</option></select></div></div><label>Anything else? (optional)</label><textarea name="comments" rows="3"></textarea><button class="go" id="rb">Register'+(c.price_kobo?' — '+esc(c.price_label):'')+'</button><div class="msg" id="rm"></div></form><div id="done"></div>';
+  document.getElementById('main').innerHTML=h;
+  if(c.starts_at){const e=document.getElementById('cd');const t=()=>{const l=new Date(c.starts_at)-Date.now();e.hidden=false;e.innerHTML=l>0?'⏳ starts in <b>'+span(l)+'</b>':'🔴 <b>started</b>'};t();setInterval(t,30000)}
+  wire();
+  if(code()&&c.has_code)unlock(code(),true);
+}
+async function unlock(cd,silent){
+  const m=document.getElementById('um');
+  try{const r=await fetch(API+'/class_unlock.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slug,code:cd})});const d=await r.json().catch(()=>({}));
+    if(r.ok&&d.ok){try{sessionStorage.setItem('classcode:'+slug,cd)}catch(e){}document.getElementById('ls').innerHTML=lessons(true);if(m){m.className='msg ok';m.textContent='Unlocked. Pick a lesson above.'}return}
+    try{sessionStorage.removeItem('classcode:'+slug)}catch(e){}
+    if(m&&!silent){m.className='msg err';m.textContent=d.error||'Could not check the code.'}
+  }catch(e){if(m&&!silent){m.className='msg err';m.textContent='Could not reach the server.'}}
+}
+function wire(){
+  const uf=document.getElementById('uf');if(uf)uf.onsubmit=e=>{e.preventDefault();unlock(document.getElementById('uc').value.trim())};
+  const rf=document.getElementById('rf');if(!rf)return;
+  rf.onsubmit=async e=>{e.preventDefault();const b=document.getElementById('rb'),m=document.getElementById('rm');b.disabled=true;m.className='msg';m.textContent='Registering…';
+    const body=Object.fromEntries(new FormData(rf));body.class=slug;body.botcheck=rf.botcheck.checked?'1':'';
+    try{const r=await fetch(API+'/class_register.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json().catch(()=>({}));
+      if(!r.ok||!d.success){m.className='msg err';m.textContent=d.error||'Something went wrong. Please try again.';b.disabled=false;return}
+      const p=d.pay||{};rf.hidden=true;
+      document.getElementById('done').innerHTML='<div class="card"><b>✅ You are registered (Reg #'+d.regId+')</b><p class="sub">We sent the details to your email.</p>'+(p.account_no?'<div class="pay">Bank: '+esc(p.bank_name)+'\nAccount number: '+esc(p.account_no)+'\nAccount name: '+esc(p.account_name)+'\nAmount: '+esc(p.price_label)+'</div>':'')+'<p class="sub">'+esc(p.note||'')+'</p><a class="go" target="_blank" rel="noopener" href="https://wa.me/'+esc(p.whatsapp)+'?text='+encodeURIComponent('Hello, proof of payment for '+D.class.title+' (Reg #'+d.regId+')')+'">Send proof on WhatsApp</a></div>';
+    }catch(err){m.className='msg err';m.textContent='Could not reach the server.';b.disabled=false}};
+}
+fetch(API+'/classes.php?slug='+encodeURIComponent(slug)).then(r=>r.ok?r.json():Promise.reject()).then(d=>{D=d;render()}).catch(()=>{document.getElementById('main').innerHTML='<p class="sub" style="padding:2rem 0">This class could not be found. <a href="classes.html">See all classes</a></p>'});
+</script>
+<footer><div class="wrap">© <span id="year"></span> <span>esau victor</span> · <a href="privacy.html">Privacy</a></div></footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+<script src="https://esauvictor.name.ng/api/site.js" defer></script>
+</body></html>

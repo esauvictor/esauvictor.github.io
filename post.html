@@ -925,6 +925,10 @@
 
         .nav-link:hover { background-color: var(--bg-color); border-color: var(--primary-color); }
         .nav-next { justify-content: flex-end; text-align: right; }
+        .class-banner { display:flex; align-items:center; gap:.7rem; padding:.7rem 1rem; margin:0 0 1rem; border:1px solid var(--border-color); border-left:4px solid var(--primary-color); border-radius:10px; background:var(--card-bg); color:var(--text-color); text-decoration:none; font-size:.9rem; }
+        .class-banner i { color:var(--primary-color); }
+        .class-banner span { flex:1; min-width:0; }
+        .class-banner em { font-style:normal; color:var(--primary-color); font-weight:600; font-size:.82rem; white-space:nowrap; }
         .nav-prev i { order: 2; }
 
         .nav-link span {
@@ -1526,6 +1530,7 @@
                     <li><a href="/#testimonials">ClientVoices</a></li>
                     <li><a href="/#projects">Projects</a></li>
                     <li><a href="blog.html" class="active">Blog</a></li>
+                    <li><a href="classes.html">Classes</a></li>
                     <li><a href="/#contact">Contact</a></li>
                 </ul>
                 <button id="themeBtn" class="theme-btn" aria-label="Toggle dark mode" title="Toggle dark mode"><i class="fas fa-moon"></i></button>
@@ -3123,7 +3128,7 @@
 
         // Replaces the post body with a "enter access code" form. Nothing about
         // the post's content is ever sent to the browser until the code is right.
-        function renderLockedGate(post, slug) {
+        function renderLockedGate(post, slug, cls) {
             clearPostToken(slug);   // stale or expired token
 
             document.getElementById('post-title').textContent = post.title;
@@ -3143,11 +3148,13 @@
             icon.style.cssText = 'font-size:2.5rem; margin-bottom:.75rem;';
 
             const heading = document.createElement('h2');
-            heading.textContent = 'This resource is locked';
+            heading.textContent = cls ? 'This lesson is for registered students' : 'This resource is locked';
             heading.style.marginTop = '0';
 
             const note = document.createElement('p');
-            note.textContent = 'Enter the code you were given to  access it.';
+            note.textContent = cls
+                ? `Enter the class code for “${cls.title}” that was emailed to you after your registration was confirmed.`
+                : 'Enter the code you were given to  access it.';
             note.style.cssText = 'color:var(--light-text);';
 
             const form = document.createElement('form');
@@ -3173,6 +3180,12 @@
 
             form.append(input, btn);
             gate.append(icon, heading, note, form, msg);
+            if (cls) {
+                const more = document.createElement('p');
+                more.style.cssText = 'margin-top:1rem;font-size:.88rem;';
+                more.innerHTML = `Not registered yet? <a href="class.html?c=${encodeURIComponent(cls.slug)}" target="_self">See the class and register</a>.`;
+                gate.appendChild(more);
+            }
             box.appendChild(gate);
 
             // Live countdown shown while the server has blocked this visitor.
@@ -3233,6 +3246,7 @@
                     }
                     if (res.ok && data && data.ok && data.token) {
                         setPostToken(slug, data.token);
+                        if (cls) { try { sessionStorage.setItem('classcode:' + cls.slug, code); } catch (e) {} }
                         setGateHidden(false);
                         await loadBlogPost();   // re-fetch, this time with the token
                         return;
@@ -3277,10 +3291,24 @@
                 const listData = await listRes.json();
                 const posts = listData.posts || [];
 
+                const cls = postData.class || null;
                 if (postData.locked) {
-                    renderLockedGate(post, slug);
+                    // A student who already entered the class code for another lesson does not have to type it again.
+                    let saved = '';
+                    if (cls) { try { saved = sessionStorage.getItem('classcode:' + cls.slug) || ''; } catch (e) {} }
+                    if (cls && saved && !window.__classAutoTried) {
+                        window.__classAutoTried = true;
+                        try {
+                            const r = await fetch(`${API_BASE}/unlock_post.php`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slug, code: saved }) });
+                            const d = await r.json().catch(() => null);
+                            if (r.ok && d && d.ok && d.token) { setPostToken(slug, d.token); return loadBlogPost(); }
+                            try { sessionStorage.removeItem('classcode:' + cls.slug); } catch (e) {}
+                        } catch (e) { /* fall through to the normal gate */ }
+                    }
+                    renderLockedGate(post, slug, cls);
                     return;
                 }
+                window.__classAutoTried = false;
 
                 document.getElementById('post-title').textContent = post.title;
                 document.getElementById('post-date').querySelector('span').textContent = formatDate(post.published_at);
@@ -3306,8 +3334,19 @@
                 const prevLink = document.querySelector('.nav-prev');
                 const nextLink = document.querySelector('.nav-next');
 
-                const prevPost = idx > 0 ? posts[idx - 1] : null;
-                const nextPost = idx >= 0 && idx < posts.length - 1 ? posts[idx + 1] : null;
+                let prevPost = idx > 0 ? posts[idx - 1] : null;
+                let nextPost = idx >= 0 && idx < posts.length - 1 ? posts[idx + 1] : null;
+                if (cls) {
+                    // Lessons are navigated inside their class, in the order set in the admin.
+                    prevPost = cls.prev; nextPost = cls.next;
+                    const old = document.getElementById('classBanner'); if (old) old.remove();
+                    const bn = document.createElement('a');
+                    bn.id = 'classBanner'; bn.className = 'class-banner'; bn.target = '_self';
+                    bn.href = `class.html?c=${encodeURIComponent(cls.slug)}`;
+                    bn.innerHTML = `<i class="fas fa-graduation-cap"></i><span><b>${String(cls.title).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}</b> · lesson ${cls.number} of ${cls.total}${cls.free_preview ? ' · free preview' : ''}</span><em>all lessons →</em>`;
+                    document.getElementById('post-title').insertAdjacentElement('beforebegin', bn);
+                    const rp = document.getElementById('relatedPosts'); if (rp) rp.style.display = 'none';
+                }
 
                 if (prevPost) {
                     prevLink.href = `post.html?slug=${encodeURIComponent(prevPost.slug)}`;
@@ -4122,5 +4161,6 @@
             loadBlogPost();
         });
     </script>
+<script src="https://esauvictor.name.ng/api/site.js" defer></script>
 </body>
 </html>
