@@ -15,7 +15,7 @@
 <meta property="og:title" content="Esau Victor — Blog">
 <meta property="og:description" content="Notes on web development, life, data analytics &amp; cyber security.">
 <meta property="og:image" content="https://avatars.githubusercontent.com/u/94287719?v=4">
-<meta property="og:url" content="https://esauvictor.github.io/blog.html">
+<meta property="og:url" content="https://esauvictor.github.io/blog">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Esau Victor — Blog">
 <meta name="twitter:description" content="Notes on web development, life, data analytics &amp; cyber security.">
@@ -974,7 +974,7 @@
       stateBox.style.display = 'none';
       grid.style.display = 'grid';
       grid.innerHTML = pagePosts.map(p => `
-        <article class="blog-card" onclick="window.location.href='post.html?slug=${encodeURIComponent(p.slug)}'">
+        <article class="blog-card" onclick="window.location.href='post?slug=${encodeURIComponent(p.slug)}'">
           <div class="thumb">
             <img src="${p.cover_image_url || 'https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg'}" alt="${p.title}" loading="lazy" />
             ${p.category ? `<span class="tag">${p.category}</span>` : ''}
@@ -984,7 +984,7 @@
             <h3 class="card-title">${p.is_locked ? '<i class="fas fa-lock" aria-hidden="true"></i> ' : ''}${p.title}</h3>
             <p class="excerpt">${p.is_locked ? '<i class="fas fa-lock" aria-hidden="true"></i> Locked' : (p.excerpt || '')}</p>
             ${(p.tags && p.tags.length) ? `<div class="post-tags">${p.tags.map(t => `<span class="ptag">#${t}</span>`).join('')}</div>` : ''}
-            <a href="post.html?slug=${encodeURIComponent(p.slug)}" class="read-more" onclick="event.stopPropagation()">${p.is_locked ? 'Unlock' : 'Read more'}</a>
+            <a href="post?slug=${encodeURIComponent(p.slug)}" class="read-more" onclick="event.stopPropagation()">${p.is_locked ? 'Unlock' : 'Read more'}</a>
           </div>
         </article>
       `).join('');

@@ -15,7 +15,7 @@
     <meta id="ogTitle" property="og:title" content="Esau Victor — Blog">
     <meta id="ogDescription" property="og:description" content="Notes on web development, data analytics &amp; cyber security.">
     <meta id="ogImage" property="og:image" content="https://avatars.githubusercontent.com/u/94287719?v=4">
-    <meta id="ogUrl" property="og:url" content="https://esauvictor.github.io/post.html">
+    <meta id="ogUrl" property="og:url" content="https://esauvictor.github.io/post">
     <meta name="twitter:card" content="summary_large_image">
     <meta id="twitterTitle" name="twitter:title" content="Esau Victor — Blog">
     <meta id="twitterDescription" name="twitter:description" content="Notes on web development, data analytics &amp; cyber security.">
@@ -1531,7 +1531,7 @@
                     <li><a href="/#about">About</a></li>
                     <li><a href="/#testimonials">ClientVoices</a></li>
                     <li><a href="/#projects">Projects</a></li>
-                    <li><a href="blog.html" class="active">Blog</a></li>
+                    <li><a href="blog" class="active">Blog</a></li>
                     <li><a href="classes">Classes</a></li>
                     <li><a href="/#contact">Contact</a></li>
                 </ul>
@@ -1658,7 +1658,7 @@
 
             <div id="relatedPosts"></div>
 
-            <a href="blog.html" class="btn secondary back-to-blog">
+            <a href="blog" class="btn secondary back-to-blog">
                 <i class="fas fa-arrow-left"></i>
                 <span>Back to Blog</span>
             </a>
@@ -1713,7 +1713,7 @@
                         <li><a href="/#about"><i class="fas fa-user"></i> About</a></li>
                         <li><a href="/#testimonials"><i class="fas fa-cog"></i> ClientVoices</a></li>
                         <li><a href="/#projects"><i class="fas fa-project-diagram"></i> Projects</a></li>
-                        <li><a href="blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+                        <li><a href="blog"><i class="fas fa-blog"></i> Blog</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -3351,7 +3351,7 @@
                 }
 
                 if (prevPost) {
-                    prevLink.href = `post.html?slug=${encodeURIComponent(prevPost.slug)}`;
+                    prevLink.href = `post?slug=${encodeURIComponent(prevPost.slug)}`;
                     prevLink.style.display = '';
                     document.getElementById('prev-post-title').textContent = prevPost.title;
                 } else {
@@ -3359,7 +3359,7 @@
                 }
 
                 if (nextPost) {
-                    nextLink.href = `post.html?slug=${encodeURIComponent(nextPost.slug)}`;
+                    nextLink.href = `post?slug=${encodeURIComponent(nextPost.slug)}`;
                     nextLink.style.display = '';
                     document.getElementById('next-post-title').textContent = nextPost.title;
                 } else {
@@ -3368,7 +3368,7 @@
 
                 document.title = `${post.title} - Esau Victor`;
 
-                const pageUrl = `https://esauvictor.github.io/post.html?slug=${encodeURIComponent(slug)}`;
+                const pageUrl = `https://esauvictor.github.io/post?slug=${encodeURIComponent(slug)}`;
                 const shareImage = post.cover_image_url || 'https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg';
                 document.getElementById('ogTitle').setAttribute('content', post.title);
                 document.getElementById('ogDescription').setAttribute('content', post.excerpt || '');
@@ -3385,7 +3385,7 @@
                         <h3 class="related-heading">Related posts</h3>
                         <div class="related-grid">
                           ${related.map(r => `
-                            <a class="related-card" href="post.html?slug=${encodeURIComponent(r.slug)}">
+                            <a class="related-card" href="post?slug=${encodeURIComponent(r.slug)}">
                               <img src="${r.cover_image_url || 'https://github.com/esauvictor/esauvictor.github.io/raw/main/Esau%20De%20Genius.jpg'}" alt="${r.title}" loading="lazy">
                               <span>${r.title}</span>
                             </a>

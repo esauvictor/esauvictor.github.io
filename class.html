@@ -39,7 +39,7 @@ footer{border-top:1px solid var(--border);margin-top:3rem;padding:1.6rem 0 2.2re
 </style>
 </head>
 <body>
-<nav class="nav"><div class="wrap"><a class="logo" href="/">esau<em>.</em>victor<em>()</em></a><ul><li><a href="/">Home</a></li><li><a href="blog.html">Blog</a></li><li><a href="classes" class="on">Classes</a></li><li><a href="/#contact">Contact</a></li></ul></div></nav>
+<nav class="nav"><div class="wrap"><a class="logo" href="/">esau<em>.</em>victor<em>()</em></a><ul><li><a href="/">Home</a></li><li><a href="blog">Blog</a></li><li><a href="classes" class="on">Classes</a></li><li><a href="/#contact">Contact</a></li></ul></div></nav>
 <main class="wrap" id="main"><p class="sub" style="padding:2rem 0">Loading…</p></main>
 <script>
 const API='https://esauvictor.name.ng/api';
@@ -55,11 +55,11 @@ function code(){try{return sessionStorage.getItem('classcode:'+slug)||''}catch(e
 function lessons(unlocked){
   const L=D.class.lessons;
   if(!L.length)return '<p class="sub">Lessons will appear here.</p>';
-  return L.map((l,i)=>{const open=!l.locked||unlocked;return '<a class="lesson '+(open?'open':'')+'" target="_self" href="post.html?slug='+encodeURIComponent(l.slug)+'"><span class="n">'+(i+1)+'</span><i class="fas '+(open?'fa-play-circle':'fa-lock')+'"></i><span>'+esc(l.title)+'</span>'+(l.free_preview?'<em>FREE PREVIEW</em>':'')+'</a>'}).join('');
+  return L.map((l,i)=>{const open=!l.locked||unlocked;return '<a class="lesson '+(open?'open':'')+'" target="_self" href="post?slug='+encodeURIComponent(l.slug)+'"><span class="n">'+(i+1)+'</span><i class="fas '+(open?'fa-play-circle':'fa-lock')+'"></i><span>'+esc(l.title)+'</span>'+(l.free_preview?'<em>FREE PREVIEW</em>':'')+'</a>'}).join('');
 }
 function render(){
   const c=D.class,p=D.pay,canReg=c.status==='open'&&!c.full;
-  const tag=c.full?'full':c.status,label=c.full?'Full':{open:'Registration open',closed:'Registration closed',completed:'Completed'}[c.status];
+  const tag=c.full?'full':c.status,label=c.full?'Full':{open:'Enrollment open',closed:'Enrollment closed',completed:'Completed'}[c.status];
   document.title=c.title+' — Esau Victor';
   const facts=['<span class="fact"><b>'+esc(c.price_label)+'</b></span>'];
   if(c.starts_at)facts.push('<span class="fact">'+ic('cal')+' '+esc(when(c.starts_at))+'</span>');
@@ -71,7 +71,7 @@ function render(){
   if(c.description)h+='<div class="desc">'+fmt(c.description)+'</div>';
   h+='<h2>Lessons</h2><div class="card" id="ls">'+lessons(false)+'</div>';
   if(c.has_code)h+='<div class="card"><b>Already registered?</b><p class="sub">Enter the class code from your confirmation email to unlock every lesson.</p><form id="uf" style="display:flex;gap:.6rem;margin-top:.7rem"><input id="uc" placeholder="Class code" autocomplete="off" autocapitalize="characters" required><button class="go" style="margin:0">Unlock</button></form><div class="msg" id="um"></div></div>';
-  if(canReg)h+='<h2>Register</h2><form class="card" id="rf"><input type="checkbox" name="botcheck" style="display:none" tabindex="-1"><div class="row2"><div><label>Full name</label><input name="fullName" required autocomplete="name"></div><div><label>Email</label><input name="email" type="email" required autocomplete="email"></div></div><div class="row2"><div><label>Phone / WhatsApp</label><input name="phone" type="tel" required autocomplete="tel" placeholder="0803…"></div><div><label>Experience</label><select name="experience" required><option value="">Choose…</option><option>Complete beginner</option><option>Some experience</option><option>Intermediate</option><option>Advanced</option></select></div></div><label>Anything else? (optional)</label><textarea name="comments" rows="3"></textarea><button class="go" id="rb">Register'+(c.price_kobo?' — '+esc(c.price_label):'')+'</button><div class="msg" id="rm"></div></form><div id="done"></div>';
+  if(canReg)h+='<h2>Enroll in this class</h2><form class="card" id="rf"><input type="checkbox" name="botcheck" style="display:none" tabindex="-1"><div class="row2"><div><label>Full name</label><input name="fullName" required autocomplete="name"></div><div><label>Email</label><input name="email" type="email" required autocomplete="email"></div></div><div class="row2"><div><label>Phone / WhatsApp</label><input name="phone" type="tel" required autocomplete="tel" placeholder="0803…"></div><div><label>Experience</label><select name="experience" required><option value="">Choose…</option><option>Complete beginner</option><option>Some experience</option><option>Intermediate</option><option>Advanced</option></select></div></div><label>Anything else? (optional)</label><textarea name="comments" rows="3"></textarea><button class="go" id="rb">Register'+(c.price_kobo?' — '+esc(c.price_label):'')+'</button><div class="msg" id="rm"></div></form><div id="done"></div>';
   document.getElementById('main').innerHTML=h;
   if(c.starts_at){const e=document.getElementById('cd');const t=()=>{const l=new Date(c.starts_at)-Date.now();e.hidden=false;e.innerHTML=l>0?ic('hour')+' starts in <b>'+span(l)+'</b>':ic('live')+' <b>started</b>'};t();setInterval(t,1000)}
   wire();
@@ -104,7 +104,7 @@ async function payNow(ps,regId){
 function wire(){
   const uf=document.getElementById('uf');if(uf)uf.onsubmit=e=>{e.preventDefault();unlock(document.getElementById('uc').value.trim())};
   const rf=document.getElementById('rf');if(!rf)return;
-  rf.onsubmit=async e=>{e.preventDefault();const b=document.getElementById('rb'),m=document.getElementById('rm');b.disabled=true;m.className='msg';m.textContent='Registering…';
+  rf.onsubmit=async e=>{e.preventDefault();const b=document.getElementById('rb'),m=document.getElementById('rm');b.disabled=true;m.className='msg';m.textContent='Enrolling…';
     const body=Object.fromEntries(new FormData(rf));body.class=slug;body.botcheck=rf.botcheck.checked?'1':'';
     try{const r=await fetch(API+'/class_register.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json().catch(()=>({}));
       if(!r.ok||!d.success){m.className='msg err';m.textContent=d.error||'Something went wrong. Please try again.';b.disabled=false;return}
@@ -114,7 +114,7 @@ function wire(){
       if(d.free){showCode(d.access_code,d.regId);return}
       if(d.paystack){
         const pay=()=>payNow(d.paystack,d.regId);
-        dn.innerHTML='<div class="card"><b>'+ic('ok')+' Registered (Reg #'+d.regId+')</b><p class="sub">One last step: pay '+esc(p.price_label)+' securely with Paystack (card, bank transfer or USSD). Your class code appears here and in your email as soon as the payment goes through.</p><button class="go" id="pn">Pay '+esc(p.price_label)+' now</button><div class="msg" id="pm"></div>'+bank+'</div>';
+        dn.innerHTML='<div class="card"><b>'+ic('ok')+' Enrolled (Ref #'+d.regId+')</b><p class="sub">One last step: pay '+esc(p.price_label)+' securely with Paystack (card, bank transfer or USSD). Your class code appears here and in your email as soon as the payment goes through.</p><button class="go" id="pn">Pay '+esc(p.price_label)+' now</button><div class="msg" id="pm"></div>'+bank+'</div>';
         document.getElementById('pn').onclick=pay;pay();return;
       }
       dn.innerHTML='<div class="card"><b>'+ic('ok')+' You are registered (Reg #'+d.regId+')</b><p class="sub">We sent the details to your email.</p>'+(p.account_no?'<div class="pay">Bank: '+esc(p.bank_name)+'\nAccount number: '+esc(p.account_no)+'\nAccount name: '+esc(p.account_name)+'\nAmount: '+esc(p.price_label)+'</div>':'')+'<p class="sub">'+esc(p.note||'')+'</p><a class="go" target="_blank" rel="noopener" href="https://wa.me/'+esc(p.whatsapp)+'?text='+encodeURIComponent('Hello, proof of payment for '+D.class.title+' (Reg #'+d.regId+')')+'">Send proof on WhatsApp</a></div>';
