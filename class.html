@@ -58,6 +58,14 @@ function lessons(unlocked){
   if(!L.length)return '<p class="sub">Lessons will appear here.</p>';
   return L.map((l,i)=>{const open=!l.locked||unlocked;return '<a class="lesson '+(open?'open':'')+'" target="_self" href="post?slug='+encodeURIComponent(l.slug)+'"><span class="n">'+(i+1)+'</span><i class="fas '+(open?'fa-play-circle':'fa-lock')+'"></i><span>'+esc(l.title)+'</span>'+(l.free_preview?'<em>FREE PREVIEW</em>':'')+'</a>'}).join('');
 }
+function videoHtml(v){
+  if(!v||!(v.url||v.embed))return '';
+  const vl=esc(v.label||'Class video');
+  const body=v.embed&&/^https:\/\/www\.youtube-nocookie\.com\/embed\/[A-Za-z0-9_-]{11}/.test(v.embed)
+    ?'<div class="yt"><iframe src="'+esc(v.embed)+'" title="'+vl+'" loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>'
+    :'<video controls playsinline preload="metadata" src="'+esc(v.url||'')+'" aria-label="'+vl+'"></video>';
+  return '<h2>'+vl+'</h2><div class="card vidc">'+body+'</div>';
+}
 function render(){
   const c=D.class,p=D.pay,canReg=c.status==='open'&&!c.full;
   const tag=c.full?'full':c.status,label=c.full?'Full':{open:'Enrollment open',closed:'Enrollment closed',completed:'Completed'}[c.status];
@@ -70,7 +78,7 @@ function render(){
   let h='<section class="hero">'+(c.cover_image_url?'<div class="cover" style="background-image:url(\''+esc(c.cover_image_url)+'\')"></div>':'')+'<span class="tag '+tag+'">'+label+'</span><h1>'+esc(c.title)+'</h1><p class="sub">'+esc(c.summary)+'</p>'
     +'<div class="facts">'+facts.join('')+'<span class="fact" id="cd" hidden></span></div></section>';
   if(c.description)h+='<div class="desc">'+fmt(c.description)+'</div>';
-  if(c.video&&(c.video.url||c.video.embed)){const vl=esc(c.video.label||'Class video');h+='<h2>'+vl+'</h2><div class="card vidc">'+(c.video.embed&&/^https:\/\/www\.youtube-nocookie\.com\/embed\/[A-Za-z0-9_-]{11}/.test(c.video.embed)?'<div class="yt"><iframe src="'+esc(c.video.embed)+'" title="'+vl+'" loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>':'<video controls playsinline preload="metadata" src="'+esc(c.video.url||'')+'" aria-label="'+vl+'"></video>')+'</div>'}
+  h+='<div id="vslot">'+videoHtml(c.video)+'</div>';
   h+='<h2>Lessons</h2><div class="card" id="ls">'+lessons(false)+'</div>';
   if(c.has_code)h+='<div class="card"><b>Already registered?</b><p class="sub">Enter the class code from your confirmation email to unlock every lesson.</p><form id="uf" style="display:flex;gap:.6rem;margin-top:.7rem"><input id="uc" placeholder="Class code" autocomplete="off" autocapitalize="characters" required><button class="go" style="margin:0">Unlock</button></form><div class="msg" id="um"></div></div>';
   if(canReg)h+='<h2>Enroll in this class</h2><form class="card" id="rf"><input type="checkbox" name="botcheck" style="display:none" tabindex="-1"><div class="row2"><div><label>Full name</label><input name="fullName" required autocomplete="name"></div><div><label>Email</label><input name="email" type="email" required autocomplete="email"></div></div><div class="row2"><div><label>Phone / WhatsApp</label><input name="phone" type="tel" required autocomplete="tel" placeholder="0803…"></div><div><label>Experience</label><select name="experience" required><option value="">Choose…</option><option>Complete beginner</option><option>Some experience</option><option>Intermediate</option><option>Advanced</option></select></div></div><label>Anything else? (optional)</label><textarea name="comments" rows="3"></textarea><button class="go" id="rb">Register'+(c.price_kobo?' — '+esc(c.price_label):'')+'</button><div class="msg" id="rm"></div></form><div id="done"></div>';
@@ -82,7 +90,7 @@ function render(){
 async function unlock(cd,silent){
   const m=document.getElementById('um');
   try{const r=await fetch(API+'/class_unlock.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slug,code:cd})});const d=await r.json().catch(()=>({}));
-    if(r.ok&&d.ok){try{sessionStorage.setItem('classcode:'+slug,cd)}catch(e){}document.getElementById('ls').innerHTML=lessons(true);if(m){m.className='msg ok';m.textContent='Unlocked. Pick a lesson above.'}return}
+    if(r.ok&&d.ok){try{sessionStorage.setItem('classcode:'+slug,cd)}catch(e){}document.getElementById('ls').innerHTML=lessons(true);const vs=document.getElementById('vslot');if(vs&&d.video)vs.innerHTML=videoHtml(d.video);if(m){m.className='msg ok';m.textContent='Unlocked. Pick a lesson above.'}return}
     try{sessionStorage.removeItem('classcode:'+slug)}catch(e){}
     if(m&&!silent){m.className='msg err';m.textContent=d.error||'Could not check the code.'}
   }catch(e){if(m&&!silent){m.className='msg err';m.textContent='Could not reach the server.'}}
