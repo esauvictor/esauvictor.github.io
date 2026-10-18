@@ -38,7 +38,7 @@ footer{border-top:1px solid var(--border);margin-top:3rem;padding:1.6rem 0 2.2re
 </style>
 </head>
 <body>
-<nav class="nav"><div class="wrap"><a class="logo" href="/">esau<em>.</em>victor<em>()</em></a><ul><li><a href="/">Home</a></li><li><a href="blog.html">Blog</a></li><li><a href="classes.html" class="on">Classes</a></li><li><a href="/#contact">Contact</a></li></ul></div></nav>
+<nav class="nav"><div class="wrap"><a class="logo" href="/">esau<em>.</em>victor<em>()</em></a><ul><li><a href="/">Home</a></li><li><a href="blog.html">Blog</a></li><li><a href="classes" class="on">Classes</a></li><li><a href="/#contact">Contact</a></li></ul></div></nav>
 <main class="wrap"><section class="hero"><h1 id="h">Classes</h1><p class="sub" id="intro">Live and recorded lessons.</p></section>
 <div class="cls-grid" id="grid"><p class="sub">Loading classes…</p></div></main>
 <script>
@@ -53,7 +53,7 @@ fetch(API+'/classes.php').then(r=>r.json()).then(d=>{
   setTimeout(()=>{if(!window.SiteClassCard)g.innerHTML='<p class="sub">Could not load the class cards. Please refresh.</p>'},6000);
 }).catch(()=>{document.getElementById('grid').innerHTML='<p class="sub">Could not load classes. Please try again.</p>'});
 </script>
-<footer><div class="wrap">© <span id="year"></span> <span>esau victor</span> · <a href="privacy.html">Privacy</a></div></footer>
+<footer><div class="wrap">© <span id="year"></span> <span>esau victor</span> · <a href="privacy">Privacy</a></div></footer>
 <script>document.getElementById('year').textContent=new Date().getFullYear();</script>
 <script src="https://esauvictor.name.ng/api/site.js" defer></script>
 </body></html>

@@ -39,7 +39,7 @@ footer{border-top:1px solid var(--border);margin-top:3rem;padding:1.6rem 0 2.2re
 </style>
 </head>
 <body>
-<nav class="nav"><div class="wrap"><a class="logo" href="/">esau<em>.</em>victor<em>()</em></a><ul><li><a href="/">Home</a></li><li><a href="blog.html">Blog</a></li><li><a href="classes.html" class="on">Classes</a></li><li><a href="/#contact">Contact</a></li></ul></div></nav>
+<nav class="nav"><div class="wrap"><a class="logo" href="/">esau<em>.</em>victor<em>()</em></a><ul><li><a href="/">Home</a></li><li><a href="blog.html">Blog</a></li><li><a href="classes" class="on">Classes</a></li><li><a href="/#contact">Contact</a></li></ul></div></nav>
 <main class="wrap" id="main"><p class="sub" style="padding:2rem 0">Loading…</p></main>
 <script>
 const API='https://esauvictor.name.ng/api';
@@ -120,9 +120,9 @@ function wire(){
       dn.innerHTML='<div class="card"><b>'+ic('ok')+' You are registered (Reg #'+d.regId+')</b><p class="sub">We sent the details to your email.</p>'+(p.account_no?'<div class="pay">Bank: '+esc(p.bank_name)+'\nAccount number: '+esc(p.account_no)+'\nAccount name: '+esc(p.account_name)+'\nAmount: '+esc(p.price_label)+'</div>':'')+'<p class="sub">'+esc(p.note||'')+'</p><a class="go" target="_blank" rel="noopener" href="https://wa.me/'+esc(p.whatsapp)+'?text='+encodeURIComponent('Hello, proof of payment for '+D.class.title+' (Reg #'+d.regId+')')+'">Send proof on WhatsApp</a></div>';
     }catch(err){m.className='msg err';m.textContent='Could not reach the server.';b.disabled=false}};
 }
-fetch(API+'/classes.php?slug='+encodeURIComponent(slug)).then(r=>r.ok?r.json():Promise.reject()).then(d=>{D=d;render()}).catch(()=>{document.getElementById('main').innerHTML='<p class="sub" style="padding:2rem 0">This class could not be found. <a href="classes.html">See all classes</a></p>'});
+fetch(API+'/classes.php?slug='+encodeURIComponent(slug)).then(r=>r.ok?r.json():Promise.reject()).then(d=>{D=d;render()}).catch(()=>{document.getElementById('main').innerHTML='<p class="sub" style="padding:2rem 0">This class could not be found. <a href="classes">See all classes</a></p>'});
 </script>
-<footer><div class="wrap">© <span id="year"></span> <span>esau victor</span> · <a href="privacy.html">Privacy</a></div></footer>
+<footer><div class="wrap">© <span id="year"></span> <span>esau victor</span> · <a href="privacy">Privacy</a></div></footer>
 <script>document.getElementById('year').textContent=new Date().getFullYear();</script>
 <script src="https://esauvictor.name.ng/api/site.js" defer></script>
 </body></html>

@@ -1532,7 +1532,7 @@
                     <li><a href="/#testimonials">ClientVoices</a></li>
                     <li><a href="/#projects">Projects</a></li>
                     <li><a href="blog.html" class="active">Blog</a></li>
-                    <li><a href="classes.html">Classes</a></li>
+                    <li><a href="classes">Classes</a></li>
                     <li><a href="/#contact">Contact</a></li>
                 </ul>
                 <button id="themeBtn" class="theme-btn" aria-label="Toggle dark mode" title="Toggle dark mode"><i class="fas fa-moon"></i></button>
@@ -3185,7 +3185,7 @@
             if (cls) {
                 const more = document.createElement('p');
                 more.style.cssText = 'margin-top:1rem;font-size:.88rem;';
-                more.innerHTML = `Not registered yet? <a href="class.html?c=${encodeURIComponent(cls.slug)}" target="_self">See the class and register</a>.`;
+                more.innerHTML = `Not registered yet? <a href="class?c=${encodeURIComponent(cls.slug)}" target="_self">See the class and register</a>.`;
                 gate.appendChild(more);
             }
             box.appendChild(gate);
@@ -3344,7 +3344,7 @@
                     const old = document.getElementById('classBanner'); if (old) old.remove();
                     const bn = document.createElement('a');
                     bn.id = 'classBanner'; bn.className = 'class-banner'; bn.target = '_self';
-                    bn.href = `class.html?c=${encodeURIComponent(cls.slug)}`;
+                    bn.href = `class?c=${encodeURIComponent(cls.slug)}`;
                     bn.innerHTML = `<i class="fas fa-graduation-cap"></i><span><b>${String(cls.title).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}</b> · lesson ${cls.number} of ${cls.total}${cls.free_preview ? ' · free preview' : ''}</span><em>all lessons →</em>`;
                     document.getElementById('post-title').insertAdjacentElement('beforebegin', bn);
                     const rp = document.getElementById('relatedPosts'); if (rp) rp.style.display = 'none';
