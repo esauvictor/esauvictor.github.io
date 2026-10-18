@@ -1,0 +1,71 @@
+name: Uptime monitor
+
+# Checks the live site every 10 minutes. If something is down it opens a GitHub issue (GitHub emails you),
+# and when it recovers it closes that issue. This repo is public, so these runs cost nothing.
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+concurrency:
+  group: uptime
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      BASE: https://esauvictor.name.ng
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check the site
+        id: check
+        run: |
+          BASE="${BASE:-https://esauvictor.name.ng}"
+          probe() { # name url expected-text
+            local name="$1" url="$2" want="$3" code body
+            for try in 1 2 3; do
+              body="$(mktemp)"
+              code="$(curl -s -o "$body" -w '%{http_code}' --max-time 20 -A 'uptime-monitor' "$url" || true)"
+              [ -n "$code" ] || code=000
+              if [ "$code" = "200" ] && { [ -z "$want" ] || grep -q "$want" "$body"; }; then echo "OK   $name ($code)"; return 0; fi
+              echo "TRY $try failed: $name -> HTTP $code"; sleep 20
+            done
+            FAILS="${FAILS}- ${name}: HTTP ${code} (${url})\n"; return 1
+          }
+          FAILS=""
+          probe "Home page"         "$BASE/"                         "esau"      || true
+          probe "API status"        "$BASE/api/status.php"           "{"         || true
+          probe "Classes (database)" "$BASE/api/classes.php"         "classes"   || true
+          probe "Blog posts"        "$BASE/api/posts.php"            ""          || true
+          probe "Admin panel"       "$BASE/admin/"                   "admin"     || true
+          if [ -n "$FAILS" ]; then
+            printf 'down=true\n' >> "$GITHUB_OUTPUT"
+            { echo 'details<<EOF'; printf '%b' "$FAILS"; echo 'EOF'; } >> "$GITHUB_OUTPUT"
+          else
+            echo 'down=false' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open or update the "site down" issue
+        if: steps.check.outputs.down == 'true'
+        run: |
+          gh label create uptime --color D93F0B --description "Uptime monitor" 2>/dev/null || true
+          N="$(gh issue list --label uptime --state open --json number --jq '.[0].number' || true)"
+          BODY="Checked at $(date -u '+%Y-%m-%d %H:%M UTC') (Lagos is one hour ahead).
+
+          ${{ steps.check.outputs.details }}
+
+          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          if [ -z "$N" ]; then gh issue create --title "Site problem: esauvictor.name.ng is not answering properly" --label uptime --body "$BODY"
+          else gh issue comment "$N" --body "Still failing. $BODY"; fi
+
+      - name: Close the issue when the site is back
+        if: steps.check.outputs.down == 'false'
+        run: |
+          N="$(gh issue list --label uptime --state open --json number --jq '.[0].number' || true)"
+          [ -z "$N" ] || gh issue close "$N" --comment "The site is answering again ($(date -u '+%Y-%m-%d %H:%M UTC'))."
