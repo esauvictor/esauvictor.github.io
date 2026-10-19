@@ -70,6 +70,18 @@ function render(){
   const c=D.class,p=D.pay,canReg=c.status==='open'&&!c.full;
   const tag=c.full?'full':c.status,label=c.full?'Full':{open:'Enrollment open',closed:'Enrollment closed',completed:'Completed'}[c.status];
   document.title=c.title+' — Esau Victor';
+  try{ // search-engine details: description, canonical link and Course data (Google runs this page's script)
+    const dsc=(c.summary||c.description||'').replace(/\s+/g,' ').slice(0,200);
+    const setM=(sel,mk,v)=>{let e=document.head.querySelector(sel);if(!e){e=document.createElement(mk);document.head.appendChild(e)}return e};
+    const md=setM('meta[name=description]','meta');md.setAttribute('name','description');md.setAttribute('content',dsc||'Web development class by Esau Victor.');
+    const cn=setM('link[rel=canonical]','link');cn.setAttribute('rel','canonical');cn.setAttribute('href','https://esauvictor.name.ng/class?c='+encodeURIComponent(c.slug));
+    const ld={'@context':'https://schema.org','@type':'Course',name:c.title,description:dsc||c.title,provider:{'@type':'Person',name:'Esau Victor',url:'https://esauvictor.name.ng/'},url:cn.href};
+    if(c.cover_image_url)ld.image=c.cover_image_url;
+    ld.offers={'@type':'Offer',category:c.price_kobo>0?'Paid':'Free',price:String(c.price_kobo/100),priceCurrency:'NGN',availability:c.status==='open'&&!c.full?'https://schema.org/InStock':'https://schema.org/SoldOut',url:cn.href};
+    if(c.starts_at)ld.hasCourseInstance={'@type':'CourseInstance',courseMode:'online',startDate:c.starts_at,...(c.duration_min?{courseWorkload:'PT'+c.duration_min+'M'}:{})};
+    let sc=document.getElementById('ldc');if(!sc){sc=document.createElement('script');sc.id='ldc';sc.type='application/ld+json';document.head.appendChild(sc)}
+    sc.textContent=JSON.stringify(ld).replace(/</g,'\\u003c');
+  }catch(e){}
   const facts=['<span class="fact"><b>'+esc(c.price_label)+'</b></span>'];
   if(c.starts_at)facts.push('<span class="fact">'+ic('cal')+' '+esc(when(c.starts_at))+'</span>');
   if(c.duration_min)facts.push('<span class="fact">'+ic('clock')+' '+c.duration_min+' min</span>');

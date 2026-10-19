@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /desk.html
+Disallow: /review.html
+
+Sitemap: https://esauvictor.name.ng/sitemap.xml
