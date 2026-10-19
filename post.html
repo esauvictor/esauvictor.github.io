@@ -3338,6 +3338,14 @@
                         document.getElementById('post-content').insertAdjacentElement('beforebegin', box);
                     }
                 }
+                { // lesson pages get one standing WhatsApp channel button, so posts don't need the link pasted in
+                    const oldw = document.getElementById('waChannel'); if (oldw) oldw.remove();
+                    if (cls) {
+                        const wa = document.createElement('div'); wa.id = 'waChannel'; wa.style.cssText = 'margin:1.8rem 0 0;padding:1rem 1.1rem;border:1px solid rgba(37,211,102,.45);border-radius:12px;display:flex;flex-wrap:wrap;gap:.7rem 1rem;align-items:center;justify-content:space-between';
+                        wa.innerHTML = '<span style="flex:1 1 220px">Highlights and reminders for each lesson go out on our WhatsApp channel.</span><a href="https://whatsapp.com/channel/0029VbDnzZyDp2QGAgvz3S40" target="_blank" rel="noopener" style="background:#25d366;color:#0b1f12;font-weight:700;text-decoration:none;padding:.6rem 1.1rem;border-radius:999px;white-space:nowrap">Follow on WhatsApp</a>';
+                        document.getElementById('post-content').insertAdjacentElement('afterend', wa);
+                    }
+                }
                 buildTableOfContents();
                 initTextToSpeech(post.narrations);
 
