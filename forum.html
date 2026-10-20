@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Community Forum — Esau Victor</title>
+<meta name="description" content="Ask questions, share your projects and help other learners in the Esau Victor community forum.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Oxanium:wght@400;600;700&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--mono:'JetBrains Mono','Noto Sans','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;--display:'Oxanium','Noto Sans',system-ui,sans-serif;--bg:#0c0a08;--bg1:#131009;--bg2:#1a150e;--border:rgba(255,120,40,.14);--border2:rgba(255,120,40,.28);--green:#ff7828;--text:#f5ede4;--text2:#b8a898;--text3:#7d6d5f}
+html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:1.6;min-height:100vh}
+a{color:var(--green)}.wrap{max-width:860px;margin:0 auto;padding:0 1.2rem}
+.nav{position:sticky;top:0;z-index:200;background:rgba(12,10,8,.93);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.2rem;gap:1rem}
+.logo{font:700 1.1rem var(--display);color:var(--text);text-decoration:none}.logo em{color:var(--green);font-style:normal}
+.nav ul{display:flex;gap:1.2rem;list-style:none;font-size:.78rem}.nav ul a{color:var(--text2);text-decoration:none}.nav ul a:hover,.nav ul a.on{color:var(--green)}
+h1{font:700 clamp(1.6rem,6vw,2.3rem)/1.15 var(--display)}
+.top{display:flex;flex-wrap:wrap;gap:.8rem 1rem;align-items:center;justify-content:space-between;padding:2rem 0 .6rem}
+.sub{color:var(--text2);font-size:.88rem;margin-top:.4rem}
+.me{font-size:.78rem;color:var(--text2);display:flex;gap:.7rem;align-items:center;flex-wrap:wrap}
+.card{background:var(--bg1);border:1px solid var(--border);border-radius:14px;padding:1.1rem;margin:1rem 0}
+label{display:block;font-size:.74rem;color:var(--text2);margin:.9rem 0 .3rem}
+input,select,textarea{width:100%;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.75rem;font:inherit;font-size:.88rem}
+textarea{min-height:130px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--green);outline-offset:1px}
+button,.btn{display:inline-block;background:var(--green);color:#1a0f04;border:0;border-radius:8px;padding:.7rem 1.2rem;font:700 .82rem var(--mono);cursor:pointer;text-decoration:none}
+button:disabled{opacity:.5}button.ghost,.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border2)}button.sm{padding:.35rem .7rem;font-size:.72rem}
+button.link{background:none;border:0;color:var(--text3);padding:0;font-weight:400;text-decoration:underline;font-size:.72rem}
+.chips{display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0}.chip{border:1px solid var(--border2);color:var(--text2);background:transparent;border-radius:999px;padding:.35rem .85rem;font:500 .76rem var(--mono);cursor:pointer}.chip.on{background:var(--green);color:#1a0f04;border-color:var(--green)}
+.t{display:block;padding:.95rem 1rem;border:1px solid var(--border);border-radius:12px;background:var(--bg1);margin:.6rem 0;text-decoration:none;color:var(--text)}.t:hover{border-color:var(--green)}
+.t b{font:700 .98rem var(--display);display:block;margin-bottom:.2rem;overflow-wrap:anywhere}.t p{color:var(--text2);font-size:.82rem;overflow-wrap:anywhere}
+.meta{font-size:.72rem;color:var(--text3);margin-top:.35rem;display:flex;gap:.3rem .8rem;flex-wrap:wrap;align-items:center}
+.badge{font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.12rem .5rem;border-radius:999px;background:#22c55e;color:#052e16}.badge.cat{background:var(--bg2);color:var(--text2);border:1px solid var(--border2)}.badge.pin{background:var(--green);color:#1a0f04}
+.body{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.9rem;color:var(--text);margin-top:.7rem}
+.reply{border-top:1px solid var(--border);padding:.9rem 0}.reply:first-child{border:0}
+.msg{margin-top:.7rem;font-size:.82rem;min-height:1.3em}.msg.err{color:#f87171}.msg.ok{color:#4ade80}
+.rules{font-size:.76rem;color:var(--text2);margin-top:.9rem}.rules li{margin-left:1.1rem}
+.hp{position:absolute;left:-9999px;height:0;overflow:hidden}
+footer{border-top:1px solid var(--border);margin-top:3rem;padding:1.6rem 0 2.2rem;text-align:center;font-size:.74rem;color:var(--text2)}
+.hide{display:none}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap"><a class="logo" href="/">esau<em>.</em>victor<em>()</em></a><ul><li><a href="/">Home</a></li><li><a href="blog">Blog</a></li><li><a href="classes">Classes</a></li><li><a href="forum" class="on">Forum</a></li></ul></div></nav>
+<main class="wrap" id="main"><p class="sub" style="padding:2rem 0">Loading…</p></main>
+<footer><div class="wrap">Be kind. Help others. No spam.</div></footer>
+<script>
+const API='https://esauvictor.name.ng/api/forum.php';
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let TOKEN='',NAME='',CATS=[],CAT='',PAGE=1;
+try{TOKEN=localStorage.getItem('forum_token')||'';NAME=localStorage.getItem('forum_name')||''}catch(e){}
+function save(){try{TOKEN?localStorage.setItem('forum_token',TOKEN):localStorage.removeItem('forum_token');NAME?localStorage.setItem('forum_name',NAME):localStorage.removeItem('forum_name')}catch(e){}}
+function ago(i){const s=Math.max(0,(Date.now()-Date.parse(i))/1000);if(s<60)return 'just now';if(s<3600)return Math.floor(s/60)+' min ago';if(s<86400)return Math.floor(s/3600)+' h ago';if(s<2592000)return Math.floor(s/86400)+' d ago';return new Date(i).toLocaleDateString('en-NG',{day:'numeric',month:'short',year:'numeric'})}
+async function call(action,data,method){
+  const h={'Content-Type':'application/json'};if(TOKEN)h.Authorization='Bearer '+TOKEN;
+  let r;
+  if(method==='GET'){r=await fetch(API+'?'+new URLSearchParams({a:action,...data}),{headers:TOKEN?{Authorization:'Bearer '+TOKEN}:{}})}
+  else r=await fetch(API,{method:'POST',headers:h,body:JSON.stringify({action,...data})});
+  const j=await r.json().catch(()=>({}));
+  if(r.status===401&&TOKEN&&method!=='GET'){TOKEN='';NAME='';save();renderTop()}
+  if(!r.ok)throw Object.assign(new Error(j.error||'Something went wrong.'),{status:r.status});
+  return j;
+}
+const id=()=>new URLSearchParams(location.search).get('t');
+const badge=s=>s?' <span class="badge">Student</span>':'';
+
+function renderTop(){const el=$('#me');if(!el)return;el.innerHTML=TOKEN?'Signed in as <b>'+esc(NAME)+'</b> <button class="link" id="out">Sign out</button>':'<button class="sm" id="in">Join / Sign in</button>';
+  const o=$('#out');if(o)o.onclick=()=>{TOKEN='';NAME='';save();renderTop();if($('#nt'))$('#nt').classList.add('hide');if(id())route()};
+  const i=$('#in');if(i)i.onclick=()=>authBox()}
+
+function authBox(after){
+  const box=$('#auth');if(!box)return;box.classList.remove('hide');
+  let email='';
+  box.innerHTML='<b>Join or sign in</b><p class="sub">Enter your email. We send a 6-digit code, so there is no password to remember. New here? You will be asked for your name.</p><label>Email</label><input id="ae" type="email" autocomplete="email" inputmode="email" autocapitalize="none"><div class="hp"><input id="aw" tabindex="-1" autocomplete="off"></div><div id="an" class="hide"><label>Your name (shown with your posts)</label><input id="aname" maxlength="40" autocomplete="name"><label style="display:flex;gap:.5rem;align-items:flex-start;color:var(--text)"><input id="ag" type="checkbox" style="width:auto;margin-top:.2rem"> <span>I will be respectful, post no spam or illegal content, and understand posts can be removed.</span></label></div><button id="ago" style="margin-top:1rem">Send code</button> <button class="ghost" id="acx" style="margin-top:1rem">Cancel</button><p class="msg" id="am"></p>';
+  const m=(t,k)=>{const e=$('#am');e.className='msg '+(k||'');e.textContent=t||''};
+  $('#acx').onclick=()=>box.classList.add('hide');
+  const ask=async()=>{
+    const b=$('#ago');email=$('#ae').value.trim();b.disabled=true;m('Sending…');
+    try{
+      const r=await call('request_code',{email,name:$('#aname').value.trim(),agree:$('#ag').checked,website:$('#aw').value});
+      if(r.need_name){$('#an').classList.remove('hide');m('Welcome! Add your name and tick the box, then tap Send code again.');b.disabled=false;return}
+      box.innerHTML='<b>Enter your code</b><p class="sub">We sent a 6-digit code to <b>'+esc(email)+'</b>. It works for 10 minutes. Check spam if you do not see it.</p><label>Code</label><input id="ac" inputmode="numeric" autocomplete="one-time-code" maxlength="6"><button id="av" style="margin-top:1rem">Continue</button> <button class="ghost" id="acx2" style="margin-top:1rem">Back</button><p class="msg" id="am"></p>';
+      $('#acx2').onclick=()=>authBox(after);
+      $('#av').onclick=async()=>{const v=$('#av');v.disabled=true;m('Checking…');try{const j=await call('verify_code',{email,code:$('#ac').value});TOKEN=j.token;NAME=j.name;save();box.classList.add('hide');renderTop();if(after)after();else route()}catch(x){m(x.message,'err');v.disabled=false}};
+      $('#ac').focus();
+    }catch(x){m(x.message,'err');b.disabled=false}
+  };
+  $('#ago').onclick=ask;$('#ae').focus();
+}
+
+async function list(more){
+  const box=$('#list');if(!more){PAGE=1;box.innerHTML='<p class="sub">Loading…</p>'}
+  try{
+    const d=await call('topics',{...(CAT?{cat:CAT}:{}),page:PAGE},'GET');
+    const html=d.topics.map(t=>'<a class="t" href="forum?t='+t.id+'" data-t="'+t.id+'"><b>'+(t.pinned?'<span class="badge pin">Pinned</span> ':'')+esc(t.title)+'</b><p>'+esc(t.body)+(t.body.length>=220?'…':'')+'</p><div class="meta"><span class="badge cat">'+esc(t.category)+'</span><span>'+esc(t.author)+badge(t.student)+'</span><span>'+t.replies+' repl'+(t.replies===1?'y':'ies')+'</span><span>'+ago(t.last_activity)+'</span></div></a>').join('');
+    box.innerHTML=(more?box.innerHTML.replace(/<button id="lm".*$/s,''):'')+(html||(more?'':'<p class="sub">No topics here yet. Be the first to start one.</p>'))+(d.more?'<button class="ghost" id="lm" style="margin-top:.8rem">Load more</button>':'');
+    const lm=$('#lm');if(lm)lm.onclick=()=>{PAGE++;lm.disabled=true;list(true)};
+    box.querySelectorAll('a[data-t]').forEach(a=>a.onclick=e=>{e.preventDefault();history.pushState(null,'',a.getAttribute('href'));route()});
+  }catch(x){box.innerHTML='<p class="msg err">'+esc(x.message)+'</p>'}
+}
+
+function viewList(){
+  $('#main').innerHTML='<div class="top"><div><h1>Community Forum</h1><p class="sub">Ask questions, share your projects, help each other.</p></div><div class="me" id="me"></div></div><div id="auth" class="card hide"></div>'
+  +'<p><button id="nb">+ New topic</button></p><div id="nt" class="card hide"><b>Start a topic</b><label>Category</label><select id="nc">'+CATS.map(c=>'<option>'+esc(c)+'</option>').join('')+'</select><label>Title</label><input id="ntt" maxlength="120"><label>Your post</label><textarea id="ntb" maxlength="5000"></textarea><div class="hp"><input id="ntw" tabindex="-1" autocomplete="off"></div><button id="nsend" style="margin-top:1rem">Post</button> <button class="ghost" id="ncx" style="margin-top:1rem">Cancel</button><p class="msg" id="nm"></p><ul class="rules"><li>One question per topic, with a clear title.</li><li>Be kind. No spam, ads, or illegal content.</li><li>Maximum 3 links per post.</li></ul></div>'
+  +'<div class="chips" id="chips"></div><div id="list"></div>';
+  renderTop();
+  const ch=$('#chips');ch.innerHTML=['All',...CATS].map(c=>'<button class="chip '+((c==='All'&&!CAT)||c===CAT?'on':'')+'" data-c="'+esc(c)+'">'+esc(c)+'</button>').join('');
+  ch.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{CAT=b.dataset.c==='All'?'':b.dataset.c;ch.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b));list()});
+  $('#nb').onclick=()=>{if(!TOKEN){authBox(()=>{$('#nt').classList.remove('hide')});return}$('#nt').classList.remove('hide');$('#ntt').focus()};
+  $('#ncx').onclick=()=>$('#nt').classList.add('hide');
+  $('#nsend').onclick=async()=>{const b=$('#nsend'),m=$('#nm');b.disabled=true;m.className='msg';m.textContent='Posting…';
+    try{const r=await call('topic_new',{category:$('#nc').value,title:$('#ntt').value,body:$('#ntb').value,website:$('#ntw').value});history.pushState(null,'','forum?t='+r.id);route()}catch(x){m.className='msg err';m.textContent=x.message;b.disabled=false}};
+  list();
+}
+
+async function viewTopic(tid){
+  $('#main').innerHTML='<div class="top"><div><a href="forum" id="bk">← All topics</a></div><div class="me" id="me"></div></div><div id="auth" class="card hide"></div><div id="tp"><p class="sub">Loading…</p></div>';
+  renderTop();$('#bk').onclick=e=>{e.preventDefault();history.pushState(null,'','forum');route()};
+  try{
+    const d=await call('topic',{id:tid},'GET'),t=d.topic;document.title=t.title+' — Forum';
+    $('#tp').innerHTML='<div class="card"><span class="badge cat">'+esc(t.category)+'</span>'+(t.locked?' <span class="badge cat">Locked</span>':'')+'<h1 style="font-size:1.4rem;margin-top:.5rem;overflow-wrap:anywhere">'+esc(t.title)+'</h1><div class="meta"><span>'+esc(t.author)+badge(t.student)+'</span><span>'+ago(t.created_at)+'</span></div><div class="body">'+esc(t.body)+'</div><div class="meta" style="margin-top:.8rem">'+(t.mine?'<button class="link" data-del="topic" data-id="'+t.id+'">Delete</button>':'<button class="link" data-rep="topic" data-id="'+t.id+'">Report</button>')+'</div></div>'
+    +'<b>'+d.replies.length+' repl'+(d.replies.length===1?'y':'ies')+'</b><div class="card" style="padding:.3rem 1.1rem">'+(d.replies.length?d.replies.map(r=>'<div class="reply"><div class="meta" style="margin:0 0 .3rem"><b style="color:var(--text)">'+esc(r.author)+'</b>'+badge(r.student)+'<span>'+ago(r.created_at)+'</span></div><div class="body" style="margin:0">'+esc(r.body)+'</div><div class="meta">'+(r.mine?'<button class="link" data-del="reply" data-id="'+r.id+'">Delete</button>':'<button class="link" data-rep="reply" data-id="'+r.id+'">Report</button>')+'</div></div>').join(''):'<p class="sub" style="padding:.8rem 0">No replies yet.</p>')+'</div>'
+    +(t.locked?'<p class="sub">This topic is locked.</p>':'<div class="card"><b>Your reply</b><textarea id="rb" maxlength="3000"></textarea><div class="hp"><input id="rw" tabindex="-1" autocomplete="off"></div><button id="rs" style="margin-top:1rem">Reply</button><p class="msg" id="rm"></p></div>');
+    const rs=$('#rs');if(rs)rs.onclick=async()=>{if(!TOKEN){authBox(()=>rs.click());return}const m=$('#rm');rs.disabled=true;m.className='msg';m.textContent='Posting…';try{await call('reply',{topic_id:t.id,body:$('#rb').value,website:$('#rw').value});viewTopic(tid)}catch(x){m.className='msg err';m.textContent=x.message;rs.disabled=false}};
+    $('#tp').querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this '+b.dataset.del+'?'))return;try{await call('delete_own',{kind:b.dataset.del,id:+b.dataset.id});if(b.dataset.del==='topic'){history.pushState(null,'','forum');route()}else viewTopic(tid)}catch(x){alert(x.message)}});
+    $('#tp').querySelectorAll('[data-rep]').forEach(b=>b.onclick=async()=>{if(!TOKEN){authBox(()=>b.click());return}try{await call('report',{kind:b.dataset.rep,id:+b.dataset.id});b.textContent='Reported. Thank you.';b.disabled=true}catch(x){alert(x.message)}});
+  }catch(x){$('#tp').innerHTML='<p class="msg err">'+esc(x.message)+'</p>'}
+}
+
+async function route(){
+  document.title='Community Forum — Esau Victor';
+  let s;try{s=await call('status',{},'GET')}catch(x){s={enabled:false}}
+  if(!s.enabled){$('#main').innerHTML='<div style="padding:3rem 0"><h1>The forum is closed right now</h1><p class="sub">Please check back soon. In the meantime, you can read the <a href="blog">blog</a> or see the <a href="classes">classes</a>.</p></div>';return}
+  CATS=s.categories||[];
+  const t=parseInt(id(),10);t?viewTopic(t):viewList();
+}
+window.onpopstate=route;route();
+</script>
+</body>
+</html>
