@@ -72,24 +72,39 @@ function renderTop(){const el=$('#me');if(!el)return;el.innerHTML=TOKEN?'Signed 
   const o=$('#out');if(o)o.onclick=()=>{TOKEN='';NAME='';save();renderTop();if($('#nt'))$('#nt').classList.add('hide');if(id())route()};
   const i=$('#in');if(i)i.onclick=()=>authBox()}
 
-function authBox(after){
-  const box=$('#auth');if(!box)return;box.classList.remove('hide');
-  let email='';
-  box.innerHTML='<b>Join or sign in</b><p class="sub">Enter your email. We send a 6-digit code, so there is no password to remember. New here? You will be asked for your name.</p><label>Email</label><input id="ae" type="email" autocomplete="email" inputmode="email" autocapitalize="none"><div class="hp"><input id="aw" tabindex="-1" autocomplete="off"></div><div id="an" class="hide"><label>Your name (shown with your posts)</label><input id="aname" maxlength="40" autocomplete="name"><label style="display:flex;gap:.5rem;align-items:flex-start;color:var(--text)"><input id="ag" type="checkbox" style="width:auto;margin-top:.2rem"> <span>I will be respectful, post no spam or illegal content, and understand posts can be removed.</span></label></div><button id="ago" style="margin-top:1rem">Send code</button> <button class="ghost" id="acx" style="margin-top:1rem">Cancel</button><p class="msg" id="am"></p>';
-  const m=(t,k)=>{const e=$('#am');e.className='msg '+(k||'');e.textContent=t||''};
-  $('#acx').onclick=()=>box.classList.add('hide');
-  const ask=async()=>{
-    const b=$('#ago');email=$('#ae').value.trim();b.disabled=true;m('Sending…');
-    try{
-      const r=await call('request_code',{email,name:$('#aname').value.trim(),agree:$('#ag').checked,website:$('#aw').value});
-      if(r.need_name){$('#an').classList.remove('hide');m('Welcome! Add your name and tick the box, then tap Send code again.');b.disabled=false;return}
-      box.innerHTML='<b>Enter your code</b><p class="sub">We sent a 6-digit code to <b>'+esc(email)+'</b>. It works for 10 minutes. Check spam if you do not see it.</p><label>Code</label><input id="ac" inputmode="numeric" autocomplete="one-time-code" maxlength="6"><button id="av" style="margin-top:1rem">Continue</button> <button class="ghost" id="acx2" style="margin-top:1rem">Back</button><p class="msg" id="am"></p>';
-      $('#acx2').onclick=()=>authBox(after);
-      $('#av').onclick=async()=>{const v=$('#av');v.disabled=true;m('Checking…');try{const j=await call('verify_code',{email,code:$('#ac').value});TOKEN=j.token;NAME=j.name;save();box.classList.add('hide');renderTop();if(after)after();else route()}catch(x){m(x.message,'err');v.disabled=false}};
-      $('#ac').focus();
-    }catch(x){m(x.message,'err');b.disabled=false}
+function authBox(after,mode){
+  const box=$('#auth');if(!box)return;box.classList.remove('hide');mode=mode||'in';
+  const m=(t,k)=>{const e=$('#am');if(e){e.className='msg '+(k||'');e.textContent=t||''}};
+  const done=j=>{TOKEN=j.token;NAME=j.name;save();box.classList.add('hide');renderTop();if(after)after();else route()};
+  const hp='<div class="hp"><input id="aw" tabindex="-1" autocomplete="off"></div>';
+  const swap=(a,t)=>'<button class="link" data-m="'+a+'">'+t+'</button>';
+  const codeStep=(email,pw)=>{
+    box.innerHTML='<b>Check your email</b><p class="sub">We sent a 6-digit code to <b>'+esc(email)+'</b>. It works for 10 minutes. Check spam if you do not see it.</p><label>Code</label><input id="ac" inputmode="numeric" autocomplete="one-time-code" maxlength="6">'+(pw?'':'<label>Choose a new password (8+ characters)</label><input id="ap2" type="password" autocomplete="new-password">')+'<button id="av" style="margin-top:1rem">Continue</button> <button class="ghost" id="acx2" style="margin-top:1rem">Back</button><p class="msg" id="am"></p>';
+    $('#acx2').onclick=()=>authBox(after,'in');
+    $('#av').onclick=async()=>{const v=$('#av');v.disabled=true;m('Checking…');try{done(await call('verify_code',{email,code:$('#ac').value,password:pw||$('#ap2').value}))}catch(x){m(x.message,'err');v.disabled=false}};
+    $('#ac').focus();
   };
-  $('#ago').onclick=ask;$('#ae').focus();
+  if(mode==='in'){
+    box.innerHTML='<b>Sign in</b><label>Email</label><input id="ae" type="email" autocomplete="email" inputmode="email" autocapitalize="none"><label>Password</label><input id="ap" type="password" autocomplete="current-password"><button id="ago" style="margin-top:1rem">Sign in</button> <button class="ghost" id="acx" style="margin-top:1rem">Cancel</button><p class="msg" id="am"></p><div class="meta" style="gap:1rem">'+swap('join','New here? Join the forum')+swap('forgot','Forgot password?')+'</div>';
+    $('#acx').onclick=()=>box.classList.add('hide');
+    $('#ago').onclick=async()=>{const b=$('#ago');b.disabled=true;m('Signing in…');try{const r=await call('login',{email:$('#ae').value.trim(),password:$('#ap').value});
+      if(r.need_password){m('This account has no password yet. Tap “Forgot password?” to set one.','err');b.disabled=false;return}done(r)}catch(x){m(x.message,'err');b.disabled=false}};
+    $('#ap').onkeydown=e=>{if(e.key==='Enter')$('#ago').click()};$('#ae').focus();
+  }else if(mode==='join'){
+    box.innerHTML='<b>Join the forum</b><p class="sub">Free. Students and everyone else are welcome. We confirm your email with a code, once.</p><label>Your name (shown with your posts)</label><input id="aname" maxlength="40" autocomplete="name"><label>Email</label><input id="ae" type="email" autocomplete="email" inputmode="email" autocapitalize="none"><label>Choose a password (8+ characters)</label><input id="ap" type="password" autocomplete="new-password">'+hp+'<label style="display:flex;gap:.5rem;align-items:flex-start;color:var(--text)"><input id="ag" type="checkbox" style="width:auto;margin-top:.2rem"> <span>I will be respectful, post no spam or illegal content, and understand posts can be removed.</span></label><button id="ago" style="margin-top:1rem">Send code</button> <button class="ghost" id="acx" style="margin-top:1rem">Cancel</button><p class="msg" id="am"></p><div class="meta">'+swap('in','Already a member? Sign in')+'</div>';
+    $('#acx').onclick=()=>box.classList.add('hide');
+    $('#ago').onclick=async()=>{const b=$('#ago'),email=$('#ae').value.trim(),pw=$('#ap').value;
+      const nm=$('#aname').value.trim();if(nm.length<2){m('Enter your name (at least 2 letters).','err');return}
+      if(pw.length<8){m('Choose a password of at least 8 characters.','err');return}
+      b.disabled=true;m('Sending…');try{await call('request_code',{email,name:nm,agree:$('#ag').checked,website:$('#aw').value});codeStep(email,pw)}catch(x){m(x.message,'err');b.disabled=false}};
+    $('#aname').focus();
+  }else{
+    box.innerHTML='<b>Forgot password</b><p class="sub">Enter your email. We send a code so you can choose a new password.</p><label>Email</label><input id="ae" type="email" autocomplete="email" inputmode="email" autocapitalize="none"><button id="ago" style="margin-top:1rem">Send code</button> <button class="ghost" id="acx" style="margin-top:1rem">Back</button><p class="msg" id="am"></p>';
+    $('#acx').onclick=()=>authBox(after,'in');
+    $('#ago').onclick=async()=>{const b=$('#ago'),email=$('#ae').value.trim();b.disabled=true;m('Sending…');try{await call('request_code',{email,forgot:true});codeStep(email,'')}catch(x){m(x.message,'err');b.disabled=false}};
+    $('#ae').focus();
+  }
+  box.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>authBox(after,b.dataset.m));
 }
 
 async function list(more){
