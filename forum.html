@@ -66,43 +66,62 @@ async function call(action,data,method){
   return j;
 }
 const id=()=>new URLSearchParams(location.search).get('t');
-const badge=s=>s?' <span class="badge">Student</span>':'';
+const badge=()=>'';
 
-function renderTop(){const el=$('#me');if(!el)return;el.innerHTML=TOKEN?'Signed in as <b>'+esc(NAME)+'</b> <button class="link" id="out">Sign out</button>':'<button class="sm" id="in">Join / Sign in</button>';
+function renderTop(){const el=$('#me');if(!el)return;el.innerHTML=TOKEN?'Signed in as <b>'+esc(NAME)+'</b> <button class="link" id="pw">Change password</button> <button class="link" id="out">Sign out</button>':'<button class="sm" id="in">Join / Sign in</button>';
   const o=$('#out');if(o)o.onclick=()=>{TOKEN='';NAME='';save();renderTop();if($('#nt'))$('#nt').classList.add('hide');if(id())route()};
-  const i=$('#in');if(i)i.onclick=()=>authBox()}
+  const i=$('#in');if(i)i.onclick=()=>authBox();const pw=$('#pw');if(pw)pw.onclick=()=>authBox(null,'pw')}
+
+// anti-spam puzzle: the browser finds a number n so that sha256(challenge:n) starts with 4 hex zeros (about a second, solved while the person types)
+let POW=null;
+async function solvePow(){
+  const j=await call('challenge',{},'GET');const enc=new TextEncoder();
+  for(let n=0;;n++){const h=new Uint8Array(await crypto.subtle.digest('SHA-256',enc.encode(j.c+':'+n)));if(h[0]===0&&h[1]===0)return{c:j.c,n:String(n)}}
+}
+function startPow(){POW=solvePow().catch(()=>null)}
+
+function recoveryScreen(j,after){
+  const box=$('#auth');box.classList.remove('hide');
+  box.innerHTML='<b>Save your recovery code</b><p class="sub">This is the only way to get back in if you forget your password. It is shown <b>once</b>. Take a screenshot or write it down.</p><div class="body" style="font:700 1.4rem var(--display);letter-spacing:.08em;text-align:center;background:var(--bg2);border:1px dashed var(--green);border-radius:10px;padding:1rem;user-select:all">'+esc(j.recovery)+'</div><button class="ghost" id="rc" style="margin-top:.8rem">Copy code</button> <button id="rd" style="margin-top:.8rem">I have saved it</button><p class="msg" id="am"></p>';
+  $('#rc').onclick=async()=>{try{await navigator.clipboard.writeText(j.recovery);$('#am').className='msg ok';$('#am').textContent='Copied.'}catch(e){$('#am').textContent='Press and hold the code to copy it.'}};
+  $('#rd').onclick=()=>{box.classList.add('hide');renderTop();if(after)after();else route()};
+}
 
 function authBox(after,mode){
   const box=$('#auth');if(!box)return;box.classList.remove('hide');mode=mode||'in';
   const m=(t,k)=>{const e=$('#am');if(e){e.className='msg '+(k||'');e.textContent=t||''}};
-  const done=j=>{TOKEN=j.token;NAME=j.name;save();box.classList.add('hide');renderTop();if(after)after();else route()};
+  const signed=j=>{TOKEN=j.token;NAME=j.name;save();renderTop()};
+  const done=j=>{signed(j);box.classList.add('hide');if(after)after();else route()};
   const hp='<div class="hp"><input id="aw" tabindex="-1" autocomplete="off"></div>';
   const swap=(a,t)=>'<button class="link" data-m="'+a+'">'+t+'</button>';
-  const codeStep=(email,pw)=>{
-    box.innerHTML='<b>Check your email</b><p class="sub">We sent a 6-digit code to <b>'+esc(email)+'</b>. It works for 10 minutes. Check spam if you do not see it.</p><label>Code</label><input id="ac" inputmode="numeric" autocomplete="one-time-code" maxlength="6">'+(pw?'':'<label>Choose a new password (8+ characters)</label><input id="ap2" type="password" autocomplete="new-password">')+'<button id="av" style="margin-top:1rem">Continue</button> <button class="ghost" id="acx2" style="margin-top:1rem">Back</button><p class="msg" id="am"></p>';
-    $('#acx2').onclick=()=>authBox(after,'in');
-    $('#av').onclick=async()=>{const v=$('#av');v.disabled=true;m('Checking…');try{done(await call('verify_code',{email,code:$('#ac').value,password:pw||$('#ap2').value}))}catch(x){m(x.message,'err');v.disabled=false}};
-    $('#ac').focus();
-  };
   if(mode==='in'){
-    box.innerHTML='<b>Sign in</b><label>Email</label><input id="ae" type="email" autocomplete="email" inputmode="email" autocapitalize="none"><label>Password</label><input id="ap" type="password" autocomplete="current-password"><button id="ago" style="margin-top:1rem">Sign in</button> <button class="ghost" id="acx" style="margin-top:1rem">Cancel</button><p class="msg" id="am"></p><div class="meta" style="gap:1rem">'+swap('join','New here? Join the forum')+swap('forgot','Forgot password?')+'</div>';
+    box.innerHTML='<b>Sign in</b><label>Username</label><input id="au" autocomplete="username" autocapitalize="none"><label>Password</label><input id="ap" type="password" autocomplete="current-password"><button id="ago" style="margin-top:1rem">Sign in</button> <button class="ghost" id="acx" style="margin-top:1rem">Cancel</button><p class="msg" id="am"></p><div class="meta" style="gap:1rem">'+swap('join','New here? Join the forum')+swap('forgot','Forgot password?')+'</div>';
     $('#acx').onclick=()=>box.classList.add('hide');
-    $('#ago').onclick=async()=>{const b=$('#ago');b.disabled=true;m('Signing in…');try{const r=await call('login',{email:$('#ae').value.trim(),password:$('#ap').value});
-      if(r.need_password){m('This account has no password yet. Tap “Forgot password?” to set one.','err');b.disabled=false;return}done(r)}catch(x){m(x.message,'err');b.disabled=false}};
-    $('#ap').onkeydown=e=>{if(e.key==='Enter')$('#ago').click()};$('#ae').focus();
+    $('#ago').onclick=async()=>{const b=$('#ago');b.disabled=true;m('Signing in…');try{done(await call('login',{username:$('#au').value.trim(),password:$('#ap').value}))}catch(x){m(x.message,'err');b.disabled=false}};
+    $('#ap').onkeydown=e=>{if(e.key==='Enter')$('#ago').click()};$('#au').focus();
   }else if(mode==='join'){
-    box.innerHTML='<b>Join the forum</b><p class="sub">Free. Students and everyone else are welcome. We confirm your email with a code, once.</p><label>Your name (shown with your posts)</label><input id="aname" maxlength="40" autocomplete="name"><label>Email</label><input id="ae" type="email" autocomplete="email" inputmode="email" autocapitalize="none"><label>Choose a password (8+ characters)</label><input id="ap" type="password" autocomplete="new-password">'+hp+'<label style="display:flex;gap:.5rem;align-items:flex-start;color:var(--text)"><input id="ag" type="checkbox" style="width:auto;margin-top:.2rem"> <span>I will be respectful, post no spam or illegal content, and understand posts can be removed.</span></label><button id="ago" style="margin-top:1rem">Send code</button> <button class="ghost" id="acx" style="margin-top:1rem">Cancel</button><p class="msg" id="am"></p><div class="meta">'+swap('in','Already a member? Sign in')+'</div>';
+    startPow();
+    box.innerHTML='<b>Join the forum</b><p class="sub">Free. Students and everyone else are welcome. No email needed.</p><label>Choose a username (shown with your posts)</label><input id="au" maxlength="30" autocomplete="username" autocapitalize="none"><label>Choose a password (8+ characters)</label><input id="ap" type="password" autocomplete="new-password">'+hp+'<label style="display:flex;gap:.5rem;align-items:flex-start;color:var(--text)"><input id="ag" type="checkbox" style="width:auto;margin-top:.2rem"> <span>I will be respectful, post no spam or illegal content, and understand posts can be removed.</span></label><button id="ago" style="margin-top:1rem">Create account</button> <button class="ghost" id="acx" style="margin-top:1rem">Cancel</button><p class="msg" id="am"></p><div class="meta">'+swap('in','Already a member? Sign in')+'</div>';
     $('#acx').onclick=()=>box.classList.add('hide');
-    $('#ago').onclick=async()=>{const b=$('#ago'),email=$('#ae').value.trim(),pw=$('#ap').value;
-      const nm=$('#aname').value.trim();if(nm.length<2){m('Enter your name (at least 2 letters).','err');return}
-      if(pw.length<8){m('Choose a password of at least 8 characters.','err');return}
-      b.disabled=true;m('Sending…');try{await call('request_code',{email,name:nm,agree:$('#ag').checked,website:$('#aw').value});codeStep(email,pw)}catch(x){m(x.message,'err');b.disabled=false}};
-    $('#aname').focus();
-  }else{
-    box.innerHTML='<b>Forgot password</b><p class="sub">Enter your email. We send a code so you can choose a new password.</p><label>Email</label><input id="ae" type="email" autocomplete="email" inputmode="email" autocapitalize="none"><button id="ago" style="margin-top:1rem">Send code</button> <button class="ghost" id="acx" style="margin-top:1rem">Back</button><p class="msg" id="am"></p>';
+    $('#ago').onclick=async()=>{const b=$('#ago');
+      if($('#au').value.trim().length<3){m('Choose a username of at least 3 characters.','err');return}
+      if($('#ap').value.length<8){m('Choose a password of at least 8 characters.','err');return}
+      if(!$('#ag').checked){m('Please tick the box to agree to the rules.','err');return}
+      b.disabled=true;m('Creating your account…');
+      try{const pow=await POW;if(!pow)throw new Error('The anti-spam check failed. Please reload the page and try again.');
+        const j=await call('register',{username:$('#au').value.trim(),password:$('#ap').value,agree:true,pow,website:$('#aw').value});signed(j);recoveryScreen(j,after)}
+      catch(x){m(x.message,'err');b.disabled=false;startPow()}};
+    $('#au').focus();
+  }else if(mode==='forgot'){
+    box.innerHTML='<b>Forgot password</b><p class="sub">Enter the recovery code you were shown when you joined. Lost it? Message Esau and he will reset your password.</p><label>Username</label><input id="au" autocomplete="username" autocapitalize="none"><label>Recovery code</label><input id="arc" placeholder="XXXX-XXXX-XXXX" autocapitalize="characters" autocomplete="off"><label>New password (8+ characters)</label><input id="ap" type="password" autocomplete="new-password"><button id="ago" style="margin-top:1rem">Reset password</button> <button class="ghost" id="acx" style="margin-top:1rem">Back</button><p class="msg" id="am"></p>';
     $('#acx').onclick=()=>authBox(after,'in');
-    $('#ago').onclick=async()=>{const b=$('#ago'),email=$('#ae').value.trim();b.disabled=true;m('Sending…');try{await call('request_code',{email,forgot:true});codeStep(email,'')}catch(x){m(x.message,'err');b.disabled=false}};
-    $('#ae').focus();
+    $('#ago').onclick=async()=>{const b=$('#ago');b.disabled=true;m('Checking…');try{const j=await call('recover',{username:$('#au').value.trim(),recovery:$('#arc').value,password:$('#ap').value});signed(j);recoveryScreen(j,after)}catch(x){m(x.message,'err');b.disabled=false}};
+    $('#au').focus();
+  }else{ // change password (signed in)
+    box.innerHTML='<b>Change password</b><label>Current password</label><input id="ap" type="password" autocomplete="current-password"><label>New password (8+ characters)</label><input id="ap2" type="password" autocomplete="new-password"><button id="ago" style="margin-top:1rem">Save</button> <button class="ghost" id="acx" style="margin-top:1rem">Cancel</button><p class="msg" id="am"></p>';
+    $('#acx').onclick=()=>box.classList.add('hide');
+    $('#ago').onclick=async()=>{const b=$('#ago');b.disabled=true;try{await call('change_password',{password:$('#ap').value,new_password:$('#ap2').value});m('Password changed.','ok');setTimeout(()=>box.classList.add('hide'),1200)}catch(x){m(x.message,'err');b.disabled=false}};
+    $('#ap').focus();
   }
   box.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>authBox(after,b.dataset.m));
 }
