@@ -1390,6 +1390,21 @@
 
 <div class="rs-ov" id="rsOv" role="dialog" aria-modal="true"><div class="rs-modal" id="rsModal"></div></div>
 
+<!-- COMMUNITY FORUM (shown only while the forum is switched on in the admin) -->
+<style>#community[hidden]{display:none}</style>
+<section id="community" class="section" hidden>
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-num">//</span>
+      <h2 class="sec-title">community<span>()</span></h2>
+      <div class="sec-line"></div>
+    </div>
+    <p style="font-size:.85rem;color:var(--text2);max-width:620px;margin-bottom:1.6rem;line-height:1.7">Ask questions, share your projects and help other learners. Free to join. Everyone is welcome, whether you are one of my students or not.</p>
+    <div class="rs-grid" id="fmGrid"></div>
+    <p style="margin-top:1.4rem;display:flex;flex-wrap:wrap;gap:.8rem"><a class="btn btn-primary" href="forum">Open the forum</a><a class="btn" href="forum" style="border:1px solid var(--border2)">Join free</a></p>
+  </div>
+</section>
+
 <!-- TESTIMONIALS -->
 <section id="testimonials" class="section">
   <div class="container">
@@ -5006,6 +5021,16 @@ window.addTestimonialLocal = function (t) {
 </script>
 
 <script src="https://esauvictor.name.ng/api/site.js" defer></script>
+<script>/* homepage community block: shows the latest forum topics while the forum is on */
+(function(){var API='https://esauvictor.name.ng/api/forum.php';
+function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function ago(i){var s=Math.max(0,(Date.now()-Date.parse(i))/1000);if(s<60)return 'just now';if(s<3600)return Math.floor(s/60)+' min ago';if(s<86400)return Math.floor(s/3600)+' h ago';return Math.floor(s/86400)+' d ago'}
+fetch(API).then(function(r){return r.json()}).then(function(j){if(!j||!j.enabled)return;
+ return fetch(API+'?a=topics').then(function(r){return r.json()}).then(function(d){
+  var sec=document.getElementById('community'),g=document.getElementById('fmGrid');if(!sec||!g)return;
+  var t=(d.topics||[]).slice(0,3);
+  g.innerHTML=t.length?t.map(function(x){return '<a class="rs-card" href="forum?t='+x.id+'" style="text-decoration:none"><div class="rs-top"><span>'+esc(x.category)+'</span><span>'+x.replies+' repl'+(x.replies===1?'y':'ies')+'</span></div><h3>'+esc(x.title)+'</h3><p>'+esc(x.body)+'</p><div class="rs-meta">'+esc(x.author)+' · '+ago(x.last_activity)+'</div></a>'}).join(''):'<div class="rs-empty" style="grid-column:1/-1;padding:1.4rem;background:var(--bg1)">No topics yet. Be the first to start a conversation.</div>';
+  sec.hidden=false})}).catch(function(){})})();</script>
 <script>/* shows the Forum link only while the forum is switched on in the admin */
 fetch('https://esauvictor.name.ng/api/forum.php').then(function(r){return r.json()}).then(function(j){if(!j||!j.enabled)return;var ul=document.querySelector('#navLinks, .nav ul');if(!ul||ul.querySelector('a[href="forum"]'))return;var li=document.createElement('li');li.innerHTML='<a href="forum">forum</a>';var c=ul.querySelector('a[href*="contact"]');c&&c.parentNode.parentNode===ul?ul.insertBefore(li,c.parentNode):ul.appendChild(li)}).catch(function(){});</script>
 </body>
