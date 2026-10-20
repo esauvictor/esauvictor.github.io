@@ -38,7 +38,7 @@ button.link{background:none;border:0;color:var(--text3);padding:0;font-weight:40
 .reply{border-top:1px solid var(--border);padding:.9rem 0}.reply:first-child{border:0}
 .msg{margin-top:.7rem;font-size:.82rem;min-height:1.3em}.msg.err{color:#f87171}.msg.ok{color:#4ade80}
 .rules{font-size:.76rem;color:var(--text2);margin-top:.9rem}.rules li{margin-left:1.1rem}
-.hp{position:absolute;left:-9999px;height:0;overflow:hidden}
+.badge.host{background:#38bdf8;color:#04283a}.u{color:inherit;text-decoration:none}.u:hover{color:var(--green)}pre{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:.8rem;overflow-x:auto;margin:.6rem 0;white-space:pre}code{font-family:var(--mono);font-size:.84em;background:var(--bg2);padding:.08rem .3rem;border-radius:4px}pre code{padding:0;background:none}.hp{position:absolute;left:-9999px;height:0;overflow:hidden}
 footer{border-top:1px solid var(--border);margin-top:3rem;padding:1.6rem 0 2.2rem;text-align:center;font-size:.74rem;color:var(--text2)}
 .hide{display:none}
 </style>
@@ -65,12 +65,30 @@ async function call(action,data,method){
   if(!r.ok)throw Object.assign(new Error(j.error||'Something went wrong.'),{status:r.status});
   return j;
 }
-const id=()=>new URLSearchParams(location.search).get('t');
-const badge=()=>'';
+const Q=()=>new URLSearchParams(location.search);
+const id=()=>Q().get('t');
+const badge=x=>(x.staff?' <span class="badge host">Host</span>':'')+(x.student?' <span class="badge">Student</span>':'');
+const who=(n,x)=>'<a class="u" href="forum?u='+encodeURIComponent(n)+'" data-u="'+esc(n)+'">'+esc(n)+'</a>'+badge(x||{});
+// post text: escape everything, then turn ``` fences and `inline code` into code (no HTML from members ever reaches the page)
+function fmt(t){return String(t==null?'':t).split('```').map((part,i)=>i%2?'<pre><code>'+esc(part.replace(/^\n/,''))+'</code></pre>':esc(part).replace(/`([^`\n]{1,200})`/g,'<code>$1</code>')).join('')}
+let UNREAD=0;
+async function loadUnread(){if(!TOKEN){UNREAD=0;return}try{UNREAD=(await call('notifs',{},'GET')).unread}catch(e){UNREAD=0}renderTop()}
+function renderTop(){const el=$('#me');if(!el)return;
+  el.innerHTML=TOKEN?'<a class="u" href="forum?u='+encodeURIComponent(NAME)+'" data-u="'+esc(NAME)+'"><b>'+esc(NAME)+'</b></a> <button class="link" id="bell">Alerts'+(UNREAD?' <span class="badge pin">'+UNREAD+'</span>':'')+'</button> <button class="link" id="acct">Account</button> <button class="link" id="out">Sign out</button>':'<button class="sm" id="in">Join / Sign in</button>';
+  const o=$('#out');if(o)o.onclick=()=>{TOKEN='';NAME='';UNREAD=0;save();renderTop();if($('#nt'))$('#nt').classList.add('hide');route()};
+  const i=$('#in');if(i)i.onclick=()=>authBox();const ac=$('#acct');if(ac)ac.onclick=()=>authBox(null,'acct');const bl=$('#bell');if(bl)bl.onclick=()=>bellBox();
+  el.querySelectorAll('a[data-u]').forEach(a=>a.onclick=e=>{e.preventDefault();go('forum?u='+encodeURIComponent(a.dataset.u))})}
+function go(href){history.pushState(null,'',href);route()}
 
-function renderTop(){const el=$('#me');if(!el)return;el.innerHTML=TOKEN?'Signed in as <b>'+esc(NAME)+'</b> <button class="link" id="pw">Change password</button> <button class="link" id="out">Sign out</button>':'<button class="sm" id="in">Join / Sign in</button>';
-  const o=$('#out');if(o)o.onclick=()=>{TOKEN='';NAME='';save();renderTop();if($('#nt'))$('#nt').classList.add('hide');if(id())route()};
-  const i=$('#in');if(i)i.onclick=()=>authBox();const pw=$('#pw');if(pw)pw.onclick=()=>authBox(null,'pw')}
+async function bellBox(){
+  const box=$('#auth');box.classList.remove('hide');box.innerHTML='<b>Alerts</b><p class="sub">Loading…</p>';
+  try{const d=await call('notifs',{full:'1'},'GET');
+    box.innerHTML='<b>Alerts</b>'+(d.items.length?d.items.map(n=>'<a class="t" href="forum?t='+n.topic_id+'" data-t="'+n.topic_id+'" style="margin:.5rem 0;'+(n.seen?'':'border-color:var(--green)')+'"><b style="font-size:.88rem">'+(n.kind==='best'?'✓ '+esc(n.actor)+' marked your reply as the best answer':'💬 '+esc(n.actor)+' replied to your topic')+'</b><div class="meta">'+esc(n.title)+' · '+ago(n.created_at)+'</div></a>').join(''):'<p class="sub">Nothing new. You will see replies to your topics here.</p>')+'<button class="ghost" id="acx" style="margin-top:.8rem">Close</button>';
+    $('#acx').onclick=()=>box.classList.add('hide');
+    box.querySelectorAll('a[data-t]').forEach(a=>a.onclick=e=>{e.preventDefault();box.classList.add('hide');go(a.getAttribute('href'))});
+    if(d.unread){await call('notifs_read',{});UNREAD=0;renderTop()}
+  }catch(x){box.innerHTML='<p class="msg err">'+esc(x.message)+'</p>'}
+}
 
 // anti-spam puzzle: the browser finds a number n so that sha256(challenge:n) starts with 4 hex zeros (about a second, solved while the person types)
 let POW=null;
@@ -90,7 +108,7 @@ function recoveryScreen(j,after){
 function authBox(after,mode){
   const box=$('#auth');if(!box)return;box.classList.remove('hide');mode=mode||'in';
   const m=(t,k)=>{const e=$('#am');if(e){e.className='msg '+(k||'');e.textContent=t||''}};
-  const signed=j=>{TOKEN=j.token;NAME=j.name;save();renderTop()};
+  const signed=j=>{TOKEN=j.token;NAME=j.name;save();renderTop();loadUnread()};
   const done=j=>{signed(j);box.classList.add('hide');if(after)after();else route()};
   const hp='<div class="hp"><input id="aw" tabindex="-1" autocomplete="off"></div>';
   const swap=(a,t)=>'<button class="link" data-m="'+a+'">'+t+'</button>';
@@ -117,51 +135,95 @@ function authBox(after,mode){
     $('#acx').onclick=()=>authBox(after,'in');
     $('#ago').onclick=async()=>{const b=$('#ago');b.disabled=true;m('Checking…');try{const j=await call('recover',{username:$('#au').value.trim(),recovery:$('#arc').value,password:$('#ap').value});signed(j);recoveryScreen(j,after)}catch(x){m(x.message,'err');b.disabled=false}};
     $('#au').focus();
-  }else{ // change password (signed in)
-    box.innerHTML='<b>Change password</b><label>Current password</label><input id="ap" type="password" autocomplete="current-password"><label>New password (8+ characters)</label><input id="ap2" type="password" autocomplete="new-password"><button id="ago" style="margin-top:1rem">Save</button> <button class="ghost" id="acx" style="margin-top:1rem">Cancel</button><p class="msg" id="am"></p>';
+  }else if(mode==='acct'){
+    box.innerHTML='<b>Your account</b><div style="display:grid;gap:.6rem;margin-top:.8rem"><button class="ghost" data-m="profile">Edit my profile</button><button class="ghost" data-m="student">Verify I am a student</button><button class="ghost" data-m="pw">Change password</button><button class="ghost" id="acx">Close</button></div>';
     $('#acx').onclick=()=>box.classList.add('hide');
+  }else if(mode==='profile'){
+    box.innerHTML='<b>Edit profile</b><p class="sub">Shown on your public profile.</p><label>About you (200 characters)</label><textarea id="pbio" maxlength="200" style="min-height:80px"></textarea><label>Website (optional, starts with https://)</label><input id="pweb" autocapitalize="none"><label>GitHub username (optional)</label><input id="pgh" autocapitalize="none"><button id="ago" style="margin-top:1rem">Save</button> <button class="ghost" id="acx" style="margin-top:1rem">Back</button><p class="msg" id="am"></p>';
+    call('profile',{u:NAME},'GET').then(p=>{$('#pbio').value=p.bio||'';$('#pweb').value=p.website||'';$('#pgh').value=p.github||''}).catch(()=>{});
+    $('#acx').onclick=()=>authBox(after,'acct');
+    $('#ago').onclick=async()=>{const b=$('#ago');b.disabled=true;try{await call('profile_save',{bio:$('#pbio').value,website:$('#pweb').value,github:$('#pgh').value});m('Saved.','ok');b.disabled=false}catch(x){m(x.message,'err');b.disabled=false}};
+  }else if(mode==='student'){
+    box.innerHTML='<b>Verify I am a student</b><p class="sub">Choose your class and enter its class code (the one you use to unlock lessons). You will get a Student badge.</p><label>Class</label><select id="scl"><option value="">Loading…</option></select><label>Class code</label><input id="scd" autocapitalize="characters" autocomplete="off"><button id="ago" style="margin-top:1rem">Verify</button> <button class="ghost" id="acx" style="margin-top:1rem">Back</button><p class="msg" id="am"></p>';
+    fetch('https://esauvictor.name.ng/api/classes.php').then(r=>r.json()).then(d=>{$('#scl').innerHTML='<option value="">Choose your class…</option>'+(d.classes||[]).filter(c=>c.has_code).map(c=>'<option value="'+esc(c.slug)+'">'+esc(c.title)+'</option>').join('')}).catch(()=>{$('#scl').innerHTML='<option value="">Could not load classes</option>'});
+    $('#acx').onclick=()=>authBox(after,'acct');
+    $('#ago').onclick=async()=>{const b=$('#ago');b.disabled=true;m('Checking…');try{await call('verify_student',{slug:$('#scl').value,code:$('#scd').value});m('Verified. Your Student badge will now show on your posts.','ok')}catch(x){m(x.message,'err');b.disabled=false}};
+  }else{ // change password (signed in)
+    box.innerHTML='<b>Change password</b><label>Current password</label><input id="ap" type="password" autocomplete="current-password"><label>New password (8+ characters)</label><input id="ap2" type="password" autocomplete="new-password"><button id="ago" style="margin-top:1rem">Save</button> <button class="ghost" id="acx" style="margin-top:1rem">Back</button><p class="msg" id="am"></p>';
+    $('#acx').onclick=()=>authBox(after,'acct');
     $('#ago').onclick=async()=>{const b=$('#ago');b.disabled=true;try{await call('change_password',{password:$('#ap').value,new_password:$('#ap2').value});m('Password changed.','ok');setTimeout(()=>box.classList.add('hide'),1200)}catch(x){m(x.message,'err');b.disabled=false}};
     $('#ap').focus();
   }
   box.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>authBox(after,b.dataset.m));
 }
 
+let FILTER='',QUERY='';
 async function list(more){
   const box=$('#list');if(!more){PAGE=1;box.innerHTML='<p class="sub">Loading…</p>'}
+  const cls=Q().get('class')||'';
   try{
-    const d=await call('topics',{...(CAT?{cat:CAT}:{}),page:PAGE},'GET');
-    const html=d.topics.map(t=>'<a class="t" href="forum?t='+t.id+'" data-t="'+t.id+'"><b>'+(t.pinned?'<span class="badge pin">Pinned</span> ':'')+esc(t.title)+'</b><p>'+esc(t.body)+(t.body.length>=220?'…':'')+'</p><div class="meta"><span class="badge cat">'+esc(t.category)+'</span><span>'+esc(t.author)+badge(t.student)+'</span><span>'+t.replies+' repl'+(t.replies===1?'y':'ies')+'</span><span>'+ago(t.last_activity)+'</span></div></a>').join('');
-    box.innerHTML=(more?box.innerHTML.replace(/<button id="lm".*$/s,''):'')+(html||(more?'':'<p class="sub">No topics here yet. Be the first to start one.</p>'))+(d.more?'<button class="ghost" id="lm" style="margin-top:.8rem">Load more</button>':'');
+    const d=await call('topics',{...(CAT?{cat:CAT}:{}),...(FILTER?{filter:FILTER}:{}),...(QUERY?{q:QUERY}:{}),...(cls?{class:cls}:{}),page:PAGE},'GET');
+    const html=d.topics.map(t=>'<a class="t" href="forum?t='+t.id+'" data-t="'+t.id+'"><b>'+(t.pinned?'<span class="badge pin">Pinned</span> ':'')+(t.solved?'<span class="badge">Solved ✓</span> ':'')+esc(t.title)+'</b><p>'+esc(t.body)+(t.body.length>=220?'…':'')+'</p><div class="meta"><span class="badge cat">'+esc(t.category)+'</span>'+(t.class?'<span class="badge cat">'+esc(t.class.title)+'</span>':'')+'<span>'+esc(t.author)+badge(t)+'</span><span>'+t.replies+' repl'+(t.replies===1?'y':'ies')+'</span>'+(t.votes?'<span>👍 '+t.votes+'</span>':'')+'<span>'+ago(t.last_activity)+'</span></div></a>').join('');
+    box.innerHTML=(more?box.innerHTML.replace(/<button id="lm".*$/s,''):'')+(html||(more?'':'<p class="sub">'+(QUERY||FILTER?'Nothing found. Try different words.':'No topics here yet. Be the first to start one.')+'</p>'))+(d.more?'<button class="ghost" id="lm" style="margin-top:.8rem">Load more</button>':'');
     const lm=$('#lm');if(lm)lm.onclick=()=>{PAGE++;lm.disabled=true;list(true)};
-    box.querySelectorAll('a[data-t]').forEach(a=>a.onclick=e=>{e.preventDefault();history.pushState(null,'',a.getAttribute('href'));route()});
+    box.querySelectorAll('a[data-t]').forEach(a=>a.onclick=e=>{e.preventDefault();go(a.getAttribute('href'))});
   }catch(x){box.innerHTML='<p class="msg err">'+esc(x.message)+'</p>'}
 }
 
 function viewList(){
+  const cls=Q().get('class')||'';
   $('#main').innerHTML='<div class="top"><div><h1>Community Forum</h1><p class="sub">Ask questions, share your projects, help each other.</p></div><div class="me" id="me"></div></div><div id="auth" class="card hide"></div>'
-  +'<p><button id="nb">+ New topic</button></p><div id="nt" class="card hide"><b>Start a topic</b><label>Category</label><select id="nc">'+CATS.map(c=>'<option>'+esc(c)+'</option>').join('')+'</select><label>Title</label><input id="ntt" maxlength="120"><label>Your post</label><textarea id="ntb" maxlength="5000"></textarea><div class="hp"><input id="ntw" tabindex="-1" autocomplete="off"></div><button id="nsend" style="margin-top:1rem">Post</button> <button class="ghost" id="ncx" style="margin-top:1rem">Cancel</button><p class="msg" id="nm"></p><ul class="rules"><li>One question per topic, with a clear title.</li><li>Be kind. No spam, ads, or illegal content.</li><li>Maximum 3 links per post.</li></ul></div>'
-  +'<div class="chips" id="chips"></div><div id="list"></div>';
+  +(cls?'<div class="card" style="display:flex;gap:.8rem;align-items:center;justify-content:space-between;flex-wrap:wrap"><span>Showing discussion for one class.</span><a href="forum" id="clr">Show all topics</a></div>':'')
+  +'<p><button id="nb">+ New topic</button></p><div id="nt" class="card hide"><b>Start a topic</b><label>Category</label><select id="nc">'+CATS.map(c=>'<option>'+esc(c)+'</option>').join('')+'</select><label>Title</label><input id="ntt" maxlength="120"><label>Your post (use ``` before and after code)</label><textarea id="ntb" maxlength="5000"></textarea><div class="hp"><input id="ntw" tabindex="-1" autocomplete="off"></div><button id="nsend" style="margin-top:1rem">Post</button> <button class="ghost" id="ncx" style="margin-top:1rem">Cancel</button><p class="msg" id="nm"></p><ul class="rules"><li>One question per topic, with a clear title.</li><li>Be kind. No spam, ads, or illegal content.</li><li>Maximum 3 links per post.</li></ul></div>'
+  +'<div style="display:flex;gap:.5rem;margin-top:1rem"><input id="sq" placeholder="Search topics…" style="flex:1" value="'+esc(QUERY)+'"><button class="ghost" id="sgo">Search</button></div><div class="chips" id="chips"></div><div id="list"></div>';
   renderTop();
-  const ch=$('#chips');ch.innerHTML=['All',...CATS].map(c=>'<button class="chip '+((c==='All'&&!CAT)||c===CAT?'on':'')+'" data-c="'+esc(c)+'">'+esc(c)+'</button>').join('');
-  ch.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{CAT=b.dataset.c==='All'?'':b.dataset.c;ch.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b));list()});
+  const ch=$('#chips');ch.innerHTML=['All',...CATS,'Unanswered'].map(c=>'<button class="chip '+((c==='All'&&!CAT&&!FILTER)||c===CAT||(c==='Unanswered'&&FILTER)?'on':'')+'" data-c="'+esc(c)+'">'+esc(c)+'</button>').join('');
+  ch.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{const v=b.dataset.c;CAT=(v==='All'||v==='Unanswered')?'':v;FILTER=v==='Unanswered'?'unanswered':'';ch.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b));list()});
+  const doSearch=()=>{QUERY=$('#sq').value.trim();list()};$('#sgo').onclick=doSearch;$('#sq').onkeydown=e=>{if(e.key==='Enter')doSearch()};
+  const cl=$('#clr');if(cl)cl.onclick=e=>{e.preventDefault();go('forum')};
   $('#nb').onclick=()=>{if(!TOKEN){authBox(()=>{$('#nt').classList.remove('hide')});return}$('#nt').classList.remove('hide');$('#ntt').focus()};
   $('#ncx').onclick=()=>$('#nt').classList.add('hide');
   $('#nsend').onclick=async()=>{const b=$('#nsend'),m=$('#nm');b.disabled=true;m.className='msg';m.textContent='Posting…';
-    try{const r=await call('topic_new',{category:$('#nc').value,title:$('#ntt').value,body:$('#ntb').value,website:$('#ntw').value});history.pushState(null,'','forum?t='+r.id);route()}catch(x){m.className='msg err';m.textContent=x.message;b.disabled=false}};
-  list();
+    try{const r=await call('topic_new',{category:$('#nc').value,title:$('#ntt').value,body:$('#ntb').value,website:$('#ntw').value,...(cls?{class_slug:cls}:{})});go('forum?t='+r.id)}catch(x){m.className='msg err';m.textContent=x.message;b.disabled=false}};
+  list();loadUnread();
 }
 
 async function viewTopic(tid){
   $('#main').innerHTML='<div class="top"><div><a href="forum" id="bk">← All topics</a></div><div class="me" id="me"></div></div><div id="auth" class="card hide"></div><div id="tp"><p class="sub">Loading…</p></div>';
-  renderTop();$('#bk').onclick=e=>{e.preventDefault();history.pushState(null,'','forum');route()};
+  renderTop();$('#bk').onclick=e=>{e.preventDefault();go('forum')};loadUnread();
   try{
     const d=await call('topic',{id:tid},'GET'),t=d.topic;document.title=t.title+' — Forum';
-    $('#tp').innerHTML='<div class="card"><span class="badge cat">'+esc(t.category)+'</span>'+(t.locked?' <span class="badge cat">Locked</span>':'')+'<h1 style="font-size:1.4rem;margin-top:.5rem;overflow-wrap:anywhere">'+esc(t.title)+'</h1><div class="meta"><span>'+esc(t.author)+badge(t.student)+'</span><span>'+ago(t.created_at)+'</span></div><div class="body">'+esc(t.body)+'</div><div class="meta" style="margin-top:.8rem">'+(t.mine?'<button class="link" data-del="topic" data-id="'+t.id+'">Delete</button>':'<button class="link" data-rep="topic" data-id="'+t.id+'">Report</button>')+'</div></div>'
-    +'<b>'+d.replies.length+' repl'+(d.replies.length===1?'y':'ies')+'</b><div class="card" style="padding:.3rem 1.1rem">'+(d.replies.length?d.replies.map(r=>'<div class="reply"><div class="meta" style="margin:0 0 .3rem"><b style="color:var(--text)">'+esc(r.author)+'</b>'+badge(r.student)+'<span>'+ago(r.created_at)+'</span></div><div class="body" style="margin:0">'+esc(r.body)+'</div><div class="meta">'+(r.mine?'<button class="link" data-del="reply" data-id="'+r.id+'">Delete</button>':'<button class="link" data-rep="reply" data-id="'+r.id+'">Report</button>')+'</div></div>').join(''):'<p class="sub" style="padding:.8rem 0">No replies yet.</p>')+'</div>'
-    +(t.locked?'<p class="sub">This topic is locked.</p>':'<div class="card"><b>Your reply</b><textarea id="rb" maxlength="3000"></textarea><div class="hp"><input id="rw" tabindex="-1" autocomplete="off"></div><button id="rs" style="margin-top:1rem">Reply</button><p class="msg" id="rm"></p></div>');
+    const vote=(k,i,v,n,mine)=>mine?'<span class="meta" style="margin:0">👍 '+n+'</span>':'<button class="link" data-vote="'+k+'" data-id="'+i+'">'+(v?'👍 Helpful ('+n+') · undo':'👍 Helpful'+(n?' ('+n+')':''))+'</button>';
+    const replyHtml=r=>'<div class="reply" id="r'+r.id+'">'+(r.id===d.best_id?'<span class="badge" style="margin-bottom:.4rem;display:inline-block">Best answer ✓</span>':'')+'<div class="meta" style="margin:0 0 .3rem"><b style="color:var(--text)">'+who(r.author,r)+'</b><span>'+ago(r.created_at)+(r.edited?' · edited':'')+'</span></div><div class="body" style="margin:0" data-body>'+fmt(r.body)+'</div><div class="meta">'+vote('reply',r.id,r.voted,r.votes,r.mine)+(t.can_mark?(r.id===d.best_id?'<button class="link" data-best="0">Remove best answer</button>':'<button class="link" data-best="'+r.id+'">Mark as best answer</button>'):'')+(r.can_edit?'<button class="link" data-edit="reply" data-id="'+r.id+'">Edit</button>':'')+(r.mine?'<button class="link" data-del="reply" data-id="'+r.id+'">Delete</button>':'<button class="link" data-rep="reply" data-id="'+r.id+'">Report</button>')+'</div></div>';
+    const best=d.replies.find(r=>r.id===d.best_id),others=d.replies.filter(r=>r.id!==d.best_id);
+    $('#tp').innerHTML='<div class="card"><span class="badge cat">'+esc(t.category)+'</span>'+(t.class?' <a class="badge cat" href="forum?class='+encodeURIComponent(t.class.slug)+'" style="text-decoration:none">'+esc(t.class.title)+'</a>':'')+(t.solved?' <span class="badge">Solved ✓</span>':'')+(t.locked?' <span class="badge cat">Locked</span>':'')+'<h1 style="font-size:1.4rem;margin-top:.5rem;overflow-wrap:anywhere" id="tt">'+esc(t.title)+'</h1><div class="meta"><span>'+who(t.author,t)+'</span><span>'+ago(t.created_at)+(t.edited?' · edited':'')+'</span></div><div class="body" data-body id="tb">'+fmt(t.body)+'</div><div class="meta" style="margin-top:.8rem">'+vote('topic',t.id,t.voted,t.votes,t.mine)+(t.can_edit?'<button class="link" data-edit="topic" data-id="'+t.id+'">Edit</button>':'')+(t.mine?'<button class="link" data-del="topic" data-id="'+t.id+'">Delete</button>':'<button class="link" data-rep="topic" data-id="'+t.id+'">Report</button>')+'</div></div>'
+    +'<b>'+d.replies.length+' repl'+(d.replies.length===1?'y':'ies')+'</b><div class="card" style="padding:.3rem 1.1rem">'+(d.replies.length?(best?replyHtml(best):'')+others.map(replyHtml).join(''):'<p class="sub" style="padding:.8rem 0">No replies yet.</p>')+'</div>'
+    +(t.locked?'<p class="sub">This topic is locked.</p>':'<div class="card"><b>Your reply</b><textarea id="rb" maxlength="3000" placeholder="Use ``` before and after code"></textarea><div class="hp"><input id="rw" tabindex="-1" autocomplete="off"></div><button id="rs" style="margin-top:1rem">Reply</button><p class="msg" id="rm"></p></div>');
+    const T=$('#tp');
+    T.querySelectorAll('a[data-u]').forEach(a=>a.onclick=e=>{e.preventDefault();go(a.getAttribute('href'))});
     const rs=$('#rs');if(rs)rs.onclick=async()=>{if(!TOKEN){authBox(()=>rs.click());return}const m=$('#rm');rs.disabled=true;m.className='msg';m.textContent='Posting…';try{await call('reply',{topic_id:t.id,body:$('#rb').value,website:$('#rw').value});viewTopic(tid)}catch(x){m.className='msg err';m.textContent=x.message;rs.disabled=false}};
-    $('#tp').querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this '+b.dataset.del+'?'))return;try{await call('delete_own',{kind:b.dataset.del,id:+b.dataset.id});if(b.dataset.del==='topic'){history.pushState(null,'','forum');route()}else viewTopic(tid)}catch(x){alert(x.message)}});
-    $('#tp').querySelectorAll('[data-rep]').forEach(b=>b.onclick=async()=>{if(!TOKEN){authBox(()=>b.click());return}try{await call('report',{kind:b.dataset.rep,id:+b.dataset.id});b.textContent='Reported. Thank you.';b.disabled=true}catch(x){alert(x.message)}});
+    T.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this '+b.dataset.del+'?'))return;try{await call('delete_own',{kind:b.dataset.del,id:+b.dataset.id});if(b.dataset.del==='topic')go('forum');else viewTopic(tid)}catch(x){alert(x.message)}});
+    T.querySelectorAll('[data-rep]').forEach(b=>b.onclick=async()=>{if(!TOKEN){authBox(()=>b.click());return}try{await call('report',{kind:b.dataset.rep,id:+b.dataset.id});b.textContent='Reported. Thank you.';b.disabled=true}catch(x){alert(x.message)}});
+    T.querySelectorAll('[data-vote]').forEach(b=>b.onclick=async()=>{if(!TOKEN){authBox(()=>b.click());return}try{await call('vote',{kind:b.dataset.vote,id:+b.dataset.id});viewTopic(tid)}catch(x){alert(x.message)}});
+    T.querySelectorAll('[data-best]').forEach(b=>b.onclick=async()=>{try{await call('mark_best',{topic_id:t.id,reply_id:+b.dataset.best});viewTopic(tid)}catch(x){alert(x.message)}});
+    T.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{
+      const kind=b.dataset.edit,eid=+b.dataset.id,box=kind==='topic'?$('#tb'):b.closest('.reply').querySelector('[data-body]');
+      const cur=kind==='topic'?t.body:d.replies.find(r=>r.id===eid).body;
+      box.outerHTML='<div id="ed">'+(kind==='topic'?'<label>Title</label><input id="et" maxlength="120" value="'+esc(t.title)+'">':'')+'<label>Your post</label><textarea id="eb" maxlength="5000">'+esc(cur)+'</textarea><button id="es" style="margin-top:.8rem">Save</button> <button class="ghost" id="ec" style="margin-top:.8rem">Cancel</button><p class="msg" id="em"></p></div>';
+      $('#ec').onclick=()=>viewTopic(tid);
+      $('#es').onclick=async()=>{$('#es').disabled=true;try{await call('edit',{kind,id:eid,title:kind==='topic'?$('#et').value:undefined,body:$('#eb').value});viewTopic(tid)}catch(x){$('#em').className='msg err';$('#em').textContent=x.message;$('#es').disabled=false}};
+    });
+  }catch(x){$('#tp').innerHTML='<p class="msg err">'+esc(x.message)+'</p>'}
+}
+
+async function viewProfile(name){
+  $('#main').innerHTML='<div class="top"><div><a href="forum" id="bk">← All topics</a></div><div class="me" id="me"></div></div><div id="auth" class="card hide"></div><div id="tp"><p class="sub">Loading…</p></div>';
+  renderTop();$('#bk').onclick=e=>{e.preventDefault();go('forum')};loadUnread();
+  try{const p=await call('profile',{u:name},'GET');document.title=p.name+' — Forum';
+    $('#tp').innerHTML='<div class="card"><h1 style="font-size:1.5rem;overflow-wrap:anywhere">'+esc(p.name)+badge(p)+'</h1><div class="meta">Joined '+new Date(p.joined).toLocaleDateString('en-NG',{month:'long',year:'numeric'})+'</div>'+(p.bio?'<div class="body">'+esc(p.bio)+'</div>':'')+'<div class="meta" style="margin-top:.8rem;gap:1rem"><span><b style="color:var(--text)">'+p.topics+'</b> topics</span><span><b style="color:var(--text)">'+p.replies+'</b> replies</span><span><b style="color:var(--text)">'+p.best_answers+'</b> best answers</span></div>'
+      +((p.website||p.github)?'<div class="meta" style="margin-top:.6rem;gap:1rem">'+(p.website?'<a href="'+esc(p.website)+'" target="_blank" rel="nofollow ugc noopener">Website</a>':'')+(p.github?'<a href="https://github.com/'+encodeURIComponent(p.github)+'" target="_blank" rel="nofollow ugc noopener">GitHub</a>':'')+'</div>':'')+'</div>'
+      +'<b>Recent topics</b>'+(p.recent.length?p.recent.map(t=>'<a class="t" href="forum?t='+t.id+'" data-t="'+t.id+'"><b>'+esc(t.title)+'</b><div class="meta"><span>'+t.replies+' repl'+(t.replies===1?'y':'ies')+'</span><span>'+ago(t.created_at)+'</span></div></a>').join(''):'<p class="sub">No topics yet.</p>');
+    $('#tp').querySelectorAll('a[data-t]').forEach(a=>a.onclick=e=>{e.preventDefault();go(a.getAttribute('href'))});
   }catch(x){$('#tp').innerHTML='<p class="msg err">'+esc(x.message)+'</p>'}
 }
 
@@ -170,7 +232,7 @@ async function route(){
   let s;try{s=await call('status',{},'GET')}catch(x){s={enabled:false}}
   if(!s.enabled){$('#main').innerHTML='<div style="padding:3rem 0"><h1>The forum is closed right now</h1><p class="sub">Please check back soon. In the meantime, you can read the <a href="blog">blog</a> or see the <a href="classes">classes</a>.</p></div>';return}
   CATS=s.categories||[];
-  const t=parseInt(id(),10);t?viewTopic(t):viewList();
+  const t=parseInt(id(),10),u=Q().get('u');t?viewTopic(t):u?viewProfile(u):viewList();
 }
 window.onpopstate=route;route();
 </script>

@@ -149,4 +149,7 @@ fetch(API+'/classes.php?slug='+encodeURIComponent(slug)).then(r=>r.ok?r.json():P
 <script src="https://esauvictor.name.ng/api/site.js" defer></script>
 <script>/* shows the Forum link only while the forum is switched on in the admin */
 fetch('https://esauvictor.name.ng/api/forum.php').then(function(r){return r.json()}).then(function(j){if(!j||!j.enabled)return;var ul=document.querySelector('#navLinks, .nav ul');if(!ul||ul.querySelector('a[href="forum"]'))return;var li=document.createElement('li');li.innerHTML='<a href="forum">forum</a>';var c=ul.querySelector('a[href*="contact"]');c&&c.parentNode.parentNode===ul?ul.insertBefore(li,c.parentNode):ul.appendChild(li)}).catch(function(){});</script>
+<script>/* "Discuss this class" link while the forum is on */
+(function(){var n=0,t=setInterval(function(){n++;if(n>60){clearInterval(t);return}if(typeof D==='undefined'||!D||!D.class)return;clearInterval(t);
+fetch('https://esauvictor.name.ng/api/forum.php').then(function(r){return r.json()}).then(function(j){if(!j||!j.enabled)return;var m=document.getElementById('main');if(!m||document.getElementById('fmLink'))return;var a=document.createElement('div');a.id='fmLink';a.className='card';a.innerHTML='<b>Questions about this class?</b><p class="sub">Ask in the community forum and get help from me and other students.</p><a class="go" href="forum?class='+encodeURIComponent(D.class.slug)+'">Discuss this class</a>';m.appendChild(a)}).catch(function(){})},500)})();</script>
 </body></html>
