@@ -49,6 +49,9 @@ footer{border-top:1px solid var(--border);margin-top:3rem;padding:1.6rem 0 2.2re
 .welcome{border:1px solid var(--green);background:linear-gradient(135deg,rgba(255,122,31,.12),transparent);border-radius:14px;padding:1rem 1.1rem;margin:1rem 0}.welcome h3{font:700 1.05rem var(--display)}.welcome ul{list-style:none;margin-top:.6rem;font-size:.84rem;color:var(--text2)}.welcome li{padding:.25rem 0}.welcome li.ok{color:#4ade80}
 .chiplink{display:inline-block;border:1px solid var(--border2);border-radius:999px;padding:.3rem .8rem;font-size:.76rem;color:var(--text);text-decoration:none}.chiplink:hover{border-color:var(--green);color:var(--green)}
 .rp{display:block;border-top:1px solid var(--border);padding:.7rem 0;text-decoration:none;color:var(--text)}.rp i{display:block;font-style:normal;font-size:.8rem;color:var(--text2);margin-top:.15rem}
+.dd{position:relative}.ddb{display:inline-flex;align-items:center;gap:.5rem;background:var(--bg1);color:#fff;border:1px solid var(--border2);border-radius:999px;padding:.25rem .8rem .25rem .3rem;font:600 .82rem var(--mono)}.ddb:hover{border-color:var(--green)}.ddb .car{font-size:.7rem;color:var(--text2)}.ddb .av{box-shadow:none}
+.ddm{position:absolute;right:0;top:calc(100% + .4rem);min-width:190px;background:var(--bg1);border:1px solid var(--border2);border-radius:12px;padding:.35rem;z-index:50;box-shadow:0 12px 32px rgba(0,0,0,.55);display:flex;flex-direction:column}.ddm.hide{display:none}
+.ddm a,.ddm button{display:flex;align-items:center;gap:.5rem;width:100%;text-align:left;background:none;border:0;border-radius:8px;padding:.65rem .8rem;color:#fff;font:500 .84rem var(--mono);text-decoration:none;cursor:pointer}.ddm a:hover,.ddm button:hover{background:var(--bg2);color:var(--green)}.ddm .bad{color:#f87171;border-top:1px solid var(--border);border-radius:0 0 8px 8px;margin-top:.25rem}.ddm .bad:hover{color:#fca5a5}
 .hide{display:none}
 </style>
 </head>
@@ -86,10 +89,13 @@ function fmt(t){return String(t==null?'':t).split('```').map((part,i)=>i%2?'<pre
 let UNREAD=0;
 async function loadUnread(){if(!TOKEN){UNREAD=0;return}try{UNREAD=(await call('notifs',{},'GET')).unread}catch(e){UNREAD=0}renderTop()}
 function renderTop(){const el=$('#me');if(!el)return;
-  el.innerHTML=TOKEN?'<a class="u" href="forum?u='+encodeURIComponent(NAME)+'" data-u="'+esc(NAME)+'" style="display:inline-flex;align-items:center;gap:.4rem">'+av(NAME,26)+'<b>'+esc(NAME)+'</b></a> <button class="link" id="bell">Alerts'+(UNREAD?' <span class="badge pin">'+UNREAD+'</span>':'')+'</button> <button class="link" id="acct">Account</button> <button class="link" id="out">Sign out</button>':'<button class="sm" id="in">Join / Sign in</button>';
+  el.innerHTML=TOKEN?'<div class="dd"><button type="button" class="ddb" id="ddb" aria-haspopup="true" aria-expanded="false">'+av(NAME,30)+'<b>'+esc(NAME)+'</b>'+(UNREAD?'<span class="badge pin">'+UNREAD+'</span>':'')+'<span class="car">▾</span></button><div class="ddm hide" id="ddm" role="menu"><a href="forum?u='+encodeURIComponent(NAME)+'" data-u="'+esc(NAME)+'">👤 My profile</a><button type="button" id="bell">🔔 Alerts'+(UNREAD?' <span class="badge pin">'+UNREAD+'</span>':'')+'</button><button type="button" id="acct">⚙️ Account</button><button type="button" id="out" class="bad">↩ Sign out</button></div></div>':'<button class="sm" id="in">Join / Sign in</button>';
+  const dm=$('#ddm'),db=$('#ddb');
+  if(db){db.onclick=e=>{e.stopPropagation();const open=dm.classList.toggle('hide');db.setAttribute('aria-expanded',String(!open))};dm.onclick=()=>{dm.classList.add('hide');db.setAttribute('aria-expanded','false')};}
   const o=$('#out');if(o)o.onclick=()=>{TOKEN='';NAME='';UNREAD=0;save();renderTop();if($('#nt'))$('#nt').classList.add('hide');route()};
-  const i=$('#in');if(i)i.onclick=()=>authBox();const ac=$('#acct');if(ac)ac.onclick=()=>authBox(null,'acct');const bl=$('#bell');if(bl)bl.onclick=()=>bellBox();
+  const i=$('#in');if(i)i.onclick=()=>authBox();const ac=$('#acct');if(ac)ac.onclick=()=>{dm.classList.add('hide');authBox(null,'acct')};const bl=$('#bell');if(bl)bl.onclick=()=>{dm.classList.add('hide');bellBox()};
   el.querySelectorAll('a[data-u]').forEach(a=>a.onclick=e=>{e.preventDefault();go('forum?u='+encodeURIComponent(a.dataset.u))})}
+document.addEventListener('click',e=>{const m=$('#ddm');if(m&&!m.classList.contains('hide')&&!e.target.closest('.dd')){m.classList.add('hide');const b=$('#ddb');if(b)b.setAttribute('aria-expanded','false')}});
 function go(href){history.pushState(null,'',href);route()}
 
 async function bellBox(){
