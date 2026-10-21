@@ -40,6 +40,15 @@ button.link{background:none;border:0;color:#fff;padding:0;font-weight:400;text-d
 .rules{font-size:.76rem;color:var(--text2);margin-top:.9rem}.rules li{margin-left:1.1rem}
 .badge.host{background:#38bdf8;color:#04283a}.u{color:#fff;text-decoration:none}.u:hover{color:var(--green)}pre{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:.8rem;overflow-x:auto;margin:.6rem 0;white-space:pre}code{font-family:var(--mono);font-size:.84em;background:var(--bg2);padding:.08rem .3rem;border-radius:4px}pre code{padding:0;background:none}.hp{position:absolute;left:-9999px;height:0;overflow:hidden}
 footer{border-top:1px solid var(--border);margin-top:3rem;padding:1.6rem 0 2.2rem;text-align:center;font-size:.74rem;color:var(--text2)}
+.av{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:#fff;font:700 1em var(--display);flex:none;text-transform:uppercase;box-shadow:0 0 0 2px rgba(255,255,255,.12)}
+.pf{overflow:hidden;padding:0}.pf .cover{height:92px;background:linear-gradient(120deg,var(--c1),var(--c2));position:relative}.pf .cover:after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(255,255,255,.28),transparent 55%)}
+.pf .in{padding:0 1.2rem 1.2rem;margin-top:-42px;position:relative}.pf .av{border:4px solid var(--bg1);box-shadow:none}
+.pf h1{display:flex;flex-wrap:wrap;gap:.4rem .6rem;align-items:center;margin-top:.5rem}
+.lvl{display:inline-block;font-size:.68rem;font-weight:700;color:var(--green);border:1px solid var(--green);border-radius:999px;padding:.1rem .6rem}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:1rem 0 .2rem}.stats div{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.7rem .4rem;text-align:center;font-size:.7rem;color:var(--text2)}.stats b{display:block;font:700 1.35rem var(--display);color:var(--text)}
+.welcome{border:1px solid var(--green);background:linear-gradient(135deg,rgba(255,122,31,.12),transparent);border-radius:14px;padding:1rem 1.1rem;margin:1rem 0}.welcome h3{font:700 1.05rem var(--display)}.welcome ul{list-style:none;margin-top:.6rem;font-size:.84rem;color:var(--text2)}.welcome li{padding:.25rem 0}.welcome li.ok{color:#4ade80}
+.chiplink{display:inline-block;border:1px solid var(--border2);border-radius:999px;padding:.3rem .8rem;font-size:.76rem;color:var(--text);text-decoration:none}.chiplink:hover{border-color:var(--green);color:var(--green)}
+.rp{display:block;border-top:1px solid var(--border);padding:.7rem 0;text-decoration:none;color:var(--text)}.rp i{display:block;font-style:normal;font-size:.8rem;color:var(--text2);margin-top:.15rem}
 .hide{display:none}
 </style>
 </head>
@@ -67,6 +76,9 @@ async function call(action,data,method){
 }
 const Q=()=>new URLSearchParams(location.search);
 const id=()=>Q().get('t');
+function hue(n){let h=0;for(const c of String(n))h=(h*31+c.charCodeAt(0))%360;return h}
+function av(n,px){const h=hue(n),ini=String(n).trim().split(/\s+/).map(w=>w[0]).join('').slice(0,2)||'?';return '<span class="av" style="width:'+px+'px;height:'+px+'px;font-size:'+Math.round(px*.4)+'px;background:linear-gradient(135deg,hsl('+h+',70%,52%),hsl('+((h+50)%360)+',70%,38%))">'+esc(ini)+'</span>'}
+function level(p){const n=p.topics*3+p.replies+p.best_answers*5;return p.staff?'Host':n>=40?'Expert':n>=15?'Regular':n>=3?'Contributor':'Newcomer'}
 const badge=x=>(x.staff?' <span class="badge host">Host</span>':'')+(x.student?' <span class="badge">Student</span>':'');
 const who=(n,x)=>'<a class="u" href="forum?u='+encodeURIComponent(n)+'" data-u="'+esc(n)+'">'+esc(n)+'</a>'+badge(x||{});
 // post text: escape everything, then turn ``` fences and `inline code` into code (no HTML from members ever reaches the page)
@@ -74,7 +86,7 @@ function fmt(t){return String(t==null?'':t).split('```').map((part,i)=>i%2?'<pre
 let UNREAD=0;
 async function loadUnread(){if(!TOKEN){UNREAD=0;return}try{UNREAD=(await call('notifs',{},'GET')).unread}catch(e){UNREAD=0}renderTop()}
 function renderTop(){const el=$('#me');if(!el)return;
-  el.innerHTML=TOKEN?'<a class="u" href="forum?u='+encodeURIComponent(NAME)+'" data-u="'+esc(NAME)+'"><b>'+esc(NAME)+'</b></a> <button class="link" id="bell">Alerts'+(UNREAD?' <span class="badge pin">'+UNREAD+'</span>':'')+'</button> <button class="link" id="acct">Account</button> <button class="link" id="out">Sign out</button>':'<button class="sm" id="in">Join / Sign in</button>';
+  el.innerHTML=TOKEN?'<a class="u" href="forum?u='+encodeURIComponent(NAME)+'" data-u="'+esc(NAME)+'" style="display:inline-flex;align-items:center;gap:.4rem">'+av(NAME,26)+'<b>'+esc(NAME)+'</b></a> <button class="link" id="bell">Alerts'+(UNREAD?' <span class="badge pin">'+UNREAD+'</span>':'')+'</button> <button class="link" id="acct">Account</button> <button class="link" id="out">Sign out</button>':'<button class="sm" id="in">Join / Sign in</button>';
   const o=$('#out');if(o)o.onclick=()=>{TOKEN='';NAME='';UNREAD=0;save();renderTop();if($('#nt'))$('#nt').classList.add('hide');route()};
   const i=$('#in');if(i)i.onclick=()=>authBox();const ac=$('#acct');if(ac)ac.onclick=()=>authBox(null,'acct');const bl=$('#bell');if(bl)bl.onclick=()=>bellBox();
   el.querySelectorAll('a[data-u]').forEach(a=>a.onclick=e=>{e.preventDefault();go('forum?u='+encodeURIComponent(a.dataset.u))})}
@@ -220,9 +232,20 @@ async function viewProfile(name){
   $('#main').innerHTML='<div class="top"><div><a href="forum" id="bk">← All topics</a></div><div class="me" id="me"></div></div><div id="auth" class="card hide"></div><div id="tp"><p class="sub">Loading…</p></div>';
   renderTop();$('#bk').onclick=e=>{e.preventDefault();go('forum')};loadUnread();
   try{const p=await call('profile',{u:name},'GET');document.title=p.name+' — Forum';
-    $('#tp').innerHTML='<div class="card"><h1 style="font-size:1.5rem;overflow-wrap:anywhere">'+esc(p.name)+badge(p)+'</h1><div class="meta">Joined '+new Date(p.joined).toLocaleDateString('en-NG',{month:'long',year:'numeric'})+'</div>'+(p.bio?'<div class="body">'+esc(p.bio)+'</div>':'')+'<div class="meta" style="margin-top:.8rem;gap:1rem"><span><b style="color:var(--text)">'+p.topics+'</b> topics</span><span><b style="color:var(--text)">'+p.replies+'</b> replies</span><span><b style="color:var(--text)">'+p.best_answers+'</b> best answers</span></div>'
-      +((p.website||p.github)?'<div class="meta" style="margin-top:.6rem;gap:1rem">'+(p.website?'<a href="'+esc(p.website)+'" target="_blank" rel="nofollow ugc noopener">Website</a>':'')+(p.github?'<a href="https://github.com/'+encodeURIComponent(p.github)+'" target="_blank" rel="nofollow ugc noopener">GitHub</a>':'')+'</div>':'')+'</div>'
-      +'<b>Recent topics</b>'+(p.recent.length?p.recent.map(t=>'<a class="t" href="forum?t='+t.id+'" data-t="'+t.id+'"><b>'+esc(t.title)+'</b><div class="meta"><span>'+t.replies+' repl'+(t.replies===1?'y':'ies')+'</span><span>'+ago(t.created_at)+'</span></div></a>').join(''):'<p class="sub">No topics yet.</p>');
+    const mine=TOKEN&&NAME===p.name,h=hue(p.name),lv=level(p),ext=[];
+    if(p.website)ext.push('<a class="chiplink" href="'+esc(p.website)+'" target="_blank" rel="nofollow ugc noopener">🌐 Website</a>');
+    if(p.github)ext.push('<a class="chiplink" href="https://github.com/'+encodeURIComponent(p.github)+'" target="_blank" rel="nofollow ugc noopener">GitHub</a>');
+    const days=Math.max(0,Math.floor((Date.now()-Date.parse(p.joined))/864e5));
+    let wel='';
+    if(mine){const k=[[!!p.bio,'Write a short bio'],[p.topics>0,'Post your first topic'],[p.replies>0,'Help someone with a reply']],d=k.filter(x=>x[0]).length;
+      wel='<div class="welcome"><h3>👋 Welcome, '+esc(p.name)+'!</h3><p class="sub">'+(d===3?'You are all set. Thanks for helping the community grow.':'Glad you are here. Finish setting up your profile:')+'</p><ul>'+k.map(x=>'<li class="'+(x[0]?'ok':'')+'">'+(x[0]?'✔ ':'○ ')+x[1]+'</li>').join('')+'</ul><p style="margin-top:.8rem"><button class="sm" id="pedit">Edit my profile</button></p></div>'}
+    $('#tp').innerHTML=wel+'<div class="card pf" style="--c1:hsl('+h+',70%,45%);--c2:hsl('+((h+60)%360)+',70%,30%)"><div class="cover"></div><div class="in">'+av(p.name,84)+'<h1 style="font-size:1.5rem;overflow-wrap:anywhere">'+esc(p.name)+badge(p)+' <span class="lvl">'+lv+'</span></h1><div class="meta">Joined '+new Date(p.joined).toLocaleDateString('en-NG',{month:'long',year:'numeric'})+(days<1?' · new today':' · '+days+' day'+(days===1?'':'s')+' ago')+(p.last_active?' · active '+ago(p.last_active):'')+'</div>'
+      +(p.bio?'<div class="body">'+esc(p.bio)+'</div>':'<p class="sub">'+(mine?'You have not written a bio yet.':'This member has not added a bio yet.')+'</p>')
+      +'<div class="stats"><div><b>'+p.topics+'</b>topics</div><div><b>'+p.replies+'</b>replies</div><div><b>'+p.best_answers+'</b>best answers</div></div>'
+      +(ext.length?'<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.8rem">'+ext.join('')+'</div>':'')+'</div></div>'
+      +'<b>Recent topics</b>'+(p.recent.length?p.recent.map(t=>'<a class="t" href="forum?t='+t.id+'" data-t="'+t.id+'"><b>'+esc(t.title)+'</b><div class="meta"><span>'+t.replies+' repl'+(t.replies===1?'y':'ies')+'</span><span>'+ago(t.created_at)+'</span></div></a>').join(''):'<p class="sub">No topics yet.</p>')
+      +((p.recent_replies||[]).length?'<div class="card"><b>Recent replies</b>'+p.recent_replies.map(r=>'<a class="rp" href="forum?t='+r.topic_id+'" data-t="'+r.topic_id+'">'+esc(r.body)+'<i>on “'+esc(r.title)+'” · '+ago(r.created_at)+'</i></a>').join('')+'</div>':'');
+    const pe=$('#pedit');if(pe)pe.onclick=()=>{authBox(null,'profile');window.scrollTo(0,0)};
     $('#tp').querySelectorAll('a[data-t]').forEach(a=>a.onclick=e=>{e.preventDefault();go(a.getAttribute('href'))});
   }catch(x){$('#tp').innerHTML='<p class="msg err">'+esc(x.message)+'</p>'}
 }
