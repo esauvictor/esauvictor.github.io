@@ -1015,7 +1015,7 @@ pre,code,kbd,samp{font-family:var(--code)}
 body{-webkit-font-smoothing:antialiased}
 
 /* typography: bold Archivo headings, Source Sans 3 body, bigger and brighter text */
-html{font-size:106.25%}
+html{font-size:106.25%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{font-weight:500}
 h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;letter-spacing:-.015em}
 .btn,button{font-weight:700}
@@ -5086,5 +5086,16 @@ fetch('https://esauvictor.name.ng/api/forum.php').then(function(r){return r.json
 (function(){function renum(){var n=0;document.querySelectorAll('section.section').forEach(function(sec){var num=sec.querySelector('.sec-num');if(!num||sec.hidden||sec.offsetParent===null&&getComputedStyle(sec).display==='none')return;n++;num.textContent='// '+(n<10?'0':'')+n});}
   renum();setTimeout(renum,1500);setTimeout(renum,4000)})();
 </script>
+<style>
+/* phones: keep floating buttons small so they never cover content */
+@media (max-width:560px){
+  #chatToggle{padding:5px!important;right:12px!important;bottom:14px!important}
+  #chatToggle .toggle-label{display:none!important}
+  #callFab{bottom:14px!important;left:12px!important}
+  #backToTop{left:auto!important;right:16px!important;bottom:76px!important}
+  .greeting-bubble{max-width:220px}
+  body{padding-bottom:70px}
+}
+</style>
 </body>
 </html>
