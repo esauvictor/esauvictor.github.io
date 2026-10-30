@@ -185,7 +185,7 @@
       font-size:1rem;
       border-radius:4px;
     }
-    @media(max-width:1020px){
+    @media(max-width:1240px){
       .nav-links {
         position:fixed;
         top:60px; left:-100%;
@@ -987,7 +987,26 @@
       0%,100%{ box-shadow:0 0 6px var(--green); }
       50%{ box-shadow:0 0 12px var(--green), 0 0 20px rgba(255,120,40,0.35); }
     }
-  </style>
+  
+    /* polish: consistent mobile rhythm */
+    @media(max-width:768px){
+      .section { padding:3.6rem 0; }
+      .sec-head { margin-bottom:1.8rem; }
+      .container { padding:0 1.25rem; }
+      .hero { padding:2.5rem 0 3.5rem; }
+      .hero-role { justify-content:center; }
+      .hero-desc { border-left:none; padding-left:0; text-align:center; font-size:.86rem; }
+      .hero-buttons { flex-direction:column; align-items:stretch; width:100%; }
+      .hero-buttons a, .hero-buttons button { text-align:center; justify-content:center; }
+      .terminal-block pre, .terminal-block code { font-size:.72rem; }
+      .contact-detail a { overflow-wrap:anywhere; word-break:normal; }
+      .footer-grid { grid-template-columns:1fr; gap:2rem; }
+      .footer-link-list { gap:.9rem; }
+    }
+    @media(max-width:1020px) and (min-width:769px){ .footer-grid { grid-template-columns:1fr 1fr; } }
+    .footer-link-list a { padding:.1rem 0; }
+    .contact-detail a { overflow-wrap:anywhere; }
+</style>
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1021,11 +1040,12 @@
       <li><a href="#tech" data-index="02">stack</a></li>
       <li><a href="#projects" data-index="03">projects</a></li>
       <li><a href="#resources" data-index="04">resources</a></li>
-      <li><a href="#support" data-index="05">support</a></li>
-      <li><a href="https://esauvictor.name.ng/blog" data-index="06">blog</a></li>
-      <li><a href="#testimonials" data-index="07">ClientVoices</a></li>
-      <li><a href="#quote" data-index="08">quote</a></li>
-      <li><a href="#contact" data-index="09">contact</a></li>
+      <li><a href="classes" data-index="05">classes</a></li>
+      <li><a href="#support" data-index="06">support</a></li>
+      <li><a href="https://esauvictor.name.ng/blog" data-index="07">blog</a></li>
+      <li><a href="#testimonials" data-index="08">reviews</a></li>
+      <li><a href="#quote" data-index="09">quote</a></li>
+      <li><a href="#contact" data-index="10">contact</a></li>
         </ul>
     <button class="hamburger" id="hamburger"><i class="fas fa-bars"></i></button>
   </div>
@@ -1413,7 +1433,7 @@
   <div class="container">
     <div class="sec-head">
       <span class="sec-num">// 07</span>
-      <h2 class="sec-title">ClientVoices<span>()</span></h2>
+      <h2 class="sec-title">reviews<span>()</span></h2>
       <div class="sec-line"></div>
     </div>
     <div class="tm-empty" id="tmEmpty" hidden>
@@ -1636,25 +1656,29 @@
         </div>
       </div>
       <div>
-        <div class="footer-col-title">Navigate</div>
+        <div class="footer-col-title">Explore</div>
         <ul class="footer-link-list">
           <li><a href="#about">About</a></li>
-          <li><a href="#tech">Stack</a></li>
           <li><a href="#projects">Projects</a></li>
+          <li><a href="classes">Classes</a></li>
+          <li><a href="forum">Community forum</a></li>
           <li><a href="https://esauvictor.name.ng/blog">Blog</a></li>
-          <li><a href="#testimonials">ClientVoices</a></li>
-          <li><a href="#quote">Get a Quote</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#testimonials">Reviews</a></li>
+          <li><a href="#quote">Get a quote</a></li>
         </ul>
       </div>
       <div>
-        <div class="footer-col-title">Legal</div>
+        <div class="footer-col-title">Get in touch</div>
         <ul class="footer-link-list">
-          <li><a href="privacy"><i class="fas fa-shield-halved"></i> Privacy &amp; Cookie Policy</a></li>
-          <li><a href="mailto:esauvictor@icloud.com"><i class="fas fa-envelope"></i> esauvictor@icloud.com</a></li>
           <li><a href="mailto:hello@esauvictor.name.ng"><i class="fas fa-envelope"></i> hello@esauvictor.name.ng</a></li>
-          <li><a href="#" id="footerReview"><i class="fas fa-pen"></i> Leave a Review</a></li>
-          <li><a href="#" id="cookiePrefsLink"><i class="fas fa-sliders"></i> Cookie Preferences</a></li>
+          <li><a href="mailto:esauvictor@icloud.com"><i class="fas fa-envelope"></i> esauvictor@icloud.com</a></li>
+          <li><a href="https://wa.me/2348132084092" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+          <li><a href="#" id="footerReview"><i class="fas fa-pen"></i> Leave a review</a></li>
+        </ul>
+        <div class="footer-col-title" style="margin-top:1.6rem">Legal</div>
+        <ul class="footer-link-list">
+          <li><a href="privacy"><i class="fas fa-shield-halved"></i> Privacy &amp; cookie policy</a></li>
+          <li><a href="#" id="cookiePrefsLink"><i class="fas fa-sliders"></i> Cookie preferences</a></li>
         </ul>
       </div>
     </div>
