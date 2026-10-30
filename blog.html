@@ -23,7 +23,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <title>Esau Victor — Blog</title>
 <style>
   :root{
@@ -37,9 +37,9 @@
     --amber:#D98A2B;
     --amber-dim:#FBF0DF;
     --radius:14px;
-    --mono:'JetBrains Mono', ui-monospace, monospace;
-    --display:'Space Grotesk', sans-serif;
-    --body:'Inter', sans-serif;
+    --mono:'Montserrat','Noto Sans','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;--code:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --display:'Montserrat','Noto Sans','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;
+    --body:'Montserrat','Noto Sans','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;
   }
   [data-theme="dark"]{
     --ink:#E7EAF2;
@@ -398,6 +398,11 @@
     h3.card-title{font-size:1.05rem;}
     .page-btn{min-width:32px;height:32px;font-size:0.76rem;}
   }
+
+/* typography: Montserrat for the site, JetBrains Mono only for code-like bits */
+pre,code,kbd,samp{font-family:var(--code)}
+.terminal-block,.terminal-block *,.sec-num,.hero-role,.profile-tag,.project-index,.terminal-path,.t-prompt,.t-cmd,.t-key,.t-str,.t-val,.t-comment,.wv-bar{font-family:var(--code)!important}
+body{-webkit-font-smoothing:antialiased}
 </style>
 </head>
 <body>

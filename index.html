@@ -17,14 +17,14 @@
   <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/94287719?v=4">
   <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
   <title>Full Stack Developer in Port Harcourt | Laravel & PHP Expert – Esau Victor</title>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,300;1,400&family=Oxanium:wght@300;400;500;600;700;800&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,300;1,400&family=Oxanium:wght@300;400;500;600;700;800&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
     :root {
-      --mono: 'JetBrains Mono', 'Noto Sans', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      --display: 'Oxanium', 'Noto Sans', system-ui, sans-serif;
+      --mono:'Montserrat','Noto Sans','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;--code:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      --display:'Montserrat','Noto Sans','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;
       --bg: #0c0a08;
       --bg1: #131009;
       --bg2: #1a150e;
@@ -1008,6 +1008,11 @@
     .footer-link-list a { padding:.1rem 0; }
     .contact-detail a { overflow-wrap:anywhere; }
 
+
+/* typography: Montserrat for the site, JetBrains Mono only for code-like bits */
+pre,code,kbd,samp{font-family:var(--code)}
+.terminal-block,.terminal-block *,.sec-num,.hero-role,.profile-tag,.project-index,.terminal-path,.t-prompt,.t-cmd,.t-key,.t-str,.t-val,.t-comment,.wv-bar{font-family:var(--code)!important}
+body{-webkit-font-smoothing:antialiased}
 </style>
   <script type="application/ld+json">
 {
