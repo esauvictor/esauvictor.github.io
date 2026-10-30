@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- Prism.js: syntax highlighting for code blocks in post content -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <title>Blog Post - Esau Victor</title>
@@ -40,8 +40,8 @@
             --amber:#D98A2B;
             --amber-dim:#FBF0DF;
             --radius:14px;
-            --mono:'Montserrat','Noto Sans','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;--code:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-            --display:'Montserrat','Noto Sans','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;
+            --mono:'Source Sans 3','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;--code:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+            --display:'Archivo','Source Sans 3','Segoe UI',system-ui,sans-serif;
             --body-font:'Inter', sans-serif;
 
             /* ---- aliases ---- */
@@ -1511,10 +1511,20 @@
   margin: 0.7rem 0 0;
 }
     
-/* typography: Montserrat for the site, JetBrains Mono only for code-like bits */
+/* code-like bits stay monospace */
 pre,code,kbd,samp{font-family:var(--code)}
 .terminal-block,.terminal-block *,.sec-num,.hero-role,.profile-tag,.project-index,.terminal-path,.t-prompt,.t-cmd,.t-key,.t-str,.t-val,.t-comment,.wv-bar{font-family:var(--code)!important}
 body{-webkit-font-smoothing:antialiased}
+
+/* typography: bold Archivo headings, Source Sans 3 body, bigger and brighter text */
+html{font-size:106.25%}
+body{font-weight:500}
+h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;letter-spacing:-.015em}
+.btn,button{font-weight:700}
+.nav-links a,.nav ul a{font-weight:600}
+@media(min-width:1241px){.nav-links a{font-size:.86rem;letter-spacing:.01em}}
+.hero-desc{font-size:1.05rem;line-height:1.7}
+.sec-num{font-size:.8rem}
 </style>
 </head>
 <body>

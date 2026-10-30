@@ -7,16 +7,16 @@
 <meta name="description" content="Share your experience working with Esau Victor.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Oxanium:wght@400;600;700;800&family=Noto+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Oxanium:wght@400;600;700;800&family=Noto+Sans:wght@400;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
   :root {
-    --mono:'Montserrat','Noto Sans','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;--code:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    --display:'Montserrat','Noto Sans','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;
+    --mono:'Source Sans 3','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;--code:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --display:'Archivo','Source Sans 3','Segoe UI',system-ui,sans-serif;
     --bg:#0c0a08; --bg1:#131009; --bg2:#1a150e;
     --border:rgba(255,120,40,.14); --border2:rgba(255,120,40,.35);
     --accent:#ff7828; --glow:rgba(255,120,40,.18);
-    --text:#f5ede4; --text2:#b8a898; --text3:#7a6a5c; --red:#ef4444; --ok:#22c55e;
+    --text:#f5ede4; --text2:#d3c6b6; --text3:#948575; --red:#ef4444; --ok:#22c55e;
   }
   html,body { min-height:100%; }
   body {
@@ -70,10 +70,20 @@
   .done a { display:inline-block; margin-top:1.3rem; color:var(--accent); text-decoration:none; font-size:.85rem; border-bottom:1px solid var(--border2); }
   .foot { text-align:center; margin-top:1.4rem; font-size:.72rem; color:var(--text3); }
 
-/* typography: Montserrat for the site, JetBrains Mono only for code-like bits */
+/* code-like bits stay monospace */
 pre,code,kbd,samp{font-family:var(--code)}
 .terminal-block,.terminal-block *,.sec-num,.hero-role,.profile-tag,.project-index,.terminal-path,.t-prompt,.t-cmd,.t-key,.t-str,.t-val,.t-comment,.wv-bar{font-family:var(--code)!important}
 body{-webkit-font-smoothing:antialiased}
+
+/* typography: bold Archivo headings, Source Sans 3 body, bigger and brighter text */
+html{font-size:106.25%}
+body{font-weight:500}
+h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;letter-spacing:-.015em}
+.btn,button{font-weight:700}
+.nav-links a,.nav ul a{font-weight:600}
+@media(min-width:1241px){.nav-links a{font-size:.86rem;letter-spacing:.01em}}
+.hero-desc{font-size:1.05rem;line-height:1.7}
+.sec-num{font-size:.8rem}
 </style>
 </head>
 <body>
