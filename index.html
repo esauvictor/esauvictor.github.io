@@ -994,7 +994,8 @@
       .sec-head { margin-bottom:1.8rem; }
       .container { padding:0 1.25rem; }
       .hero { padding:2.5rem 0 3.5rem; }
-      .hero-role { justify-content:center; }
+      .hero-role { display:block; text-align:center; }
+      .hero-role::before { margin-right:.5rem; }
       .hero-desc { border-left:none; padding-left:0; text-align:center; font-size:.86rem; }
       .hero-buttons { flex-direction:column; align-items:stretch; width:100%; }
       .hero-buttons a, .hero-buttons button { text-align:center; justify-content:center; }
@@ -1036,17 +1037,17 @@
   <div class="container nav-inner">
     <a href="#" class="logo">esau<em>.</em>victor<em>()</em></a>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#about" data-index="01">about</a></li>
-      <li><a href="#tech" data-index="02">stack</a></li>
-      <li><a href="#projects" data-index="03">projects</a></li>
-      <li><a href="#resources" data-index="04">resources</a></li>
-      <li><a href="classes" data-index="05">classes</a></li>
-      <li><a href="#support" data-index="06">support</a></li>
-      <li><a href="https://esauvictor.name.ng/blog" data-index="07">blog</a></li>
-      <li><a href="#testimonials" data-index="08">reviews</a></li>
-      <li><a href="#quote" data-index="09">quote</a></li>
-      <li><a href="#contact" data-index="10">contact</a></li>
-        </ul>
+      <li><a href="#about" data-index="01">About</a></li>
+      <li><a href="#tech" data-index="02">Stack</a></li>
+      <li><a href="#projects" data-index="03">Projects</a></li>
+      <li><a href="classes" data-index="04">Classes</a></li>
+      <li><a href="#resources" data-index="05">Resources</a></li>
+      <li><a href="https://esauvictor.name.ng/blog" data-index="06">Blog</a></li>
+      <li><a href="#testimonials" data-index="07">Reviews</a></li>
+      <li><a href="#quote" data-index="08">Quote</a></li>
+      <li><a href="#support" data-index="09">Support</a></li>
+      <li><a href="#contact" data-index="10">Contact</a></li>
+    </ul>
     <button class="hamburger" id="hamburger"><i class="fas fa-bars"></i></button>
   </div>
 </nav>
@@ -1173,22 +1174,21 @@
   <div class="hero-glow"></div>
   <div class="container hero-grid">
     <div class="hero-content">
-      <h1 class="hero-name">Full<br>Stack<br><span class="accent">Dev.</span></h1>
-      <p class="hero-role">role = "Laravel &amp; PHP Engineer"</p>
+      <h1 class="hero-name">Reliable<br>web systems,<br><span class="accent">built right.</span></h1>
+      <p class="hero-role">role = "Full-stack developer · Laravel &amp; PHP"</p>
       <p class="hero-desc">
-        Scalable backend systems. High-performance APIs. Production-grade code.
-        The work either meets the standard or it doesn't ship.
-        Port Harcourt, NG — remote-capable.
+        I'm Esau Victor. I design and build secure, fast web applications and APIs for businesses, schools and organisations.
+        Based in Port Harcourt, Nigeria, and available for remote work.
       </p>
       <div class="hero-buttons">
-        <a href="#projects" class="btn btn-primary"><i class="fas fa-code-branch"></i> <span>view_projects()</span></a>
-        <a href="#contact" class="btn btn-outline"><i class="fas fa-terminal"></i> <span>let's_talk()</span></a>
+        <a href="#projects" class="btn btn-primary"><i class="fas fa-code-branch"></i> <span>View my work</span></a>
+        <a href="#quote" class="btn btn-outline"><i class="fas fa-terminal"></i> <span>Get an instant quote</span></a>
       </div>
     </div>
     <div class="hero-visual">
       <div class="profile-frame">
         <img class="profile-img" src="https://avatars.githubusercontent.com/u/94287719?v=4" alt="Esau Victor">
-        <div class="profile-tag">PH, NIGERIA</div>
+        <div class="profile-tag">PORT HARCOURT, NG</div>
       </div>
     </div>
   </div>
@@ -1386,30 +1386,12 @@
       <h2 class="sec-title">resources<span>()</span></h2>
       <div class="sec-line"></div>
     </div>
-    <p style="font-size:.85rem;color:var(--text2);max-width:620px;margin-bottom:1.6rem;line-height:1.7">Source code, ebooks and templates I have built. Some are free, some are paid — instant download either way, with a link sent to your email.</p>
+    <p style="font-size:.85rem;color:var(--text2);max-width:620px;margin-bottom:1.6rem;line-height:1.7">Source code, ebooks and templates from real projects. Some are free, some are paid. Download instantly, and a copy of the link is sent to your email.</p>
     <div class="rs-grid" id="rsGrid"><div class="rs-empty" style="grid-column:1/-1">loading resources…</div></div>
   </div>
 </section>
 
-<section id="support" class="section">
-  <div class="container">
-    <div class="sec-head">
-      <span class="sec-num">// 05</span>
-      <h2 class="sec-title">support<span>()</span></h2>
-      <div class="sec-line"></div>
-    </div>
-    <div class="rs-support">
-      <p>If my projects, posts or free resources have saved you time, you can support the work with a one-off contribution. Payments are processed securely by Paystack (card, bank transfer, USSD).</p>
-      <div class="rs-chips" id="rsChips">
-        <button class="rs-chip" data-amt="1000"><span class="naira">₦</span>1,000</button>
-        <button class="rs-chip" data-amt="2000"><span class="naira">₦</span>2,000</button>
-        <button class="rs-chip" data-amt="5000"><span class="naira">₦</span>5,000</button>
-        <button class="rs-chip" data-amt="10000"><span class="naira">₦</span>10,000</button>
-        <button class="rs-chip" data-amt="0">custom…</button>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <div class="rs-ov" id="rsOv" role="dialog" aria-modal="true"><div class="rs-modal" id="rsModal"></div></div>
 
@@ -1437,7 +1419,7 @@
       <div class="sec-line"></div>
     </div>
     <div class="tm-empty" id="tmEmpty" hidden>
-      <p>No reviews yet. Worked with me? Be the first to share your experience.</p>
+      <p>No reviews yet. Worked with me? Share your experience.</p>
     </div>
     <div class="slider-container">
       <div class="testimonials-track" id="testimonialsTrack"></div>
@@ -1515,7 +1497,7 @@
       <h2 class="sec-title">quote<span>()</span></h2>
       <div class="sec-line"></div>
     </div>
-    <p class="qc-intro">Pick what you want built and get an instant ballpark price and timeline. It is an estimate, not a contract. I confirm the exact figure after a short scoping chat.</p>
+    <p class="qc-intro">Choose what you need built and get an instant ballpark price and timeline. It is an estimate, not a contract. I confirm the exact figure after a short scoping chat.</p>
     <div class="qc-wrap">
       <div class="qc-main">
         <div class="qc-mini" aria-live="polite"><span>estimate</span><b id="qcMini"></b></div>
@@ -1554,6 +1536,26 @@
   </div>
 </section>
 
+<section id="support" class="section">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-num">// 05</span>
+      <h2 class="sec-title">support<span>()</span></h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="rs-support">
+      <p>If my projects, posts or free resources have saved you time, you can say thanks with a one-off contribution. Payments are processed securely by Paystack (card, bank transfer or USSD).</p>
+      <div class="rs-chips" id="rsChips">
+        <button class="rs-chip" data-amt="1000"><span class="naira">₦</span>1,000</button>
+        <button class="rs-chip" data-amt="2000"><span class="naira">₦</span>2,000</button>
+        <button class="rs-chip" data-amt="5000"><span class="naira">₦</span>5,000</button>
+        <button class="rs-chip" data-amt="10000"><span class="naira">₦</span>10,000</button>
+        <button class="rs-chip" data-amt="0">custom…</button>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CONTACT -->
 <section id="contact" class="section">
   <div class="container">
@@ -1566,9 +1568,9 @@
 
       <div class="contact-left">
         <p class="contact-tagline">
-          Got a problem worth solving?<br>
-          Serious projects. Serious people.<br>
-          Let's find out if it's a fit.
+          Have a project in mind?<br>
+          Tell me what you need and I'll get back to you.<br>
+          Let's see if we're a good fit.
         </p>
         <div class="contact-detail">
           <div class="contact-icon"><i class="fas fa-envelope"></i></div>
@@ -5059,6 +5061,13 @@ fetch(API).then(function(r){return r.json()}).then(function(j){if(!j||!j.enabled
   g.innerHTML=t.length?t.map(function(x){return '<a class="rs-card" href="forum?t='+x.id+'" style="text-decoration:none"><div class="rs-top"><span>'+esc(x.category)+'</span><span>'+x.replies+' repl'+(x.replies===1?'y':'ies')+'</span></div><h3>'+esc(x.title)+'</h3><p>'+esc(x.body)+'</p><div class="rs-meta">'+esc(x.author)+' · '+ago(x.last_activity)+'</div></a>'}).join(''):'<div class="rs-empty" style="grid-column:1/-1;padding:1.4rem;background:var(--bg1)">No topics yet. Be the first to start a conversation.</div>';
   sec.hidden=false})}).catch(function(){})})();</script>
 <script>/* shows the Forum link only while the forum is switched on in the admin */
-fetch('https://esauvictor.name.ng/api/forum.php').then(function(r){return r.json()}).then(function(j){if(!j||!j.enabled)return;var ul=document.querySelector('#navLinks, .nav ul');if(!ul||ul.querySelector('a[href="forum"]'))return;var li=document.createElement('li');li.innerHTML='<a href="forum">forum</a>';var c=ul.querySelector('a[href*="contact"]');c&&c.parentNode.parentNode===ul?ul.insertBefore(li,c.parentNode):ul.appendChild(li)}).catch(function(){});</script>
+fetch('https://esauvictor.name.ng/api/forum.php').then(function(r){return r.json()}).then(function(j){if(!j||!j.enabled)return;
+  function add(){var ul=document.querySelector('#navLinks');if(ul&&!ul.querySelector('a[href="forum"]')){var li=document.createElement('li');li.innerHTML='<a href="forum">Forum</a>';var c=ul.querySelector('a[href*="contact"]');c&&c.parentNode.parentNode===ul?ul.insertBefore(li,c.parentNode):ul.appendChild(li)}
+    if(ul)ul.querySelectorAll('a').forEach(function(a,i){a.setAttribute('data-index',(i<9?'0':'')+(i+1))});
+    var fl=document.querySelector('.footer-link-list');if(fl&&!fl.querySelector('a[href="forum"]')){var f=document.createElement('li');f.innerHTML='<a href="forum">Community forum</a>';fl.appendChild(f)}}
+  add();setTimeout(add,1500);setTimeout(add,4000)}).catch(function(){});
+(function(){function renum(){var n=0;document.querySelectorAll('section.section').forEach(function(sec){var num=sec.querySelector('.sec-num');if(!num||sec.hidden||sec.offsetParent===null&&getComputedStyle(sec).display==='none')return;n++;num.textContent='// '+(n<10?'0':'')+n});}
+  renum();setTimeout(renum,1500);setTimeout(renum,4000)})();
+</script>
 </body>
 </html>
