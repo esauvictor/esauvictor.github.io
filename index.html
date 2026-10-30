@@ -49,6 +49,8 @@
     /* Naira sign: rendered with a font that has the glyph on every platform
        (JetBrains Mono doesn't include ₦, which is why it disappeared on
        many Android/iOS devices). */
+    .amt{display:inline-block;white-space:nowrap}
+    .naira{letter-spacing:0!important;margin-right:.08em}
     .naira {
       font-family: 'Noto Sans', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
       font-weight: 600;
@@ -3846,7 +3848,7 @@ window.addTestimonialLocal = function (t) {
   // Naira symbol is wrapped in .naira so it renders with a font that has
   // the glyph on every platform (Android/iOS included). This returns HTML,
   // so it must be injected without esc() when used.
-  const naira = n => '<span class="naira">₦</span>' + Number(n).toLocaleString('en-NG');
+  const naira = n => '<span class="amt"><span class="naira">₦</span>' + Number(n).toLocaleString('en-NG') + '</span>';
   const LABEL = {source_code:'source code', ebook:'ebook', template:'template', other:'resource'};
   const size = b => !b ? '' : b > 1048576 ? (b/1048576).toFixed(1)+' MB' : Math.max(1,Math.round(b/1024))+' KB';
   let list = [];
