@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Community Forum — Esau Victor</title>
+<title>Community Forum, Esau Victor</title>
 <meta name="description" content="Ask questions, share your projects and help other learners in the Esau Victor community forum.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
@@ -247,7 +247,7 @@ async function viewTopic(tid){
   $('#main').innerHTML='<div class="top"><div><a href="forum" id="bk">← All topics</a></div><div class="me" id="me"></div></div><div id="auth" class="card hide"></div><div id="tp"><p class="sub">Loading…</p></div>';
   renderTop();$('#bk').onclick=e=>{e.preventDefault();go('forum')};loadUnread();
   try{
-    const d=await call('topic',{id:tid},'GET'),t=d.topic;document.title=t.title+' — Forum';
+    const d=await call('topic',{id:tid},'GET'),t=d.topic;document.title=t.title+', Forum';
     const vote=(k,i,v,n,mine)=>mine?'<span class="meta" style="margin:0">👍 '+n+'</span>':'<button class="link" data-vote="'+k+'" data-id="'+i+'">'+(v?'👍 Helpful ('+n+') · undo':'👍 Helpful'+(n?' ('+n+')':''))+'</button>';
     const replyHtml=r=>'<div class="reply" id="r'+r.id+'">'+(r.id===d.best_id?'<span class="badge" style="margin-bottom:.4rem;display:inline-block">Best answer ✓</span>':'')+'<div class="meta" style="margin:0 0 .3rem"><b style="color:var(--text)">'+who(r.author,r)+'</b><span>'+ago(r.created_at)+(r.edited?' · edited':'')+'</span></div><div class="body" style="margin:0" data-body>'+fmt(r.body)+'</div><div class="meta">'+vote('reply',r.id,r.voted,r.votes,r.mine)+(t.can_mark?(r.id===d.best_id?'<button class="link" data-best="0">Remove best answer</button>':'<button class="link" data-best="'+r.id+'">Mark as best answer</button>'):'')+(r.can_edit?'<button class="link" data-edit="reply" data-id="'+r.id+'">Edit</button>':'')+(r.mine?'<button class="link" data-del="reply" data-id="'+r.id+'">Delete</button>':'<button class="link" data-rep="reply" data-id="'+r.id+'">Report</button>')+'</div></div>';
     const best=d.replies.find(r=>r.id===d.best_id),others=d.replies.filter(r=>r.id!==d.best_id);
@@ -289,7 +289,7 @@ function settingsPanel(p,root){
 async function viewProfile(name){
   $('#main').innerHTML='<div class="top"><div><a href="forum" id="bk">← All topics</a></div><div class="me" id="me"></div></div><div id="auth" class="card hide"></div><div id="tp"><p class="sub">Loading…</p></div>';
   renderTop();$('#bk').onclick=e=>{e.preventDefault();go('forum')};loadUnread();
-  try{const p=await call('profile',{u:name},'GET');document.title=p.name+' — Forum';
+  try{const p=await call('profile',{u:name},'GET');document.title=p.name+', Forum';
     const mine=TOKEN&&NAME===p.name,h=hue(p.name),lv=level(p),ext=[];
     if(p.website)ext.push('<a class="chiplink" href="'+esc(p.website)+'" target="_blank" rel="nofollow ugc noopener">'+ico('globe',15)+' Website</a>');
     if(p.github)ext.push('<a class="chiplink" href="https://github.com/'+encodeURIComponent(p.github)+'" target="_blank" rel="nofollow ugc noopener">'+ico('gh',15)+' GitHub</a>');
@@ -311,7 +311,7 @@ async function viewProfile(name){
 }
 
 async function route(){
-  document.title='Community Forum — Esau Victor';
+  document.title='Community Forum, Esau Victor';
   let s;try{s=await call('status',{},'GET')}catch(x){s={enabled:false}}
   if(!s.enabled){$('#main').innerHTML='<div style="padding:3rem 0"><h1>The forum is closed right now</h1><p class="sub">Please check back soon. In the meantime, you can read the <a href="blog">blog</a> or see the <a href="classes">classes</a>.</p></div>';return}
   CATS=s.categories||[];

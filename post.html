@@ -7,17 +7,17 @@
     <meta name="keywords" content="web development, data analytics, cyber security, programming">
     <meta name="author" content="Esau Victor">
     <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
-    <link rel="alternate" type="application/rss+xml" title="Esau Victor — Blog RSS Feed" href="https://esauvictor.name.ng/api/rss.php">
+    <link rel="alternate" type="application/rss+xml" title="Esau Victor, Blog RSS Feed" href="https://esauvictor.name.ng/api/rss.php">
 
     <!-- Open Graph / Twitter Card defaults -->
     <meta property="og:type" content="article">
-    <meta property="og:site_name" content="Esau Victor — Blog">
-    <meta id="ogTitle" property="og:title" content="Esau Victor — Blog">
+    <meta property="og:site_name" content="Esau Victor, Blog">
+    <meta id="ogTitle" property="og:title" content="Esau Victor, Blog">
     <meta id="ogDescription" property="og:description" content="Notes on web development, data analytics &amp; cyber security.">
     <meta id="ogImage" property="og:image" content="https://avatars.githubusercontent.com/u/94287719?v=4">
     <meta id="ogUrl" property="og:url" content="https://esauvictor.github.io/post">
     <meta name="twitter:card" content="summary_large_image">
-    <meta id="twitterTitle" name="twitter:title" content="Esau Victor — Blog">
+    <meta id="twitterTitle" name="twitter:title" content="Esau Victor, Blog">
     <meta id="twitterDescription" name="twitter:description" content="Notes on web development, data analytics &amp; cyber security.">
     <meta id="twitterImage" name="twitter:image" content="https://avatars.githubusercontent.com/u/94287719?v=4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -1797,7 +1797,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
 
         const API_BASE = 'https://esauvictor.name.ng/api';
         const AUTHOR_AVATAR_URL = 'https://avatars.githubusercontent.com/u/94287719?v=4';
-        // The synthetic voices below are the browser's built-in options —
+        // The synthetic voices below are the browser's built-in options -
         // they can't be your actual voice. To have this post read in your
         // real voice instead, record yourself reading it, host the file
         // somewhere (e.g. a GitHub raw link), and paste that URL here.
@@ -1895,7 +1895,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
         })();
 
         // ---------- Text-to-speech ----------
-        // (unchanged from your original — kept as-is)
+        // (unchanged from your original, kept as-is)
 
         function simplifyUrlForSpeech(href) {
             try {
@@ -2487,7 +2487,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
                 voiceSelect.innerHTML = '';
                 const baseLabels = voices.map(v => {
                     const gender = genderLabel(v);
-                    return gender ? `English (${regionLabel(v.lang)}) — ${gender}` : `English (${regionLabel(v.lang)})`;
+                    return gender ? `English (${regionLabel(v.lang)}), ${gender}` : `English (${regionLabel(v.lang)})`;
                 });
                 const counts = {};
                 baseLabels.forEach(b => { counts[b] = (counts[b] || 0) + 1; });
@@ -2718,7 +2718,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
                         const stallTimer = setTimeout(() => {
                             if (settled) return;
                             settled = true;
-                            reject(new Error('stalled — no audio started'));
+                            reject(new Error('stalled, no audio started'));
                         }, 6000);
                         networkAudio.onended = () => {
                             if (settled) return;
@@ -2757,7 +2757,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
                             await tryPlay(piece, 'gtx', true);
                         } catch (e2) {
                             if (session !== playSession) return;
-                            reportVoiceIssue(`No online voice is available for ${langLabel(currentLang)} yet — reading with the closest available voice on this device instead. For accurate pronunciation, install this language's voice pack in your phone's text-to-speech settings.`);
+                            reportVoiceIssue(`No online voice is available for ${langLabel(currentLang)} yet, reading with the closest available voice on this device instead. For accurate pronunciation, install this language's voice pack in your phone's text-to-speech settings.`);
                             speakChunkLocally(index, session, rate, textForChunk(index), () => speakFrom(index + 1));
                             return;
                         }
@@ -2831,7 +2831,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
                     if (postNarrations[lang]) {
                         if (translateNote) {
                             translateNote.hidden = false;
-                            translateNote.textContent = lang === 'en' ? '' : `Read by the author in ${langLabel(lang)} — not a machine translation.`;
+                            translateNote.textContent = lang === 'en' ? '' : `Read by the author in ${langLabel(lang)}, not a machine translation.`;
                             if (lang === 'en') translateNote.hidden = true;
                         }
                         return;
@@ -2855,15 +2855,15 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
                         applyVoiceForLang('en');
                         if (translateNote) {
                             translateNote.hidden = false;
-                            translateNote.textContent = `The translation service doesn't support ${langLabel(lang)} well enough right now — reading the original English instead.`;
+                            translateNote.textContent = `The translation service doesn't support ${langLabel(lang)} well enough right now, reading the original English instead.`;
                         }
                         return;
                     }
                     applyVoiceForLang(lang);
                     if (translateNote) {
                         translateNote.textContent = useNetworkVoice
-                            ? 'Machine translation, read using a free online voice (no matching voice on this device) — for anything important, double-check against the original.'
-                            : 'Machine translation — for anything important, double-check against the original.';
+                            ? 'Machine translation, read using a free online voice (no matching voice on this device), for anything important, double-check against the original.'
+                            : 'Machine translation, for anything important, double-check against the original.';
                     }
                 });
             }
@@ -3608,7 +3608,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
                     bodyInput.value = '';
                     wrap.classList.remove('open');
                 } catch (err) {
-                    statusEl.textContent = err.message || 'Could not submit reply — please try again.';
+                    statusEl.textContent = err.message || 'Could not submit reply, please try again.';
                     statusEl.classList.add('error');
                 } finally {
                     submitBtn.disabled = false;
@@ -3912,7 +3912,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
             if (c.parent_id) {
                 const parentItem = listEl.querySelector(`.comment-item[data-comment-id="${c.parent_id}"]`);
                 if (!parentItem) {
-                    // Parent not rendered yet — buffer this reply.
+                    // Parent not rendered yet, buffer this reply.
                     if (!bufferedReplies.has(c.parent_id)) bufferedReplies.set(c.parent_id, []);
                     bufferedReplies.get(c.parent_id).push(c);
                     return;
@@ -3958,7 +3958,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
         }
 
         function checkPendingCommentWatches(comments) {
-            // Legacy shim — no longer used with SSE. Kept as a no-op so
+            // Legacy shim, no longer used with SSE. Kept as a no-op so
             // loadComments() doesn't error if it's ever called.
         }
 
@@ -3996,7 +3996,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
                 listEl.innerHTML = '';
 
                 if (!tree.length) {
-                    listEl.innerHTML = '<p class="comment-empty">No comments yet — be the first to share your thoughts.</p>';
+                    listEl.innerHTML = '<p class="comment-empty">No comments yet, be the first to share your thoughts.</p>';
                     return;
                 }
 
@@ -4143,7 +4143,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
                     form.reset();
                     saveCommenter(payload.name, payload.email);
                 } catch (err) {
-                    statusEl.textContent = err.message || 'Could not submit comment — please try again.';
+                    statusEl.textContent = err.message || 'Could not submit comment, please try again.';
                     statusEl.classList.add('error');
                 } finally {
                     submitBtn.disabled = false;
@@ -4179,7 +4179,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
                     statusEl.classList.add('success');
                     subscribeForm.reset();
                 } catch (err) {
-                    statusEl.textContent = err.message || 'Could not subscribe right now — please try again.';
+                    statusEl.textContent = err.message || 'Could not subscribe right now, please try again.';
                     statusEl.classList.add('error');
                 } finally {
                     submitBtn.disabled = false;

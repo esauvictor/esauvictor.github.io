@@ -7,24 +7,24 @@
 <meta name="keywords" content="web development blog, data analytics blog, cyber security blog, programming blog" />
 <meta name="author" content="Esau Victor" />
 <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
-<link rel="alternate" type="application/rss+xml" title="Esau Victor — Blog RSS Feed" href="https://esauvictor.name.ng/api/rss.php">
+<link rel="alternate" type="application/rss+xml" title="Esau Victor, Blog RSS Feed" href="https://esauvictor.name.ng/api/rss.php">
 
-<!-- Open Graph / Twitter Card — shows a real preview when this link is shared -->
+<!-- Open Graph / Twitter Card, shows a real preview when this link is shared -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Esau Victor — Blog">
-<meta property="og:title" content="Esau Victor — Blog">
+<meta property="og:site_name" content="Esau Victor, Blog">
+<meta property="og:title" content="Esau Victor, Blog">
 <meta property="og:description" content="Notes on web development, life, data analytics &amp; cyber security.">
 <meta property="og:image" content="https://avatars.githubusercontent.com/u/94287719?v=4">
 <meta property="og:url" content="https://esauvictor.github.io/blog">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Esau Victor — Blog">
+<meta name="twitter:title" content="Esau Victor, Blog">
 <meta name="twitter:description" content="Notes on web development, life, data analytics &amp; cyber security.">
 <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/94287719?v=4">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<title>Esau Victor — Blog</title>
+<title>Esau Victor, Blog</title>
 <style>
   :root{
     --ink:#12172B;
@@ -701,7 +701,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
       <button type="button" class="newsletter-close" id="newsletterClose" aria-label="Close">✕</button>
       <div class="newsletter-icon"><i class="fas fa-envelope-open-text"></i></div>
       <h2 id="newsletterTitle">Stay in the loop</h2>
-      <p class="newsletter-sub">Get new posts on web development, data analytics &amp; cyber security — straight to your inbox, no spam.</p>
+      <p class="newsletter-sub">Get new posts on web development, data analytics &amp; cyber security, straight to your inbox, no spam.</p>
       <form class="newsletter-form" id="newsletterForm">
         <input type="hidden" name="form" value="subscribe">
         <input type="text" name="honeypot" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -824,7 +824,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
           form.reset();
           setTimeout(() => closePopup(false), 1600);
         } catch (err) {
-          statusEl.textContent = err.message || 'Could not subscribe right now — please try again.';
+          statusEl.textContent = err.message || 'Could not subscribe right now, please try again.';
           statusEl.classList.add('error');
         } finally {
           submitBtn.disabled = false;
@@ -832,7 +832,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
       });
 
       // Trigger on whichever comes first: ~55% scroll depth, a 15s delay,
-      // or exit intent (desktop only — no reliable signal on mobile).
+      // or exit intent (desktop only, no reliable signal on mobile).
       let triggered = false;
       function tryTrigger() {
         if (triggered) return;
@@ -1060,7 +1060,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
           showState(`
             <div class="console">
               <div><span class="ok">$</span> query posts --all</div>
-              <div style="margin-top:0.5rem;">No posts yet — check back soon.</div>
+              <div style="margin-top:0.5rem;">No posts yet, check back soon.</div>
             </div>
           `);
           return;
@@ -1074,7 +1074,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
         showState(`
           <div class="console">
             <div><span class="err">$</span> query posts --all</div>
-            <div style="margin-top:0.5rem;">Couldn't load posts right now — please try again later.</div>
+            <div style="margin-top:0.5rem;">Couldn't load posts right now, please try again later.</div>
           </div>
         `);
       });
@@ -1142,7 +1142,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
         voiceSelect.innerHTML = '';
         const baseLabels = voices.map(v => {
             const gender = genderLabel(v);
-            return gender ? `English (${regionLabel(v.lang)}) — ${gender}` : `English (${regionLabel(v.lang)})`;
+            return gender ? `English (${regionLabel(v.lang)}), ${gender}` : `English (${regionLabel(v.lang)})`;
         });
         const counts = {};
         baseLabels.forEach(b => { counts[b] = (counts[b] || 0) + 1; });
@@ -1174,7 +1174,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
         });
     }
 
-    // ---- Content scanning — built fresh every time Play is pressed, so it ----
+    // ---- Content scanning, built fresh every time Play is pressed, so it ----
     // always matches whatever's actually on screen (dynamically-loaded
     // sections, filtered/paginated lists, etc.) rather than a stale snapshot
     // taken at page load.
@@ -1199,7 +1199,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
                     if (text) blocks.push(text);
                     return;
                 }
-                // Generic wrapper (div/span/etc.) — recurse only if it
+                // Generic wrapper (div/span/etc.), recurse only if it
                 // structurally contains real block-level content; otherwise
                 // treat its whole text as one block rather than fragmenting
                 // into individual inline spans (common in stylized layouts).
@@ -1307,7 +1307,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
     playBtn.addEventListener('click', () => {
         if (!speaking) {
             chunks = buildSpeechChunksFresh();
-            if (!chunks.length) { label.textContent = "Nothing to read here yet — try again once the page has loaded."; return; }
+            if (!chunks.length) { label.textContent = "Nothing to read here yet, try again once the page has loaded."; return; }
             speaking = true; paused = false;
             playBtn.innerHTML = '<i class="fas fa-pause"></i>';
             playBtn.setAttribute('aria-label', 'Pause');

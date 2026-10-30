@@ -1197,7 +1197,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
       <p class="hero-desc">
         Scalable backend systems. High-performance APIs. Production-grade code.
         The work either meets the standard or it doesn't ship.
-        Port Harcourt, NG — remote-capable.
+        Port Harcourt, NG, remote-capable.
       </p>
       <div class="hero-buttons">
         <a href="#projects" class="btn btn-primary"><i class="fas fa-code-branch"></i> <span>view_projects()</span></a>
@@ -1265,7 +1265,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
           <div>];</div>
           <div style="margin-top:.8rem; color:var(--text2); font-size:.75rem;" id="aboutBio">
             <span class="t-comment">/*</span><br>
-            <span class="t-comment">&nbsp;* Laravel, PHP, MySQL, API architecture — that's the craft.</span><br>
+            <span class="t-comment">&nbsp;* Laravel, PHP, MySQL, API architecture, that's the craft.</span><br>
             <span class="t-comment">&nbsp;* Systems built to last: thousands of concurrent users,</span><br>
             <span class="t-comment">&nbsp;* zero-compromise reliability, no shortcuts.</span><br>
             <span class="t-comment">&nbsp;* If the code isn't clean, it doesn't go out.</span><br>
@@ -1405,7 +1405,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
       <h2 class="sec-title">resources<span>()</span></h2>
       <div class="sec-line"></div>
     </div>
-    <p style="font-size:.85rem;color:var(--text2);max-width:620px;margin-bottom:1.6rem;line-height:1.7">Source code, ebooks and templates I have built. Some are free, some are paid — instant download either way, with a link sent to your email.</p>
+    <p style="font-size:.85rem;color:var(--text2);max-width:620px;margin-bottom:1.6rem;line-height:1.7">Source code, ebooks and templates I have built. Some are free, some are paid, instant download either way, with a link sent to your email.</p>
     <div class="rs-grid" id="rsGrid"><div class="rs-empty" style="grid-column:1/-1">loading resources…</div></div>
   </div>
 </section>
@@ -1726,7 +1726,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       const href = a.getAttribute('href');
-      // href="#" alone (the logo) means "back to top" — querySelector('#') throws.
+      // href="#" alone (the logo) means "back to top", querySelector('#') throws.
       if (!href || href === '#') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
       let t = null;
       try { t = document.querySelector(href); } catch (err) { t = null; }
@@ -1790,13 +1790,13 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
       if (data.success) {
         window.location.href = 'https://esauvictor.name.ng/thank-you';
       } else {
-        formStatus.textContent = '✗ submission failed — ' + (data.message || 'please try again.');
+        formStatus.textContent = '✗ submission failed, ' + (data.message || 'please try again.');
         formStatus.className = 'form-status error';
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> <span>send_message()</span>';
       }
     } catch (err) {
-      formStatus.textContent = '✗ network error — check your connection and retry.';
+      formStatus.textContent = '✗ network error, check your connection and retry.';
       formStatus.className = 'form-status error';
       submitBtn.disabled = false;
       submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> <span>send_message()</span>';
@@ -1825,7 +1825,7 @@ const safeUrl = u => /^https?:\/\//i.test(String(u || '')) ? escHtml(u) : '';
 
 // Retries a GET request a couple of times with a short backoff before
 // giving up. This is specifically to smooth over the host's occasional
-// "connection refused" blips (confirmed via cPanel — not a code bug,
+// "connection refused" blips (confirmed via cPanel, not a code bug,
 // just transient resource throttling) so visitors don't see empty
 // sections for something that resolves itself in a second or two.
 function fetchWithRetry(url, options = {}, retries = 4, delayMs = 1000) {
@@ -1930,14 +1930,14 @@ fetchWithRetry(`${API_BASE}/about.php`)
         '<span class="t-comment">&nbsp;*/</span>';
     }
   })
-  .catch(() => { /* fail silently — keep whatever fallback markup exists */ })
+  .catch(() => { /* fail silently, keep whatever fallback markup exists */ })
   .finally(() => { document.dispatchEvent(new Event('aboutDataReady')); });
 
 // ---- "about" terminal: continuous typewriter loop ----
 // Types the command and every output line character by character, like
 // someone actually typing/running it, then loops the whole sequence again.
 // Looping pauses whenever the section scrolls out of view (saves CPU/battery)
-// and picks back up — with a fresh run — once it's back in view. Colors are
+// and picks back up, with a fresh run, once it's back in view. Colors are
 // preserved exactly because we walk and retype the real DOM tree (including
 // nested spans) rather than typing plain text and swapping it after.
 (function () {
@@ -2096,7 +2096,7 @@ fetchWithRetry(`${API_BASE}/tech-stack.php`)
       </div>
     `).join('');
   })
-  .catch(() => { /* fail silently — keep whatever fallback markup exists */ });
+  .catch(() => { /* fail silently, keep whatever fallback markup exists */ });
 </script>
 
 <style>
@@ -2177,7 +2177,7 @@ fetchWithRetry(`${API_BASE}/projects.php`)
     `;
     pagedGrid(grid, data.projects, cardHtml, 6, 'projects');
   })
-  .catch(() => { /* fail silently — keep whatever fallback markup exists */ });
+  .catch(() => { /* fail silently, keep whatever fallback markup exists */ });
 </script>
 
 <script>
@@ -2213,7 +2213,7 @@ function loadTestimonials() {
       initTestimonialsCarousel();          // binds once; later calls are no-ops
       window.__tmGoTo && window.__tmGoTo(0);
     })
-    .catch(() => { /* fail silently — keep whatever fallback markup exists */ });
+    .catch(() => { /* fail silently, keep whatever fallback markup exists */ });
 }
 window.reloadTestimonials = loadTestimonials;
 loadTestimonials();
@@ -2230,7 +2230,7 @@ window.addTestimonialLocal = function (t) {
 </script>
 
 <script>
-/* ===== Leave a review (modal) — reuses the #rsOv / #rsModal overlay ===== */
+/* ===== Leave a review (modal), reuses the #rsOv / #rsModal overlay ===== */
 (function () {
   const ov = document.getElementById('rsOv'), md = document.getElementById('rsModal');
   if (!ov || !md) return;
@@ -2730,7 +2730,7 @@ window.addTestimonialLocal = function (t) {
   window.addEventListener('resize', scheduleAdjust);
   adjustForFooter();
 
-  // Hide the floating call button while the contact section is in view —
+  // Hide the floating call button while the contact section is in view -
   // that section already has the "Call me live" link, so the pill is redundant there.
   if (callFabBtn) {
     const contactSec = document.getElementById('contact');
@@ -3170,7 +3170,7 @@ window.addTestimonialLocal = function (t) {
         voiceSelect.innerHTML = '';
         const baseLabels = voices.map(v => {
             const gender = genderLabel(v);
-            return gender ? `English (${regionLabel(v.lang)}) — ${gender}` : `English (${regionLabel(v.lang)})`;
+            return gender ? `English (${regionLabel(v.lang)}), ${gender}` : `English (${regionLabel(v.lang)})`;
         });
         const counts = {};
         baseLabels.forEach(b => { counts[b] = (counts[b] || 0) + 1; });
@@ -3520,7 +3520,7 @@ window.addTestimonialLocal = function (t) {
 
     function startReading() {
         chunks = buildSpeechChunksFresh();
-        if (!chunks.length) { label.textContent = "Nothing to read here yet — try again once the page has loaded."; return; }
+        if (!chunks.length) { label.textContent = "Nothing to read here yet, try again once the page has loaded."; return; }
         speaking = true; paused = false; awaitingTap = false; tries = 0; chunkIndex = 0; lastChar = 0;
         if (stopBtn) stopBtn.hidden = false;
         if (avatarWrap) { avatarWrap.hidden = false; setupFullscreen(); }
@@ -3631,8 +3631,8 @@ window.addTestimonialLocal = function (t) {
 
 </script>
 <script>
-/* Welcome video — plays by itself, and talks as soon as the browser allows it.
-   Browsers (Chrome, Safari, Firefox) will not play SOUND before the visitor has tapped, clicked or pressed a key on the page — that rule
+/* Welcome video, plays by itself, and talks as soon as the browser allows it.
+   Browsers (Chrome, Safari, Firefox) will not play SOUND before the visitor has tapped, clicked or pressed a key on the page, that rule
    cannot be bypassed by any website. So this does the next best thing, in this order:
      1. When the video is on screen it tries to play WITH sound. If the browser allows it (returning visitors, or anyone who has already
         tapped the page, e.g. the cookie banner), it simply talks.
@@ -3860,7 +3860,7 @@ window.addTestimonialLocal = function (t) {
   fetch(API + '/resources.php').then(r => r.json()).then(d => {
     list = d.resources || [];
     const g = $('rsGrid');
-    if (!list.length) { g.innerHTML = '<div class="rs-empty" style="grid-column:1/-1">New resources are on the way — check back soon.</div>'; return; }
+    if (!list.length) { g.innerHTML = '<div class="rs-empty" style="grid-column:1/-1">New resources are on the way, check back soon.</div>'; return; }
     const rsCard = r => `
       <div class="rs-card">
         ${r.cover_url ? `<img src="${esc(r.cover_url)}" alt="${esc(r.title)}" loading="lazy">` : ''}
@@ -3899,7 +3899,7 @@ window.addTestimonialLocal = function (t) {
       <div class="sub">${don ? 'one-off contribution' : (free ? 'free download' : naira(c.r.price_ngn))}</div>
       ${don ? `<label>Amount (<span class="naira">₦</span>)</label><input id="rsAmt" type="number" min="500" step="100" value="${c.amount || ''}" placeholder="e.g. 3000">` : ''}
       <label>Name (optional)</label><input id="rsName" autocomplete="name">
-      <label>Email${free ? ' — your download link is sent here' : ' — your receipt goes here'}</label><input id="rsEmail" type="email" autocomplete="email" required>
+      <label>Email${free ? ', your download link is sent here' : ', your receipt goes here'}</label><input id="rsEmail" type="email" autocomplete="email" required>
       ${don ? `<label>Message (optional)</label><textarea id="rsNote" rows="2" maxlength="300"></textarea>` : ''}
       <button class="btn btn-primary rs-go" id="rsGo">${don ? 'continue to payment' : free ? 'get download' : 'pay ' + naira(c.r.price_ngn)}</button>
       <div class="rs-msg" id="rsMsg"></div>`;
@@ -3911,7 +3911,7 @@ window.addTestimonialLocal = function (t) {
   function showDone(title, url) {
     md.innerHTML = `<button class="rs-x" aria-label="Close">×</button><div class="rs-ok">
       <div class="tick">✓</div><h4>${url ? 'Ready!' : 'Thank you!'}</h4>
-      <p style="font-size:.82rem;color:var(--text2);margin:.6rem 0 1rem;line-height:1.6">${url ? esc(title) + ' — your download is ready. A copy of the link was also emailed to you.' : 'Your support means a lot. A receipt is on its way to your inbox.'}</p>
+      <p style="font-size:.82rem;color:var(--text2);margin:.6rem 0 1rem;line-height:1.6">${url ? esc(title) + ', your download is ready. A copy of the link was also emailed to you.' : 'Your support means a lot. A receipt is on its way to your inbox.'}</p>
       ${url ? `<a class="btn btn-primary rs-go" href="${esc(url)}">download now</a>` : ''}</div>`;
   }
 
@@ -3931,7 +3931,7 @@ window.addTestimonialLocal = function (t) {
         onSuccess: tx => { openChecking(); confirmPay(tx.reference || j.reference, 0); },
         onCancel: () => {}
       });
-    } catch (e) { btn.disabled = false; setMsg('Network problem — please try again.', true); }
+    } catch (e) { btn.disabled = false; setMsg('Network problem, please try again.', true); }
   }
 
   function openChecking() { md.innerHTML = '<div class="rs-ok"><div class="tick">…</div><h4>Confirming payment</h4><p style="font-size:.8rem;color:var(--text2)">Please keep this page open.</p></div>'; ov.classList.add('open'); }
@@ -3942,7 +3942,7 @@ window.addTestimonialLocal = function (t) {
       if (ok && j.ok) return showDone(j.title, j.download_url);
     } catch (e) {}
     if (n < 6) return setTimeout(() => confirmPay(ref, n + 1), 2500);
-    md.innerHTML = `<button class="rs-x">×</button><div class="rs-ok"><h4>Payment received?</h4><p style="font-size:.8rem;color:var(--text2);line-height:1.6;margin-top:.6rem">We couldn't confirm it automatically yet. If you were charged, your download link will be emailed to you shortly — or contact me with reference <b>${esc(ref)}</b>.</p></div>`;
+    md.innerHTML = `<button class="rs-x">×</button><div class="rs-ok"><h4>Payment received?</h4><p style="font-size:.8rem;color:var(--text2);line-height:1.6;margin-top:.6rem">We couldn't confirm it automatically yet. If you were charged, your download link will be emailed to you shortly, or contact me with reference <b>${esc(ref)}</b>.</p></div>`;
   }
 
   let psLoad;

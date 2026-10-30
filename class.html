@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Class — Esau Victor</title>
+<title>Class, Esau Victor</title>
 <meta name="description" content="Live and recorded web development classes by Esau Victor.">
 <link rel="icon" href="https://avatars.githubusercontent.com/u/94287719?v=4" type="image/png">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Oxanium:wght@400;600;700&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -84,7 +84,7 @@ function videoHtml(v){
 function render(){
   const c=D.class,p=D.pay,canReg=c.status==='open'&&!c.full;
   const tag=c.full?'full':c.status,label=c.full?'Full':{open:'Enrollment open',closed:'Enrollment closed',completed:'Completed'}[c.status];
-  document.title=c.title+' — Esau Victor';
+  document.title=c.title+', Esau Victor';
   try{ // search-engine details: description, canonical link and Course data (Google runs this page's script)
     const dsc=(c.summary||c.description||'').replace(/\s+/g,' ').slice(0,200);
     const setM=(sel,mk,v)=>{let e=document.head.querySelector(sel);if(!e){e=document.createElement(mk);document.head.appendChild(e)}return e};
@@ -108,7 +108,7 @@ function render(){
   h+='<div id="vslot">'+videoHtml(c.video)+'</div>';
   h+='<h2>Lessons</h2><div class="card" id="ls">'+lessons(false)+'</div>';
   if(c.has_code)h+='<div class="card"><b>Already registered?</b><p class="sub">Enter the class code from your confirmation email to unlock every lesson.</p><form id="uf" style="display:flex;gap:.6rem;margin-top:.7rem"><input id="uc" placeholder="Class code" autocomplete="off" autocapitalize="characters" required><button class="go" style="margin:0">Unlock</button></form><div class="msg" id="um"></div></div>';
-  if(canReg)h+='<h2>Enroll in this class</h2><form class="card" id="rf"><input type="checkbox" name="botcheck" style="display:none" tabindex="-1"><div class="row2"><div><label>Full name</label><input name="fullName" required autocomplete="name"></div><div><label>Email</label><input name="email" type="email" required autocomplete="email"></div></div><div class="row2"><div><label>Phone / WhatsApp</label><input name="phone" type="tel" required autocomplete="tel" placeholder="0803…"></div><div><label>Experience</label><select name="experience" required><option value="">Choose…</option><option>Complete beginner</option><option>Some experience</option><option>Intermediate</option><option>Advanced</option></select></div></div><label>Anything else? (optional)</label><textarea name="comments" rows="3"></textarea><button class="go" id="rb">Register'+(c.price_kobo?' — '+esc(c.price_label):'')+'</button><div class="msg" id="rm"></div></form><div id="done"></div>';
+  if(canReg)h+='<h2>Enroll in this class</h2><form class="card" id="rf"><input type="checkbox" name="botcheck" style="display:none" tabindex="-1"><div class="row2"><div><label>Full name</label><input name="fullName" required autocomplete="name"></div><div><label>Email</label><input name="email" type="email" required autocomplete="email"></div></div><div class="row2"><div><label>Phone / WhatsApp</label><input name="phone" type="tel" required autocomplete="tel" placeholder="0803…"></div><div><label>Experience</label><select name="experience" required><option value="">Choose…</option><option>Complete beginner</option><option>Some experience</option><option>Intermediate</option><option>Advanced</option></select></div></div><label>Anything else? (optional)</label><textarea name="comments" rows="3"></textarea><button class="go" id="rb">Register'+(c.price_kobo?', '+esc(c.price_label):'')+'</button><div class="msg" id="rm"></div></form><div id="done"></div>';
   document.getElementById('main').innerHTML=h;
   if(c.starts_at){const e=document.getElementById('cd');const t=()=>{const l=new Date(c.starts_at)-Date.now();e.hidden=false;e.innerHTML=l>0?ic('hour')+' starts in <b>'+span(l)+'</b>':ic('live')+' <b>started</b>'};t();setInterval(t,1000)}
   wire();
