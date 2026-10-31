@@ -1781,7 +1781,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
     const json = JSON.stringify(object);
 
     try {
-      const response = await fetch('https://esauvictor.name.ng/admin/submissions.php?form=contact', {
+      const response = await fetch('https://esauvictor.name.ng/api/contact.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: json
@@ -1790,7 +1790,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
       if (data.success) {
         window.location.href = 'https://esauvictor.name.ng/thank-you';
       } else {
-        formStatus.textContent = '✗ submission failed, ' + (data.message || 'please try again.');
+        formStatus.textContent = '✗ submission failed, ' + (data.message || data.error || 'please try again.');
         formStatus.className = 'form-status error';
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> <span>send_message()</span>';
@@ -4805,7 +4805,7 @@ window.addTestimonialLocal = function (t) {
     rangeHigh: 1.15,          // high end of the range = estimate x 1.15
     rushFee: 0.25,            // fast-track adds 25% to the project total
     rushWeeks: 0.7,           // and cuts the timeline to 70%
-    submitUrl: 'https://esauvictor.name.ng/admin/submissions.php?form=contact',
+    submitUrl: 'https://esauvictor.name.ng/api/contact.php',
     whatsapp: '2348132084092'
   };
 
@@ -5055,7 +5055,7 @@ window.addTestimonialLocal = function (t) {
         done.hidden = false;
         done.textContent = 'Request sent. Thanks ' + name.split(' ')[0] + '. I will review your selection and reply to ' + email + ' with a confirmed quote.';
       } else {
-        throw new Error((d && d.message) || 'failed');
+        throw new Error((d && (d.message || d.error)) || 'failed');
       }
     }).catch(function () {
       status.textContent = '\u2717 could not send. Check your connection and retry, or use WhatsApp above.';

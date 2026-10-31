@@ -753,7 +753,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
 
     // ---------- newsletter popup ----------
     (function () {
-      const SUBSCRIBE_URL = 'https://renaissanceassembly.org/secure/admin/submissions.php';
+      const SUBSCRIBE_URL = 'https://esauvictor.name.ng/api/subscribe.php';
       const DISMISS_DAYS = 7;
 
       const overlay = document.getElementById('newsletterOverlay');
@@ -812,8 +812,8 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
         try {
           const res = await fetch(SUBSCRIBE_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams(new FormData(form)),
+            headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(Object.fromEntries(new FormData(form))),
           });
           const data = await res.json();
           if (!res.ok || !data.success) throw new Error(data.error || 'Something went wrong');

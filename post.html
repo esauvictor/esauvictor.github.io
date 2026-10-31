@@ -4151,7 +4151,7 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
             });
         }
 
-        const SUBSCRIBE_URL = 'https://renaissanceassembly.org/secure/admin/submissions.php';
+        const SUBSCRIBE_URL = 'https://esauvictor.name.ng/api/subscribe.php';
 
         const subscribeForm = document.getElementById('subscribeForm');
         if (subscribeForm) {
@@ -4169,8 +4169,8 @@ h1,h2,h3,h4,.sec-title,.hero-name{font-family:var(--display);font-weight:800;let
                 try {
                     const res = await fetch(SUBSCRIBE_URL, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: new URLSearchParams(new FormData(subscribeForm)),
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(Object.fromEntries(new FormData(subscribeForm))),
                     });
                     const data = await res.json();
                     if (!res.ok || !data.success) throw new Error(data.error || 'Something went wrong');
